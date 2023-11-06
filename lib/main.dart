@@ -2,9 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:heartless/pages/auth/login_page.dart';
 import 'package:heartless/shared/constants.dart';
+import 'package:provider/provider.dart';
+export 'package:provider/provider.dart';
+import 'package:heartless/shared/provider/widget_provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  // runApp(const MyApp());
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (_) => WidgetNotifier()),
+    ],
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
