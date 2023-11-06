@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:heartless/pages/auth/login_page.dart';
 import 'package:heartless/shared/constants.dart';
 
 void main() {
@@ -16,12 +17,13 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: Constants().primaryColor,
+
         // useMaterial3: true,
       ),
       darkTheme: ThemeData(
         primaryColor: Constants().darkPrimaryColor,
       ),
-      home: const HomePage(),
+      home: const LoginPage(),
     );
   }
 }
@@ -38,7 +40,7 @@ class HomePage extends StatelessWidget {
       body: Container(
         color: Theme.of(context).primaryColor,
         child: SvgPicture.asset(
-          'assets/illustrations/forgot_pass.svg',
+          'assets/illustrations/login.svg',
           height: 64,
         ),
       ),
