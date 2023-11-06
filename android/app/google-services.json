@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1064544734386",
+    "project_id": "heartless-17b56",
+    "storage_bucket": "heartless-17b56.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1064544734386:android:daf184d0cc0ad786c74dab",
+        "android_client_info": {
+          "package_name": "com.dhwanish.heartless"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpzMaQ8VnK9aBfI2i8P8wwcxqeRWYm9fY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
