@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:heartless/main.dart';
 import 'package:heartless/shared/constants.dart';
+import 'package:heartless/shared/provider/widget_provider.dart';
 
 class TextFieldInput extends StatelessWidget {
   final TextEditingController textEditingController;
-  final bool isPass;
+  final bool passwordShown;
   final String hintText;
   final String labelText;
   final String startIcon;
@@ -17,7 +19,7 @@ class TextFieldInput extends StatelessWidget {
     required this.startIcon,
     this.endIcon,
     this.endIconAlt,
-    this.isPass = false,
+    this.passwordShown = false,
     this.labelText = "",
     required this.hintText,
     this.textInputType = TextInputType.name,
@@ -26,17 +28,23 @@ class TextFieldInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    double containerWidth = 0.8 * screenWidth;
+    double containerWidth = 0.9 * screenWidth;
+    WidgetNotifier widgetNotifier =
+        Provider.of<WidgetNotifier>(context, listen: false);
     return Container(
       padding: const EdgeInsets.all(8.0),
       width: containerWidth, // 80% of screen width
       height: 70,
       child: TextField(
-        cursorHeight: 15,
+        cursorHeight: 19,
         controller: textEditingController,
         keyboardType: TextInputType.name,
-        obscureText: isPass,
-        obscuringCharacter: '*',
+        obscureText: passwordShown,
+        obscuringCharacter: '•',
+        style: const TextStyle(
+          fontSize: 15,
+          // textBaseline: TextBaseline.alphabetic,
+        ),
         decoration: InputDecoration(
           labelText: labelText,
           labelStyle: TextStyle(
@@ -45,10 +53,7 @@ class TextFieldInput extends StatelessWidget {
           hintStyle: TextStyle(
             fontSize: 15,
             color: Constants().customGray,
-            // color: Theme.of(context).primaryColor,
           ),
-          // fillColor: const Color.fromARGB(15, 211, 214, 214),
-          // filled: true,
 
           prefixIcon: Padding(
             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
@@ -58,12 +63,18 @@ class TextFieldInput extends StatelessWidget {
             ),
           ),
           suffixIcon: (endIcon != null)
-              ? Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-                  child: SvgPicture.asset(
-                    endIcon!,
-                    height: 20,
+              ? GestureDetector(
+                  onTap: () {
+                    widgetNotifier
+                        .setPasswordShown(!widgetNotifier.passwordShown);
+                  },
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                    child: SvgPicture.asset(
+                      passwordShown ? endIcon! : endIconAlt!,
+                      height: 20,
+                    ),
                   ),
                 )
               : null,
