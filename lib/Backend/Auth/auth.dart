@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:heartless/shared/Models/patient.dart';
-import 'package:heartless/shared/auth_notifier.dart';
+import 'package:heartless/shared/provider/auth_notifier.dart';
 
 class Auth {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -12,6 +12,22 @@ class Auth {
       await FirebaseFirestore.instance
           .collection('Patients')
           .doc(authNotifier.patient.uid)
+          .get()
+          .then((value) =>
+              authNotifier.setPatient(Patient.fromMap(value.data()!)));
+      return true;
+    } catch (e) {
+      print(e);
+    }
+    return false;
+  }
+
+  Future<bool> getPateintDetailsbyUID(
+      String uid, AuthNotifier authNotifier) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('Patients')
+          .doc(uid)
           .get()
           .then((value) =>
               authNotifier.setPatient(Patient.fromMap(value.data()!)));
