@@ -7,10 +7,20 @@ import 'package:shared_preferences/shared_preferences.dart';
 class LocalStorage {
   // save user details
   Future<bool> saveUser(AuthNotifier authNotifier) async {
+    if (authNotifier.isLoggedIn == false) {
+      return false;
+    }
     final SharedPreferences sp = await SharedPreferences.getInstance();
     sp.setString('userType', authNotifier.userType);
-    String jsonUser = jsonEncode(authNotifier.patient.toMap());
 
+    String jsonUser = '';
+    if (authNotifier.userType == 'patient') {
+      jsonUser = jsonEncode(authNotifier.patient.toMap());
+    }
+    //! add more user types here
+    if (jsonUser == '') {
+      return false;
+    }
     sp.setString('user', jsonUser);
     return true;
   }
@@ -27,6 +37,7 @@ class LocalStorage {
         authNotifier.setUserType(userType!);
         authNotifier.setPatient(Patient.fromMap(userMap));
       }
+      //! add more user types here
       return true;
     }
     return false;

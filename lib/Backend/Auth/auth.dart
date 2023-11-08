@@ -22,22 +22,6 @@ class Auth {
     return false;
   }
 
-  Future<bool> getPateintDetailsbyUID(
-      String uid, AuthNotifier authNotifier) async {
-    try {
-      await FirebaseFirestore.instance
-          .collection('Patients')
-          .doc(uid)
-          .get()
-          .then((value) =>
-              authNotifier.setPatient(Patient.fromMap(value.data()!)));
-      return true;
-    } catch (e) {
-      print(e);
-    }
-    return false;
-  }
-
   // set patient details to firebase
   Future<bool> setPateintDetails(AuthNotifier authNotifier) async {
     try {
@@ -85,6 +69,7 @@ class Auth {
           .then((value) => authNotifier.patient.uid = value.user!.uid);
 
       await setPateintDetails(authNotifier);
+      authNotifier.setLoggedIn(true);
       return true;
     } catch (e) {
       print(e);

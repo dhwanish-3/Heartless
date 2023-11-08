@@ -7,13 +7,13 @@ class SplashServices {
   final _auth = FirebaseAuth.instance;
 
   Future<bool> hasLoggedIn(AuthNotifier authNotifier) async {
-    final _user = _auth.currentUser;
-    if (_user != null) {
+    final user = _auth.currentUser;
+    if (user != null) {
       if (await LocalStorage().getUser(authNotifier)) {
         return true;
       } else {
         try {
-          if (await Auth().getPateintDetailsbyUID(_user.uid, authNotifier)) {
+          if (await Auth().initializePatient(authNotifier)) {
             return true;
           } else {
             return false;
