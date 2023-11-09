@@ -9,6 +9,13 @@ class AuthNotifier with ChangeNotifier {
     notifyListeners();
   }
 
+  String _userType = 'patient';
+  String get userType => _userType;
+  void setUserType(String value) {
+    _userType = value;
+    notifyListeners();
+  }
+
   Patient _patient = Patient();
   Patient get patient => _patient;
 
