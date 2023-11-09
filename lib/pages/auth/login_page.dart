@@ -177,10 +177,10 @@ class _LoginPageState extends State<LoginPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
+                        const Text(
                           "Don't have an account?",
                           style: TextStyle(
-                            color: Constants().customGray,
+                            color: Constants.customGray,
                             fontWeight: FontWeight.w600,
                             fontSize: 13,
                           ),
@@ -209,10 +209,10 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                         ),
-                        Text(
+                        const Text(
                           'OR',
                           style: TextStyle(
-                            color: Constants().customGray,
+                            color: Constants.customGray,
                           ),
                         ),
                         Expanded(

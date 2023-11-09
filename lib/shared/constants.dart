@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class Constants {
-  final primaryColor = const Color.fromARGB(255, 55, 244, 218);
-  final darkPrimaryColor = const Color.fromARGB(255, 212, 64, 64);
-  final customGray = const Color.fromARGB(255, 160, 168, 176);
+  static const primaryColor = Color.fromARGB(255, 55, 244, 218);
+  static const darkPrimaryColor = Color.fromARGB(255, 212, 64, 64);
+  static const customGray = Color.fromARGB(255, 160, 168, 176);
 
   TextTheme textThemeLight = const TextTheme(
     displayLarge: TextStyle(
@@ -18,16 +18,15 @@ class Constants {
     ),
     labelMedium: TextStyle(
       fontSize: 12,
-      // color: Constants().primaryColor,
-      color: Color.fromARGB(255, 55, 244, 218),
+      color: primaryColor,
     ),
     bodyLarge: TextStyle(
-      color: Color.fromARGB(255, 160, 168, 176),
+      color: customGray,
       fontWeight: FontWeight.w600,
       fontSize: 13,
     ),
     bodyMedium: TextStyle(
-      color: Color.fromARGB(255, 55, 244, 218),
+      color: primaryColor,
       fontWeight: FontWeight.w600,
       fontSize: 14,
     ),

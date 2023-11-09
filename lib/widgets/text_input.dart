@@ -46,12 +46,12 @@ class TextFieldInput extends StatelessWidget {
         ),
         decoration: InputDecoration(
           labelText: labelText,
-          labelStyle: TextStyle(
-              color: Constants().customGray, fontSize: 15), // Text color
+          labelStyle: const TextStyle(
+              color: Constants.customGray, fontSize: 15), // Text color
           hintText: hintText,
-          hintStyle: TextStyle(
+          hintStyle: const TextStyle(
             fontSize: 15,
-            color: Constants().customGray,
+            color: Constants.customGray,
           ),
 
           prefixIcon: Padding(

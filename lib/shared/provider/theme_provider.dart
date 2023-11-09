@@ -14,11 +14,11 @@ class ThemeNotifier extends ChangeNotifier {
 
   ThemeData lightTheme = ThemeData(
       brightness: Brightness.light,
-      primaryColor: Constants().primaryColor,
+      primaryColor: Constants.primaryColor,
       textTheme: Constants().textThemeLight);
 
   ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
-    primaryColor: Constants().darkPrimaryColor,
+    primaryColor: Constants.darkPrimaryColor,
   );
 }

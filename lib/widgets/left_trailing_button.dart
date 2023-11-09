@@ -26,10 +26,10 @@ class LeftButton extends StatelessWidget {
             'assets/Icons/leftNav.svg',
             height: 20,
           ),
-          Text(
+          const Text(
             'Back',
             style: TextStyle(
-              color: Constants().customGray,
+              color: Constants.customGray,
               fontWeight: FontWeight.bold,
             ),
           ),
