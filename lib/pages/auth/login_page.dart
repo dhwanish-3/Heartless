@@ -2,6 +2,7 @@ import "package:flutter/material.dart";
 import "package:flutter_svg/svg.dart";
 import "package:heartless/Backend/Auth/auth.dart";
 import "package:heartless/main.dart";
+import "package:heartless/shared/Models/patient.dart";
 import "package:heartless/shared/auth_notifier.dart";
 import "package:heartless/shared/constants.dart";
 import "package:heartless/shared/provider/theme_provider.dart";
@@ -19,6 +20,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final Auth _auth = Auth();
+  final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -43,6 +46,23 @@ class _LoginPageState extends State<LoginPage> {
         Provider.of<WidgetNotifier>(context, listen: false);
     final themeProvider = Provider.of<ThemeNotifier>(context);
     AuthNotifier authNotifier = Provider.of<AuthNotifier>(context);
+
+    Future<void> submitForm() async {
+      if (_formKey.currentState!.validate()) {
+        _formKey.currentState!.save();
+        try {
+          Patient? patient = Patient();
+          patient.email = _emailController.text;
+          patient.password = _passwordController.text;
+          authNotifier.setPatient(patient);
+          await _auth.loginPatient(authNotifier);
+          print('Logged in${authNotifier.patient.uid}');
+        } catch (e) {
+          print(e);
+        }
+      }
+    }
+
     return Scaffold(
       body: Stack(
         children: [
@@ -93,46 +113,49 @@ class _LoginPageState extends State<LoginPage> {
                       padding: const EdgeInsets.symmetric(
                         horizontal: 20,
                       ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          TextFieldInput(
-                            textEditingController: _emailController,
-                            hintText: 'Enter your email',
-                            labelText: 'email',
-                            startIcon: 'assets/Icons/Email.svg',
-                            textInputType: TextInputType.emailAddress,
-                          ),
-                          Consumer<WidgetNotifier>(
-                              builder: (context, value, child) {
-                            return TextFieldInput(
-                              textEditingController: _passwordController,
-                              hintText: 'Enter your password',
-                              labelText: 'password',
-                              startIcon: 'assets/Icons/lock.svg',
-                              endIcon: 'assets/Icons/eyeClosed.svg',
-                              endIconAlt: 'assets/Icons/eyeOpened.svg',
-                              passwordShown: widgetNotifier.passwordShown,
-                              textInputType: TextInputType.visiblePassword,
-                            );
-                          }),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 5,
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            TextFieldInput(
+                              textEditingController: _emailController,
+                              hintText: 'Enter your email',
+                              labelText: 'email',
+                              startIcon: 'assets/Icons/Email.svg',
+                              textInputType: TextInputType.emailAddress,
                             ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text('Forgot Password?',
-                                    textAlign: TextAlign.start,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .labelMedium),
-                              ],
-                            ),
-                          )
-                        ],
+                            Consumer<WidgetNotifier>(
+                                builder: (context, value, child) {
+                              return TextFieldInput(
+                                textEditingController: _passwordController,
+                                hintText: 'Enter your password',
+                                labelText: 'password',
+                                startIcon: 'assets/Icons/lock.svg',
+                                endIcon: 'assets/Icons/eyeClosed.svg',
+                                endIconAlt: 'assets/Icons/eyeOpened.svg',
+                                passwordShown: widgetNotifier.passwordShown,
+                                textInputType: TextInputType.visiblePassword,
+                              );
+                            }),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 5,
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Text('Forgot Password?',
+                                      textAlign: TextAlign.start,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .labelMedium),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                     Padding(
@@ -144,8 +167,8 @@ class _LoginPageState extends State<LoginPage> {
                           GestureDetector(
                               onTap: () {}, child: const LeftButton()),
                           GestureDetector(
-                              onTap: () {
-                                Auth().loginPatient(authNotifier);
+                              onTap: () async {
+                                submitForm();
                               },
                               child: const RightButton()),
                         ],

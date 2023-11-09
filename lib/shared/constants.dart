@@ -18,6 +18,7 @@ class Constants {
     ),
     labelMedium: TextStyle(
       fontSize: 12,
+      // color: Constants().primaryColor,
       color: Color.fromARGB(255, 55, 244, 218),
     ),
     bodyLarge: TextStyle(
