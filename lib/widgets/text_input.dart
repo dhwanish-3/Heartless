@@ -43,7 +43,6 @@ class TextFieldInput extends StatelessWidget {
         obscuringCharacter: '•',
         style: const TextStyle(
           fontSize: 15,
-          // textBaseline: TextBaseline.alphabetic,
         ),
         decoration: InputDecoration(
           labelText: labelText,

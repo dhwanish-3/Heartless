@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:heartless/shared/constants.dart';
 
 class RightButton extends StatelessWidget {
   const RightButton({super.key});

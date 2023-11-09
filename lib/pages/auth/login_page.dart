@@ -1,7 +1,10 @@
 import "package:flutter/material.dart";
 import "package:flutter_svg/svg.dart";
+import "package:heartless/Backend/Auth/auth.dart";
 import "package:heartless/main.dart";
+import "package:heartless/shared/auth_notifier.dart";
 import "package:heartless/shared/constants.dart";
+import "package:heartless/shared/provider/theme_provider.dart";
 import "package:heartless/widgets/GoogleButton.dart";
 import "package:heartless/widgets/left_trailing_button.dart";
 import "package:heartless/widgets/right_trailing_button.dart";
@@ -38,10 +41,9 @@ class _LoginPageState extends State<LoginPage> {
     double screenWidth = MediaQuery.of(context).size.width;
     WidgetNotifier widgetNotifier =
         Provider.of<WidgetNotifier>(context, listen: false);
-
+    final themeProvider = Provider.of<ThemeNotifier>(context);
+    AuthNotifier authNotifier = Provider.of<AuthNotifier>(context);
     return Scaffold(
-      // appBar: AppBar(),
-      // resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           Positioned(
@@ -50,6 +52,16 @@ class _LoginPageState extends State<LoginPage> {
             child: SvgPicture.asset(
               'assets/Icons/blueHeart.svg',
               height: screenHeight * 0.2,
+            ),
+          ),
+          Positioned(
+            left: 20,
+            top: 40,
+            child: IconButton(
+              icon: const Icon(Icons.brightness_6), // Icon to toggle theme
+              onPressed: () {
+                themeProvider.toggleThemeMode();
+              },
             ),
           ),
           Center(
@@ -70,12 +82,9 @@ class _LoginPageState extends State<LoginPage> {
                     const SizedBox(
                       height: 20,
                     ),
-                    const Text(
+                    Text(
                       'Login',
-                      style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: Theme.of(context).textTheme.headlineMedium,
                     ),
                     const SizedBox(
                       height: 20,
@@ -115,14 +124,11 @@ class _LoginPageState extends State<LoginPage> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                Text(
-                                  'Forgot Password?',
-                                  textAlign: TextAlign.start,
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                                ),
+                                Text('Forgot Password?',
+                                    textAlign: TextAlign.start,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelMedium),
                               ],
                             ),
                           )
@@ -138,7 +144,10 @@ class _LoginPageState extends State<LoginPage> {
                           GestureDetector(
                               onTap: () {}, child: const LeftButton()),
                           GestureDetector(
-                              onTap: () {}, child: const RightButton()),
+                              onTap: () {
+                                Auth().loginPatient(authNotifier);
+                              },
+                              child: const RightButton()),
                         ],
                       ),
                     ),
