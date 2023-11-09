@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:heartless/shared/Models/patient.dart';
-import 'package:heartless/shared/auth_notifier.dart';
+import 'package:heartless/shared/provider/auth_notifier.dart';
 
 class Auth {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -69,6 +69,7 @@ class Auth {
           .then((value) => authNotifier.patient.uid = value.user!.uid);
 
       await setPateintDetails(authNotifier);
+      authNotifier.setLoggedIn(true);
       return true;
     } catch (e) {
       print(e);

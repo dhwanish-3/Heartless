@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/pages/auth/login_page.dart';
-import 'package:heartless/shared/auth_notifier.dart';
+import 'package:heartless/shared/provider/auth_notifier.dart';
 import 'package:heartless/shared/provider/theme_provider.dart';
 import 'package:provider/provider.dart';
 export 'package:provider/provider.dart';
