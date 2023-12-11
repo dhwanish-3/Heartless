@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:heartless/shared/Models/patient.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
 import 'package:shared_preferences/shared_preferences.dart';

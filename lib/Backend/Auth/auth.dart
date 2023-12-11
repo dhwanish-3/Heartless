@@ -1,10 +1,14 @@
+import 'dart:async';
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:heartless/services/app_exceptions.dart';
 import 'package:heartless/shared/Models/patient.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
 
 class Auth {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  static const Duration timeLimit = Duration(seconds: 10);
 
   // get patient details from firebase
   Future<bool> getPateintDetails(AuthNotifier authNotifier) async {
@@ -14,8 +18,13 @@ class Auth {
           .doc(authNotifier.patient.uid)
           .get()
           .then((value) =>
-              authNotifier.setPatient(Patient.fromMap(value.data()!)));
+              authNotifier.setPatient(Patient.fromMap(value.data()!)))
+          .timeout(timeLimit);
       return true;
+    } on SocketException {
+      throw FetchDataException('No Internet connection');
+    } on TimeoutException {
+      throw ApiNotRespondingException('Server is not responding');
     } catch (e) {
       print(e);
     }
@@ -30,6 +39,10 @@ class Auth {
           .doc(authNotifier.patient.uid)
           .set(authNotifier.patient.toMap());
       return true;
+    } on SocketException {
+      throw FetchDataException('No Internet connection');
+    } on TimeoutException {
+      throw ApiNotRespondingException('Server is not responding');
     } catch (e) {
       print(e);
     }
@@ -53,6 +66,10 @@ class Auth {
         authNotifier.setLoggedIn(false);
         return false;
       }
+    } on SocketException {
+      throw FetchDataException('No Internet connection');
+    } on TimeoutException {
+      throw ApiNotRespondingException('Server is not responding');
     } catch (e) {
       print(e);
     }
@@ -71,6 +88,10 @@ class Auth {
       await setPateintDetails(authNotifier);
       authNotifier.setLoggedIn(true);
       return true;
+    } on SocketException {
+      throw FetchDataException('No Internet connection');
+    } on TimeoutException {
+      throw ApiNotRespondingException('Server is not responding');
     } catch (e) {
       print(e);
     }
@@ -90,6 +111,10 @@ class Auth {
         authNotifier.setLoggedIn(false);
         return false;
       }
+    } on SocketException {
+      throw FetchDataException('No Internet connection');
+    } on TimeoutException {
+      throw ApiNotRespondingException('Server is not responding');
     } catch (e) {
       print(e);
     }
@@ -103,6 +128,10 @@ class Auth {
       authNotifier.setLoggedIn(false);
       authNotifier.setPatient(Patient());
       return true;
+    } on SocketException {
+      throw FetchDataException('No Internet connection');
+    } on TimeoutException {
+      throw ApiNotRespondingException('Server is not responding');
     } catch (e) {
       print(e);
     }
