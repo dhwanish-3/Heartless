@@ -13,12 +13,19 @@ class ThemeNotifier extends ChangeNotifier {
   }
 
   ThemeData lightTheme = ThemeData(
-      brightness: Brightness.light,
-      primaryColor: Constants.primaryColor,
-      textTheme: Constants().textThemeLight);
+    brightness: Brightness.light,
+    primaryColor: Constants.primaryColor,
+    textTheme: Constants().textThemeLight,
+    canvasColor: Colors.white,
+    shadowColor: Colors.black,
+  );
+//* for widgets that have to alternate between white and black colors give them canvasColor and shadowColor fot the converse
 
   ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
-    primaryColor: Constants.darkPrimaryColor,
+    primaryColor: Constants.primaryColor,
+    textTheme: Constants().textThemeDark,
+    canvasColor: Colors.black,
+    shadowColor: Colors.white,
   );
 }

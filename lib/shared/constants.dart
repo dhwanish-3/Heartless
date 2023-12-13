@@ -6,29 +6,72 @@ class Constants {
   static const customGray = Color.fromARGB(255, 160, 168, 176);
 
   TextTheme textThemeLight = const TextTheme(
-    displayLarge: TextStyle(
-      fontSize: 30,
-      fontWeight: FontWeight.bold,
-      color: Colors.white,
-    ),
-    headlineMedium: TextStyle(
-      fontSize: 25,
-      fontWeight: FontWeight.bold,
-      color: Colors.black,
-    ),
-    labelMedium: TextStyle(
-      fontSize: 12,
-      color: primaryColor,
-    ),
-    bodyLarge: TextStyle(
-      color: customGray,
-      fontWeight: FontWeight.w600,
-      fontSize: 13,
-    ),
-    bodyMedium: TextStyle(
-      color: primaryColor,
-      fontWeight: FontWeight.w600,
-      fontSize: 14,
-    ),
-  );
+      displayLarge: TextStyle(
+        fontSize: 30,
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+      ),
+      headlineMedium: TextStyle(
+        fontSize: 25,
+        fontWeight: FontWeight.bold,
+        color: Colors.black,
+      ),
+      labelMedium: TextStyle(
+        color: customGray,
+        fontSize: 15,
+      ),
+      labelSmall: TextStyle(
+        color: customGray,
+        fontSize: 15,
+      ),
+      bodyLarge: TextStyle(
+        color: customGray,
+        fontWeight: FontWeight.w600,
+        fontSize: 13,
+      ),
+      bodyMedium: TextStyle(
+        color: Colors.black,
+        fontWeight: FontWeight.w400,
+        fontSize: 16,
+      ),
+      headlineSmall: TextStyle(
+        color: primaryColor,
+        fontWeight: FontWeight.w600,
+        fontSize: 16,
+      ));
+
+  TextTheme textThemeDark = const TextTheme(
+      displayLarge: TextStyle(
+        fontSize: 30,
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+      ),
+      headlineMedium: TextStyle(
+        fontSize: 25,
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+      ),
+      labelMedium: TextStyle(
+        color: customGray,
+        fontSize: 15,
+      ),
+      labelSmall: TextStyle(
+        color: primaryColor,
+        fontSize: 15,
+      ),
+      bodyLarge: TextStyle(
+        color: customGray,
+        fontWeight: FontWeight.w600,
+        fontSize: 13,
+      ),
+      bodyMedium: TextStyle(
+        color: Colors.black,
+        fontWeight: FontWeight.w400,
+        fontSize: 16,
+      ),
+      headlineSmall: TextStyle(
+        color: primaryColor,
+        fontWeight: FontWeight.w600,
+        fontSize: 16,
+      ));
 }

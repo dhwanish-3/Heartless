@@ -20,6 +20,7 @@ class GoogleButton extends StatelessWidget {
         decoration: BoxDecoration(
           border: Border.all(color: Constants.customGray),
           borderRadius: BorderRadius.circular(20),
+          color: Colors.white,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

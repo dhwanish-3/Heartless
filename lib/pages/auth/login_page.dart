@@ -150,7 +150,7 @@ class _LoginPageState extends State<LoginPage> {
                                       textAlign: TextAlign.start,
                                       style: Theme.of(context)
                                           .textTheme
-                                          .labelMedium),
+                                          .labelSmall),
                                 ],
                               ),
                             )
@@ -177,23 +177,15 @@ class _LoginPageState extends State<LoginPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text(
+                        Text(
                           "Don't have an account?",
-                          style: TextStyle(
-                            color: Constants.customGray,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 13,
-                          ),
+                          style: Theme.of(context).textTheme.labelMedium,
                         ),
                         TextButton(
                           onPressed: () {},
                           child: Text(
                             "Sign Up",
-                            style: TextStyle(
-                              color: Theme.of(context).primaryColor,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14,
-                            ),
+                            style: Theme.of(context).textTheme.headlineSmall,
                           ),
                         )
                       ],
