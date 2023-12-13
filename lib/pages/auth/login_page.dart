@@ -170,7 +170,7 @@ class _LoginPageState extends State<LoginPage> {
                               onTap: () async {
                                 submitForm();
                               },
-                              child: const RightButton()),
+                              child: const RightButton(text: 'Login')),
                         ],
                       ),
                     ),

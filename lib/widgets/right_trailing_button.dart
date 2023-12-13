@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class RightButton extends StatelessWidget {
-  const RightButton({super.key});
+  final String text;
+  const RightButton({super.key, required this.text});
 
   @override
   Widget build(BuildContext context) {
@@ -12,17 +13,14 @@ class RightButton extends StatelessWidget {
       width: screenWidth * 0.25,
       padding: const EdgeInsets.fromLTRB(20, 5, 10, 5),
       decoration: BoxDecoration(
-          // border: Border.all(
-          //   color: Constants().customGray,
-          // ),
           borderRadius: BorderRadius.circular(10),
           color: Theme.of(context).primaryColor),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          const Text(
-            'Login',
-            style: TextStyle(
+          Text(
+            text,
+            style: const TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
             ),

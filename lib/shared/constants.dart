@@ -25,9 +25,9 @@ class Constants {
         fontSize: 15,
       ),
       bodyLarge: TextStyle(
-        color: customGray,
+        color: Colors.black,
         fontWeight: FontWeight.w600,
-        fontSize: 13,
+        fontSize: 20,
       ),
       bodyMedium: TextStyle(
         color: Colors.black,
@@ -36,42 +36,53 @@ class Constants {
       ),
       headlineSmall: TextStyle(
         color: primaryColor,
+        fontWeight: FontWeight.w600,
+        fontSize: 16,
+      ),
+      titleSmall: TextStyle(
+        color: Colors.black,
         fontWeight: FontWeight.w600,
         fontSize: 16,
       ));
 
   TextTheme textThemeDark = const TextTheme(
-      displayLarge: TextStyle(
-        fontSize: 30,
-        fontWeight: FontWeight.bold,
-        color: Colors.white,
-      ),
-      headlineMedium: TextStyle(
-        fontSize: 25,
-        fontWeight: FontWeight.bold,
-        color: Colors.white,
-      ),
-      labelMedium: TextStyle(
-        color: customGray,
-        fontSize: 15,
-      ),
-      labelSmall: TextStyle(
-        color: primaryColor,
-        fontSize: 15,
-      ),
-      bodyLarge: TextStyle(
-        color: customGray,
-        fontWeight: FontWeight.w600,
-        fontSize: 13,
-      ),
-      bodyMedium: TextStyle(
-        color: Colors.black,
-        fontWeight: FontWeight.w400,
-        fontSize: 16,
-      ),
-      headlineSmall: TextStyle(
-        color: primaryColor,
-        fontWeight: FontWeight.w600,
-        fontSize: 16,
-      ));
+    displayLarge: TextStyle(
+      fontSize: 30,
+      fontWeight: FontWeight.bold,
+      color: Colors.white,
+    ),
+    headlineMedium: TextStyle(
+      fontSize: 25,
+      fontWeight: FontWeight.bold,
+      color: Colors.white,
+    ),
+    labelMedium: TextStyle(
+      color: customGray,
+      fontSize: 15,
+    ),
+    labelSmall: TextStyle(
+      color: primaryColor,
+      fontSize: 15,
+    ),
+    bodyLarge: TextStyle(
+      color: Colors.black,
+      fontWeight: FontWeight.w600,
+      fontSize: 25,
+    ),
+    bodyMedium: TextStyle(
+      color: Colors.black,
+      fontWeight: FontWeight.w400,
+      fontSize: 16,
+    ),
+    headlineSmall: TextStyle(
+      color: primaryColor,
+      fontWeight: FontWeight.w600,
+      fontSize: 16,
+    ),
+    titleSmall: TextStyle(
+      color: Colors.white,
+      fontWeight: FontWeight.w600,
+      fontSize: 16,
+    ),
+  );
 }

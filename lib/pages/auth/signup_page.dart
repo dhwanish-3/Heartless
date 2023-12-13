@@ -161,7 +161,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               onTap: () async {
                                 submitForm();
                               },
-                              child: const RightButton()),
+                              child: const RightButton(text: 'SignUp')),
                         ],
                       ),
                     ),
