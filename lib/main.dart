@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/pages/auth/login_page.dart';
+import 'package:heartless/pages/auth/signup_page.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
 import 'package:heartless/shared/provider/theme_provider.dart';
 import 'package:provider/provider.dart';
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
       theme: themeNotifier.lightTheme,
       darkTheme: themeNotifier.darkTheme,
       themeMode: ThemeNotifier.themeMode,
-      home: const LoginPage(),
+      home: const SignUpPage(),
     );
   }
 
