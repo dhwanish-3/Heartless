@@ -4,30 +4,33 @@ import "package:heartless/Backend/Auth/auth.dart";
 import "package:heartless/main.dart";
 import "package:heartless/shared/Models/patient.dart";
 import "package:heartless/shared/provider/auth_notifier.dart";
+import "package:heartless/shared/constants.dart";
 import "package:heartless/shared/provider/theme_provider.dart";
-import 'package:heartless/widgets/otp_input_field.dart';
+import 'package:heartless/widgets/google_button.dart';
 import "package:heartless/widgets/left_trailing_button.dart";
 import "package:heartless/widgets/right_trailing_button.dart";
-import "package:heartless/shared/provider/widget_provider.dart";
 import "package:heartless/widgets/text_input.dart";
-import 'package:heartless/widgets/email_phone_toggle.dart';
+import "package:heartless/shared/provider/widget_provider.dart";
 
-class ForgotPassPage extends StatefulWidget {
-  const ForgotPassPage({super.key});
+class CreatePassPage extends StatefulWidget {
+  const CreatePassPage({super.key});
 
   @override
-  State<ForgotPassPage> createState() => _ForgotPassPageState();
+  State<CreatePassPage> createState() => _CreatePassPageState();
 }
 
-class _ForgotPassPageState extends State<ForgotPassPage> {
+class _CreatePassPageState extends State<CreatePassPage> {
   final Auth _auth = Auth();
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   @override
   void dispose() {
     super.dispose();
+    _confirmPasswordController.dispose();
+    _passwordController.dispose();
   }
 
   @override
@@ -44,12 +47,18 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
         Provider.of<WidgetNotifier>(context, listen: false);
     final themeProvider = Provider.of<ThemeNotifier>(context);
     AuthNotifier authNotifier = Provider.of<AuthNotifier>(context);
+
+    Future<void> submitForm() async {
+      // todo
+    }
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Stack(
           children: [
             Positioned(
               left: 0,
+              // top: screenHeight * 0.6,
               bottom: 0,
               child: SvgPicture.asset(
                 'assets/Icons/blueHeart.svg',
@@ -87,29 +96,19 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
                     height: 20,
                   ),
                   Text(
-                    'Forgot Your Password?',
+                    'Create New Passsword',
                     style: Theme.of(context).textTheme.headlineMedium,
                   ),
-                  const SizedBox(
-                    height: 20,
-                  ),
+                  // const SizedBox(
+                  //   height: 20,
+                  // ),
                   SizedBox(
                     width: screenWidth * 0.8,
                     child: Text(
-                      '''Enter email or phone number we will send you a confirmation code''',
+                      'create new password to login',
                       style: Theme.of(context).textTheme.labelMedium,
                       textAlign: TextAlign.center,
                     ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Consumer<WidgetNotifier>(
-                    builder: (context, value, child) {
-                      return ToggleButton(
-                        emailPhoneToggle: widgetNotifier.emailPhoneToggle,
-                      );
-                    },
                   ),
                   const SizedBox(
                     height: 20,
@@ -118,25 +117,39 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
                     padding: const EdgeInsets.symmetric(
                       horizontal: 20,
                     ),
-                    child: Consumer<WidgetNotifier>(
-                      builder: (context, widgetNotifier, _) {
-                        return widgetNotifier.emailPhoneToggle
-                            ? TextFieldInput(
-                                textEditingController: _emailController,
-                                hintText: 'Enter your email',
-                                labelText: 'email',
-                                startIcon: 'assets/Icons/Email.svg',
-                                textInputType: TextInputType.emailAddress,
-                              )
-                            : TextFieldInput(
-                                textEditingController: _phoneController,
-                                hintText: 'Enter your phone number',
-                                labelText: 'phone',
-                                startIcon: 'assets/Icons/Email.svg',
-                                //! phone icon yet to be downloaded
-                                textInputType: TextInputType.phone,
-                              );
-                      },
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Consumer<WidgetNotifier>(
+                              builder: (context, value, child) {
+                            return TextFieldInput(
+                              textEditingController: _passwordController,
+                              hintText: 'Enter your password',
+                              labelText: 'password',
+                              startIcon: 'assets/Icons/lock.svg',
+                              endIcon: 'assets/Icons/eyeClosed.svg',
+                              endIconAlt: 'assets/Icons/eyeOpened.svg',
+                              passwordShown: widgetNotifier.passwordShown,
+                              textInputType: TextInputType.visiblePassword,
+                            );
+                          }),
+                          Consumer<WidgetNotifier>(
+                              builder: (context, value, child) {
+                            return TextFieldInput(
+                              textEditingController: _confirmPasswordController,
+                              hintText: 'Confirm your password',
+                              labelText: 'confirm password',
+                              startIcon: 'assets/Icons/lock.svg',
+                              endIcon: 'assets/Icons/eyeClosed.svg',
+                              endIconAlt: 'assets/Icons/eyeOpened.svg',
+                              passwordShown: widgetNotifier.passwordShown,
+                              textInputType: TextInputType.visiblePassword,
+                            );
+                          }),
+                        ],
+                      ),
                     ),
                   ),
                   Padding(
@@ -148,14 +161,17 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
                         GestureDetector(
                             onTap: () {}, child: const LeftButton()),
                         GestureDetector(
-                            onTap: () async {},
-                            child: const RightButton(text: 'Reset')),
+                            onTap: () async {
+                              submitForm();
+                            },
+                            child: const RightButton(text: 'Login')),
                       ],
                     ),
                   ),
-                  const SizedBox(
-                    height: 20,
-                  )
+                  // const SizedBox(
+                  //   height: 120,
+                  // ),
+                  //
                 ],
               ),
             ),
