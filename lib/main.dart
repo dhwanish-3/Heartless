@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heartless/pages/auth/create_password.dart';
 import 'package:heartless/pages/auth/forgot_password.dart';
 import 'package:heartless/pages/auth/login_page.dart';
 import 'package:heartless/pages/auth/signup_page.dart';
@@ -36,7 +37,7 @@ class MyApp extends StatelessWidget {
       theme: themeNotifier.lightTheme,
       darkTheme: themeNotifier.darkTheme,
       themeMode: ThemeNotifier.themeMode,
-      home: const VerificationPage(),
+      home: const CreatePassPage(),
     );
   }
 
