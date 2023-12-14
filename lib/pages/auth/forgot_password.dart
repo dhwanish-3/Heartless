@@ -9,21 +9,21 @@ import 'package:heartless/widgets/otp_input_field.dart';
 import "package:heartless/widgets/left_trailing_button.dart";
 import "package:heartless/widgets/right_trailing_button.dart";
 import "package:heartless/shared/provider/widget_provider.dart";
+import "package:heartless/widgets/text_input.dart";
+import 'package:heartless/widgets/email_phone_toggle.dart';
 
-class VerificationPage extends StatefulWidget {
-  const VerificationPage({super.key});
+class ForgotPassPage extends StatefulWidget {
+  const ForgotPassPage({super.key});
 
   @override
-  State<VerificationPage> createState() => _VerificationPageState();
+  State<ForgotPassPage> createState() => _ForgotPassPageState();
 }
 
-class _VerificationPageState extends State<VerificationPage> {
+class _ForgotPassPageState extends State<ForgotPassPage> {
   final Auth _auth = Auth();
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _otpController = TextEditingController();
-
-  //! must fetch userEmail from authNotifier
-  final userEmail = "dhwanish";
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
 
   @override
   void dispose() {
@@ -44,8 +44,8 @@ class _VerificationPageState extends State<VerificationPage> {
         Provider.of<WidgetNotifier>(context, listen: false);
     final themeProvider = Provider.of<ThemeNotifier>(context);
     AuthNotifier authNotifier = Provider.of<AuthNotifier>(context);
-
     return Scaffold(
+      //! currently scrolling is not permitted the reset button is not visible when onscreen keyboard appears
       resizeToAvoidBottomInset: false, //to prevent pixel overflow
       body: Stack(
         children: [
@@ -87,27 +87,57 @@ class _VerificationPageState extends State<VerificationPage> {
                   height: 20,
                 ),
                 Text(
-                  'Enter Verification Code',
+                  'Forgot Your Password?',
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
                 const SizedBox(
                   height: 20,
                 ),
-                Text(
-                  '''Enter code that we have sent to your email''',
-                  style: Theme.of(context).textTheme.labelMedium,
-                  textAlign: TextAlign.center,
-                ),
-                Text(
-                  "${userEmail.substring(0, 2)}********@gmail.com",
-                  style: Theme.of(context).textTheme.titleSmall,
+                SizedBox(
+                  width: screenWidth * 0.8,
+                  child: Text(
+                    '''Enter email or phone number we will send you a confirmation code''',
+                    style: Theme.of(context).textTheme.labelMedium,
+                    textAlign: TextAlign.center,
+                  ),
                 ),
                 const SizedBox(
                   height: 20,
                 ),
-                OtpWidget(otpController: _otpController),
+                Consumer<WidgetNotifier>(
+                  builder: (context, value, child) {
+                    return ToggleButton(
+                      emailPhoneToggle: widgetNotifier.emailPhoneToggle,
+                    );
+                  },
+                ),
                 const SizedBox(
                   height: 20,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                  ),
+                  child: Consumer<WidgetNotifier>(
+                    builder: (context, widgetNotifier, _) {
+                      return widgetNotifier.emailPhoneToggle
+                          ? TextFieldInput(
+                              textEditingController: _emailController,
+                              hintText: 'Enter your email',
+                              labelText: 'email',
+                              startIcon: 'assets/Icons/Email.svg',
+                              textInputType: TextInputType.emailAddress,
+                            )
+                          : TextFieldInput(
+                              textEditingController: _phoneController,
+                              hintText: 'Enter your phone number',
+                              labelText: 'phone',
+                              startIcon: 'assets/Icons/Email.svg',
+                              //! phone icon yet to be downloaded
+                              textInputType: TextInputType.phone,
+                            );
+                    },
+                  ),
                 ),
                 Padding(
                   padding:
@@ -118,7 +148,7 @@ class _VerificationPageState extends State<VerificationPage> {
                       GestureDetector(onTap: () {}, child: const LeftButton()),
                       GestureDetector(
                           onTap: () async {},
-                          child: const RightButton(text: 'Verify')),
+                          child: const RightButton(text: 'Reset')),
                     ],
                   ),
                 ),

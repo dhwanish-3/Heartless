@@ -6,7 +6,7 @@ import "package:heartless/shared/Models/patient.dart";
 import "package:heartless/shared/provider/auth_notifier.dart";
 import "package:heartless/shared/constants.dart";
 import "package:heartless/shared/provider/theme_provider.dart";
-import "package:heartless/widgets/GoogleButton.dart";
+import 'package:heartless/widgets/google_button.dart';
 import "package:heartless/widgets/left_trailing_button.dart";
 import "package:heartless/widgets/right_trailing_button.dart";
 import "package:heartless/widgets/text_input.dart";

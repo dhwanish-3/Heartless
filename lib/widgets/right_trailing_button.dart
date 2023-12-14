@@ -11,7 +11,7 @@ class RightButton extends StatelessWidget {
     return Container(
       height: 40,
       width: screenWidth * 0.25,
-      padding: const EdgeInsets.fromLTRB(20, 5, 10, 5),
+      padding: const EdgeInsets.fromLTRB(15, 5, 10, 5),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           color: Theme.of(context).primaryColor),
@@ -23,6 +23,7 @@ class RightButton extends StatelessWidget {
             style: const TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
+              fontSize: 16,
             ),
           ),
           SvgPicture.asset(

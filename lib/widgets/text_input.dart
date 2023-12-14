@@ -31,14 +31,15 @@ class TextFieldInput extends StatelessWidget {
     double containerWidth = 0.9 * screenWidth;
     WidgetNotifier widgetNotifier =
         Provider.of<WidgetNotifier>(context, listen: false);
+
     return Container(
       padding: const EdgeInsets.all(8.0),
-      width: containerWidth, // 80% of screen width
+      width: containerWidth, // 90% of screen width
       height: 70,
       child: TextField(
         cursorHeight: 19,
         controller: textEditingController,
-        keyboardType: TextInputType.name,
+        keyboardType: textInputType,
         obscureText: passwordShown,
         obscuringCharacter: '•',
         style: Theme.of(context).textTheme.bodyMedium,

@@ -31,6 +31,7 @@ class LeftButton extends StatelessWidget {
             style: TextStyle(
               color: Constants.customGray,
               fontWeight: FontWeight.bold,
+              fontSize: 15,
             ),
           ),
         ],

@@ -6,44 +6,45 @@ class Constants {
   static const customGray = Color.fromARGB(255, 160, 168, 176);
 
   TextTheme textThemeLight = const TextTheme(
-      displayLarge: TextStyle(
-        fontSize: 30,
-        fontWeight: FontWeight.bold,
-        color: Colors.white,
-      ),
-      headlineMedium: TextStyle(
-        fontSize: 25,
-        fontWeight: FontWeight.bold,
-        color: Colors.black,
-      ),
-      labelMedium: TextStyle(
-        color: customGray,
-        fontSize: 15,
-      ),
-      labelSmall: TextStyle(
-        color: customGray,
-        fontSize: 15,
-      ),
-      bodyLarge: TextStyle(
-        color: Colors.black,
-        fontWeight: FontWeight.w600,
-        fontSize: 20,
-      ),
-      bodyMedium: TextStyle(
-        color: Colors.black,
-        fontWeight: FontWeight.w400,
-        fontSize: 16,
-      ),
-      headlineSmall: TextStyle(
-        color: primaryColor,
-        fontWeight: FontWeight.w600,
-        fontSize: 16,
-      ),
-      titleSmall: TextStyle(
-        color: Colors.black,
-        fontWeight: FontWeight.w600,
-        fontSize: 16,
-      ));
+    displayLarge: TextStyle(
+      fontSize: 30,
+      fontWeight: FontWeight.bold,
+      color: Colors.white,
+    ),
+    headlineMedium: TextStyle(
+      fontSize: 25,
+      fontWeight: FontWeight.bold,
+      color: Colors.black,
+    ),
+    labelMedium: TextStyle(
+      color: customGray,
+      fontSize: 15,
+    ),
+    labelSmall: TextStyle(
+      color: customGray,
+      fontSize: 15,
+    ),
+    bodyLarge: TextStyle(
+      color: Colors.black,
+      fontWeight: FontWeight.w600,
+      fontSize: 20,
+    ),
+    bodyMedium: TextStyle(
+      color: Colors.black,
+      fontWeight: FontWeight.w400,
+      fontSize: 16,
+    ),
+    headlineSmall: TextStyle(
+      color: primaryColor,
+      fontWeight: FontWeight.w600,
+      fontSize: 16,
+    ),
+    titleSmall: TextStyle(
+      color: Colors.black,
+      fontWeight: FontWeight.w600,
+      fontSize: 16,
+    ),
+  );
 
   TextTheme textThemeDark = const TextTheme(
     displayLarge: TextStyle(

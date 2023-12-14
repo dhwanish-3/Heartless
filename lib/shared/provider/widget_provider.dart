@@ -16,4 +16,12 @@ class WidgetNotifier with ChangeNotifier {
     _passwordShown = passwordShown;
     notifyListeners();
   }
+
+  //for swtiching the toggle button
+  bool _emailPhoneToggle = true;
+  bool get emailPhoneToggle => _emailPhoneToggle;
+  void toggleEmailPhone() {
+    _emailPhoneToggle = !_emailPhoneToggle;
+    notifyListeners();
+  }
 }
