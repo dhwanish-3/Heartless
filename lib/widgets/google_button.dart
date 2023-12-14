@@ -18,8 +18,9 @@ class GoogleButton extends StatelessWidget {
         width: screenWidth * 0.7,
         height: 45,
         decoration: BoxDecoration(
-          border: Border.all(color: Constants().customGray),
+          border: Border.all(color: Constants.customGray),
           borderRadius: BorderRadius.circular(20),
+          color: Colors.white,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

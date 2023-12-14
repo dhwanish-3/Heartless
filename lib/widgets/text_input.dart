@@ -31,29 +31,25 @@ class TextFieldInput extends StatelessWidget {
     double containerWidth = 0.9 * screenWidth;
     WidgetNotifier widgetNotifier =
         Provider.of<WidgetNotifier>(context, listen: false);
+
     return Container(
       padding: const EdgeInsets.all(8.0),
-      width: containerWidth, // 80% of screen width
+      width: containerWidth, // 90% of screen width
       height: 70,
       child: TextField(
         cursorHeight: 19,
         controller: textEditingController,
-        keyboardType: TextInputType.name,
+        keyboardType: textInputType,
         obscureText: passwordShown,
         obscuringCharacter: '•',
-        style: const TextStyle(
-          fontSize: 15,
-        ),
+        style: Theme.of(context).textTheme.bodyMedium,
         decoration: InputDecoration(
+          filled: true,
+          fillColor: Colors.white,
           labelText: labelText,
-          labelStyle: TextStyle(
-              color: Constants().customGray, fontSize: 15), // Text color
+          labelStyle: Theme.of(context).textTheme.labelMedium,
           hintText: hintText,
-          hintStyle: TextStyle(
-            fontSize: 15,
-            color: Constants().customGray,
-          ),
-
+          hintStyle: Theme.of(context).textTheme.labelMedium,
           prefixIcon: Padding(
             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
             child: SvgPicture.asset(
@@ -77,10 +73,8 @@ class TextFieldInput extends StatelessWidget {
                   ),
                 )
               : null,
-
           border: const OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(15))),
-
           focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(
                 color: Theme.of(context).primaryColor,

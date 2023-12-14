@@ -13,11 +13,11 @@ class LeftButton extends StatelessWidget {
       width: screenWidth * 0.25,
       padding: const EdgeInsets.fromLTRB(10, 5, 20, 5),
       decoration: BoxDecoration(
+        color: Theme.of(context).canvasColor,
         border: Border.all(
           color: Theme.of(context).primaryColor,
         ),
         borderRadius: BorderRadius.circular(10),
-        color: Colors.white,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -26,11 +26,12 @@ class LeftButton extends StatelessWidget {
             'assets/Icons/leftNav.svg',
             height: 20,
           ),
-          Text(
+          const Text(
             'Back',
             style: TextStyle(
-              color: Constants().customGray,
+              color: Constants.customGray,
               fontWeight: FontWeight.bold,
+              fontSize: 15,
             ),
           ),
         ],

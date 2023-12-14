@@ -4,32 +4,32 @@ import "package:heartless/Backend/Auth/auth.dart";
 import "package:heartless/main.dart";
 import "package:heartless/shared/Models/patient.dart";
 import "package:heartless/shared/provider/auth_notifier.dart";
-import "package:heartless/shared/constants.dart";
 import "package:heartless/shared/provider/theme_provider.dart";
-import 'package:heartless/widgets/google_button.dart';
 import "package:heartless/widgets/left_trailing_button.dart";
 import "package:heartless/widgets/right_trailing_button.dart";
 import "package:heartless/widgets/text_input.dart";
 import "package:heartless/shared/provider/widget_provider.dart";
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class SignUpPage extends StatefulWidget {
+  const SignUpPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<SignUpPage> createState() => _SignUpPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _SignUpPageState extends State<SignUpPage> {
   final Auth _auth = Auth();
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
 
   @override
   void dispose() {
     super.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _nameController.dispose();
   }
 
   @override
@@ -67,10 +67,10 @@ class _LoginPageState extends State<LoginPage> {
       body: Stack(
         children: [
           Positioned(
-            left: 0,
+            right: 0,
             bottom: 0,
             child: SvgPicture.asset(
-              'assets/Icons/blueHeart.svg',
+              'assets/Icons/heartRightbottom.svg',
               height: screenHeight * 0.2,
             ),
           ),
@@ -96,14 +96,14 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SvgPicture.asset(
-                      'assets/illustrations/login.svg',
+                      'assets/illustrations/signup.svg',
                       height: svgHeight,
                     ),
                     const SizedBox(
                       height: 20,
                     ),
                     Text(
-                      'Login',
+                      'SignUp',
                       style: Theme.of(context).textTheme.headlineMedium,
                     ),
                     const SizedBox(
@@ -118,6 +118,13 @@ class _LoginPageState extends State<LoginPage> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
+                            TextFieldInput(
+                              textEditingController: _nameController,
+                              hintText: 'Enter your email',
+                              labelText: 'name',
+                              startIcon: 'assets/Icons/user.svg',
+                              textInputType: TextInputType.name,
+                            ),
                             TextFieldInput(
                               textEditingController: _emailController,
                               hintText: 'Enter your email',
@@ -138,22 +145,6 @@ class _LoginPageState extends State<LoginPage> {
                                 textInputType: TextInputType.visiblePassword,
                               );
                             }),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 5,
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Text('Forgot Password?',
-                                      textAlign: TextAlign.start,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .labelSmall),
-                                ],
-                              ),
-                            )
                           ],
                         ),
                       ),
@@ -170,7 +161,7 @@ class _LoginPageState extends State<LoginPage> {
                               onTap: () async {
                                 submitForm();
                               },
-                              child: const RightButton(text: 'Login')),
+                              child: const RightButton(text: 'SignUp')),
                         ],
                       ),
                     ),
@@ -178,49 +169,18 @@ class _LoginPageState extends State<LoginPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "Don't have an account?",
+                          "Already have an account?",
                           style: Theme.of(context).textTheme.labelMedium,
                         ),
                         TextButton(
                           onPressed: () {},
                           child: Text(
-                            "Sign Up",
+                            "Log in",
                             style: Theme.of(context).textTheme.headlineSmall,
                           ),
                         )
                       ],
                     ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(30, 0, 10, 0),
-                            child: Divider(
-                              thickness: 1,
-                              color: Colors.grey[300],
-                            ),
-                          ),
-                        ),
-                        const Text(
-                          'OR',
-                          style: TextStyle(
-                            color: Constants.customGray,
-                          ),
-                        ),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(10, 0, 30, 0),
-                            child: Divider(
-                              thickness: 1,
-                              color: Colors.grey[300],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: GoogleButton(screenWidth: screenWidth)),
                     const SizedBox(
                       height: 20,
                     )
