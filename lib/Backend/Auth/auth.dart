@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import 'package:heartless/services/app_exceptions.dart';
+import 'package:heartless/services/exceptions/app_exceptions.dart';
 import 'package:heartless/shared/Models/patient.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
 
