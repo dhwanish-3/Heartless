@@ -1,23 +1,24 @@
-class Patient {
+class Doctor {
   String uid = '';
-  String name = 'hari';
+  String name = 'doctor';
+  // todo: add a default image for doctor
   String imageUrl = 'https://i.imgur.com/BoN9kdC.png';
   String email = '';
   String phone = '';
   String password = '';
-  List<String> nurses = [];
-  List<String> doctors = [];
+  List<String> patients = []; // list of patients handled
+  List<String> doctors = []; // list of nurses reporting
 
-  Patient();
+  Doctor();
 
-  Patient.fromMap(Map<String, dynamic> map) {
+  Doctor.fromMap(Map<String, dynamic> map) {
     uid = map['uid'];
     name = map['name'];
     imageUrl = map['imageUrl'];
     email = map['email'];
     phone = map['phone'];
     password = map['password'];
-    nurses = map['nurses'] is Iterable ? List.from(map['nurses']) : [];
+    patients = map['patients'] is Iterable ? List.from(map['patients']) : [];
     doctors = map['doctors'] is Iterable ? List.from(map['doctors']) : [];
   }
 
@@ -29,7 +30,7 @@ class Patient {
       'email': email,
       'phone': phone,
       'password': password,
-      'nurses': nurses,
+      'patients': patients,
       'doctors': doctors,
     };
   }
