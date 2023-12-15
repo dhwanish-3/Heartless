@@ -10,6 +10,7 @@ import 'package:heartless/shared/provider/auth_notifier.dart';
 class Auth {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   static const Duration timeLimit = Duration(seconds: 10);
+  String? verificationId;
 
   // get patient details from firebase
   Future<bool> getPateintDetails(AuthNotifier authNotifier) async {
@@ -22,6 +23,8 @@ class Auth {
               authNotifier.setPatient(Patient.fromMap(value.data()!)))
           .timeout(timeLimit);
       return true;
+    } on FirebaseAuthException {
+      throw UnAutherizedException();
     } on SocketException {
       throw FetchDataException('No Internet Connection');
     } on TimeoutException {
@@ -41,6 +44,8 @@ class Auth {
           .set(authNotifier.patient.toMap())
           .timeout(timeLimit);
       return true;
+    } on FirebaseAuthException {
+      throw UnAutherizedException();
     } on SocketException {
       throw FetchDataException('No Internet Connection');
     } on TimeoutException {
@@ -70,6 +75,8 @@ class Auth {
         authNotifier.setLoggedIn(false);
         return false;
       }
+    } on FirebaseAuthException {
+      throw UnAutherizedException();
     } on SocketException {
       throw FetchDataException('No Internet Connection');
     } on TimeoutException {
@@ -93,6 +100,8 @@ class Auth {
       await setPateintDetails(authNotifier).timeout(timeLimit);
       authNotifier.setLoggedIn(true);
       return true;
+    } on FirebaseAuthException {
+      throw UnAutherizedException();
     } on SocketException {
       throw FetchDataException('No Internet Connection');
     } on TimeoutException {
@@ -116,6 +125,8 @@ class Auth {
         authNotifier.setLoggedIn(false);
         return false;
       }
+    } on FirebaseAuthException {
+      throw UnAutherizedException();
     } on SocketException {
       throw FetchDataException('No Internet Connection');
     } on TimeoutException {
@@ -133,6 +144,8 @@ class Auth {
       authNotifier.setLoggedIn(false);
       authNotifier.setPatient(Patient());
       return true;
+    } on FirebaseAuthException {
+      throw UnAutherizedException();
     } on SocketException {
       throw FetchDataException('No Internet Connection');
     } on TimeoutException {
@@ -151,6 +164,37 @@ class Auth {
           .sendPasswordResetEmail(email: authNotifier.patient.email.toString())
           .timeout(timeLimit);
       return true;
+    } on FirebaseAuthException {
+      throw UnAutherizedException();
+    } on SocketException {
+      throw FetchDataException('No Internet Connection');
+    } on TimeoutException {
+      throw ApiNotRespondingException('Server is not responding');
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return false;
+  }
+
+  // send password reset message to phone number
+  Future<bool> sendPasswordResetMessagetoPhone(
+      AuthNotifier authNotifier) async {
+    try {
+      await _auth.verifyPhoneNumber(
+          phoneNumber: authNotifier.patient.phone,
+          verificationCompleted: (_) {},
+          verificationFailed: (firebaseException) {
+            throw firebaseException;
+          },
+          codeSent: (String vID, int? token) {
+            verificationId = vID;
+          },
+          codeAutoRetrievalTimeout: (e) {
+            throw TimeoutException;
+          });
+      return true;
+    } on FirebaseAuthException {
+      throw UnAutherizedException();
     } on SocketException {
       throw FetchDataException('No Internet Connection');
     } on TimeoutException {
@@ -172,6 +216,8 @@ class Auth {
         return false;
       }
       return true;
+    } on FirebaseAuthException {
+      throw UnAutherizedException();
     } on SocketException {
       throw FetchDataException('No Internet Connection');
     } on TimeoutException {
@@ -189,6 +235,8 @@ class Auth {
           .confirmPasswordReset(code: code, newPassword: newPassword)
           .timeout(timeLimit);
       return true;
+    } on FirebaseAuthException {
+      throw UnAutherizedException();
     } on SocketException {
       throw FetchDataException('No Internet Connection');
     } on TimeoutException {
