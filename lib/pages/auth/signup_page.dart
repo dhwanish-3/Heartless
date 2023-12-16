@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter_svg/svg.dart";
-import "package:heartless/Backend/Auth/auth.dart";
+import 'package:heartless/backend/auth/auth.dart';
 import "package:heartless/main.dart";
 import "package:heartless/shared/Models/patient.dart";
 import "package:heartless/shared/provider/auth_notifier.dart";
@@ -44,23 +44,36 @@ class _SignUpPageState extends State<SignUpPage> {
     double screenWidth = MediaQuery.of(context).size.width;
     WidgetNotifier widgetNotifier =
         Provider.of<WidgetNotifier>(context, listen: false);
-    final themeProvider = Provider.of<ThemeNotifier>(context);
-    AuthNotifier authNotifier = Provider.of<AuthNotifier>(context);
+    final themeProvider = Provider.of<ThemeNotifier>(context, listen: false);
+    AuthNotifier authNotifier =
+        Provider.of<AuthNotifier>(context, listen: false);
 
-    Future<void> submitForm() async {
+    Future<bool> submitForm() async {
       if (_formKey.currentState!.validate()) {
         _formKey.currentState!.save();
-        try {
-          Patient? patient = Patient();
-          patient.email = _emailController.text;
-          patient.password = _passwordController.text;
-          authNotifier.setPatient(patient);
-          await _auth.loginPatient(authNotifier);
-          print('Logged in${authNotifier.patient.uid}');
-        } catch (e) {
-          print(e);
-        }
+        Patient? patient = Patient();
+        patient.email = _emailController.text;
+        patient.password = _passwordController.text;
+        authNotifier.setPatient(patient);
+        bool success = await _auth.signUpPatient(authNotifier);
+        debugPrint('Signed up ${authNotifier.patient.uid}');
+        return success;
+      } else {
+        return false;
       }
+    }
+
+    void goBack() {
+      Navigator.pop(
+          context); //! idk what happens if this is the first page i.e. nothing to pop
+    }
+
+    void goToHome() {
+      Navigator.pushNamed(context, '/userhome'); // todo : add correct name
+    }
+
+    void goToLoginPage() {
+      Navigator.pushNamed(context, '/login'); // todo : add correct name
     }
 
     return Scaffold(
@@ -156,10 +169,12 @@ class _SignUpPageState extends State<SignUpPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           GestureDetector(
-                              onTap: () {}, child: const LeftButton()),
+                              onTap: goBack, child: const LeftButton()),
                           GestureDetector(
                               onTap: () async {
-                                submitForm();
+                                if (await submitForm()) {
+                                  goToHome();
+                                }
                               },
                               child: const RightButton(text: 'SignUp')),
                         ],
@@ -173,7 +188,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           style: Theme.of(context).textTheme.labelMedium,
                         ),
                         TextButton(
-                          onPressed: () {},
+                          onPressed: goToLoginPage,
                           child: Text(
                             "Log in",
                             style: Theme.of(context).textTheme.headlineSmall,
