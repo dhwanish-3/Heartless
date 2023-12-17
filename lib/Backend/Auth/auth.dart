@@ -69,9 +69,15 @@ class Auth {
       User? user = _auth.currentUser;
       if (user != null) {
         authNotifier.patient.uid = user.uid;
-        await getPateintDetails(authNotifier).timeout(_timeLimit);
-        authNotifier.setLoggedIn(true);
-        return true;
+        bool success =
+            await getPateintDetails(authNotifier).timeout(_timeLimit);
+        if (success) {
+          authNotifier.setLoggedIn(true);
+          return true;
+        } else {
+          await _auth.signOut();
+          return false;
+        }
       } else {
         authNotifier.setLoggedIn(false);
         return false;
@@ -98,9 +104,15 @@ class Auth {
           .then((value) => authNotifier.patient.uid = value.user!.uid)
           .timeout(_timeLimit);
 
-      await setPateintDetails(authNotifier).timeout(_timeLimit);
-      authNotifier.setLoggedIn(true);
-      return true;
+      bool success = await setPateintDetails(authNotifier).timeout(_timeLimit);
+      if (success) {
+        authNotifier.setLoggedIn(true);
+        return true;
+      } else {
+        await _auth // ! Let us hope that this never happens
+            .signOut(); // !i.e. user created at auth but not able to set to firestore
+        return false;
+      }
     } on FirebaseAuthException {
       throw UnAutherizedException();
     } on SocketException {
