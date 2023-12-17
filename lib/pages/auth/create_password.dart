@@ -76,7 +76,6 @@ class _CreatePassPageState extends State<CreatePassPage> {
           children: [
             Positioned(
               left: 0,
-              // top: screenHeight * 0.6,
               bottom: 0,
               child: SvgPicture.asset(
                 'assets/Icons/blueHeart.svg',

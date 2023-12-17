@@ -128,20 +128,10 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
                   SizedBox(
                     width: screenWidth * 0.8,
                     child: Text(
-                      '''Enter email or phone number we will send you a confirmation code''',
+                      '''Enter email we will send you a confirmation code''',
                       style: Theme.of(context).textTheme.labelMedium,
                       textAlign: TextAlign.center,
                     ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Consumer<WidgetNotifier>(
-                    builder: (context, value, child) {
-                      return ToggleButton(
-                        emailPhoneToggle: widgetNotifier.emailPhoneToggle,
-                      );
-                    },
                   ),
                   const SizedBox(
                     height: 20,
@@ -150,25 +140,12 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
                     padding: const EdgeInsets.symmetric(
                       horizontal: 20,
                     ),
-                    child: Consumer<WidgetNotifier>(
-                      builder: (context, widgetNotifier, _) {
-                        return widgetNotifier.emailPhoneToggle
-                            ? TextFieldInput(
-                                textEditingController: _emailController,
-                                hintText: 'Enter your email',
-                                labelText: 'email',
-                                startIcon: 'assets/Icons/Email.svg',
-                                textInputType: TextInputType.emailAddress,
-                              )
-                            : TextFieldInput(
-                                textEditingController: _phoneController,
-                                hintText: 'Enter your phone number',
-                                labelText: 'phone',
-                                startIcon: 'assets/Icons/Email.svg',
-                                //! phone icon yet to be downloaded
-                                textInputType: TextInputType.phone,
-                              );
-                      },
+                    child: TextFieldInput(
+                      textEditingController: _emailController,
+                      hintText: 'Enter your email',
+                      labelText: 'email',
+                      startIcon: 'assets/Icons/Email.svg',
+                      textInputType: TextInputType.emailAddress,
                     ),
                   ),
                   Padding(
