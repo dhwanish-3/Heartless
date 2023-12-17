@@ -9,8 +9,9 @@ import 'package:heartless/shared/provider/auth_notifier.dart';
 
 class Auth {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  static const Duration timeLimit = Duration(seconds: 10);
-  String? verificationId;
+  static const Duration _timeLimit = Duration(seconds: 10);
+  String? _verificationId;
+  String? _otp;
 
   // get patient details from firebase
   Future<bool> getPateintDetails(AuthNotifier authNotifier) async {
@@ -21,7 +22,7 @@ class Auth {
           .get()
           .then((value) =>
               authNotifier.setPatient(Patient.fromMap(value.data()!)))
-          .timeout(timeLimit);
+          .timeout(_timeLimit);
       return true;
     } on FirebaseAuthException {
       throw UnAutherizedException();
@@ -42,7 +43,7 @@ class Auth {
           .collection('Patients')
           .doc(authNotifier.patient.uid)
           .set(authNotifier.patient.toMap())
-          .timeout(timeLimit);
+          .timeout(_timeLimit);
       return true;
     } on FirebaseAuthException {
       throw UnAutherizedException();
@@ -61,16 +62,22 @@ class Auth {
     try {
       await _auth
           .signInWithEmailAndPassword(
-              email: authNotifier.patient.email!,
-              password: authNotifier.patient.password!)
-          .timeout(timeLimit);
+              email: authNotifier.patient.email,
+              password: authNotifier.patient.password)
+          .timeout(_timeLimit);
 
       User? user = _auth.currentUser;
       if (user != null) {
         authNotifier.patient.uid = user.uid;
-        await getPateintDetails(authNotifier).timeout(timeLimit);
-        authNotifier.setLoggedIn(true);
-        return true;
+        bool success =
+            await getPateintDetails(authNotifier).timeout(_timeLimit);
+        if (success) {
+          authNotifier.setLoggedIn(true);
+          return true;
+        } else {
+          await _auth.signOut();
+          return false;
+        }
       } else {
         authNotifier.setLoggedIn(false);
         return false;
@@ -92,14 +99,20 @@ class Auth {
     try {
       await _auth
           .createUserWithEmailAndPassword(
-              email: authNotifier.patient.email!,
-              password: authNotifier.patient.password!)
+              email: authNotifier.patient.email,
+              password: authNotifier.patient.password)
           .then((value) => authNotifier.patient.uid = value.user!.uid)
-          .timeout(timeLimit);
+          .timeout(_timeLimit);
 
-      await setPateintDetails(authNotifier).timeout(timeLimit);
-      authNotifier.setLoggedIn(true);
-      return true;
+      bool success = await setPateintDetails(authNotifier).timeout(_timeLimit);
+      if (success) {
+        authNotifier.setLoggedIn(true);
+        return true;
+      } else {
+        await _auth // ! Let us hope that this never happens
+            .signOut(); // !i.e. user created at auth but not able to set to firestore
+        return false;
+      }
     } on FirebaseAuthException {
       throw UnAutherizedException();
     } on SocketException {
@@ -118,7 +131,7 @@ class Auth {
       User? user = _auth.currentUser;
       if (user != null) {
         authNotifier.patient.uid = user.uid;
-        await getPateintDetails(authNotifier).timeout(timeLimit);
+        await getPateintDetails(authNotifier).timeout(_timeLimit);
         authNotifier.setLoggedIn(true);
         return true;
       } else {
@@ -140,7 +153,7 @@ class Auth {
   // logout for patient
   Future<bool> logoutPatient(AuthNotifier authNotifier) async {
     try {
-      await _auth.signOut().timeout(timeLimit);
+      await _auth.signOut().timeout(_timeLimit);
       authNotifier.setLoggedIn(false);
       authNotifier.setPatient(Patient());
       return true;
@@ -162,7 +175,7 @@ class Auth {
     try {
       await _auth
           .sendPasswordResetEmail(email: authNotifier.patient.email.toString())
-          .timeout(timeLimit);
+          .timeout(_timeLimit);
       return true;
     } on FirebaseAuthException {
       throw UnAutherizedException();
@@ -187,7 +200,7 @@ class Auth {
             throw firebaseException;
           },
           codeSent: (String vID, int? token) {
-            verificationId = vID;
+            _verificationId = vID;
           },
           codeAutoRetrievalTimeout: (e) {
             throw TimeoutException;
@@ -211,10 +224,11 @@ class Auth {
       //! Really do have a doubt on which method to use for verification
       //! verifyPasswordResetCode or confirmPasswordReset
       String email =
-          await _auth.verifyPasswordResetCode(code).timeout(timeLimit);
+          await _auth.verifyPasswordResetCode(code).timeout(_timeLimit);
       if (email != authNotifier.patient.email) {
         return false;
       }
+      _otp = code; // saving it for later use
       return true;
     } on FirebaseAuthException {
       throw UnAutherizedException();
@@ -229,12 +243,16 @@ class Auth {
   }
 
   // set new password
-  Future<bool> setNewPassword(String code, String newPassword) async {
+  Future<bool> setNewPassword(String newPassword) async {
     try {
-      _auth
-          .confirmPasswordReset(code: code, newPassword: newPassword)
-          .timeout(timeLimit);
-      return true;
+      if (_otp != null) {
+        _auth
+            .confirmPasswordReset(code: _otp!, newPassword: newPassword)
+            .timeout(_timeLimit);
+        return true;
+      } else {
+        return false;
+      }
     } on FirebaseAuthException {
       throw UnAutherizedException();
     } on SocketException {

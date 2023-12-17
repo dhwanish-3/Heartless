@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter_svg/svg.dart";
-import "package:heartless/Backend/Auth/auth.dart";
+import 'package:heartless/backend/auth/auth.dart';
 import "package:heartless/main.dart";
 import "package:heartless/shared/Models/patient.dart";
 import "package:heartless/shared/provider/auth_notifier.dart";
@@ -28,6 +28,8 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
   @override
   void dispose() {
     super.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
   }
 
   @override
@@ -42,8 +44,38 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
     double screenWidth = MediaQuery.of(context).size.width;
     WidgetNotifier widgetNotifier =
         Provider.of<WidgetNotifier>(context, listen: false);
-    final themeProvider = Provider.of<ThemeNotifier>(context);
-    AuthNotifier authNotifier = Provider.of<AuthNotifier>(context);
+    final themeProvider = Provider.of<ThemeNotifier>(context, listen: false);
+    AuthNotifier authNotifier =
+        Provider.of<AuthNotifier>(context, listen: false);
+
+    Future<bool> submitForm() async {
+      if (_formKey.currentState!.validate()) {
+        _formKey.currentState!.save();
+        Patient? patient = Patient();
+        patient.email = _emailController.text;
+        patient.phone = _phoneController.text;
+        authNotifier.setPatient(patient);
+        bool success = false;
+        if (widgetNotifier.emailPhoneToggle) {
+          success = await _auth.sendPasswordResetEmail(authNotifier);
+        } else {
+          success = await _auth.sendPasswordResetMessagetoPhone(authNotifier);
+        }
+        return success;
+      } else {
+        return false;
+      }
+    }
+
+    void goBack() {
+      Navigator.pop(
+          context); //! idk what happens if this is the first page i.e. nothing to pop
+    }
+
+    void goToVerificationPage() {
+      Navigator.pushNamed(context, '/verification'); // todo : add correct name
+    }
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Stack(
@@ -123,9 +155,13 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         GestureDetector(
-                            onTap: () {}, child: const LeftButton()),
+                            onTap: goBack, child: const LeftButton()),
                         GestureDetector(
-                            onTap: () async {},
+                            onTap: () async {
+                              if (await submitForm()) {
+                                goToVerificationPage();
+                              }
+                            },
                             child: const RightButton(text: 'Reset')),
                       ],
                     ),

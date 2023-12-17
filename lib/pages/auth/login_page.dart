@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter_svg/svg.dart";
-import "package:heartless/Backend/Auth/auth.dart";
+import 'package:heartless/backend/auth/auth.dart';
 import "package:heartless/main.dart";
 import "package:heartless/shared/Models/patient.dart";
 import "package:heartless/shared/provider/auth_notifier.dart";
@@ -47,20 +47,32 @@ class _LoginPageState extends State<LoginPage> {
     final themeProvider = Provider.of<ThemeNotifier>(context);
     AuthNotifier authNotifier = Provider.of<AuthNotifier>(context);
 
-    Future<void> submitForm() async {
+    Future<bool> submitForm() async {
       if (_formKey.currentState!.validate()) {
         _formKey.currentState!.save();
-        try {
-          Patient? patient = Patient();
-          patient.email = _emailController.text;
-          patient.password = _passwordController.text;
-          authNotifier.setPatient(patient);
-          await _auth.loginPatient(authNotifier);
-          print('Logged in${authNotifier.patient.uid}');
-        } catch (e) {
-          print(e);
-        }
+        Patient? patient = Patient();
+        patient.email = _emailController.text;
+        patient.password = _passwordController.text;
+        authNotifier.setPatient(patient);
+        bool success = await _auth.loginPatient(authNotifier);
+        debugPrint('Logged in${authNotifier.patient.uid}');
+        return success;
+      } else {
+        return false;
       }
+    }
+
+    void goBack() {
+      Navigator.pop(
+          context); //! idk what happens if this is the first page i.e. nothing to pop
+    }
+
+    void goToHome() {
+      Navigator.pushNamed(context, '/userhome'); // todo : add correct name
+    }
+
+    void goToSignUpPage() {
+      Navigator.pushNamed(context, '/login'); // todo : add correct name
     }
 
     return Scaffold(
@@ -165,10 +177,12 @@ class _LoginPageState extends State<LoginPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           GestureDetector(
-                              onTap: () {}, child: const LeftButton()),
+                              onTap: goBack, child: const LeftButton()),
                           GestureDetector(
                               onTap: () async {
-                                submitForm();
+                                if (await submitForm()) {
+                                  goToHome();
+                                }
                               },
                               child: const RightButton(text: 'Login')),
                         ],
@@ -182,7 +196,7 @@ class _LoginPageState extends State<LoginPage> {
                           style: Theme.of(context).textTheme.labelMedium,
                         ),
                         TextButton(
-                          onPressed: () {},
+                          onPressed: goToSignUpPage,
                           child: Text(
                             "Sign Up",
                             style: Theme.of(context).textTheme.headlineSmall,

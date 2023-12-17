@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter_svg/svg.dart";
-import "package:heartless/Backend/Auth/auth.dart";
+import 'package:heartless/backend/auth/auth.dart';
 import "package:heartless/main.dart";
 import "package:heartless/shared/Models/patient.dart";
 import "package:heartless/shared/provider/auth_notifier.dart";
@@ -48,8 +48,26 @@ class _CreatePassPageState extends State<CreatePassPage> {
     final themeProvider = Provider.of<ThemeNotifier>(context);
     AuthNotifier authNotifier = Provider.of<AuthNotifier>(context);
 
-    Future<void> submitForm() async {
-      // todo
+    Future<bool> submitForm() async {
+      if (_formKey.currentState!.validate()) {
+        if (_passwordController.text != _confirmPasswordController.text) {
+          return false;
+        }
+        _formKey.currentState!.save();
+        bool success = await _auth.setNewPassword(_passwordController.text);
+        return success;
+      } else {
+        return false;
+      }
+    }
+
+    void goBack() {
+      Navigator.pop(
+          context); //! idk what happens if this is the first page i.e. nothing to pop
+    }
+
+    void goToLoginPage() {
+      Navigator.pushNamed(context, '/login'); // todo : add correct name
     }
 
     return Scaffold(
@@ -158,10 +176,12 @@ class _CreatePassPageState extends State<CreatePassPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         GestureDetector(
-                            onTap: () {}, child: const LeftButton()),
+                            onTap: goBack, child: const LeftButton()),
                         GestureDetector(
                             onTap: () async {
-                              submitForm();
+                              if (await submitForm()) {
+                                goToLoginPage();
+                              }
                             },
                             child: const RightButton(text: 'Login')),
                       ],

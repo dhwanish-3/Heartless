@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter_svg/svg.dart";
-import "package:heartless/Backend/Auth/auth.dart";
+import 'package:heartless/backend/auth/auth.dart';
 import "package:heartless/main.dart";
 import "package:heartless/shared/Models/patient.dart";
 import "package:heartless/shared/provider/auth_notifier.dart";
@@ -44,6 +44,26 @@ class _VerificationPageState extends State<VerificationPage> {
         Provider.of<WidgetNotifier>(context, listen: false);
     final themeProvider = Provider.of<ThemeNotifier>(context);
     AuthNotifier authNotifier = Provider.of<AuthNotifier>(context);
+
+    Future<bool> submitForm() async {
+      if (_formKey.currentState!.validate()) {
+        _formKey.currentState!.save();
+        bool success = await _auth.verifyOTP(authNotifier, _otpController.text);
+        return success;
+      } else {
+        return false;
+      }
+    }
+
+    void goBack() {
+      Navigator.pop(
+          context); //! idk what happens if this is the first page i.e. nothing to pop
+    }
+
+    void goToCreatePasswordPage() {
+      Navigator.pushNamed(
+          context, '/create_password'); // todo : add correct name
+    }
 
     return Scaffold(
       resizeToAvoidBottomInset: false, //to prevent pixel overflow
@@ -115,9 +135,13 @@ class _VerificationPageState extends State<VerificationPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      GestureDetector(onTap: () {}, child: const LeftButton()),
+                      GestureDetector(onTap: goBack, child: const LeftButton()),
                       GestureDetector(
-                          onTap: () async {},
+                          onTap: () async {
+                            if (await submitForm()) {
+                              goToCreatePasswordPage();
+                            }
+                          },
                           child: const RightButton(text: 'Verify')),
                     ],
                   ),
