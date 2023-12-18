@@ -12,7 +12,20 @@
           "package_name": "com.dhwanish.heartless"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "1064544734386-les3dohk0jcrtm5ediv5h5sjkuqjam70.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dhwanish.heartless",
+            "certificate_hash": "354dec81cb6046d692f99b44f41f377ea18af184"
+          }
+        },
+        {
+          "client_id": "1064544734386-c9kft6qjvi9m394vnq9l1418f6bc6n9v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCpzMaQ8VnK9aBfI2i8P8wwcxqeRWYm9fY"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1064544734386-c9kft6qjvi9m394vnq9l1418f6bc6n9v.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1064544734386-0r4oktllqlisbso0cfc3p9c2i9v1k31g.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.dhwanish.heartless"
+              }
+            }
+          ]
         }
       }
     }
