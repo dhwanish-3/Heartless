@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:heartless/services/exceptions/app_exceptions.dart';
 import 'package:heartless/shared/Models/patient.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
@@ -10,7 +11,6 @@ import 'package:heartless/shared/provider/auth_notifier.dart';
 class Auth {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   static const Duration _timeLimit = Duration(seconds: 10);
-  String? _verificationId;
   String? _otp;
 
   // get patient details from firebase
@@ -45,6 +45,59 @@ class Auth {
           .set(authNotifier.patient.toMap())
           .timeout(_timeLimit);
       return true;
+    } on FirebaseAuthException {
+      throw UnAutherizedException();
+    } on SocketException {
+      throw FetchDataException('No Internet Connection');
+    } on TimeoutException {
+      throw ApiNotRespondingException('Server is not responding');
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return false;
+  }
+
+  // initialize patient
+  Future<bool> initializePatient(AuthNotifier authNotifier) async {
+    try {
+      User? user = _auth.currentUser;
+      if (user != null) {
+        authNotifier.patient.uid = user.uid;
+        await getPateintDetails(authNotifier).timeout(_timeLimit);
+        authNotifier.setLoggedIn(true);
+        return true;
+      } else {
+        authNotifier.setLoggedIn(false);
+        return false;
+      }
+    } on FirebaseAuthException {
+      throw UnAutherizedException();
+    } on SocketException {
+      throw FetchDataException('No Internet Connection');
+    } on TimeoutException {
+      throw ApiNotRespondingException('Server is not responding');
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return false;
+  }
+
+  /* Authentication */
+
+  // google sign in
+  Future<bool> googleSignIn() async {
+    final googleSignIn = GoogleSignIn();
+    try {
+      debugPrint('Google Sign In');
+      final googleUser = await googleSignIn.signIn();
+      if (googleUser == null) {
+        return false;
+      }
+      final googleAuth = await googleUser.authentication;
+      final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
+      await _auth.signInWithCredential(credential);
+      debugPrint(_auth.currentUser.toString());
     } on FirebaseAuthException {
       throw UnAutherizedException();
     } on SocketException {
@@ -125,31 +178,6 @@ class Auth {
     return false;
   }
 
-  // initialize patient
-  Future<bool> initializePatient(AuthNotifier authNotifier) async {
-    try {
-      User? user = _auth.currentUser;
-      if (user != null) {
-        authNotifier.patient.uid = user.uid;
-        await getPateintDetails(authNotifier).timeout(_timeLimit);
-        authNotifier.setLoggedIn(true);
-        return true;
-      } else {
-        authNotifier.setLoggedIn(false);
-        return false;
-      }
-    } on FirebaseAuthException {
-      throw UnAutherizedException();
-    } on SocketException {
-      throw FetchDataException('No Internet Connection');
-    } on TimeoutException {
-      throw ApiNotRespondingException('Server is not responding');
-    } catch (e) {
-      debugPrint(e.toString());
-    }
-    return false;
-  }
-
   // logout for patient
   Future<bool> logoutPatient(AuthNotifier authNotifier) async {
     try {
@@ -199,9 +227,7 @@ class Auth {
           verificationFailed: (firebaseException) {
             throw firebaseException;
           },
-          codeSent: (String vID, int? token) {
-            _verificationId = vID;
-          },
+          codeSent: (String vID, int? token) {},
           codeAutoRetrievalTimeout: (e) {
             throw TimeoutException;
           });

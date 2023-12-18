@@ -4,6 +4,7 @@ import 'package:heartless/pages/auth/forgot_password.dart';
 import 'package:heartless/pages/auth/login_page.dart';
 import 'package:heartless/pages/auth/signup_page.dart';
 import 'package:heartless/pages/auth/verification_page.dart';
+import 'package:heartless/services/routes/routes.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
 import 'package:heartless/shared/provider/theme_provider.dart';
 import 'package:provider/provider.dart';
@@ -37,7 +38,9 @@ class MyApp extends StatelessWidget {
       theme: themeNotifier.lightTheme,
       darkTheme: themeNotifier.darkTheme,
       themeMode: ThemeNotifier.themeMode,
-      home: const ForgotPassPage(),
+      home: const LoginPage(),
+      initialRoute: '/loginPatient',
+      onGenerateRoute: Routes.generateRoutes,
     );
   }
 

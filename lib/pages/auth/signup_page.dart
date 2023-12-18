@@ -73,7 +73,7 @@ class _SignUpPageState extends State<SignUpPage> {
     }
 
     void goToLoginPage() {
-      Navigator.pushNamed(context, '/login'); // todo : add correct name
+      Navigator.pushNamed(context, '/loginPatient'); // todo : add correct name
     }
 
     return Scaffold(
