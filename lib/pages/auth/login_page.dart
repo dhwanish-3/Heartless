@@ -72,7 +72,7 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     void goToSignUpPage() {
-      Navigator.pushNamed(context, '/login'); // todo : add correct name
+      Navigator.pushNamed(context, '/signupPatient'); // todo : add correct name
     }
 
     return Scaffold(
@@ -234,7 +234,11 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     Padding(
                         padding: const EdgeInsets.all(20),
-                        child: GoogleButton(screenWidth: screenWidth)),
+                        child: InkWell(
+                            onTap: () async {
+                              await _auth.googleSignIn();
+                            },
+                            child: GoogleButton(screenWidth: screenWidth))),
                     const SizedBox(
                       height: 20,
                     )

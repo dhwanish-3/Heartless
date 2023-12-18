@@ -41,6 +41,7 @@ dependencies:
   firebase_core: ^2.21.0
   shared_preferences: ^2.2.2
   pin_code_text_field: ^1.8.0
+  google_sign_in: ^6.1.6
 
 dev_dependencies:
   flutter_test:
