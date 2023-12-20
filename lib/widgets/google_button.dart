@@ -18,7 +18,7 @@ class GoogleButton extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border.all(color: Constants.customGray),
         borderRadius: BorderRadius.circular(20),
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -30,11 +30,11 @@ class GoogleButton extends StatelessWidget {
               'assets/Icons/Google.svg',
             ),
           ),
-          const Text(
+          Text(
             'Sign in with Google',
             style: TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).shadowColor),
           )
         ],
       ),

@@ -3,8 +3,10 @@ import "package:flutter_svg/svg.dart";
 import 'package:heartless/backend/auth/auth.dart';
 import "package:heartless/main.dart";
 import "package:heartless/shared/Models/patient.dart";
+import "package:heartless/shared/constants.dart";
 import "package:heartless/shared/provider/auth_notifier.dart";
 import "package:heartless/shared/provider/theme_provider.dart";
+import "package:heartless/widgets/google_button.dart";
 import "package:heartless/widgets/left_trailing_button.dart";
 import "package:heartless/widgets/right_trailing_button.dart";
 import "package:heartless/widgets/text_input.dart";
@@ -87,16 +89,16 @@ class _SignUpPageState extends State<SignUpPage> {
               height: screenHeight * 0.2,
             ),
           ),
-          Positioned(
-            left: 20,
-            top: 40,
-            child: IconButton(
-              icon: const Icon(Icons.brightness_6), // Icon to toggle theme
-              onPressed: () {
-                themeProvider.toggleThemeMode();
-              },
-            ),
-          ),
+          // Positioned(
+          //   left: 20,
+          //   top: 40,
+          //   child: IconButton(
+          //     icon: const Icon(Icons.brightness_6), // Icon to toggle theme
+          //     onPressed: () {
+          //       themeProvider.toggleThemeMode();
+          //     },
+          //   ),
+          // ),
           Center(
             child: SingleChildScrollView(
               child: Padding(
@@ -120,7 +122,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       style: Theme.of(context).textTheme.headlineMedium,
                     ),
                     const SizedBox(
-                      height: 20,
+                      height: 40,
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(
@@ -196,9 +198,41 @@ class _SignUpPageState extends State<SignUpPage> {
                         )
                       ],
                     ),
-                    const SizedBox(
-                      height: 20,
-                    )
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(30, 0, 10, 0),
+                            child: Divider(
+                              thickness: 1,
+                              color: Colors.grey[300],
+                            ),
+                          ),
+                        ),
+                        const Text(
+                          'OR',
+                          style: TextStyle(
+                            color: Constants.customGray,
+                          ),
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 0, 30, 0),
+                            child: Divider(
+                              thickness: 1,
+                              color: Colors.grey[300],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: InkWell(
+                            onTap: () async {
+                              await _auth.googleSignIn();
+                            },
+                            child: GoogleButton(screenWidth: screenWidth))),
                   ],
                 ),
               ),

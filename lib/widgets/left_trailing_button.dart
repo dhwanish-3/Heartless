@@ -13,7 +13,7 @@ class LeftButton extends StatelessWidget {
       width: screenWidth * 0.25,
       padding: const EdgeInsets.fromLTRB(10, 5, 20, 5),
       decoration: BoxDecoration(
-        color: Theme.of(context).canvasColor,
+        color: Theme.of(context).cardColor,
         border: Border.all(
           color: Theme.of(context).primaryColor,
         ),

@@ -33,7 +33,7 @@ class TextFieldInput extends StatelessWidget {
         Provider.of<WidgetNotifier>(context, listen: false);
 
     return Container(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(6.0),
       width: containerWidth, // 90% of screen width
       height: 70,
       child: TextField(
@@ -45,7 +45,7 @@ class TextFieldInput extends StatelessWidget {
         style: Theme.of(context).textTheme.bodyMedium,
         decoration: InputDecoration(
           filled: true,
-          fillColor: Colors.white,
+          fillColor: Theme.of(context).cardColor,
           labelText: labelText,
           labelStyle: Theme.of(context).textTheme.labelMedium,
           hintText: hintText,
