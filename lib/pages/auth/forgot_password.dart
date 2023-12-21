@@ -88,16 +88,16 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
                 height: screenHeight * 0.2,
               ),
             ),
-            Positioned(
-              left: 20,
-              top: 40,
-              child: IconButton(
-                icon: const Icon(Icons.brightness_6), // Icon to toggle theme
-                onPressed: () {
-                  themeProvider.toggleThemeMode();
-                },
-              ),
-            ),
+            // Positioned(
+            //   left: 20,
+            //   top: 40,
+            //   child: IconButton(
+            //     icon: const Icon(Icons.brightness_6), // Icon to toggle theme
+            //     onPressed: () {
+            //       themeProvider.toggleThemeMode();
+            //     },
+            //   ),
+            // ),
             Container(
               height: screenHeight,
               padding: const EdgeInsets.symmetric(
@@ -128,7 +128,7 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
                   SizedBox(
                     width: screenWidth * 0.8,
                     child: Text(
-                      '''Enter email we will send you a confirmation code''',
+                      '''Enter your email we will send you a confirmation code''',
                       style: Theme.of(context).textTheme.labelMedium,
                       textAlign: TextAlign.center,
                     ),

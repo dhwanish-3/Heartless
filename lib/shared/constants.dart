@@ -9,7 +9,7 @@ class Constants {
     displayLarge: TextStyle(
       fontSize: 30,
       fontWeight: FontWeight.bold,
-      color: Colors.white,
+      color: Colors.black,
     ),
     headlineMedium: TextStyle(
       fontSize: 25,
@@ -71,7 +71,7 @@ class Constants {
       fontSize: 25,
     ),
     bodyMedium: TextStyle(
-      color: Colors.black,
+      color: Colors.white,
       fontWeight: FontWeight.w400,
       fontSize: 16,
     ),

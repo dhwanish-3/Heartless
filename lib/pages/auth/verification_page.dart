@@ -77,16 +77,16 @@ class _VerificationPageState extends State<VerificationPage> {
               height: screenHeight * 0.2,
             ),
           ),
-          Positioned(
-            left: 20,
-            top: 40,
-            child: IconButton(
-              icon: const Icon(Icons.brightness_6), // Icon to toggle theme
-              onPressed: () {
-                themeProvider.toggleThemeMode();
-              },
-            ),
-          ),
+          // Positioned(
+          //   left: 20,
+          //   top: 40,
+          //   child: IconButton(
+          //     icon: const Icon(Icons.brightness_6), // Icon to toggle theme
+          //     onPressed: () {
+          //       themeProvider.toggleThemeMode();
+          //     },
+          //   ),
+          // ),
           Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: 10,

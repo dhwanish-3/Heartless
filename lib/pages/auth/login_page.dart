@@ -86,16 +86,16 @@ class _LoginPageState extends State<LoginPage> {
               height: screenHeight * 0.2,
             ),
           ),
-          Positioned(
-            left: 20,
-            top: 40,
-            child: IconButton(
-              icon: const Icon(Icons.brightness_6), // Icon to toggle theme
-              onPressed: () {
-                themeProvider.toggleThemeMode();
-              },
-            ),
-          ),
+          // Positioned(
+          //   left: 20,
+          //   top: 40,
+          //   child: IconButton(
+          //     icon: const Icon(Icons.brightness_6), // Icon to toggle theme
+          //     onPressed: () {
+          //       themeProvider.toggleThemeMode();
+          //     },
+          //   ),
+          // ),
           Center(
             child: SingleChildScrollView(
               child: Padding(

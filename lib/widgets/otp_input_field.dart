@@ -17,18 +17,23 @@ class OtpWidget extends StatelessWidget {
       hideCharacter: false,
       highlight: true,
       highlightColor: Colors.blue,
+      pinBoxColor: Theme.of(context).cardColor,
       defaultBorderColor: Constants.customGray,
       hasTextBorderColor: Theme.of(context).primaryColor,
       pinBoxBorderWidth: 1.0,
       pinBoxRadius: 10.0,
-      maxLength: 4,
+      maxLength: 6,
       hasError: false,
       onTextChanged: (text) {
         //* if anything should be added later on
       },
       wrapAlignment: WrapAlignment.spaceEvenly,
       pinBoxDecoration: ProvidedPinBoxDecoration.defaultPinBoxDecoration,
-      pinTextStyle: Theme.of(context).textTheme.bodyLarge,
+      pinTextStyle: TextStyle(
+        color: Theme.of(context).shadowColor,
+        fontWeight: FontWeight.w600,
+        fontSize: 25,
+      ),
       pinBoxWidth: 50.0,
       pinBoxHeight: 50.0,
     );
