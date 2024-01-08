@@ -4,19 +4,39 @@ import 'package:heartless/shared/provider/auth_notifier.dart';
 
 class PatientController with BaseController {
   final PatientAuth _patientAuth = PatientAuth();
-  Future<void> login(AuthNotifier authNotifier) async {
-    await _patientAuth.loginPatient(authNotifier).catchError(handleError);
+  Future<bool> login(AuthNotifier authNotifier) async {
+    if (await _patientAuth.loginPatient(authNotifier).catchError(handleError)) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
-  Future<void> signUp(AuthNotifier authNotifier) async {
-    await _patientAuth.signUpPatient(authNotifier).catchError(handleError);
+  Future<bool> signUp(AuthNotifier authNotifier) async {
+    if (await _patientAuth
+        .signUpPatient(authNotifier)
+        .catchError(handleError)) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
-  Future<void> logout(AuthNotifier authNotifier) async {
-    await _patientAuth.logoutPatient(authNotifier).catchError(handleError);
+  Future<bool> logout(AuthNotifier authNotifier) async {
+    if (await _patientAuth
+        .logoutPatient(authNotifier)
+        .catchError(handleError)) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
-  Future<void> googleSignIn(AuthNotifier authNotifier) async {
-    await _patientAuth.googleSignIn(authNotifier).catchError(handleError);
+  Future<bool> googleSignIn(AuthNotifier authNotifier) async {
+    if (await _patientAuth.googleSignIn(authNotifier).catchError(handleError)) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
