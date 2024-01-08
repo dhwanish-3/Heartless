@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter_svg/svg.dart";
-import 'package:heartless/backend/auth/auth.dart';
+import 'package:heartless/backend/auth/patient_auth.dart';
 import "package:heartless/main.dart";
 import "package:heartless/shared/Models/patient.dart";
 import "package:heartless/shared/constants.dart";
@@ -20,7 +20,7 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  final Auth _auth = Auth();
+  final PatientAuth _auth = PatientAuth();
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -230,7 +230,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         padding: const EdgeInsets.all(20),
                         child: InkWell(
                             onTap: () async {
-                              await _auth.googleSignIn();
+                              await _auth.googleSignIn(authNotifier);
                             },
                             child: GoogleButton(screenWidth: screenWidth))),
                   ],

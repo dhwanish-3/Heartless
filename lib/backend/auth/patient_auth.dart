@@ -8,7 +8,7 @@ import 'package:heartless/services/exceptions/app_exceptions.dart';
 import 'package:heartless/shared/Models/patient.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
 
-class Auth {
+class PatientAuth {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   static const Duration _timeLimit = Duration(seconds: 10);
   String? _otp;
@@ -85,7 +85,7 @@ class Auth {
   /* Authentication */
 
   // google sign in
-  Future<bool> googleSignIn() async {
+  Future<bool> googleSignIn(AuthNotifier authNotifier) async {
     final googleSignIn = GoogleSignIn();
     try {
       debugPrint('Google Sign In');
@@ -96,8 +96,25 @@ class Auth {
       final googleAuth = await googleUser.authentication;
       final credential = GoogleAuthProvider.credential(
           accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
-      await _auth.signInWithCredential(credential);
-      debugPrint(_auth.currentUser.toString());
+      UserCredential result = await _auth.signInWithCredential(credential);
+      if (result.user != null) {
+        debugPrint(_auth.currentUser.toString());
+        authNotifier.patient.uid = result.user!.uid;
+        authNotifier.patient.email = result.user!.email!;
+        authNotifier.patient.name = result.user!.displayName!;
+        authNotifier.patient.imageUrl = result.user!.photoURL!;
+        authNotifier.setLoggedIn(true);
+        bool success =
+            await setPateintDetails(authNotifier).timeout(_timeLimit);
+        if (success) {
+          return true;
+        } else {
+          await _auth.signOut();
+        }
+        return true;
+      } else {
+        return false;
+      }
     } on FirebaseAuthException {
       throw UnAutherizedException();
     } on SocketException {
@@ -129,11 +146,11 @@ class Auth {
           return true;
         } else {
           await _auth.signOut();
-          return false;
+          throw SocketException;
         }
       } else {
         authNotifier.setLoggedIn(false);
-        return false;
+        throw SocketException;
       }
     } on FirebaseAuthException {
       throw UnAutherizedException();
@@ -141,10 +158,7 @@ class Auth {
       throw FetchDataException('No Internet Connection');
     } on TimeoutException {
       throw ApiNotRespondingException('Server is not responding');
-    } catch (e) {
-      debugPrint(e.toString());
     }
-    return false;
   }
 
   // signup for patient
