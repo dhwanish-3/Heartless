@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:heartless/pages/auth/dummy_home.dart';
+import 'package:heartless/pages/auth/loading_page.dart';
 import 'package:heartless/pages/auth/login_page.dart';
 import 'package:heartless/pages/auth/signup_page.dart';
 import 'package:heartless/services/routes/route_names.dart';
@@ -6,9 +8,9 @@ import 'package:heartless/services/routes/route_names.dart';
 class Routes {
   static Route<dynamic> generateRoutes(RouteSettings settings) {
     switch (settings.name) {
-      case RouteNames.home:
+      case RouteNames.splash:
         // todo: add landing page
-        return MaterialPageRoute(builder: (_) => Container());
+        return MaterialPageRoute(builder: (_) => const SplashScreen());
 
       // * auth routes * //
       case RouteNames.loginPatient:
@@ -21,6 +23,8 @@ class Routes {
         return MaterialPageRoute(builder: (_) => Container());
 
       // ! Patient routes ! //
+      case RouteNames.patientHome:
+        return MaterialPageRoute(builder: (_) => const DummyHome());
       default:
         return MaterialPageRoute(builder: (_) => Container());
     }

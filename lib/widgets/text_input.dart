@@ -47,7 +47,7 @@ class TextFieldInput extends StatelessWidget {
           filled: true,
           fillColor: Theme.of(context).cardColor,
           labelText: labelText,
-          // labelStyle: Theme.of(context).textTheme.labelMedium,
+          // labelStyle: Theme.of(context).textTheme.headlineSmall,
           hintText: hintText,
           hintStyle: Theme.of(context).textTheme.labelMedium,
           prefixIcon: Padding(
