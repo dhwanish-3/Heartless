@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:heartless/backend/auth/auth.dart';
+import 'package:heartless/backend/auth/patient_auth.dart';
 import 'package:heartless/services/local_storage/local_storage.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
 
@@ -13,7 +13,7 @@ class SplashServices {
         return true;
       } else {
         try {
-          if (await Auth().initializePatient(authNotifier)) {
+          if (await PatientAuth().initializePatient(authNotifier)) {
             return true;
           } else {
             return false;

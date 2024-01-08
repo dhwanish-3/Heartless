@@ -35,7 +35,7 @@ class TextFieldInput extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(6.0),
       width: containerWidth, // 90% of screen width
-      height: 70,
+      height: 65,
       child: TextField(
         cursorHeight: 19,
         controller: textEditingController,
@@ -47,14 +47,14 @@ class TextFieldInput extends StatelessWidget {
           filled: true,
           fillColor: Theme.of(context).cardColor,
           labelText: labelText,
-          labelStyle: Theme.of(context).textTheme.labelMedium,
+          // labelStyle: Theme.of(context).textTheme.labelMedium,
           hintText: hintText,
           hintStyle: Theme.of(context).textTheme.labelMedium,
           prefixIcon: Padding(
             padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
             child: SvgPicture.asset(
               startIcon,
-              height: 20,
+              height: 23,
             ),
           ),
           suffixIcon: (endIcon != null)
@@ -68,7 +68,7 @@ class TextFieldInput extends StatelessWidget {
                         const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
                     child: SvgPicture.asset(
                       passwordShown ? endIcon! : endIconAlt!,
-                      height: 20,
+                      height: 23,
                     ),
                   ),
                 )
