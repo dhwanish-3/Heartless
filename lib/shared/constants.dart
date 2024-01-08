@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 
 class Constants {
-  static const primaryColor = Color.fromARGB(255, 55, 244, 218);
+  static const primaryColor = Color.fromARGB(255, 52, 190, 171);
   static const darkPrimaryColor = Color.fromARGB(255, 212, 64, 64);
   static const customGray = Color.fromARGB(255, 160, 168, 176);
+  static const notifColor = Color.fromARGB(255, 251, 188, 5);
+  static const foodColor = Color.fromARGB(178, 255, 104, 56);
+  static const medColor = Color.fromARGB(255, 125, 171, 247);
+  static const exerciseColor = Color.fromARGB(191, 52, 168, 83);
 
   TextTheme textThemeLight = const TextTheme(
     displayLarge: TextStyle(
