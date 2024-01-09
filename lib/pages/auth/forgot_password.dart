@@ -1,16 +1,13 @@
 import "package:flutter/material.dart";
 import "package:flutter_svg/svg.dart";
-import 'package:heartless/backend/auth/patient_auth.dart';
+import "package:heartless/backend/controllers/patient_controller.dart";
 import "package:heartless/main.dart";
 import "package:heartless/shared/Models/patient.dart";
 import "package:heartless/shared/provider/auth_notifier.dart";
-import "package:heartless/shared/provider/theme_provider.dart";
-import 'package:heartless/widgets/otp_input_field.dart';
 import "package:heartless/widgets/left_trailing_button.dart";
 import "package:heartless/widgets/right_trailing_button.dart";
 import "package:heartless/shared/provider/widget_provider.dart";
 import "package:heartless/widgets/text_input.dart";
-import 'package:heartless/widgets/email_phone_toggle.dart';
 
 class ForgotPassPage extends StatefulWidget {
   const ForgotPassPage({super.key});
@@ -20,7 +17,7 @@ class ForgotPassPage extends StatefulWidget {
 }
 
 class _ForgotPassPageState extends State<ForgotPassPage> {
-  final PatientAuth _auth = PatientAuth();
+  final PatientController _patientController = PatientController();
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
@@ -44,28 +41,8 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
     double screenWidth = MediaQuery.of(context).size.width;
     WidgetNotifier widgetNotifier =
         Provider.of<WidgetNotifier>(context, listen: false);
-    final themeProvider = Provider.of<ThemeNotifier>(context, listen: false);
     AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
-
-    Future<bool> submitForm() async {
-      if (_formKey.currentState!.validate()) {
-        _formKey.currentState!.save();
-        Patient? patient = Patient();
-        patient.email = _emailController.text;
-        patient.phone = _phoneController.text;
-        authNotifier.setPatient(patient);
-        bool success = false;
-        if (widgetNotifier.emailPhoneToggle) {
-          success = await _auth.sendPasswordResetEmail(authNotifier);
-        } else {
-          success = await _auth.sendPasswordResetMessagetoPhone(authNotifier);
-        }
-        return success;
-      } else {
-        return false;
-      }
-    }
 
     void goBack() {
       Navigator.pop(
@@ -74,6 +51,25 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
 
     void goToVerificationPage() {
       Navigator.pushNamed(context, '/verification'); // todo : add correct name
+    }
+
+    Future<void> submitForm() async {
+      if (_formKey.currentState!.validate()) {
+        _formKey.currentState!.save();
+        Patient? patient = Patient();
+        patient.email = _emailController.text;
+        patient.phone = _phoneController.text;
+        authNotifier.setPatient(patient);
+        bool success = false;
+        if (widgetNotifier.emailPhoneToggle) {
+          success = await _patientController.sendResetEmail(authNotifier);
+        } else {
+          success = await _patientController.sendResetEmail(authNotifier);
+        }
+        if (success) {
+          goToVerificationPage();
+        }
+      }
     }
 
     return Scaffold(
@@ -157,11 +153,7 @@ class _ForgotPassPageState extends State<ForgotPassPage> {
                         GestureDetector(
                             onTap: goBack, child: const LeftButton()),
                         GestureDetector(
-                            onTap: () async {
-                              if (await submitForm()) {
-                                goToVerificationPage();
-                              }
-                            },
+                            onTap: submitForm,
                             child: const RightButton(text: 'Reset')),
                       ],
                     ),

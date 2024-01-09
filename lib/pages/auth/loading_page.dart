@@ -70,14 +70,3 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 }
-
-
-
-
-// 4
-// 5
-// 6
-// 8
-// 14
-// 16
-// 17
