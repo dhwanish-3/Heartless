@@ -1,14 +1,11 @@
 import "package:flutter/material.dart";
 import "package:flutter_svg/svg.dart";
-import 'package:heartless/backend/auth/patient_auth.dart';
+import "package:heartless/backend/controllers/patient_controller.dart";
 import "package:heartless/main.dart";
-import "package:heartless/shared/Models/patient.dart";
 import "package:heartless/shared/provider/auth_notifier.dart";
-import "package:heartless/shared/provider/theme_provider.dart";
 import 'package:heartless/widgets/otp_input_field.dart';
 import "package:heartless/widgets/left_trailing_button.dart";
 import "package:heartless/widgets/right_trailing_button.dart";
-import "package:heartless/shared/provider/widget_provider.dart";
 
 class VerificationPage extends StatefulWidget {
   const VerificationPage({super.key});
@@ -18,7 +15,7 @@ class VerificationPage extends StatefulWidget {
 }
 
 class _VerificationPageState extends State<VerificationPage> {
-  final PatientAuth _auth = PatientAuth();
+  final PatientController _patientController = PatientController();
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _otpController = TextEditingController();
 
@@ -39,21 +36,7 @@ class _VerificationPageState extends State<VerificationPage> {
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     double svgHeight = 0.15 * screenHeight;
-    double screenWidth = MediaQuery.of(context).size.width;
-    WidgetNotifier widgetNotifier =
-        Provider.of<WidgetNotifier>(context, listen: false);
-    final themeProvider = Provider.of<ThemeNotifier>(context);
     AuthNotifier authNotifier = Provider.of<AuthNotifier>(context);
-
-    Future<bool> submitForm() async {
-      if (_formKey.currentState!.validate()) {
-        _formKey.currentState!.save();
-        bool success = await _auth.verifyOTP(authNotifier, _otpController.text);
-        return success;
-      } else {
-        return false;
-      }
-    }
 
     void goBack() {
       Navigator.pop(
@@ -63,6 +46,17 @@ class _VerificationPageState extends State<VerificationPage> {
     void goToCreatePasswordPage() {
       Navigator.pushNamed(
           context, '/create_password'); // todo : add correct name
+    }
+
+    Future<void> submitForm() async {
+      if (_formKey.currentState!.validate()) {
+        _formKey.currentState!.save();
+        bool success = await _patientController.verifyOTP(
+            authNotifier, _otpController.text);
+        if (success) {
+          goToCreatePasswordPage();
+        }
+      }
     }
 
     return Scaffold(
@@ -77,16 +71,6 @@ class _VerificationPageState extends State<VerificationPage> {
               height: screenHeight * 0.2,
             ),
           ),
-          // Positioned(
-          //   left: 20,
-          //   top: 40,
-          //   child: IconButton(
-          //     icon: const Icon(Icons.brightness_6), // Icon to toggle theme
-          //     onPressed: () {
-          //       themeProvider.toggleThemeMode();
-          //     },
-          //   ),
-          // ),
           Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: 10,
@@ -137,11 +121,7 @@ class _VerificationPageState extends State<VerificationPage> {
                     children: [
                       GestureDetector(onTap: goBack, child: const LeftButton()),
                       GestureDetector(
-                          onTap: () async {
-                            if (await submitForm()) {
-                              goToCreatePasswordPage();
-                            }
-                          },
+                          onTap: submitForm,
                           child: const RightButton(text: 'Verify')),
                     ],
                   ),

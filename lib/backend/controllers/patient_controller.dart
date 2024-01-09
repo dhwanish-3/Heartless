@@ -22,6 +22,14 @@ class PatientController with BaseController {
     }
   }
 
+  Future<bool> googleSignIn(AuthNotifier authNotifier) async {
+    if (await _patientAuth.googleSignIn(authNotifier).catchError(handleError)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   Future<bool> logout(AuthNotifier authNotifier) async {
     if (await _patientAuth
         .logoutPatient(authNotifier)
@@ -32,8 +40,32 @@ class PatientController with BaseController {
     }
   }
 
-  Future<bool> googleSignIn(AuthNotifier authNotifier) async {
-    if (await _patientAuth.googleSignIn(authNotifier).catchError(handleError)) {
+  // Forgot password Feature
+  Future<bool> sendResetEmail(AuthNotifier authNotifier) async {
+    if (await _patientAuth
+        .sendPasswordResetEmail(authNotifier)
+        .catchError(handleError)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> verifyOTP(AuthNotifier authNotifier, String code) async {
+    if (await _patientAuth
+        .verifyOTP(authNotifier, code)
+        .catchError(handleError)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> setNewPassword(
+      AuthNotifier authNotifier, String password) async {
+    if (await _patientAuth
+        .setNewPassword(authNotifier, password)
+        .catchError(handleError)) {
       return true;
     } else {
       return false;

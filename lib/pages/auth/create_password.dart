@@ -1,12 +1,9 @@
 import "package:flutter/material.dart";
 import "package:flutter_svg/svg.dart";
-import 'package:heartless/backend/auth/patient_auth.dart';
+import "package:heartless/backend/controllers/patient_controller.dart";
 import "package:heartless/main.dart";
-import "package:heartless/shared/Models/patient.dart";
 import "package:heartless/shared/provider/auth_notifier.dart";
-import "package:heartless/shared/constants.dart";
 import "package:heartless/shared/provider/theme_provider.dart";
-import 'package:heartless/widgets/google_button.dart';
 import "package:heartless/widgets/left_trailing_button.dart";
 import "package:heartless/widgets/right_trailing_button.dart";
 import "package:heartless/widgets/text_input.dart";
@@ -20,7 +17,7 @@ class CreatePassPage extends StatefulWidget {
 }
 
 class _CreatePassPageState extends State<CreatePassPage> {
-  final PatientAuth _auth = PatientAuth();
+  final PatientController _patientController = PatientController();
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
@@ -48,19 +45,6 @@ class _CreatePassPageState extends State<CreatePassPage> {
     final themeProvider = Provider.of<ThemeNotifier>(context);
     AuthNotifier authNotifier = Provider.of<AuthNotifier>(context);
 
-    Future<bool> submitForm() async {
-      if (_formKey.currentState!.validate()) {
-        if (_passwordController.text != _confirmPasswordController.text) {
-          return false;
-        }
-        _formKey.currentState!.save();
-        bool success = await _auth.setNewPassword(_passwordController.text);
-        return success;
-      } else {
-        return false;
-      }
-    }
-
     void goBack() {
       Navigator.pop(
           context); //! idk what happens if this is the first page i.e. nothing to pop
@@ -68,6 +52,24 @@ class _CreatePassPageState extends State<CreatePassPage> {
 
     void goToLoginPage() {
       Navigator.pushNamed(context, '/login'); // todo : add correct name
+    }
+
+    Future<void> submitForm() async {
+      if (_formKey.currentState!.validate()) {
+        if (_passwordController.text != _confirmPasswordController.text) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Passwords do not match'),
+            ),
+          );
+        }
+        _formKey.currentState!.save();
+        bool success = await _patientController.setNewPassword(
+            authNotifier, _passwordController.text);
+        if (success) {
+          goToLoginPage();
+        }
+      }
     }
 
     return Scaffold(
@@ -178,11 +180,7 @@ class _CreatePassPageState extends State<CreatePassPage> {
                         GestureDetector(
                             onTap: goBack, child: const LeftButton()),
                         GestureDetector(
-                            onTap: () async {
-                              if (await submitForm()) {
-                                goToLoginPage();
-                              }
-                            },
+                            onTap: submitForm,
                             child: const RightButton(text: 'Login')),
                       ],
                     ),
