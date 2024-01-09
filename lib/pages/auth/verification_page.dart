@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter_svg/svg.dart";
-import 'package:heartless/backend/auth/auth.dart';
+import 'package:heartless/backend/auth/patient_auth.dart';
 import "package:heartless/main.dart";
 import "package:heartless/shared/Models/patient.dart";
 import "package:heartless/shared/provider/auth_notifier.dart";
@@ -18,7 +18,7 @@ class VerificationPage extends StatefulWidget {
 }
 
 class _VerificationPageState extends State<VerificationPage> {
-  final Auth _auth = Auth();
+  final PatientAuth _auth = PatientAuth();
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _otpController = TextEditingController();
 

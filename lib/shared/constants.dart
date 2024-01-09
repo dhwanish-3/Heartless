@@ -25,7 +25,7 @@ class Constants {
       fontSize: 15,
     ),
     labelSmall: TextStyle(
-      color: customGray,
+      color: primaryColor,
       fontSize: 15,
     ),
     bodyLarge: TextStyle(

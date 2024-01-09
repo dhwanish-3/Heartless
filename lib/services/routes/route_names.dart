@@ -1,5 +1,5 @@
 class RouteNames {
-  static const String home = '/';
+  static const String splash = '/';
 
   // * auth routes
   // login routes

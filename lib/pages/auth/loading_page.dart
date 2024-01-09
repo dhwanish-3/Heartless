@@ -1,14 +1,17 @@
 import "package:flutter/material.dart";
 import "package:flutter_svg/svg.dart";
+import "package:heartless/main.dart";
+import "package:heartless/services/splash/splash_services.dart";
+import "package:heartless/shared/provider/auth_notifier.dart";
 
-class LoadingPage extends StatefulWidget {
-  const LoadingPage({super.key});
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
 
   @override
-  State<LoadingPage> createState() => _LoadingPageState();
+  State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _LoadingPageState extends State<LoadingPage> {
+class _SplashScreenState extends State<SplashScreen> {
   @override
   void dispose() {
     super.dispose();
@@ -17,6 +20,15 @@ class _LoadingPageState extends State<LoadingPage> {
   @override
   void initState() {
     super.initState();
+    AuthNotifier authNotifier =
+        Provider.of<AuthNotifier>(context, listen: false);
+    SplashServices().hasLoggedIn(authNotifier).then((value) {
+      if (value) {
+        Navigator.pushNamed(context, '/patientHome');
+      } else {
+        Navigator.pushNamed(context, '/loginPatient');
+      }
+    });
   }
 
   @override
