@@ -13,6 +13,31 @@ class PatientAuth {
   static const Duration _timeLimit = Duration(seconds: 10);
   String? _otp;
 
+  // get patient using email
+  Future<bool> getPatientDetailswithEmail(
+      AuthNotifier authNotifier, String email) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('Patients')
+          .where('email', isEqualTo: email)
+          .get()
+          .then((value) {
+        if (value.docs.isNotEmpty) {
+          authNotifier.setPatient(Patient.fromMap(value.docs.first.data()));
+        } else {
+          return false;
+        }
+      }).timeout(_timeLimit);
+      return true;
+    } on FirebaseAuthException {
+      throw UnAutherizedException();
+    } on SocketException {
+      throw FetchDataException('No Internet Connection');
+    } on TimeoutException {
+      throw ApiNotRespondingException('Server is not responding');
+    }
+  }
+
   // get patient details from firebase
   Future<bool> getPateintDetails(AuthNotifier authNotifier) async {
     try {
@@ -30,10 +55,7 @@ class PatientAuth {
       throw FetchDataException('No Internet Connection');
     } on TimeoutException {
       throw ApiNotRespondingException('Server is not responding');
-    } catch (e) {
-      debugPrint(e.toString());
     }
-    return false;
   }
 
   // set patient details to firebase
@@ -51,10 +73,7 @@ class PatientAuth {
       throw FetchDataException('No Internet Connection');
     } on TimeoutException {
       throw ApiNotRespondingException('Server is not responding');
-    } catch (e) {
-      debugPrint(e.toString());
     }
-    return false;
   }
 
   // initialize patient
@@ -76,10 +95,7 @@ class PatientAuth {
       throw FetchDataException('No Internet Connection');
     } on TimeoutException {
       throw ApiNotRespondingException('Server is not responding');
-    } catch (e) {
-      debugPrint(e.toString());
     }
-    return false;
   }
 
   /* Authentication */
@@ -88,32 +104,42 @@ class PatientAuth {
   Future<bool> googleSignIn(AuthNotifier authNotifier) async {
     final googleSignIn = GoogleSignIn();
     try {
-      debugPrint('Google Sign In');
+      debugPrint('Google Sign In Started');
       final googleUser = await googleSignIn.signIn();
       if (googleUser == null) {
-        return false;
+        throw UnAutherizedException;
       }
       final googleAuth = await googleUser.authentication;
       final credential = GoogleAuthProvider.credential(
           accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
       UserCredential result = await _auth.signInWithCredential(credential);
+
       if (result.user != null) {
-        debugPrint(_auth.currentUser.toString());
-        authNotifier.patient.uid = result.user!.uid;
-        authNotifier.patient.email = result.user!.email!;
-        authNotifier.patient.name = result.user!.displayName!;
-        authNotifier.patient.imageUrl = result.user!.photoURL!;
-        authNotifier.setLoggedIn(true);
-        bool success =
-            await setPateintDetails(authNotifier).timeout(_timeLimit);
-        if (success) {
+        // ! check if the user already had an account
+        if (await getPatientDetailswithEmail(
+            authNotifier, result.user!.email!)) {
+          authNotifier.setLoggedIn(true);
+          authNotifier.setUserType('patient');
           return true;
         } else {
-          await _auth.signOut();
+          debugPrint(_auth.currentUser.toString());
+          authNotifier.patient.uid = result.user!.uid;
+          authNotifier.patient.email = result.user!.email!;
+          authNotifier.patient.name = result.user!.displayName!;
+          authNotifier.patient.imageUrl = result.user!.photoURL!;
+          authNotifier.setLoggedIn(true);
+          authNotifier.setUserType('patient');
+          bool success =
+              await setPateintDetails(authNotifier).timeout(_timeLimit);
+          if (success) {
+            return true;
+          } else {
+            await _auth.signOut();
+            throw SocketException;
+          }
         }
-        return true;
       } else {
-        return false;
+        throw SocketException;
       }
     } on FirebaseAuthException {
       throw UnAutherizedException();
@@ -121,10 +147,7 @@ class PatientAuth {
       throw FetchDataException('No Internet Connection');
     } on TimeoutException {
       throw ApiNotRespondingException('Server is not responding');
-    } catch (e) {
-      debugPrint(e.toString());
     }
-    return false;
   }
 
   // login for patient
@@ -143,13 +166,13 @@ class PatientAuth {
             await getPateintDetails(authNotifier).timeout(_timeLimit);
         if (success) {
           authNotifier.setLoggedIn(true);
+          authNotifier.setUserType('patient');
           return true;
         } else {
           await _auth.signOut();
           throw SocketException;
         }
       } else {
-        authNotifier.setLoggedIn(false);
         throw SocketException;
       }
     } on FirebaseAuthException {
@@ -170,15 +193,21 @@ class PatientAuth {
               password: authNotifier.patient.password)
           .then((value) => authNotifier.patient.uid = value.user!.uid)
           .timeout(_timeLimit);
-
-      bool success = await setPateintDetails(authNotifier).timeout(_timeLimit);
-      if (success) {
-        authNotifier.setLoggedIn(true);
-        return true;
+      User? user = _auth.currentUser;
+      if (user != null) {
+        bool success =
+            await setPateintDetails(authNotifier).timeout(_timeLimit);
+        if (success) {
+          authNotifier.setLoggedIn(true);
+          authNotifier.setUserType('patient');
+          return true;
+        } else {
+          await _auth // ! Let us hope that this never happens
+              .signOut(); // !i.e. user created at auth but not able to set to firestore
+          return false;
+        }
       } else {
-        await _auth // ! Let us hope that this never happens
-            .signOut(); // !i.e. user created at auth but not able to set to firestore
-        return false;
+        throw SocketException;
       }
     } on FirebaseAuthException {
       throw UnAutherizedException();
@@ -186,10 +215,7 @@ class PatientAuth {
       throw FetchDataException('No Internet Connection');
     } on TimeoutException {
       throw ApiNotRespondingException('Server is not responding');
-    } catch (e) {
-      debugPrint(e.toString());
     }
-    return false;
   }
 
   // logout for patient
@@ -205,10 +231,7 @@ class PatientAuth {
       throw FetchDataException('No Internet Connection');
     } on TimeoutException {
       throw ApiNotRespondingException('Server is not responding');
-    } catch (e) {
-      debugPrint(e.toString());
     }
-    return false;
   }
 
   /* Forgot Password */
@@ -225,10 +248,7 @@ class PatientAuth {
       throw FetchDataException('No Internet Connection');
     } on TimeoutException {
       throw ApiNotRespondingException('Server is not responding');
-    } catch (e) {
-      debugPrint(e.toString());
     }
-    return false;
   }
 
   // send password reset message to phone number
@@ -252,10 +272,7 @@ class PatientAuth {
       throw FetchDataException('No Internet Connection');
     } on TimeoutException {
       throw ApiNotRespondingException('Server is not responding');
-    } catch (e) {
-      debugPrint(e.toString());
     }
-    return false;
   }
 
   // verify otp
@@ -266,7 +283,7 @@ class PatientAuth {
       String email =
           await _auth.verifyPasswordResetCode(code).timeout(_timeLimit);
       if (email != authNotifier.patient.email) {
-        return false;
+        throw FirebaseAuthException;
       }
       _otp = code; // saving it for later use
       return true;
@@ -283,15 +300,19 @@ class PatientAuth {
   }
 
   // set new password
-  Future<bool> setNewPassword(String newPassword) async {
+  Future<bool> setNewPassword(
+      AuthNotifier authNotifier, String newPassword) async {
     try {
       if (_otp != null) {
-        _auth
+        await _auth
             .confirmPasswordReset(code: _otp!, newPassword: newPassword)
             .timeout(_timeLimit);
+
+        _otp = null; // clearing otp
+        authNotifier.patient.password = newPassword;
         return true;
       } else {
-        return false;
+        throw FirebaseAuthException;
       }
     } on FirebaseAuthException {
       throw UnAutherizedException();
@@ -299,9 +320,6 @@ class PatientAuth {
       throw FetchDataException('No Internet Connection');
     } on TimeoutException {
       throw ApiNotRespondingException('Server is not responding');
-    } catch (e) {
-      debugPrint(e.toString());
     }
-    return false;
   }
 }
