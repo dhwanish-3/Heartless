@@ -6,7 +6,8 @@ class AppException implements Exception {
 
   @override
   String toString() {
-    return message ?? 'Something went wrong...';
+    String errorMessage = '$prefix $message';
+    return errorMessage;
   }
 }
 

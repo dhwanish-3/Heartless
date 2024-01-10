@@ -5,15 +5,15 @@ mixin BaseController {
   ToastMessage toastMessage = ToastMessage();
   Future<bool> handleError(error) {
     if (error is BadRequestException) {
-      toastMessage.showError(error.message ?? "Bad Request");
+      toastMessage.showError(error.toString() ?? "Bad Request");
     } else if (error is FetchDataException) {
-      toastMessage.showError(error.message ?? "Error During Communication");
+      toastMessage.showError(error.toString() ?? "Error During Communication");
     } else if (error is ApiNotRespondingException) {
-      toastMessage.showError(error.message ?? "Api Not Responding");
+      toastMessage.showError(error.toString() ?? "Api Not Responding");
     } else if (error is UnAutherizedException) {
-      toastMessage.showError(error.message ?? "UnAutherized");
+      toastMessage.showError(error.toString() ?? "UnAutherized");
     } else {
-      toastMessage.showError(error.message ?? "Something Went Wrong");
+      toastMessage.showError(error.toString() ?? "Something Went Wrong");
     }
     return Future.value(false);
   }
