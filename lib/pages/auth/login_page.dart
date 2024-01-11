@@ -80,6 +80,10 @@ class _LoginPageState extends State<LoginPage> {
       }
     }
 
+    void forgotPassword() async {
+      // todo
+    }
+
     return Scaffold(
       body: Stack(
         children: [
@@ -162,12 +166,18 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text('Forgot Password?',
+                                  GestureDetector(
+                                    onTap: forgotPassword,
+                                    child: Text(
+                                      'Forgot Password?',
                                       textAlign: TextAlign.start,
                                       style: Theme.of(context)
                                           .textTheme
-                                          .labelSmall),
+                                          .labelSmall,
+                                    ),
+                                  ),
                                 ],
                               ),
                             )
