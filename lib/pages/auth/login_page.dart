@@ -168,8 +168,8 @@ class _LoginPageState extends State<LoginPage> {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  TextButton(
-                                    onPressed: forgotPassword,
+                                  GestureDetector(
+                                    onTap: forgotPassword,
                                     child: Text(
                                       'Forgot Password?',
                                       textAlign: TextAlign.start,
