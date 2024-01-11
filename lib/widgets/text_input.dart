@@ -47,6 +47,10 @@ class TextFieldInput extends StatelessWidget {
           filled: true,
           fillColor: Theme.of(context).cardColor,
           labelText: labelText,
+          labelStyle: const TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 18,
+          ),
           // labelStyle: Theme.of(context).textTheme.headlineSmall,
           hintText: hintText,
           hintStyle: Theme.of(context).textTheme.labelMedium,
