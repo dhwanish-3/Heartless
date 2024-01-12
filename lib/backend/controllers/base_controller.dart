@@ -3,18 +3,28 @@ import 'package:heartless/services/utils/toast_message.dart';
 
 mixin BaseController {
   ToastMessage toastMessage = ToastMessage();
+  // Show error message
   Future<bool> handleError(error) {
     if (error is BadRequestException) {
-      toastMessage.showError(error.toString() ?? "Bad Request");
+      toastMessage.showError(error.toString());
     } else if (error is FetchDataException) {
-      toastMessage.showError(error.toString() ?? "Error During Communication");
+      toastMessage.showError(error.toString());
     } else if (error is ApiNotRespondingException) {
-      toastMessage.showError(error.toString() ?? "Api Not Responding");
+      toastMessage.showError(error.toString());
     } else if (error is UnAutherizedException) {
-      toastMessage.showError(error.toString() ?? "UnAutherized");
+      toastMessage.showError(error.toString());
     } else {
-      toastMessage.showError(error.toString() ?? "Something Went Wrong");
+      toastMessage.showError(error.toString());
     }
     return Future.value(false);
+  }
+
+  // Show success message
+  Future<bool> handleSuccess(success, String message) async {
+    if (success == null) return Future.value(false);
+    if (success == true) {
+      toastMessage.showSuccess("Successfully $message");
+    }
+    return Future.value(true);
   }
 }
