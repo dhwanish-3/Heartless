@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/pages/auth/dummy_home.dart';
-import 'package:heartless/pages/auth/loading_page.dart';
+import 'package:heartless/pages/auth/splash_screen.dart';
 import 'package:heartless/pages/auth/login_page.dart';
 import 'package:heartless/pages/auth/signup_page.dart';
 import 'package:heartless/services/routes/route_names.dart';
