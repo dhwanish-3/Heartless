@@ -251,30 +251,6 @@ class PatientAuth {
     }
   }
 
-  // send password reset message to phone number
-  Future<bool> sendPasswordResetMessagetoPhone(
-      AuthNotifier authNotifier) async {
-    try {
-      await _auth.verifyPhoneNumber(
-          phoneNumber: authNotifier.patient.phone,
-          verificationCompleted: (_) {},
-          verificationFailed: (firebaseException) {
-            throw firebaseException;
-          },
-          codeSent: (String vID, int? token) {},
-          codeAutoRetrievalTimeout: (e) {
-            throw TimeoutException;
-          });
-      return true;
-    } on FirebaseAuthException {
-      throw UnAutherizedException();
-    } on SocketException {
-      throw FetchDataException('No Internet Connection');
-    } on TimeoutException {
-      throw ApiNotRespondingException('Server is not responding');
-    }
-  }
-
   // verify otp
   Future<bool> verifyOTP(AuthNotifier authNotifier, String code) async {
     try {

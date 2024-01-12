@@ -51,15 +51,15 @@ class _SplashScreenState extends State<SplashScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SvgPicture.asset(
-                'assets/Icons/heart.svg',
+              Image.asset(
+                'assets/Icons/Logo.png',
                 height: 100,
               ),
               const SizedBox(
                 height: 20,
               ),
               Text(
-                "Heartless",
+                "HeartFull",
                 style: Theme.of(context).textTheme.displayLarge,
                 textAlign: TextAlign.center,
               ),
