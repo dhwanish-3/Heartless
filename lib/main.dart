@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:heartless/pages/chat/chat_page.dart';
 import 'package:heartless/pages/chat/contacts_page.dart';
-import 'package:heartless/pages/testing_page.dart';
 import 'package:heartless/services/routes/routes.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
 import 'package:heartless/shared/provider/theme_provider.dart';

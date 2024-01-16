@@ -86,6 +86,7 @@ class _ChatTileState extends State<ChatTile> {
                               ),
                               textAlign: TextAlign.start,
                               overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
                             ),
                           ),
                           widget.unreadMessages > 0

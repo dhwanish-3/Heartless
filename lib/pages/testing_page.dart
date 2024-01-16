@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/widgets/chat_tile.dart';
 import 'package:heartless/widgets/dashboard_card.dart';
+import 'package:heartless/widgets/message_tile.dart';
 import 'package:heartless/widgets/reminder_card.dart';
 
 class TestingPage extends StatefulWidget {
