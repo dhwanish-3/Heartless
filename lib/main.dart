@@ -33,7 +33,6 @@ class MyApp extends StatelessWidget {
       theme: themeNotifier.lightTheme,
       darkTheme: themeNotifier.darkTheme,
       themeMode: ThemeNotifier.themeMode,
-      // home: const SignUpPage(),
       initialRoute: '/',
       onGenerateRoute: Routes.generateRoutes,
     );
