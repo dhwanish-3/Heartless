@@ -46,9 +46,14 @@ class TextFieldInput extends StatelessWidget {
         decoration: InputDecoration(
           filled: true,
           fillColor: Theme.of(context).cardColor,
+          floatingLabelStyle: const TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 18,
+            color: Constants.primaryColor,
+          ),
           labelText: labelText,
           labelStyle: const TextStyle(
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w500,
             fontSize: 18,
           ),
           // labelStyle: Theme.of(context).textTheme.headlineSmall,

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:heartless/widgets/chat_tile.dart';
 import 'package:heartless/widgets/dashboard_card.dart';
+import 'package:heartless/widgets/message_tile.dart';
 import 'package:heartless/widgets/reminder_card.dart';
 
 class TestingPage extends StatefulWidget {
@@ -12,80 +14,19 @@ class TestingPage extends StatefulWidget {
 class _TestingPageState extends State<TestingPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Center(
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Image.asset(
-                  'assets/Icons/nutritionCard.png',
-                  height: 150,
-                  width: 150,
-                ),
-                Image.asset(
-                  'assets/Icons/exerciseCard.png',
-                  height: 150,
-                  width: 150,
-                ),
-                Image.asset(
-                  'assets/Icons/medicineCard.png',
-                  height: 150,
-                  width: 150,
-                ),
-                Image.asset(
-                  'assets/Icons/genericCard.png',
-                  height: 150,
-                  width: 150,
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Image.asset(
-                  'assets/Icons/heartRateCard.png',
-                  height: 150,
-                  width: 150,
-                ),
-                Image.asset(
-                  'assets/Icons/bpCard.png',
-                  height: 150,
-                  width: 150,
-                ),
-                Image.asset(
-                  'assets/Icons/weightCard.png',
-                  height: 150,
-                  width: 150,
-                ),
-                Image.asset(
-                  'assets/Icons/glucoseCard.png',
-                  height: 150,
-                  width: 150,
-                ),
-                const Reminder(
-                    title: 'Paracetoamol',
-                    description: "the best medicine out there",
-                    time: '9:00 AM',
-                    type: 0),
-                const Reminder(
-                    title: 'Paracetoamol',
-                    description: "the best medicine out there",
-                    time: '9:00 AM',
-                    type: 0,
-                    status: 2),
-              ],
-            ),
-          ],
-        ),
+    return const Scaffold(
+      body: Center(
+        child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: ChatTile(
+              name: 'Dr. John Dot',
+              imageUrl: 'assets/avatar/User.png',
+              latestMessage: 'Hello, how are you?',
+              time: '10:00 AM',
+              unreadMessages: 5,
+            )),
       ),
-    ));
+    );
   }
 }
 
