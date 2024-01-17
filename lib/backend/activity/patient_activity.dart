@@ -63,6 +63,22 @@ class PatientActivity {
     }
   }
 
+  // to edit an activity
+  Future<bool> editActivry(Activity activity) async {
+    try {
+      DateTime startOfWeek = getStartOfWeek();
+      await _fireStore
+          .doc(startOfWeek.toString())
+          .collection('Activities')
+          .doc(activity.id)
+          .update(activity.toMap());
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
   // to get all activities of the day
   Future<List<Activity>> getAllActivitiesOfTheDay(DateTime date) async {
     try {
