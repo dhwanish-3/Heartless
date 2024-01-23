@@ -1,5 +1,31 @@
 enum UserType { patient, nurse, doctor }
 
+String userTypeToString(UserType userType) {
+  switch (userType) {
+    case UserType.patient:
+      return 'patient';
+    case UserType.nurse:
+      return 'nurse';
+    case UserType.doctor:
+      return 'doctor';
+    default:
+      return 'patient';
+  }
+}
+
+UserType stringToUserType(String userType) {
+  switch (userType) {
+    case 'patient':
+      return UserType.patient;
+    case 'nurse':
+      return UserType.nurse;
+    case 'doctor':
+      return UserType.doctor;
+    default:
+      return UserType.patient;
+  }
+}
+
 class AppUser {
   String uid = '';
   String email = '';
