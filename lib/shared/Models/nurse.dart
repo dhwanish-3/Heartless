@@ -1,15 +1,14 @@
-class Nurse {
-  String uid = '';
-  String name = 'chechi';
-  // todo: add a default image for nurse
-  String imageUrl = 'https://i.imgur.com/BoN9kdC.png';
-  String email = '';
-  String phone = '';
-  String password = '';
+import 'package:heartless/shared/Models/app_user.dart';
+
+class Nurse extends AppUser {
   List<String> patients = []; // list of patients handled
   List<String> doctors = []; // list of doctors reporting
 
-  Nurse();
+  Nurse() {
+    // todo: add a default image for nurse
+    imageUrl = 'https://i.imgur.com/BoN9kdC.png';
+    userType = UserType.nurse;
+  }
 
   Nurse.fromMap(Map<String, dynamic> map) {
     uid = map['uid'];
