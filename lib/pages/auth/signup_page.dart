@@ -70,7 +70,7 @@ class _SignUpPageState extends State<SignUpPage> {
         authNotifier.setPatient(patient);
         bool success = await _patientController.signUp(authNotifier);
         if (success && context.mounted) {
-          debugPrint('Signed up ${authNotifier.patient.uid}');
+          debugPrint('Signed up ${authNotifier.patient!.uid}');
           goToHome();
         }
       }

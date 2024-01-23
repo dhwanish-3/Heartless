@@ -67,7 +67,7 @@ class _LoginPageState extends State<LoginPage> {
         authNotifier.setPatient(patient);
         bool success = await _patientController.login(authNotifier);
         if (success && context.mounted) {
-          debugPrint('Logged in${authNotifier.patient.uid}');
+          debugPrint('Logged in${authNotifier.patient!.uid}');
           goToHome();
         }
       }
