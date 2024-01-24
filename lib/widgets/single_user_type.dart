@@ -15,26 +15,26 @@ class SingleUserType extends StatelessWidget {
     double imageHeight = isSelected ? 100 : 80;
     double fontSize = isSelected ? 30 : 26;
     final String imageUrl = type == 1
-        ? 'assets/Icons/doctor.png'
+        ? 'assets/Icons/patient.png'
         : type == 2
-            ? 'assets/Icons/patient.png'
+            ? 'assets/Icons/nurse.png'
             : type == 3
-                ? 'assets/Icons/nurse.png'
+                ? 'assets/Icons/doctor.png'
                 : 'assets/Icons/doctor.png';
 
     final String value = type == 1
-        ? 'DOCTOR'
+        ? 'PATIENT'
         : type == 2
-            ? 'PATIENT'
+            ? 'NURSE'
             : type == 3
-                ? 'NURSE'
+                ? 'DOCTOR'
                 : 'DOCTOR';
 
     return Container(
         width: containerWidth,
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).canvasColor,
           borderRadius: BorderRadius.circular(20),
           border: isSelected
               ? Border.all(color: Constants.primaryColor, width: 2)
@@ -45,14 +45,14 @@ class SingleUserType extends StatelessWidget {
                     color: Colors.grey,
                     offset: Offset(0, 2),
                     blurRadius: 2,
-                    spreadRadius: 2,
+                    spreadRadius: 1,
                   ),
                 ]
               : null,
         ),
         child:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          type != 2
+          type != 1
               ? Expanded(
                   flex: 1,
                   child: Container(
@@ -74,11 +74,11 @@ class SingleUserType extends StatelessWidget {
               style: TextStyle(
                 fontSize: fontSize,
                 fontWeight: FontWeight.w800,
-                color: Colors.black,
+                color: Theme.of(context).shadowColor,
               ),
             ),
           ),
-          type == 2
+          type == 1
               ? Expanded(
                   flex: 1,
                   child: Container(
