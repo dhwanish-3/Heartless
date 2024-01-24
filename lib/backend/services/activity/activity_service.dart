@@ -1,16 +1,20 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:heartless/services/exceptions/app_exceptions.dart';
 import 'package:heartless/shared/models/activity.dart';
 
-class PatientActivity {
-  String patientId = '';
+class ActivityService {
+  final uid = FirebaseAuth.instance.currentUser!.uid;
   var _fireStore = FirebaseFirestore.instance
       .collection('Patients'); // *fake(not used) initializing
 
-  PatientActivity(String id) {
-    patientId = id;
+  ActivityService() {
     _fireStore = FirebaseFirestore.instance
         .collection('Patients')
-        .doc(id)
+        .doc(uid)
         .collection(
             'WeeklyData'); //! updating the collection NOTE: this is the definition actually used for _fireStore
   }
@@ -40,9 +44,12 @@ class PatientActivity {
           .doc(activityId)
           .update({'status': Status.completed.index});
       return true;
-    } catch (e) {
-      print(e);
-      return false;
+    } on FirebaseAuthException {
+      throw UnAutherizedException();
+    } on SocketException {
+      throw FetchDataException('No Internet Connection');
+    } on TimeoutException {
+      throw ApiNotRespondingException('Server is not responding');
     }
   }
 
@@ -56,9 +63,12 @@ class PatientActivity {
       activity.id = documentReference.id;
       await documentReference.set(activity.toMap());
       return activity;
-    } catch (e) {
-      print(e);
-      return Activity();
+    } on FirebaseAuthException {
+      throw UnAutherizedException();
+    } on SocketException {
+      throw FetchDataException('No Internet Connection');
+    } on TimeoutException {
+      throw ApiNotRespondingException('Server is not responding');
     }
   }
 
@@ -75,9 +85,34 @@ class PatientActivity {
           .doc(activity.id)
           .update(activity.toMap());
       return true;
-    } catch (e) {
-      print(e);
-      return false;
+    } on FirebaseAuthException {
+      throw UnAutherizedException();
+    } on SocketException {
+      throw FetchDataException('No Internet Connection');
+    } on TimeoutException {
+      throw ApiNotRespondingException('Server is not responding');
+    }
+  }
+
+  // to delete an activity
+  Future<bool> deleteActivity(Activity activity) async {
+    try {
+      if (activity.id == '') {
+        return false;
+      }
+      DateTime startOfWeek = getStartOfWeekOfDate(activity.time);
+      await _fireStore
+          .doc(startOfWeek.toString())
+          .collection('Activities')
+          .doc(activity.id)
+          .delete();
+      return true;
+    } on FirebaseAuthException {
+      throw UnAutherizedException();
+    } on SocketException {
+      throw FetchDataException('No Internet Connection');
+    } on TimeoutException {
+      throw ApiNotRespondingException('Server is not responding');
     }
   }
 
@@ -101,9 +136,12 @@ class PatientActivity {
             .add(Activity.fromMap(element.data() as Map<String, dynamic>));
       }
       return activities;
-    } catch (e) {
-      print(e);
-      return [];
+    } on FirebaseAuthException {
+      throw UnAutherizedException();
+    } on SocketException {
+      throw FetchDataException('No Internet Connection');
+    } on TimeoutException {
+      throw ApiNotRespondingException('Server is not responding');
     }
   }
 
@@ -134,9 +172,12 @@ class PatientActivity {
         }
       }
       return true;
-    } catch (e) {
-      print(e);
-      return false;
+    } on FirebaseAuthException {
+      throw UnAutherizedException();
+    } on SocketException {
+      throw FetchDataException('No Internet Connection');
+    } on TimeoutException {
+      throw ApiNotRespondingException('Server is not responding');
     }
   }
 
@@ -161,9 +202,12 @@ class PatientActivity {
             .add(Activity.fromMap(element.data() as Map<String, dynamic>));
       }
       return activities;
-    } catch (e) {
-      print(e);
-      return [];
+    } on FirebaseAuthException {
+      throw UnAutherizedException();
+    } on SocketException {
+      throw FetchDataException('No Internet Connection');
+    } on TimeoutException {
+      throw ApiNotRespondingException('Server is not responding');
     }
   }
 
@@ -188,9 +232,12 @@ class PatientActivity {
             .add(Activity.fromMap(element.data() as Map<String, dynamic>));
       }
       return activities;
-    } catch (e) {
-      print(e);
-      return [];
+    } on FirebaseAuthException {
+      throw UnAutherizedException();
+    } on SocketException {
+      throw FetchDataException('No Internet Connection');
+    } on TimeoutException {
+      throw ApiNotRespondingException('Server is not responding');
     }
   }
 
@@ -214,9 +261,12 @@ class PatientActivity {
             .add(Activity.fromMap(element.data() as Map<String, dynamic>));
       }
       return activities;
-    } catch (e) {
-      print(e);
-      return [];
+    } on FirebaseAuthException {
+      throw UnAutherizedException();
+    } on SocketException {
+      throw FetchDataException('No Internet Connection');
+    } on TimeoutException {
+      throw ApiNotRespondingException('Server is not responding');
     }
   }
 }
