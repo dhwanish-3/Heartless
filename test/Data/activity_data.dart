@@ -1,4 +1,4 @@
-import 'package:heartless/shared/Models/activity.dart';
+import 'package:heartless/shared/models/activity.dart';
 
 const userId = '1';
 

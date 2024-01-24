@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:heartless/shared/Models/activity.dart';
+import 'package:heartless/shared/models/activity.dart';
 
 class PatientActivity {
   String patientId = '';
