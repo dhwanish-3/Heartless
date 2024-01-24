@@ -34,13 +34,13 @@ class _DummyHomeState extends State<DummyHome> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Welcome ${authNotifier.patient.name}',
+              'Welcome ${authNotifier.patient!.name}',
               style: const TextStyle(fontSize: 20),
             ),
-            Image.network(authNotifier.patient.imageUrl),
-            Text(authNotifier.patient.name),
-            Text(authNotifier.patient.email),
-            Text(authNotifier.patient.uid),
+            Image.network(authNotifier.patient!.imageUrl),
+            Text(authNotifier.patient!.name),
+            Text(authNotifier.patient!.email),
+            Text(authNotifier.patient!.uid),
             ElevatedButton(onPressed: logout, child: const Text('Logout')),
           ],
         ),

@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:heartless/shared/Models/activity.dart';
+import 'package:heartless/shared/models/activity.dart';
 
 class PatientActivity {
   String patientId = '';
@@ -15,9 +15,9 @@ class PatientActivity {
             'WeeklyData'); //! updating the collection NOTE: this is the definition actually used for _fireStore
   }
 
-  // to get start of the week
-  DateTime getStartOfWeek() {
-    DateTime startOfWeek = DateTime.now();
+  // to get start of the week of a given date
+  DateTime getStartOfWeekOfDate(DateTime date) {
+    DateTime startOfWeek = date;
     startOfWeek = startOfWeek.subtract(Duration(days: startOfWeek.weekday - 1));
     startOfWeek = DateTime(
         startOfWeek.year, startOfWeek.month, startOfWeek.day, 0, 0, 0, 0, 0);
@@ -25,15 +25,14 @@ class PatientActivity {
   }
 
   // to get start of the day
-  DateTime getStartOfDay(DateTime startOfDay) {
-    startOfDay = DateTime(
-        startOfDay.year, startOfDay.month, startOfDay.day, 0, 0, 0, 0, 0);
-    return startOfDay;
+  DateTime getStartOfDay(DateTime date) {
+    return DateTime(date.year, date.month, date.day, 0, 0, 0, 0, 0);
   }
 
   // mark as completed
   Future<bool> markAsCompleted(String activityId) async {
-    DateTime startOfWeek = getStartOfWeek();
+    // activity can be marked as completed only if it belongs to the current week
+    DateTime startOfWeek = getStartOfWeekOfDate(DateTime.now());
     try {
       await _fireStore
           .doc(startOfWeek.toString())
@@ -50,7 +49,7 @@ class PatientActivity {
   // to add an activity
   Future<Activity> addActivity(Activity activity) async {
     try {
-      DateTime startOfWeek = getStartOfWeek();
+      DateTime startOfWeek = getStartOfWeekOfDate(activity.time);
       DocumentReference documentReference =
           _fireStore.doc(startOfWeek.toString()).collection('Activities').doc();
       // getting the id for the new activity
@@ -64,9 +63,12 @@ class PatientActivity {
   }
 
   // to edit an activity
-  Future<bool> editActivry(Activity activity) async {
+  Future<bool> editActivity(Activity activity) async {
     try {
-      DateTime startOfWeek = getStartOfWeek();
+      if (activity.id == '') {
+        return false;
+      }
+      DateTime startOfWeek = getStartOfWeekOfDate(activity.time);
       await _fireStore
           .doc(startOfWeek.toString())
           .collection('Activities')
@@ -80,15 +82,18 @@ class PatientActivity {
   }
 
   // to get all activities of the day
-  Future<List<Activity>> getAllActivitiesOfTheDay(DateTime date) async {
+  Future<List<Activity>> getAllActivitiesOfTheDate(DateTime date) async {
     try {
-      DateTime startOfWeek = getStartOfWeek();
-      date = getStartOfDay(date);
+      DateTime startOfWeek = getStartOfWeekOfDate(date);
+      DateTime startOfDay = getStartOfDay(date);
+
       QuerySnapshot querySnapshot = await _fireStore
           .doc(startOfWeek.toString())
           .collection('Activities')
-          .where('time', isGreaterThanOrEqualTo: date)
-          .where('time', isLessThan: date.add(const Duration(days: 1)))
+          .where('time', isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
+          .where('time',
+              isLessThan:
+                  Timestamp.fromDate(startOfDay.add(const Duration(days: 1))))
           .get();
       List<Activity> activities = [];
       for (var element in querySnapshot.docs) {
@@ -105,7 +110,7 @@ class PatientActivity {
   // to get update the activity status according to the time
   Future<bool> updateActivityStatus() async {
     // get the Datetime with for the start of the week
-    DateTime startOfWeek = getStartOfWeek();
+    DateTime startOfWeek = getStartOfWeekOfDate(DateTime.now());
 
     try {
       // get all the activities with status upcoming
@@ -113,7 +118,12 @@ class PatientActivity {
           .doc(startOfWeek.toString())
           .collection('Activities')
           .where('status', isEqualTo: Status.upcoming.index)
+          .where('time',
+              isLessThan: Timestamp.fromDate(DateTime.now().add(const Duration(
+                  minutes: -10)))) //! giving a buffer time of 10 minutes
           .get();
+
+      // check if the time of the activity is before the current time
       for (var element in querySnapshot.docs) {
         Activity activity =
             Activity.fromMap(element.data() as Map<String, dynamic>);
@@ -131,12 +141,18 @@ class PatientActivity {
   }
 
   // to get all completed activities of the day
-  Future<List<Activity>> getCompletedActivitiesOftheDay() async {
-    DateTime startOfWeek = getStartOfWeek();
+  Future<List<Activity>> getCompletedActivitiesOftheDay(
+      DateTime dateTime) async {
+    DateTime startOfWeek = getStartOfWeekOfDate(dateTime);
+    DateTime startOfDay = getStartOfDay(dateTime);
     try {
       QuerySnapshot querySnapshot = await _fireStore
           .doc(startOfWeek.toString())
           .collection('Activities')
+          .where('time', isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
+          .where('time',
+              isLessThan:
+                  Timestamp.fromDate(startOfDay.add(const Duration(days: 1))))
           .where('status', isEqualTo: Status.completed.index)
           .get();
       List<Activity> activities = [];
@@ -152,12 +168,18 @@ class PatientActivity {
   }
 
   // to get all upcoming activities of the day
-  Future<List<Activity>> getUpcomingActivitiesOftheDay() async {
-    DateTime startOfWeek = getStartOfWeek();
+  Future<List<Activity>> getUpcomingActivitiesOftheDay(
+      DateTime dateTime) async {
+    DateTime startOfWeek = getStartOfWeekOfDate(dateTime);
+    DateTime startOfDay = getStartOfDay(dateTime);
     try {
       QuerySnapshot querySnapshot = await _fireStore
           .doc(startOfWeek.toString())
           .collection('Activities')
+          .where('time', isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
+          .where('time',
+              isLessThan:
+                  Timestamp.fromDate(startOfDay.add(const Duration(days: 1))))
           .where('status', isEqualTo: Status.upcoming.index)
           .get();
       List<Activity> activities = [];
@@ -173,12 +195,17 @@ class PatientActivity {
   }
 
   // to get all missed activities of the day
-  Future<List<Activity>> getMissedActivitiesOftheDay() async {
-    DateTime startOfWeek = getStartOfWeek();
+  Future<List<Activity>> getMissedActivitiesOftheDay(DateTime dateTime) async {
+    DateTime startOfWeek = getStartOfWeekOfDate(dateTime);
+    DateTime startOfDay = getStartOfDay(dateTime);
     try {
       QuerySnapshot querySnapshot = await _fireStore
           .doc(startOfWeek.toString())
           .collection('Activities')
+          .where('time', isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
+          .where('time',
+              isLessThan:
+                  Timestamp.fromDate(startOfDay.add(const Duration(days: 1))))
           .where('status', isEqualTo: Status.missed.index)
           .get();
       List<Activity> activities = [];
