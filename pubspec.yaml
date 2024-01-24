@@ -43,6 +43,10 @@ dependencies:
   pin_code_text_field: ^1.8.0
   google_sign_in: ^6.1.6
   fluttertoast: ^8.2.4
+  syncfusion_flutter_charts: ^21.2.4
+  # syncfusion_flutter_charts: ^24.1.47+1
+  calendar_agenda: ^0.0.2+3
+
 
 dev_dependencies:
   flutter_test:
@@ -69,7 +73,7 @@ flutter:
   assets:
     - assets/illustrations/
     - assets/Icons/
-    - assets/avatar/
+    # - assets/avatar/
 
     # - assets/
 
