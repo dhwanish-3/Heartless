@@ -5,26 +5,26 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:heartless/services/exceptions/app_exceptions.dart';
-import 'package:heartless/shared/Models/app_user.dart';
-import 'package:heartless/shared/Models/nurse.dart';
+import 'package:heartless/shared/models/app_user.dart';
+import 'package:heartless/shared/models/patient.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
 
-class NurseAuth {
+class PatientAuth {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   static const Duration _timeLimit = Duration(seconds: 10);
   String? _otp;
 
-  // get nurse using email
-  Future<bool> getNurseDetailswithEmail(
+  // get patient using email
+  Future<bool> getPatientDetailswithEmail(
       AuthNotifier authNotifier, String email) async {
     try {
       await FirebaseFirestore.instance
-          .collection('Nurses')
+          .collection('Patients')
           .where('email', isEqualTo: email)
           .get()
           .then((value) {
         if (value.docs.isNotEmpty) {
-          authNotifier.setNurse(Nurse.fromMap(value.docs.first.data()));
+          authNotifier.setPatient(Patient.fromMap(value.docs.first.data()));
         } else {
           return false;
         }
@@ -39,14 +39,15 @@ class NurseAuth {
     }
   }
 
-  // get nurse details from firebase
-  Future<bool> getNurseDetails(AuthNotifier authNotifier) async {
+  // get patient details from firebase
+  Future<bool> getPateintDetails(AuthNotifier authNotifier) async {
     try {
       await FirebaseFirestore.instance
-          .collection('Nurses')
-          .doc(authNotifier.nurse!.uid)
+          .collection('Patients')
+          .doc(authNotifier.patient!.uid)
           .get()
-          .then((value) => authNotifier.setNurse(Nurse.fromMap(value.data()!)))
+          .then((value) =>
+              authNotifier.setPatient(Patient.fromMap(value.data()!)))
           .timeout(_timeLimit);
       return true;
     } on FirebaseAuthException {
@@ -58,13 +59,13 @@ class NurseAuth {
     }
   }
 
-  // set nurse details to firebase
-  Future<bool> setNurseDetails(AuthNotifier authNotifier) async {
+  // set patient details to firebase
+  Future<bool> setPateintDetails(AuthNotifier authNotifier) async {
     try {
       await FirebaseFirestore.instance
-          .collection('Nurses')
-          .doc(authNotifier.nurse!.uid)
-          .set(authNotifier.nurse!.toMap())
+          .collection('Patients')
+          .doc(authNotifier.patient!.uid)
+          .set(authNotifier.patient!.toMap())
           .timeout(_timeLimit);
       return true;
     } on FirebaseAuthException {
@@ -76,13 +77,13 @@ class NurseAuth {
     }
   }
 
-  // initialize nurse
-  Future<bool> initializeNurse(AuthNotifier authNotifier) async {
+  // initialize patient
+  Future<bool> initializePatient(AuthNotifier authNotifier) async {
     try {
       User? user = _auth.currentUser;
       if (user != null) {
-        authNotifier.nurse!.uid = user.uid;
-        await getNurseDetails(authNotifier).timeout(_timeLimit);
+        authNotifier.patient!.uid = user.uid;
+        await getPateintDetails(authNotifier).timeout(_timeLimit);
         authNotifier.setLoggedIn(true);
         return true;
       } else {
@@ -116,20 +117,21 @@ class NurseAuth {
 
       if (result.user != null) {
         // ! check if the user already had an account
-        if (await getNurseDetailswithEmail(authNotifier, result.user!.email!)) {
+        if (await getPatientDetailswithEmail(
+            authNotifier, result.user!.email!)) {
           authNotifier.setLoggedIn(true);
-          authNotifier.setUserType(UserType.nurse);
+          authNotifier.setUserType(UserType.patient);
           return true;
         } else {
           debugPrint(_auth.currentUser.toString());
-          authNotifier.nurse!.uid = result.user!.uid;
-          authNotifier.nurse!.email = result.user!.email!;
-          authNotifier.nurse!.name = result.user!.displayName!;
-          authNotifier.nurse!.imageUrl = result.user!.photoURL!;
+          authNotifier.patient!.uid = result.user!.uid;
+          authNotifier.patient!.email = result.user!.email!;
+          authNotifier.patient!.name = result.user!.displayName!;
+          authNotifier.patient!.imageUrl = result.user!.photoURL!;
           authNotifier.setLoggedIn(true);
-          authNotifier.setUserType(UserType.nurse);
+          authNotifier.setUserType(UserType.patient);
           bool success =
-              await setNurseDetails(authNotifier).timeout(_timeLimit);
+              await setPateintDetails(authNotifier).timeout(_timeLimit);
           if (success) {
             return true;
           } else {
@@ -149,22 +151,23 @@ class NurseAuth {
     }
   }
 
-  // login for nurse
-  Future<bool> loginNurse(AuthNotifier authNotifier) async {
+  // login for patient
+  Future<bool> loginPatient(AuthNotifier authNotifier) async {
     try {
       await _auth
           .signInWithEmailAndPassword(
-              email: authNotifier.nurse!.email,
-              password: authNotifier.nurse!.password)
+              email: authNotifier.patient!.email,
+              password: authNotifier.patient!.password)
           .timeout(_timeLimit);
 
       User? user = _auth.currentUser;
       if (user != null) {
-        authNotifier.nurse!.uid = user.uid;
-        bool success = await getNurseDetails(authNotifier).timeout(_timeLimit);
+        authNotifier.patient!.uid = user.uid;
+        bool success =
+            await getPateintDetails(authNotifier).timeout(_timeLimit);
         if (success) {
           authNotifier.setLoggedIn(true);
-          authNotifier.setUserType(UserType.nurse);
+          authNotifier.setUserType(UserType.patient);
           return true;
         } else {
           await _auth.signOut();
@@ -182,21 +185,22 @@ class NurseAuth {
     }
   }
 
-  // signup for nurse
-  Future<bool> signUpNurse(AuthNotifier authNotifier) async {
+  // signup for patient
+  Future<bool> signUpPatient(AuthNotifier authNotifier) async {
     try {
       await _auth
           .createUserWithEmailAndPassword(
-              email: authNotifier.nurse!.email,
-              password: authNotifier.nurse!.password)
-          .then((value) => authNotifier.nurse!.uid = value.user!.uid)
+              email: authNotifier.patient!.email,
+              password: authNotifier.patient!.password)
+          .then((value) => authNotifier.patient!.uid = value.user!.uid)
           .timeout(_timeLimit);
       User? user = _auth.currentUser;
       if (user != null) {
-        bool success = await setNurseDetails(authNotifier).timeout(_timeLimit);
+        bool success =
+            await setPateintDetails(authNotifier).timeout(_timeLimit);
         if (success) {
           authNotifier.setLoggedIn(true);
-          authNotifier.setUserType(UserType.nurse);
+          authNotifier.setUserType(UserType.patient);
           return true;
         } else {
           await _auth // ! Let us hope that this never happens
@@ -215,12 +219,12 @@ class NurseAuth {
     }
   }
 
-  // logout for nurse
-  Future<bool> logoutNurse(AuthNotifier authNotifier) async {
+  // logout for patient
+  Future<bool> logoutPatient(AuthNotifier authNotifier) async {
     try {
       await _auth.signOut().timeout(_timeLimit);
       authNotifier.setLoggedIn(false);
-      authNotifier.setNurse(Nurse());
+      authNotifier.setPatient(Patient());
       return true;
     } on FirebaseAuthException {
       throw UnAutherizedException();
@@ -236,7 +240,7 @@ class NurseAuth {
   Future<bool> sendPasswordResetEmail(AuthNotifier authNotifier) async {
     try {
       await _auth
-          .sendPasswordResetEmail(email: authNotifier.nurse!.email.toString())
+          .sendPasswordResetEmail(email: authNotifier.patient!.email.toString())
           .timeout(_timeLimit);
       return true;
     } on FirebaseAuthException {
@@ -255,7 +259,7 @@ class NurseAuth {
       //! verifyPasswordResetCode or confirmPasswordReset
       String email =
           await _auth.verifyPasswordResetCode(code).timeout(_timeLimit);
-      if (email != authNotifier.nurse!.email) {
+      if (email != authNotifier.patient!.email) {
         throw FirebaseAuthException;
       }
       _otp = code; // saving it for later use
@@ -282,7 +286,7 @@ class NurseAuth {
             .timeout(_timeLimit);
 
         _otp = null; // clearing otp
-        authNotifier.nurse!.password = newPassword;
+        authNotifier.patient!.password = newPassword;
         return true;
       } else {
         throw FirebaseAuthException;

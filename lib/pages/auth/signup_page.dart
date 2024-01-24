@@ -2,7 +2,7 @@ import "package:flutter/material.dart";
 import "package:flutter_svg/svg.dart";
 import "package:heartless/backend/controllers/patient_controller.dart";
 import "package:heartless/main.dart";
-import "package:heartless/shared/Models/patient.dart";
+import 'package:heartless/shared/models/patient.dart';
 import "package:heartless/shared/constants.dart";
 import "package:heartless/shared/provider/auth_notifier.dart";
 import "package:heartless/widgets/google_button.dart";
