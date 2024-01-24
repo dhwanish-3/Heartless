@@ -1,4 +1,4 @@
-import 'package:heartless/shared/Models/app_user.dart';
+import 'package:heartless/shared/models/app_user.dart';
 
 class Nurse extends AppUser {
   List<String> patients = []; // list of patients handled

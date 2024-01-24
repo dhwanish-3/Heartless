@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
-import 'package:heartless/shared/Models/app_user.dart';
-import 'package:heartless/shared/Models/doctor.dart';
-import 'package:heartless/shared/Models/nurse.dart';
-import 'package:heartless/shared/Models/patient.dart';
+import 'package:heartless/shared/models/app_user.dart';
+import 'package:heartless/shared/models/doctor.dart';
+import 'package:heartless/shared/models/nurse.dart';
+import 'package:heartless/shared/models/patient.dart';
 
 class AuthNotifier with ChangeNotifier {
   bool _isLoggedIn = false;
