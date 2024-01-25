@@ -26,7 +26,15 @@ class _DoughnutChartState extends State<DoughnutChart> {
           dataSource: chartData,
           pointColorMapper: (ChartData data, _) => data.color,
           xValueMapper: (ChartData data, _) => data.x,
-          yValueMapper: (ChartData data, _) => data.y)
+          yValueMapper: (ChartData data, _) => data.y,
+          explode: true,
+          explodeGesture: ActivationMode.singleTap,
+          dataLabelMapper: (ChartData data, _) =>
+              data.x.toString() + "\n" + data.y.toString(),
+          dataLabelSettings: const DataLabelSettings(
+              // Renders the data label
+              isVisible: true,
+              textStyle: TextStyle(fontSize: 17)))
     ]))));
   }
 }
