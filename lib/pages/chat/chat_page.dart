@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/shared/constants.dart';
-import 'package:heartless/widgets/message_tile.dart';
-import 'package:heartless/widgets/msg_input_field.dart';
-import 'package:heartless/widgets/text_input.dart';
+import 'package:heartless/widgets/chat/message_tile.dart';
+import 'package:heartless/widgets/chat/msg_input_field.dart';
+import 'package:heartless/widgets/auth/text_input.dart';
 
 const data = [
   {"message": "Hello", "isSender": true, "time": "9:00 AM"},

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/shared/constants.dart';
 import 'package:heartless/shared/models/app_user.dart';
-import 'package:heartless/widgets/single_user_type.dart';
+import 'package:heartless/widgets/auth/single_user_type.dart';
 
 class UserTypeWidget extends StatefulWidget {
   UserType userType;

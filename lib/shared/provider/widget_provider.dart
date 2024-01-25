@@ -32,4 +32,11 @@ class WidgetNotifier with ChangeNotifier {
     _userType = userType;
     notifyListeners();
   }
+
+  bool _showLogin = true;
+  bool get showLogin => _showLogin;
+  void toggleLoginSignup() {
+    _showLogin = !_showLogin;
+    notifyListeners();
+  }
 }

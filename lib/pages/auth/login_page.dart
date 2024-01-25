@@ -5,10 +5,10 @@ import "package:heartless/main.dart";
 import 'package:heartless/shared/models/patient.dart';
 import "package:heartless/shared/provider/auth_notifier.dart";
 import "package:heartless/shared/constants.dart";
-import 'package:heartless/widgets/google_button.dart';
-import "package:heartless/widgets/left_trailing_button.dart";
-import "package:heartless/widgets/right_trailing_button.dart";
-import "package:heartless/widgets/text_input.dart";
+import 'package:heartless/widgets/auth/google_button.dart';
+import 'package:heartless/widgets/miscellaneous/left_trailing_button.dart';
+import 'package:heartless/widgets/miscellaneous/right_trailing_button.dart';
+import 'package:heartless/widgets/auth/text_input.dart';
 import "package:heartless/shared/provider/widget_provider.dart";
 
 import "package:heartless/pages/activities/activity_page.dart";
@@ -97,16 +97,6 @@ class _LoginPageState extends State<LoginPage> {
               height: screenHeight * 0.2,
             ),
           ),
-          // Positioned(
-          //   left: 20,
-          //   top: 40,
-          //   child: IconButton(
-          //     icon: const Icon(Icons.brightness_6), // Icon to toggle theme
-          //     onPressed: () {
-          //       themeProvider.toggleThemeMode();
-          //     },
-          //   ),
-          // ),
           Center(
             child: SingleChildScrollView(
               child: Padding(
@@ -209,7 +199,9 @@ class _LoginPageState extends State<LoginPage> {
                           style: Theme.of(context).textTheme.labelMedium,
                         ),
                         TextButton(
-                          onPressed: goToSignUpPage,
+                          onPressed: () {
+                            widgetNotifier.toggleLoginSignup();
+                          },
                           child: Text(
                             "Sign Up",
                             style: Theme.of(context).textTheme.headlineSmall,
