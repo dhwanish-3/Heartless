@@ -43,6 +43,8 @@ dependencies:
   pin_code_text_field: ^1.8.0
   google_sign_in: ^6.1.6
   fluttertoast: ^8.2.4
+  syncfusion_flutter_charts: ^21.2.4
+  calendar_agenda: ^0.0.2+3
   sliding_up_panel: ^2.0.0+1
 
 dev_dependencies:
@@ -70,8 +72,6 @@ flutter:
   assets:
     - assets/illustrations/
     - assets/Icons/
-
-    # - assets/
 
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg

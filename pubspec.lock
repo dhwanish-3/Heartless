@@ -49,6 +49,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.1"
+  calendar_agenda:
+    dependency: "direct main"
+    description:
+      name: calendar_agenda
+      sha256: "7b6da3ef3d290adb1392467d00f0948ca899784e13160f2accc49b5ce6fe8d70"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.2+3"
   characters:
     dependency: transitive
     description:
@@ -304,6 +312,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.2"
+  intl:
+    dependency: transitive
+    description:
+      name: intl
+      sha256: "910f85bce16fb5c6f614e117efa303e85a1731bb0081edf3604a2ae6e9a3cc91"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.17.0"
   js:
     dependency: transitive
     description:
@@ -456,6 +472,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.4"
+  scrollable_positioned_list:
+    dependency: transitive
+    description:
+      name: scrollable_positioned_list
+      sha256: "9566352ab9ba05794ee6c8864f154afba5d36c5637d0e3e32c615ba4ceb92772"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.3"
   shared_preferences:
     dependency: "direct main"
     description:
@@ -557,6 +581,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
+  syncfusion_flutter_charts:
+    dependency: "direct main"
+    description:
+      name: syncfusion_flutter_charts
+      sha256: bdb7cc5814ceb187793cea587f4a5946afcffd96726b219cee79df8460f44b7b
+      url: "https://pub.dev"
+    source: hosted
+    version: "21.2.4"
+  syncfusion_flutter_core:
+    dependency: transitive
+    description:
+      name: syncfusion_flutter_core
+      sha256: "8db8f55c77f56968681447d3837c10f27a9e861e238a898fda116c7531def979"
+      url: "https://pub.dev"
+    source: hosted
+    version: "21.2.10"
   term_glyph:
     dependency: transitive
     description:
@@ -625,10 +665,10 @@ packages:
     dependency: transitive
     description:
       name: web
-      sha256: "14f1f70c51119012600c5f1f60ca68efda5a9b6077748163c6af2893ec5df8fc"
+      sha256: afe077240a270dcfd2aafe77602b4113645af95d0ad31128cc02bce5ac5d5152
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.1-beta"
+    version: "0.3.0"
   win32:
     dependency: transitive
     description:
@@ -662,5 +702,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.2.0-157.0.dev <4.0.0"
+  dart: ">=3.2.0-194.0.dev <4.0.0"
   flutter: ">=3.13.0"
