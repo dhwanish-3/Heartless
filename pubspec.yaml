@@ -43,6 +43,7 @@ dependencies:
   pin_code_text_field: ^1.8.0
   google_sign_in: ^6.1.6
   fluttertoast: ^8.2.4
+  sliding_up_panel: ^2.0.0+1
 
 dev_dependencies:
   flutter_test:
@@ -69,7 +70,6 @@ flutter:
   assets:
     - assets/illustrations/
     - assets/Icons/
-    - assets/avatar/
 
     # - assets/
 
