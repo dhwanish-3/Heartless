@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-
 class StackedColumnChart extends StatefulWidget {
   const StackedColumnChart({super.key});
 
@@ -26,31 +25,44 @@ class _StackedColumnChartState extends State<StackedColumnChart> {
       ChartData('US', 16, 18),
       ChartData('Russia', 14, 10),
       ChartData('India', 12, 16),
+      ChartData('UAE', 13, 15),
     ];
 
     return Scaffold(
         body: Center(
             child: Container(
+                height: 300,
+                width: 350,
                 child: SfCartesianChart(
                     primaryXAxis: CategoryAxis(),
                     series: <CartesianSeries>[
-          StackedColumnSeries<ChartData, String>(
-              dataSource: chartData,
-              xValueMapper: (ChartData data, _) => data.x,
-              yValueMapper: (ChartData data, _) => data.y1),
-          StackedColumnSeries<ChartData, String>(
-              dataSource: chartData,
-              xValueMapper: (ChartData data, _) => data.x,
-              yValueMapper: (ChartData data, _) => data.y2),
-          // StackedColumnSeries<ChartData, String>(
-          //     dataSource: chartData,
-          //     xValueMapper: (ChartData data, _) => data.x,
-          //     yValueMapper: (ChartData data, _) => data.y3),
-          // StackedColumnSeries<ChartData, String>(
-          //     dataSource: chartData,
-          //     xValueMapper: (ChartData data, _) => data.x,
-          //     yValueMapper: (ChartData data, _) => data.y4)
-        ]))));
+                      StackedColumnSeries<ChartData, String>(
+                        dataSource: chartData,
+                        xValueMapper: (ChartData data, _) => data.x,
+                        yValueMapper: (ChartData data, _) => data.y1,
+                        dataLabelSettings: DataLabelSettings(
+                            isVisible: true,
+                            showCumulativeValues: true,
+                            textStyle: TextStyle(fontSize: 17)),
+                      ),
+                      StackedColumnSeries<ChartData, String>(
+                        dataSource: chartData,
+                        xValueMapper: (ChartData data, _) => data.x,
+                        yValueMapper: (ChartData data, _) => data.y2,
+                        dataLabelSettings: DataLabelSettings(
+                            isVisible: true,
+                            showCumulativeValues: true,
+                            textStyle: TextStyle(fontSize: 15)),
+                      ),
+                      // StackedColumnSeries<ChartData, String>(
+                      //     dataSource: chartData,
+                      //     xValueMapper: (ChartData data, _) => data.x,
+                      //     yValueMapper: (ChartData data, _) => data.y3),
+                      // StackedColumnSeries<ChartData, String>(
+                      //     dataSource: chartData,
+                      //     xValueMapper: (ChartData data, _) => data.x,
+                      //     yValueMapper: (ChartData data, _) => data.y4)
+                    ]))));
   }
 }
 
