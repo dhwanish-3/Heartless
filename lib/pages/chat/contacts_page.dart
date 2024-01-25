@@ -84,8 +84,6 @@ class ContactsPage extends StatelessWidget {
           itemCount: data.length,
           itemBuilder: (context, index) {
             final entry = data[index];
-            print(entry['name']);
-            // debugPrint(entry.toString());
             return ChatTile(
               name: entry['name'].toString(),
               time: entry['time'].toString(),

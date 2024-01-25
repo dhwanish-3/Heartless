@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heartless/shared/models/app_user.dart';
 
 class WidgetNotifier with ChangeNotifier {
   // for circular progress indicator
@@ -22,6 +23,13 @@ class WidgetNotifier with ChangeNotifier {
   bool get emailPhoneToggle => _emailPhoneToggle;
   void toggleEmailPhone() {
     _emailPhoneToggle = !_emailPhoneToggle;
+    notifyListeners();
+  }
+
+  UserType _userType = UserType.patient;
+  UserType get userType => _userType;
+  void setUserType(UserType userType) {
+    _userType = userType;
     notifyListeners();
   }
 }
