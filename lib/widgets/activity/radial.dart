@@ -12,10 +12,10 @@ class _RadialBarChartState extends State<RadialBarChart> {
   @override
   Widget build(BuildContext context) {
     final List<ChartData> chartData = [
-      ChartData('David', 25),
-      ChartData('Steve', 38),
-      ChartData('Jack', 34),
-      ChartData('Others', 52)
+      ChartData('David', 50),
+      ChartData('Steve', 76),
+      ChartData('Jack', 68),
+      ChartData('Others', 90)
     ];
     return Scaffold(
         body: Center(
@@ -25,7 +25,16 @@ class _RadialBarChartState extends State<RadialBarChart> {
       RadialBarSeries<ChartData, String>(
           dataSource: chartData,
           xValueMapper: (ChartData data, _) => data.x,
-          yValueMapper: (ChartData data, _) => data.y)
+          yValueMapper: (ChartData data, _) => data.y,
+          cornerStyle: CornerStyle.bothCurve,
+          // useSeriesColor: true,
+          // trackOpacity: 0.3,
+          maximumValue: 100,
+          dataLabelSettings: const DataLabelSettings(
+            // Renders the data label
+            isVisible: true,
+            textStyle: TextStyle(fontSize: 15)
+          ))
     ]))));
   }
 }

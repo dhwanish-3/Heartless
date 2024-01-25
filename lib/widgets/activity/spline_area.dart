@@ -24,16 +24,30 @@ class _SplineAreaChartState extends State<SplineAreaChart> {
     ];
     return Scaffold(
         body: Center(
-            child: SfCartesianChart(series: <CartesianSeries>[
-      SplineAreaSeries<ChartData, int>(
-          dataSource: chartData,
-          xValueMapper: (ChartData data, _) => data.x,
-          yValueMapper: (ChartData data, _) => data.y),
-      SplineAreaSeries<ChartData, int>(
-          dataSource: chartData,
-          xValueMapper: (ChartData data, _) => data.x,
-          yValueMapper: (ChartData data, _) => data.y1),
-    ])));
+            child: Container(
+                height: 300,
+                width: 350,
+                child: SfCartesianChart(
+                  series: <CartesianSeries>[
+                    SplineAreaSeries<ChartData, int>(
+                        dataSource: chartData,
+                        xValueMapper: (ChartData data, _) => data.x,
+                        yValueMapper: (ChartData data, _) => data.y,
+                        legendItemText: 'Total',
+                        dataLabelSettings: DataLabelSettings(
+                            // Renders the data label
+                            isVisible: false)),
+                    SplineAreaSeries<ChartData, int>(
+                        dataSource: chartData,
+                        xValueMapper: (ChartData data, _) => data.x,
+                        yValueMapper: (ChartData data, _) => data.y1,
+                        legendItemText: 'Completed',
+                        dataLabelSettings: DataLabelSettings(
+                            // Renders the data label
+                            isVisible: false)),
+                  ],
+                  legend: Legend(isVisible: true, offset: Offset(20, -80)),
+                ))));
   }
 }
 
