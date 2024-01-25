@@ -61,7 +61,7 @@ class ActivityService {
       DateTime startOfWeek = getStartOfWeekOfDate(activity.time);
       DocumentReference documentReference =
           _fireStore.doc(startOfWeek.toString()).collection('Activities').doc();
-      // getting the id for the new activity
+      // getting the id for the new activity from the reference
       activity.id = documentReference.id;
       await documentReference.set(activity.toMap()).timeout(_timeLimit);
       return activity;
