@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:heartless/widgets/chat_tile.dart';
+import 'package:heartless/widgets/chat/chat_tile.dart';
 
 const data = [
   {

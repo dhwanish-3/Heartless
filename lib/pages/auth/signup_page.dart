@@ -5,10 +5,10 @@ import "package:heartless/main.dart";
 import 'package:heartless/shared/models/patient.dart';
 import "package:heartless/shared/constants.dart";
 import "package:heartless/shared/provider/auth_notifier.dart";
-import "package:heartless/widgets/google_button.dart";
-import "package:heartless/widgets/left_trailing_button.dart";
-import "package:heartless/widgets/right_trailing_button.dart";
-import "package:heartless/widgets/text_input.dart";
+import 'package:heartless/widgets/auth/google_button.dart';
+import 'package:heartless/widgets/miscellaneous/left_trailing_button.dart';
+import 'package:heartless/widgets/miscellaneous/right_trailing_button.dart';
+import 'package:heartless/widgets/auth/text_input.dart';
 import "package:heartless/shared/provider/widget_provider.dart";
 
 class SignUpPage extends StatefulWidget {
@@ -21,6 +21,7 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
   final PatientController _patientController = PatientController();
   final _formKey = GlobalKey<FormState>();
+
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
@@ -191,7 +192,9 @@ class _SignUpPageState extends State<SignUpPage> {
                           style: Theme.of(context).textTheme.labelMedium,
                         ),
                         TextButton(
-                          onPressed: goToLoginPage,
+                          onPressed: () {
+                            widgetNotifier.toggleLoginSignup();
+                          },
                           child: Text(
                             "Log in",
                             style: Theme.of(context).textTheme.headlineSmall,

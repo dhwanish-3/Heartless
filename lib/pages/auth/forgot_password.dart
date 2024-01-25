@@ -4,10 +4,10 @@ import "package:heartless/backend/controllers/patient_controller.dart";
 import "package:heartless/main.dart";
 import 'package:heartless/shared/models/patient.dart';
 import "package:heartless/shared/provider/auth_notifier.dart";
-import "package:heartless/widgets/left_trailing_button.dart";
-import "package:heartless/widgets/right_trailing_button.dart";
+import 'package:heartless/widgets/miscellaneous/left_trailing_button.dart';
+import 'package:heartless/widgets/miscellaneous/right_trailing_button.dart';
 import "package:heartless/shared/provider/widget_provider.dart";
-import "package:heartless/widgets/text_input.dart";
+import 'package:heartless/widgets/auth/text_input.dart';
 
 class ForgotPassPage extends StatefulWidget {
   const ForgotPassPage({super.key});

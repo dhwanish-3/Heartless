@@ -22,12 +22,14 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
-    SplashServices().hasLoggedIn(authNotifier).then((value) {
-      if (value) {
-        Navigator.pushNamed(context, '/patientHome');
-      } else {
-        Navigator.pushNamed(context, '/loginPatient');
-      }
+    Future.delayed(const Duration(seconds: 3), () {
+      SplashServices().hasLoggedIn(authNotifier).then((value) {
+        if (value) {
+          Navigator.pushNamed(context, '/patientHome');
+        } else {
+          Navigator.pushNamed(context, '/loginOrSignup');
+        }
+      });
     });
   }
 

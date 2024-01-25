@@ -3,6 +3,7 @@ import 'package:heartless/pages/auth/dummy_home.dart';
 import 'package:heartless/pages/auth/splash_screen.dart';
 import 'package:heartless/pages/auth/login_page.dart';
 import 'package:heartless/pages/auth/signup_page.dart';
+import 'package:heartless/services/auth/login_register_toggle.dart';
 import 'package:heartless/services/routes/route_names.dart';
 
 class Routes {
@@ -22,6 +23,8 @@ class Routes {
         // todo: add login page for doctor
         return MaterialPageRoute(builder: (_) => Container());
 
+      case RouteNames.loginOrSignup:
+        return MaterialPageRoute(builder: (_) => const LoginOrRegister());
       // ! Patient routes ! //
       case RouteNames.patientHome:
         return MaterialPageRoute(builder: (_) => const DummyHome());

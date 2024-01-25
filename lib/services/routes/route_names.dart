@@ -13,4 +13,7 @@ class RouteNames {
   // patient routes
   static const String patientHome = '/patientHome';
   static const String patientProfile = '/patientProfile';
+
+  //login Signup toggle
+  static const String loginOrSignup = '/loginOrSignup';
 }
