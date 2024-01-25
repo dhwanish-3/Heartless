@@ -7,14 +7,16 @@ import 'package:heartless/services/exceptions/app_exceptions.dart';
 import 'package:heartless/shared/models/activity.dart';
 
 class ActivityService {
-  final uid = FirebaseAuth.instance.currentUser!.uid;
+  final _uid = FirebaseAuth.instance.currentUser!.uid;
   var _fireStore = FirebaseFirestore.instance
       .collection('Patients'); // *fake(not used) initializing
+
+  static const Duration _timeLimit = Duration(seconds: 10);
 
   ActivityService() {
     _fireStore = FirebaseFirestore.instance
         .collection('Patients')
-        .doc(uid)
+        .doc(_uid)
         .collection(
             'WeeklyData'); //! updating the collection NOTE: this is the definition actually used for _fireStore
   }
@@ -42,7 +44,7 @@ class ActivityService {
           .doc(startOfWeek.toString())
           .collection('Activities')
           .doc(activityId)
-          .update({'status': Status.completed.index});
+          .update({'status': Status.completed.index}).timeout(_timeLimit);
       return true;
     } on FirebaseAuthException {
       throw UnAutherizedException();
@@ -61,7 +63,7 @@ class ActivityService {
           _fireStore.doc(startOfWeek.toString()).collection('Activities').doc();
       // getting the id for the new activity
       activity.id = documentReference.id;
-      await documentReference.set(activity.toMap());
+      await documentReference.set(activity.toMap()).timeout(_timeLimit);
       return activity;
     } on FirebaseAuthException {
       throw UnAutherizedException();
@@ -83,7 +85,8 @@ class ActivityService {
           .doc(startOfWeek.toString())
           .collection('Activities')
           .doc(activity.id)
-          .update(activity.toMap());
+          .update(activity.toMap())
+          .timeout(_timeLimit);
       return true;
     } on FirebaseAuthException {
       throw UnAutherizedException();
@@ -105,7 +108,8 @@ class ActivityService {
           .doc(startOfWeek.toString())
           .collection('Activities')
           .doc(activity.id)
-          .delete();
+          .delete()
+          .timeout(_timeLimit);
       return true;
     } on FirebaseAuthException {
       throw UnAutherizedException();
@@ -129,7 +133,8 @@ class ActivityService {
           .where('time',
               isLessThan:
                   Timestamp.fromDate(startOfDay.add(const Duration(days: 1))))
-          .get();
+          .get()
+          .timeout(_timeLimit);
       List<Activity> activities = [];
       for (var element in querySnapshot.docs) {
         activities
@@ -159,7 +164,8 @@ class ActivityService {
           .where('time',
               isLessThan: Timestamp.fromDate(DateTime.now().add(const Duration(
                   minutes: -10)))) //! giving a buffer time of 10 minutes
-          .get();
+          .get()
+          .timeout(_timeLimit);
 
       // check if the time of the activity is before the current time
       for (var element in querySnapshot.docs) {
@@ -168,7 +174,7 @@ class ActivityService {
         if (activity.time.isBefore(DateTime.now())) {
           await _fireStore
               .doc(element.id)
-              .update({'status': Status.missed.index});
+              .update({'status': Status.missed.index}).timeout(_timeLimit);
         }
       }
       return true;
@@ -195,7 +201,8 @@ class ActivityService {
               isLessThan:
                   Timestamp.fromDate(startOfDay.add(const Duration(days: 1))))
           .where('status', isEqualTo: Status.completed.index)
-          .get();
+          .get()
+          .timeout(_timeLimit);
       List<Activity> activities = [];
       for (var element in querySnapshot.docs) {
         activities
@@ -225,7 +232,8 @@ class ActivityService {
               isLessThan:
                   Timestamp.fromDate(startOfDay.add(const Duration(days: 1))))
           .where('status', isEqualTo: Status.upcoming.index)
-          .get();
+          .get()
+          .timeout(_timeLimit);
       List<Activity> activities = [];
       for (var element in querySnapshot.docs) {
         activities
@@ -254,7 +262,8 @@ class ActivityService {
               isLessThan:
                   Timestamp.fromDate(startOfDay.add(const Duration(days: 1))))
           .where('status', isEqualTo: Status.missed.index)
-          .get();
+          .get()
+          .timeout(_timeLimit);
       List<Activity> activities = [];
       for (var element in querySnapshot.docs) {
         activities

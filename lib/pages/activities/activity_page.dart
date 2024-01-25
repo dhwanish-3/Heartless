@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:heartless/widgets/activity/pie_chart.dart';
 import 'package:heartless/widgets/activity/radial.dart';
 import 'package:heartless/widgets/activity/spline_area.dart';
@@ -19,7 +20,14 @@ class ActivityPage extends StatefulWidget {
 class _ActivityPageState extends State<ActivityPage> {
   @override
   Widget build(BuildContext context) {
-    // return const Placeholder();
-    return const PieChart();
+
+    // return const StackedColumnChart();
+    return const SplineAreaChart();
+    // return const RadialBarChart();
+    // return const DoughnutChart();
+    // return const PieChart();
+    // return const HorizontalCalendar();
+    
+    
   }
 }
