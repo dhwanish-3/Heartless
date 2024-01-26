@@ -64,7 +64,7 @@ class _SignUpPageState extends State<SignUpPage> {
     }
 
 // patient signup
-    void patientSignUp() async {
+    Future<void> patientSignUp() async {
       Patient patient = Patient();
       patient.name = _nameController.text;
       patient.email = _emailController.text;
@@ -77,7 +77,7 @@ class _SignUpPageState extends State<SignUpPage> {
     }
 
     // nurse signup
-    void nurseSignUp() async {
+    Future<void> nurseSignUp() async {
       Nurse nurse = Nurse();
       nurse.name = _nameController.text;
       nurse.email = _emailController.text;
@@ -91,11 +91,14 @@ class _SignUpPageState extends State<SignUpPage> {
 
     void submitForm() async {
       if (_formKey.currentState!.validate()) {
+        widgetNotifier.setLoading(true);
         _formKey.currentState!.save();
         if (widgetNotifier.userType == UserType.patient) {
-          patientSignUp();
+          await patientSignUp();
+          widgetNotifier.setLoading(false);
         } else if (widgetNotifier.userType == UserType.nurse) {
           nurseSignUp();
+          widgetNotifier.setLoading(false);
         } // todo : add doctor
       }
     }

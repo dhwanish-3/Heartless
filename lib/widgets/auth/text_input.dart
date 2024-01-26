@@ -35,8 +35,9 @@ class TextFieldInput extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(6.0),
       width: containerWidth, // 90% of screen width
-      height: 65,
-      child: TextField(
+      // !  when height is specified, widget shrinks on validator error
+      // height: 65,
+      child: TextFormField(
         cursorHeight: 19,
         controller: textEditingController,
         keyboardType: textInputType,
@@ -90,6 +91,21 @@ class TextFieldInput extends StatelessWidget {
               ),
               borderRadius: const BorderRadius.all(Radius.circular(15))),
         ),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            if (textInputType == TextInputType.emailAddress) {
+              return 'Please enter an email';
+            } else if (textInputType == TextInputType.visiblePassword) {
+              return 'Please enter a password';
+            } else {
+              return 'Please enter a value';
+            }
+          } else if (textInputType == TextInputType.visiblePassword &&
+              value.length < 6) {
+            return 'Please enter a password with atleast 6 characters';
+          }
+          return null;
+        },
       ),
     );
   }

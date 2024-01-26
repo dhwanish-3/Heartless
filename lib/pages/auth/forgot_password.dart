@@ -49,26 +49,39 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       Navigator.pop(context);
     }
 
-    void goToVerificationPage() {
-      Navigator.pushNamed(context, '/verification'); // todo : add correct name
+    void goToLoginPage() {
+      Navigator.pushNamed(context, '/login');
     }
 
     // patient forgot password
     void patientForgotPassword() async {
+      widgetNotifier.setLoading(true);
       Patient patient = Patient();
       patient.email = _emailController.text;
       authNotifier.setPatient(patient);
+
       if (await _patientController.sendResetEmail(authNotifier)) {
-        goToVerificationPage();
+        // since verification by otp input is not yet functional user is redirected to login page
+        widgetNotifier.setLoading(false);
+        goToLoginPage();
+      } else {
+        // in case the sendResetEmail function returns false
+        widgetNotifier.setLoading(false);
       }
     }
 
     void nurseForgotPassword() async {
+      widgetNotifier.setLoading(true);
       Nurse nurse = Nurse();
       nurse.email = _emailController.text;
       authNotifier.setNurse(nurse);
       if (await _nurseController.sendResetEmail(authNotifier)) {
-        goToVerificationPage();
+        // since verification by otp input is not yet functional user is redirected to login page
+        widgetNotifier.setLoading(false);
+        goToLoginPage();
+      } else {
+        // in case the sendResetEmail function returns false
+        widgetNotifier.setLoading(false);
       }
     }
 
