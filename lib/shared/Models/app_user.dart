@@ -4,13 +4,13 @@ enum UserType { patient, nurse, doctor }
 String userTypeToString(UserType userType) {
   switch (userType) {
     case UserType.patient:
-      return 'patient';
+      return 'Patient';
     case UserType.nurse:
-      return 'nurse';
+      return 'Nurse';
     case UserType.doctor:
-      return 'doctor';
+      return 'Doctor';
     default:
-      return 'patient';
+      return 'Patient';
   }
 }
 

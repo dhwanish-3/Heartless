@@ -61,6 +61,7 @@ class _LoginPageState extends State<LoginPage> {
 
     // patient login
     void patientLogin() async {
+      debugPrint('patient login');
       Patient? patient = Patient();
       patient.email = _emailController.text;
       patient.password = _passwordController.text;
@@ -74,6 +75,7 @@ class _LoginPageState extends State<LoginPage> {
 
     // nurse login
     void nurseLogin() async {
+      debugPrint('nurse login');
       Nurse? nurse = Nurse();
       nurse.email = _emailController.text;
       nurse.password = _passwordController.text;
@@ -92,7 +94,9 @@ class _LoginPageState extends State<LoginPage> {
           patientLogin();
         } else if (widgetNotifier.userType == UserType.nurse) {
           nurseLogin();
-        }
+        } // todo : add doctor
+      } else {
+        debugPrint('form not validated');
       }
     }
 
@@ -145,7 +149,7 @@ class _LoginPageState extends State<LoginPage> {
                         height: 20,
                       ),
                       Text(
-                        'Login',
+                        '${userTypeToString(widgetNotifier.userType)} Login',
                         style: Theme.of(context).textTheme.headlineMedium,
                       ),
                       const SizedBox(

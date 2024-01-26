@@ -58,10 +58,6 @@ class _SignUpPageState extends State<SignUpPage> {
       Navigator.pushNamed(context, '/patientHome'); // todo : add correct name
     }
 
-    void goToLoginPage() {
-      Navigator.pushNamed(context, '/loginPatient'); // todo : add correct name
-    }
-
     void submitForm() async {
       if (_formKey.currentState!.validate()) {
         _formKey.currentState!.save();

@@ -17,7 +17,7 @@ class _DummyHomeState extends State<DummyHome> {
     await PatientController().logout(authNotifier);
     if (context.mounted) {
       // ! ensure that the widget is mounted before navigating
-      Navigator.pushNamed(context, '/loginPatient');
+      Navigator.pushNamed(context, '/login');
     }
   }
 
