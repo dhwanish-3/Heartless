@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:heartless/services/exceptions/app_exceptions.dart';
 import 'package:heartless/shared/models/app_user.dart';
@@ -11,6 +10,7 @@ import 'package:heartless/shared/provider/auth_notifier.dart';
 
 class NurseAuth {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final _nurseRef = FirebaseFirestore.instance.collection('Nurses');
   static const Duration _timeLimit = Duration(seconds: 10);
   String? _otp;
 
@@ -18,18 +18,17 @@ class NurseAuth {
   Future<bool> getNurseDetailswithEmail(
       AuthNotifier authNotifier, String email) async {
     try {
-      await FirebaseFirestore.instance
-          .collection('Nurses')
+      return await _nurseRef
           .where('email', isEqualTo: email)
           .get()
           .then((value) {
         if (value.docs.isNotEmpty) {
           authNotifier.setNurse(Nurse.fromMap(value.docs.first.data()));
+          return true;
         } else {
           return false;
         }
       }).timeout(_timeLimit);
-      return true;
     } on FirebaseAuthException {
       throw UnAutherizedException();
     } on SocketException {
@@ -42,13 +41,14 @@ class NurseAuth {
   // get nurse details from firebase
   Future<bool> getNurseDetails(AuthNotifier authNotifier) async {
     try {
-      await FirebaseFirestore.instance
-          .collection('Nurses')
-          .doc(authNotifier.nurse!.uid)
-          .get()
-          .then((value) => authNotifier.setNurse(Nurse.fromMap(value.data()!)))
-          .timeout(_timeLimit);
-      return true;
+      return await _nurseRef.doc(authNotifier.nurse!.uid).get().then((value) {
+        if (value.exists && value.data() != null) {
+          authNotifier.setNurse(Nurse.fromMap(value.data()!));
+          return true;
+        } else {
+          return false;
+        }
+      }).timeout(_timeLimit);
     } on FirebaseAuthException {
       throw UnAutherizedException();
     } on SocketException {
@@ -61,8 +61,7 @@ class NurseAuth {
   // set nurse details to firebase
   Future<bool> setNurseDetails(AuthNotifier authNotifier) async {
     try {
-      await FirebaseFirestore.instance
-          .collection('Nurses')
+      await _nurseRef
           .doc(authNotifier.nurse!.uid)
           .set(authNotifier.nurse!.toMap())
           .timeout(_timeLimit);
@@ -82,9 +81,13 @@ class NurseAuth {
       User? user = _auth.currentUser;
       if (user != null) {
         authNotifier.nurse!.uid = user.uid;
-        await getNurseDetails(authNotifier).timeout(_timeLimit);
-        authNotifier.setLoggedIn(true);
-        return true;
+        if (await getNurseDetails(authNotifier)) {
+          authNotifier.setLoggedIn(true);
+          return true;
+        } else {
+          authNotifier.setLoggedIn(false);
+          return false;
+        }
       } else {
         authNotifier.setLoggedIn(false);
         return false;
@@ -104,7 +107,6 @@ class NurseAuth {
   Future<bool> googleSignIn(AuthNotifier authNotifier) async {
     final googleSignIn = GoogleSignIn();
     try {
-      debugPrint('Google Sign In Started');
       final googleUser = await googleSignIn.signIn();
       if (googleUser == null) {
         throw UnAutherizedException;
@@ -115,21 +117,21 @@ class NurseAuth {
       UserCredential result = await _auth.signInWithCredential(credential);
 
       if (result.user != null) {
-        // ! check if the user already had an account
+        // * check if the user already had an account
         if (await getNurseDetailswithEmail(authNotifier, result.user!.email!)) {
           authNotifier.setLoggedIn(true);
           authNotifier.setUserType(UserType.nurse);
           return true;
         } else {
-          debugPrint(_auth.currentUser.toString());
+          // * if not then create a new account
+          authNotifier.setNurse(Nurse());
           authNotifier.nurse!.uid = result.user!.uid;
           authNotifier.nurse!.email = result.user!.email!;
           authNotifier.nurse!.name = result.user!.displayName!;
           authNotifier.nurse!.imageUrl = result.user!.photoURL!;
           authNotifier.setLoggedIn(true);
           authNotifier.setUserType(UserType.nurse);
-          bool success =
-              await setNurseDetails(authNotifier).timeout(_timeLimit);
+          bool success = await setNurseDetails(authNotifier);
           if (success) {
             return true;
           } else {
@@ -255,21 +257,19 @@ class NurseAuth {
       //! verifyPasswordResetCode or confirmPasswordReset
       String email =
           await _auth.verifyPasswordResetCode(code).timeout(_timeLimit);
-      if (email != authNotifier.nurse!.email) {
+      if (email == authNotifier.nurse!.email) {
+        _otp = code; // saving it for later use
+        return true;
+      } else {
         throw FirebaseAuthException;
       }
-      _otp = code; // saving it for later use
-      return true;
     } on FirebaseAuthException {
       throw UnAutherizedException();
     } on SocketException {
       throw FetchDataException('No Internet Connection');
     } on TimeoutException {
       throw ApiNotRespondingException('Server is not responding');
-    } catch (e) {
-      debugPrint(e.toString());
     }
-    return false;
   }
 
   // set new password
