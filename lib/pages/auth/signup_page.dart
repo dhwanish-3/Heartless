@@ -72,7 +72,6 @@ class _SignUpPageState extends State<SignUpPage> {
       authNotifier.setPatient(patient);
       bool success = await _patientController.signUp(authNotifier);
       if (success && context.mounted) {
-        debugPrint('Signed up ${authNotifier.patient!.uid}');
         goToPatientHome();
       }
     }
@@ -86,7 +85,6 @@ class _SignUpPageState extends State<SignUpPage> {
       authNotifier.setNurse(nurse);
       bool success = await _nurseController.signUp(authNotifier);
       if (success && context.mounted) {
-        debugPrint('Signed up ${authNotifier.nurse!.uid}');
         goToNurseHome();
       }
     }

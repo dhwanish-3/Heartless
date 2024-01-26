@@ -4,6 +4,7 @@ import 'package:heartless/shared/constants.dart';
 import 'package:heartless/shared/provider/widget_provider.dart';
 import 'package:heartless/widgets/auth/custom_text_button.dart';
 
+// ! This widget is not beign used anywhere
 class ToggleButton extends StatelessWidget {
   final bool emailPhoneToggle;
   const ToggleButton({

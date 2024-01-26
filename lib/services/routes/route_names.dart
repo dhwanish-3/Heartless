@@ -1,13 +1,18 @@
 class RouteNames {
-  //! splash routes
+  // splash routes
   static const String splash = '/';
   static const String choosUserType = '/chooseUserType';
 
   // * auth routes
-  //login Signup toggle
+  // login Signup toggle
   static const String loginOrSignup = '/loginOrSignup';
   static const String login = '/login';
   static const String signup = '/signup';
+
+  // forgot password
+  static const String forgotPassword = '/forgotPassword';
+  static const String verification = '/verification';
+  static const String resetPassword = '/resetPassword';
 
   // patient routes
   static const String patientHome = '/patientHome';

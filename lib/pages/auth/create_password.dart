@@ -9,14 +9,14 @@ import 'package:heartless/widgets/miscellaneous/right_trailing_button.dart';
 import 'package:heartless/widgets/auth/text_input.dart';
 import "package:heartless/shared/provider/widget_provider.dart";
 
-class CreatePassPage extends StatefulWidget {
-  const CreatePassPage({super.key});
+class CreatePasswordPage extends StatefulWidget {
+  const CreatePasswordPage({super.key});
 
   @override
-  State<CreatePassPage> createState() => _CreatePassPageState();
+  State<CreatePasswordPage> createState() => _CreatePasswordPageState();
 }
 
-class _CreatePassPageState extends State<CreatePassPage> {
+class _CreatePasswordPageState extends State<CreatePasswordPage> {
   final PatientController _patientController = PatientController();
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _passwordController = TextEditingController();
