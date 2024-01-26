@@ -31,10 +31,9 @@ class _RadialBarChartState extends State<RadialBarChart> {
           // trackOpacity: 0.3,
           maximumValue: 100,
           dataLabelSettings: const DataLabelSettings(
-            // Renders the data label
-            isVisible: true,
-            textStyle: TextStyle(fontSize: 15)
-          ))
+              // Renders the data label
+              isVisible: true,
+              textStyle: TextStyle(fontSize: 15)))
     ]))));
   }
 }

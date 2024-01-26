@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import "package:flutter_svg/svg.dart";
-import 'package:heartless/main.dart';
-import 'package:heartless/shared/provider/widget_provider.dart';
 import 'package:heartless/widgets/miscellaneous/right_trailing_button.dart';
 import 'package:heartless/widgets/auth/user_type.dart';
 
@@ -10,9 +8,12 @@ class ChooseUserPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    WidgetNotifier widgetNotifier =
-        Provider.of<WidgetNotifier>(context, listen: false);
     double height = MediaQuery.of(context).size.height;
+
+    void goToLoginOrSignupPage() {
+      Navigator.pushNamed(context, '/loginOrSignup'); // todo : add correct name
+    }
+
     return Scaffold(
       body: Stack(
         alignment: Alignment.center,
@@ -22,7 +23,7 @@ class ChooseUserPage extends StatelessWidget {
             bottom: 0,
             left: 0,
             child: SvgPicture.asset(
-              'assets/illustrations/LftBtmDsgnElmt.svg',
+              'assets/illustrations/cool_design.svg',
               height: height * 0.25,
             ),
           ),
@@ -39,17 +40,13 @@ class ChooseUserPage extends StatelessWidget {
               )),
           Positioned(
             top: height * 0.25,
-            child: UserTypeWidget(
-              userType: widgetNotifier.userType,
-            ),
+            child: const UserTypeWidget(),
           ),
           Positioned(
             bottom: 80,
             right: 60,
             child: GestureDetector(
-                onTap: () {
-                  // todo
-                },
+                onTap: goToLoginOrSignupPage,
                 child: const RightButton(text: 'Next')),
           )
         ],

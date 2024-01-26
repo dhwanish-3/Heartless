@@ -1,5 +1,6 @@
 class RouteNames {
   static const String splash = '/';
+  static const String choosUserType = '/chooseUserType';
 
   // * auth routes
   // login routes
