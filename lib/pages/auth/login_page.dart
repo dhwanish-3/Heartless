@@ -62,7 +62,7 @@ class _LoginPageState extends State<LoginPage> {
     // patient login
     void patientLogin() async {
       debugPrint('patient login');
-      Patient? patient = Patient();
+      Patient patient = Patient();
       patient.email = _emailController.text;
       patient.password = _passwordController.text;
       authNotifier.setPatient(patient);
@@ -76,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
     // nurse login
     void nurseLogin() async {
       debugPrint('nurse login');
-      Nurse? nurse = Nurse();
+      Nurse nurse = Nurse();
       nurse.email = _emailController.text;
       nurse.password = _passwordController.text;
       authNotifier.setNurse(nurse);
@@ -95,8 +95,6 @@ class _LoginPageState extends State<LoginPage> {
         } else if (widgetNotifier.userType == UserType.nurse) {
           nurseLogin();
         } // todo : add doctor
-      } else {
-        debugPrint('form not validated');
       }
     }
 
