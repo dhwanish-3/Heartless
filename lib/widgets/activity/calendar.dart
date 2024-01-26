@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:calendar_agenda/calendar_agenda.dart';
 import 'package:flutter/material.dart';
+import 'package:heartless/shared/constants.dart';
 
 class HorizontalCalendar extends StatefulWidget {
   const HorizontalCalendar({super.key});
@@ -36,7 +37,7 @@ class _HorizontalCalendarState extends State<HorizontalCalendar> {
               locale: 'en',
               weekDay: WeekDay.long,
               fullCalendarDay: WeekDay.short,
-              selectedDateColor: Colors.blue.shade900,
+              selectedDateColor: Constants.primaryColor,
               selectedDayPosition: SelectedDayPosition.center,
 
               initialDate: DateTime.now(),
@@ -58,12 +59,6 @@ class _HorizontalCalendarState extends State<HorizontalCalendar> {
               //   scale: 5.0,
               // ),
             ),
-            // ElevatedButton(
-            //   onPressed: () {
-            //     _calendarAgendaControllerNotAppBar.goToDay(DateTime.now());
-            //   },
-            //   child: const Text("Today"),
-            // ),
             const SizedBox(
               height: 20.0,
             ),

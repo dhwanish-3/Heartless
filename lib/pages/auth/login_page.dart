@@ -60,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     // patient login
-    void patientLogin() async {
+    Future<void> patientLogin() async {
       Patient patient = Patient();
       patient.email = _emailController.text;
       patient.password = _passwordController.text;
@@ -72,7 +72,7 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     // nurse login
-    void nurseLogin() async {
+    Future<void> nurseLogin() async {
       Nurse nurse = Nurse();
       nurse.email = _emailController.text;
       nurse.password = _passwordController.text;
@@ -85,13 +85,17 @@ class _LoginPageState extends State<LoginPage> {
 
     void submitForm() async {
       if (_formKey.currentState!.validate()) {
+        widgetNotifier.setLoading(true);
         _formKey.currentState!.save();
         if (widgetNotifier.userType == UserType.patient) {
-          patientLogin();
+          await patientLogin();
+          widgetNotifier.setLoading(false);
         } else if (widgetNotifier.userType == UserType.nurse) {
-          nurseLogin();
+          await nurseLogin();
+          widgetNotifier.setLoading(false);
         } // todo : add doctor
       }
+      // widgetNotifier.setLoading(false);
     }
 
     void googleSignIn() async {
