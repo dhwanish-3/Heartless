@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heartless/widgets/activity/reminder_card.dart';
 import 'package:heartless/widgets/chat/chat_tile.dart';
 
 class TestingPage extends StatefulWidget {
@@ -13,16 +14,20 @@ class _TestingPageState extends State<TestingPage> {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: ChatTile(
-              name: 'Dr. John Dot',
-              imageUrl: 'assets/avatar/User.png',
-              latestMessage: 'Hello, how are you?',
-              time: '10:00 AM',
-              unreadMessages: 5,
-            )),
-      ),
+          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Reminder(
+            title: 'Paracetamol ',
+            description: "the best medicine out there",
+            time: '9:00 AM',
+            type: 0),
+        SizedBox(height: 20),
+        Reminder(
+            title: 'Paracetoamol',
+            description: "the best medicine out there",
+            time: '9:00 AM',
+            type: 0,
+            status: 2),
+      ])),
     );
   }
 }

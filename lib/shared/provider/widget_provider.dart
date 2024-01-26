@@ -41,4 +41,11 @@ class WidgetNotifier with ChangeNotifier {
     _showLogin = !_showLogin;
     notifyListeners();
   }
+
+  int _toggleSelectionIndex = 0;
+  int get toggleSelectionIndex => _toggleSelectionIndex;
+  void changeToggleSelection(int index) {
+    _toggleSelectionIndex = index;
+    notifyListeners();
+  }
 }
