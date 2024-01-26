@@ -11,6 +11,7 @@ import 'package:heartless/shared/provider/auth_notifier.dart';
 
 class PatientAuth {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final _patientRef = FirebaseFirestore.instance.collection('Patients');
   static const Duration _timeLimit = Duration(seconds: 10);
   String? _otp;
 
@@ -18,18 +19,17 @@ class PatientAuth {
   Future<bool> getPatientDetailswithEmail(
       AuthNotifier authNotifier, String email) async {
     try {
-      await FirebaseFirestore.instance
-          .collection('Patients')
+      return await _patientRef
           .where('email', isEqualTo: email)
           .get()
           .then((value) {
         if (value.docs.isNotEmpty) {
           authNotifier.setPatient(Patient.fromMap(value.docs.first.data()));
+          return true;
         } else {
           return false;
         }
       }).timeout(_timeLimit);
-      return true;
     } on FirebaseAuthException {
       throw UnAutherizedException();
     } on SocketException {
@@ -42,14 +42,17 @@ class PatientAuth {
   // get patient details from firebase
   Future<bool> getPateintDetails(AuthNotifier authNotifier) async {
     try {
-      await FirebaseFirestore.instance
-          .collection('Patients')
+      return await _patientRef
           .doc(authNotifier.patient!.uid)
           .get()
-          .then((value) =>
-              authNotifier.setPatient(Patient.fromMap(value.data()!)))
-          .timeout(_timeLimit);
-      return true;
+          .then((value) {
+        if (value.exists && value.data() == null) {
+          authNotifier.setPatient(Patient.fromMap(value.data()!));
+          return true;
+        } else {
+          return false;
+        }
+      }).timeout(_timeLimit);
     } on FirebaseAuthException {
       throw UnAutherizedException();
     } on SocketException {
@@ -62,8 +65,7 @@ class PatientAuth {
   // set patient details to firebase
   Future<bool> setPateintDetails(AuthNotifier authNotifier) async {
     try {
-      await FirebaseFirestore.instance
-          .collection('Patients')
+      await _patientRef
           .doc(authNotifier.patient!.uid)
           .set(authNotifier.patient!.toMap())
           .timeout(_timeLimit);
@@ -83,9 +85,14 @@ class PatientAuth {
       User? user = _auth.currentUser;
       if (user != null) {
         authNotifier.patient!.uid = user.uid;
-        await getPateintDetails(authNotifier).timeout(_timeLimit);
-        authNotifier.setLoggedIn(true);
-        return true;
+        if (await getPateintDetails(authNotifier).timeout(_timeLimit)) {
+          authNotifier.setLoggedIn(true);
+          authNotifier.setUserType(UserType.patient);
+          return true;
+        } else {
+          authNotifier.setLoggedIn(false);
+          return false;
+        }
       } else {
         authNotifier.setLoggedIn(false);
         return false;
@@ -105,7 +112,6 @@ class PatientAuth {
   Future<bool> googleSignIn(AuthNotifier authNotifier) async {
     final googleSignIn = GoogleSignIn();
     try {
-      debugPrint('Google Sign In Started');
       final googleUser = await googleSignIn.signIn();
       if (googleUser == null) {
         throw UnAutherizedException;
@@ -116,14 +122,15 @@ class PatientAuth {
       UserCredential result = await _auth.signInWithCredential(credential);
 
       if (result.user != null) {
-        // ! check if the user already had an account
+        // * check if the user already had an account
         if (await getPatientDetailswithEmail(
             authNotifier, result.user!.email!)) {
           authNotifier.setLoggedIn(true);
           authNotifier.setUserType(UserType.patient);
           return true;
         } else {
-          debugPrint(_auth.currentUser.toString());
+          // * if not then create a new account
+          authNotifier.setPatient(Patient());
           authNotifier.patient!.uid = result.user!.uid;
           authNotifier.patient!.email = result.user!.email!;
           authNotifier.patient!.name = result.user!.displayName!;
