@@ -11,8 +11,6 @@ import 'package:heartless/widgets/miscellaneous/right_trailing_button.dart';
 import 'package:heartless/widgets/auth/text_input.dart';
 import "package:heartless/shared/provider/widget_provider.dart";
 
-import "package:heartless/pages/activities/activity_page.dart";
-
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -253,6 +251,5 @@ class _LoginPageState extends State<LoginPage> {
         ],
       ),
     );
-
   }
 }

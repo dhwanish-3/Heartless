@@ -10,6 +10,9 @@ class Reminder extends StatelessWidget {
   final String time;
   final int type;
   final int status;
+
+  //! to be taken from provider
+  final bool isPatient = false;
   const Reminder(
       {super.key,
       required this.title,
@@ -85,6 +88,7 @@ class Reminder extends StatelessWidget {
                     SizedBox(
                       // padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
                       height: 50,
+                      //!have to be made responsice
                       width: containerWidth - 150,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -115,54 +119,89 @@ class Reminder extends StatelessWidget {
                         ],
                       ),
                     ),
-                    Container(
-                        width: 33,
-                        height: 33,
-                        margin: const EdgeInsets.fromLTRB(0, 0, 12, 0),
-                        // padding: const EdgeInsets.all(15),
-                        decoration: BoxDecoration(
-                          color: Constants.notifColor,
-                          borderRadius: const BorderRadius.only(
-                              topRight: Radius.circular(17)),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.5),
-                              spreadRadius: 0,
-                              blurRadius: 2,
-                              offset: const Offset(0, 3),
+                    isPatient
+                        ? Container(
+                            width: 33,
+                            height: 33,
+                            margin: const EdgeInsets.fromLTRB(0, 0, 12, 0),
+                            // padding: const EdgeInsets.all(15),
+                            decoration: BoxDecoration(
+                              color: Constants.notifColor,
+                              borderRadius: const BorderRadius.only(
+                                  topRight: Radius.circular(17)),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.5),
+                                  spreadRadius: 0,
+                                  blurRadius: 2,
+                                  offset: const Offset(0, 3),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                        child: Image.asset(buttonUrl))
+                            child: Image.asset(buttonUrl))
+                        : Container()
                   ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        time,
-                        // style: Theme.of(context).textTheme.headlineSmall,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      time,
+                      // style: Theme.of(context).textTheme.headlineSmall,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
                       ),
-                      Text(
-                        trailLabel,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 8,
-                        ),
-                      )
-                    ],
-                  ),
+                    ),
+                    isPatient
+                        ? Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                            child: Text(
+                              trailLabel,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 8,
+                              ),
+                            ),
+                          )
+                        : Container()
+                  ],
                 )
               ],
             ),
-          )
+          ),
+          !isPatient
+              ? Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Container(
+                        height: 33,
+                        width: 33,
+                        margin: const EdgeInsets.fromLTRB(0, 5, 12, 0),
+                        decoration: const BoxDecoration(
+                          image: DecorationImage(
+                            opacity: 0.8,
+                            scale: 2,
+                            image: AssetImage('assets/Icons/delete.png'),
+                          ),
+                        )),
+                    Container(
+                        height: 33,
+                        width: 33,
+                        margin: const EdgeInsets.fromLTRB(0, 0, 10, 5),
+                        decoration: const BoxDecoration(
+                          borderRadius:
+                              BorderRadius.only(topRight: Radius.circular(17)),
+                          image: DecorationImage(
+                            scale: 1.3,
+                            opacity: 0.6,
+                            image: AssetImage('assets/Icons/edit.png'),
+                          ),
+                        )),
+                  ],
+                )
+              : Container(),
         ],
       ),
     );

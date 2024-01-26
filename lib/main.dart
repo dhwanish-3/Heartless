@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heartless/pages/testing_page.dart';
 import 'package:heartless/services/routes/routes.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
 import 'package:heartless/shared/provider/theme_provider.dart';
@@ -33,7 +34,8 @@ class MyApp extends StatelessWidget {
       theme: themeNotifier.lightTheme,
       darkTheme: themeNotifier.darkTheme,
       themeMode: ThemeNotifier.themeMode,
-      initialRoute: '/',
+      // initialRoute: '/',
+      home: const TestingPage(),
       onGenerateRoute: Routes.generateRoutes,
     );
   }
