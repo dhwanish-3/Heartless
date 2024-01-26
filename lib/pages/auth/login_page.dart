@@ -61,28 +61,24 @@ class _LoginPageState extends State<LoginPage> {
 
     // patient login
     void patientLogin() async {
-      debugPrint('patient login');
       Patient patient = Patient();
       patient.email = _emailController.text;
       patient.password = _passwordController.text;
       authNotifier.setPatient(patient);
       bool success = await _patientController.login(authNotifier);
       if (success && context.mounted) {
-        debugPrint('Logged in ${authNotifier.patient!.uid}');
         goToPatientHome();
       }
     }
 
     // nurse login
     void nurseLogin() async {
-      debugPrint('nurse login');
       Nurse nurse = Nurse();
       nurse.email = _emailController.text;
       nurse.password = _passwordController.text;
       authNotifier.setNurse(nurse);
       bool success = await _nurseController.login(authNotifier);
       if (success && context.mounted) {
-        debugPrint('Logged in ${authNotifier.nurse!.uid}');
         goToNurseHome();
       }
     }

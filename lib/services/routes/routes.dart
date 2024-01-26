@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/pages/auth/choose_user_type.dart';
+import 'package:heartless/pages/auth/create_password.dart';
 import 'package:heartless/pages/auth/dummy_home.dart';
+import 'package:heartless/pages/auth/forgot_password.dart';
 import 'package:heartless/pages/auth/splash_screen.dart';
 import 'package:heartless/pages/auth/login_page.dart';
 import 'package:heartless/pages/auth/signup_page.dart';
 import 'package:heartless/pages/auth/login_register_toggle.dart';
+import 'package:heartless/pages/auth/verification_page.dart';
 import 'package:heartless/services/routes/route_names.dart';
 
 class Routes {
@@ -17,13 +20,20 @@ class Routes {
         return MaterialPageRoute(builder: (_) => const ChooseUserPage());
 
       // * auth routes * //
+      case RouteNames.loginOrSignup:
+        return MaterialPageRoute(builder: (_) => const LoginOrRegister());
       case RouteNames.login:
         return MaterialPageRoute(builder: (_) => const LoginPage());
       case RouteNames.signup:
         return MaterialPageRoute(builder: (_) => const SignUpPage());
 
-      case RouteNames.loginOrSignup:
-        return MaterialPageRoute(builder: (_) => const LoginOrRegister());
+      case RouteNames.forgotPassword:
+        return MaterialPageRoute(builder: (_) => const ForgotPasswordPage());
+      case RouteNames.verification:
+        return MaterialPageRoute(builder: (_) => const VerificationPage());
+      case RouteNames.resetPassword:
+        return MaterialPageRoute(builder: (_) => const CreatePasswordPage());
+
       // ! Patient routes ! //
       case RouteNames.patientHome:
         return MaterialPageRoute(builder: (_) => const DummyHome());
