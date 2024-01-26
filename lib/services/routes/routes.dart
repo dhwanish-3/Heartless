@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heartless/pages/auth/choose_user_type.dart';
 import 'package:heartless/pages/auth/dummy_home.dart';
 import 'package:heartless/pages/auth/splash_screen.dart';
 import 'package:heartless/pages/auth/login_page.dart';
@@ -12,6 +13,8 @@ class Routes {
       case RouteNames.splash:
         // todo: add landing page
         return MaterialPageRoute(builder: (_) => const SplashScreen());
+      case RouteNames.choosUserType:
+        return MaterialPageRoute(builder: (_) => const ChooseUserPage());
 
       // * auth routes * //
       case RouteNames.loginPatient:

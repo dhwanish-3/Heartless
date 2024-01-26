@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:heartless/shared/constants.dart';
+import 'package:heartless/main.dart';
 import 'package:heartless/shared/models/app_user.dart';
+import 'package:heartless/shared/provider/widget_provider.dart';
 import 'package:heartless/widgets/auth/single_user_type.dart';
 
 class UserTypeWidget extends StatefulWidget {
-  UserType userType;
-  UserTypeWidget({
+  const UserTypeWidget({
     super.key,
-    required this.userType,
   });
 
   @override
-  _UserTypeState createState() => _UserTypeState();
+  State<UserTypeWidget> createState() => _UserTypeState();
 }
 
 class _UserTypeState extends State<UserTypeWidget> {
@@ -24,21 +23,23 @@ class _UserTypeState extends State<UserTypeWidget> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          buildItem(UserType.doctor),
-          buildItem(UserType.patient),
-          buildItem(UserType.nurse),
+          buildChooseUserTypeWidget(UserType.doctor, context),
+          buildChooseUserTypeWidget(UserType.patient, context),
+          buildChooseUserTypeWidget(UserType.nurse, context),
         ],
       ),
     );
   }
 
-  Widget buildItem(UserType userType) {
-    final isSelected = widget.userType == userType;
+  Widget buildChooseUserTypeWidget(UserType userType, BuildContext context) {
+    WidgetNotifier widgetNotifier =
+        Provider.of<WidgetNotifier>(context, listen: false);
+    final isSelected = widgetNotifier.userType == userType;
 
     return GestureDetector(
       onTap: () {
         setState(() {
-          widget.userType = userType;
+          widgetNotifier.setUserType(userType);
         });
       },
       child: AnimatedContainer(

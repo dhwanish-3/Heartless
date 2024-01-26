@@ -27,7 +27,7 @@ class _SplashScreenState extends State<SplashScreen> {
         if (value) {
           Navigator.pushNamed(context, '/patientHome');
         } else {
-          Navigator.pushNamed(context, '/loginOrSignup');
+          Navigator.pushNamed(context, '/chooseUserType');
         }
       });
     });

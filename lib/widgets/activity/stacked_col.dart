@@ -30,7 +30,7 @@ class _StackedColumnChartState extends State<StackedColumnChart> {
 
     return Scaffold(
         body: Center(
-            child: Container(
+            child: SizedBox(
                 height: 300,
                 width: 350,
                 child: SfCartesianChart(
@@ -40,7 +40,7 @@ class _StackedColumnChartState extends State<StackedColumnChart> {
                         dataSource: chartData,
                         xValueMapper: (ChartData data, _) => data.x,
                         yValueMapper: (ChartData data, _) => data.y1,
-                        dataLabelSettings: DataLabelSettings(
+                        dataLabelSettings: const DataLabelSettings(
                             isVisible: true,
                             showCumulativeValues: true,
                             textStyle: TextStyle(fontSize: 17)),
@@ -49,7 +49,7 @@ class _StackedColumnChartState extends State<StackedColumnChart> {
                         dataSource: chartData,
                         xValueMapper: (ChartData data, _) => data.x,
                         yValueMapper: (ChartData data, _) => data.y2,
-                        dataLabelSettings: DataLabelSettings(
+                        dataLabelSettings: const DataLabelSettings(
                             isVisible: true,
                             showCumulativeValues: true,
                             textStyle: TextStyle(fontSize: 15)),

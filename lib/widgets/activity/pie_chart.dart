@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 
 class PieChart extends StatefulWidget {
   const PieChart({super.key});
@@ -11,13 +9,8 @@ class PieChart extends StatefulWidget {
 }
 
 class _PieChartState extends State<PieChart> {
-  // @override
-  // Widget build(BuildContext context) {
-  //   return const Placeholder();
-  // }
   @override
   Widget build(BuildContext context) {
-
     final List<Color> colors = [
       Colors.lightBlue,
       Colors.lime,
@@ -26,10 +19,10 @@ class _PieChartState extends State<PieChart> {
       Colors.redAccent,
     ];
 
-    var i=0;
+    var i = 0;
     final List<ChartData> chartData = [
       ChartData('David', 25, colors[i++]),
-      ChartData('Steve', 38,colors[i++]),
+      ChartData('Steve', 38, colors[i++]),
       ChartData('Jack', 34, colors[i++]),
       ChartData('Others', 52, colors[i++])
     ];
@@ -46,8 +39,7 @@ class _PieChartState extends State<PieChart> {
           yValueMapper: (ChartData data, _) => data.y,
           explode: true,
           explodeGesture: ActivationMode.singleTap,
-          dataLabelMapper: (ChartData data, _) =>
-              data.x.toString() + "\n" + data.y.toString(),
+          dataLabelMapper: (ChartData data, _) => "${data.x}\n${data.y}",
           dataLabelSettings: const DataLabelSettings(
               // Renders the data label
               isVisible: true,

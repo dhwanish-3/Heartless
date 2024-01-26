@@ -12,10 +12,10 @@ class _DoughnutChartState extends State<DoughnutChart> {
   @override
   Widget build(BuildContext context) {
     final List<ChartData> chartData = [
-      ChartData('David', 25, Color.fromRGBO(9, 0, 136, 1)),
-      ChartData('Steve', 38, Color.fromRGBO(147, 0, 119, 1)),
-      ChartData('Jack', 34, Color.fromRGBO(228, 0, 124, 1)),
-      ChartData('Others', 52, Color.fromRGBO(255, 189, 57, 1))
+      ChartData('David', 25, const Color.fromRGBO(9, 0, 136, 1)),
+      ChartData('Steve', 38, const Color.fromRGBO(147, 0, 119, 1)),
+      ChartData('Jack', 34, const Color.fromRGBO(228, 0, 124, 1)),
+      ChartData('Others', 52, const Color.fromRGBO(255, 189, 57, 1))
     ];
     return Scaffold(
         body: Center(
@@ -29,8 +29,7 @@ class _DoughnutChartState extends State<DoughnutChart> {
           yValueMapper: (ChartData data, _) => data.y,
           explode: true,
           explodeGesture: ActivationMode.singleTap,
-          dataLabelMapper: (ChartData data, _) =>
-              data.x.toString() + "\n" + data.y.toString(),
+          dataLabelMapper: (ChartData data, _) => "${data.x}\n${data.y}",
           dataLabelSettings: const DataLabelSettings(
               // Renders the data label
               isVisible: true,
