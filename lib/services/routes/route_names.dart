@@ -3,6 +3,9 @@ class RouteNames {
   static const String choosUserType = '/chooseUserType';
 
   // * auth routes
+  //login Signup toggle
+  static const String loginOrSignup = '/loginOrSignup';
+
   // login routes
   static const String loginPatient = '/loginPatient';
   static const String loginDoctor = '/loginDoctor';
@@ -15,6 +18,11 @@ class RouteNames {
   static const String patientHome = '/patientHome';
   static const String patientProfile = '/patientProfile';
 
-  //login Signup toggle
-  static const String loginOrSignup = '/loginOrSignup';
+  // nurse routes
+  static const String nurseHome = '/nurseHome';
+  static const String nurseProfile = '/nurseProfile';
+
+  // doctor routes
+  static const String doctorHome = '/doctorHome';
+  static const String doctorProfile = '/doctorProfile';
 }
