@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:heartless/shared/constants.dart';
 
@@ -32,11 +33,29 @@ class _ChatTileState extends State<ChatTile> {
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           child: Row(
             children: [
-              CircleAvatar(
-                  radius: 26,
-                  backgroundColor: Theme.of(context).primaryColor,
-                  backgroundImage:
-                      const NetworkImage("https://i.pravatar.cc/150?img=3")),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(30),
+                child: CachedNetworkImage(
+                  imageUrl: "https://iavatar.cc",
+                  height: 52,
+                  width: 52,
+                  placeholder: (context, url) =>
+                      const CircularProgressIndicator(),
+                  // todo: modify the error widget
+                  errorWidget: (context, url, error) => Container(
+                      height: 52,
+                      width: 52,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        color: Theme.of(context).shadowColor,
+                      ),
+                      child: const Icon(
+                        Icons.person_2_outlined,
+                        color: Colors.black,
+                        size: 30,
+                      )),
+                ),
+              ),
               Expanded(
                 child: Container(
                   padding: const EdgeInsets.fromLTRB(10, 5, 0, 0),
