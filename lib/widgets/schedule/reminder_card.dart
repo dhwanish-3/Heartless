@@ -12,7 +12,7 @@ class Reminder extends StatelessWidget {
   final int status;
 
   //! to be taken from provider
-  final bool isPatient = false;
+  final bool isPatient = true;
   const Reminder(
       {super.key,
       required this.title,
@@ -45,6 +45,7 @@ class Reminder extends StatelessWidget {
             : type == 2
                 ? Constants.exerciseColor
                 : Constants.exerciseColor;
+    // bgColor = Constants.primaryColor.withOpacity(0.1);
     return Container(
       height: 85,
       width: containerWidth,
