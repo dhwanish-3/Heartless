@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:heartless/widgets/chat/chat_tile.dart';
 import 'package:heartless/widgets/schedule/reminder_card.dart';
 
 class TestingPage extends StatefulWidget {
