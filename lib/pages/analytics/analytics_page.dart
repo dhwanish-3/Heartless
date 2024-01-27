@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/shared/constants.dart';
-import 'package:heartless/widgets/hero.dart';
+import 'package:heartless/widgets/analytics/hero.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class AnalyticsPage extends StatelessWidget {

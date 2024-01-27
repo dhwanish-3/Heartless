@@ -95,7 +95,6 @@ class _LoginPageState extends State<LoginPage> {
           widgetNotifier.setLoading(false);
         } // todo : add doctor
       }
-      // widgetNotifier.setLoading(false);
     }
 
     void googleSignIn() async {
