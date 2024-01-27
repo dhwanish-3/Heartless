@@ -1,9 +1,6 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:heartless/shared/constants.dart';
-import 'package:heartless/widgets/schedule/calender_agenda.dart';
-import 'package:heartless/widgets/schedule/full_calendar.dart';
+import 'package:calendar_slider/calendar_slider.dart';
 
 class HorizontalCalendar extends StatefulWidget {
   const HorizontalCalendar({super.key});
@@ -13,23 +10,23 @@ class HorizontalCalendar extends StatefulWidget {
 }
 
 class _HorizontalCalendarState extends State<HorizontalCalendar> {
-  final CalendarAgendaController _calendarAgendaControllerNotAppBar =
-      CalendarAgendaController();
-  DateTime _selectedDateNotAppBBar = DateTime.now();
+  final CalendarSliderController _calendarSliderControllerNotAppBar =
+      CalendarSliderController();
+  DateTime _selectedDateNotAppBar = DateTime.now();
 
   Random random = Random();
 
   @override
   Widget build(BuildContext context) {
-    return CalendarAgenda(
+    return CalendarSlider(
       backgroundColor: Colors.transparent,
       dateColor: Colors.black,
-      controller: _calendarAgendaControllerNotAppBar,
+      controller: _calendarSliderControllerNotAppBar,
 
       // ! must discuss with user Harikrishnan
       // leading: GestureDetector(
       //     onTap: () {
-      //       _calendarAgendaControllerNotAppBar.goToDay(DateTime.now());
+      //       _calendarSliderControllerNotAppBar.goToDay(DateTime.now());
       //     },
       //     child: Image.asset(
       //       'assets/Icons/todo.png',
@@ -48,7 +45,7 @@ class _HorizontalCalendarState extends State<HorizontalCalendar> {
       fullCalendarScroll: FullCalendarScroll.horizontal,
       onDateSelected: (date) {
         setState(() {
-          _selectedDateNotAppBBar = date;
+          _selectedDateNotAppBar = date;
         });
       },
     );

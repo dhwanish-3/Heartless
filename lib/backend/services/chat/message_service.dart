@@ -6,7 +6,6 @@ import 'package:heartless/services/exceptions/app_exceptions.dart';
 import 'package:heartless/shared/models/message.dart';
 
 class MessageService {
-  final _uid = FirebaseAuth.instance.currentUser!.uid;
   final _fireStore = FirebaseFirestore.instance.collection("ChatRooms");
   static const Duration _timeLimit = Duration(seconds: 10);
 
