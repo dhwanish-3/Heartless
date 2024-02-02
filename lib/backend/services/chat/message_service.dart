@@ -6,18 +6,18 @@ import 'package:heartless/services/exceptions/app_exceptions.dart';
 import 'package:heartless/shared/models/message.dart';
 
 class MessageService {
-  final _fireStore = FirebaseFirestore.instance.collection("ChatRooms");
+  static final _chatRoomRef =
+      FirebaseFirestore.instance.collection("ChatRooms");
   static const Duration _timeLimit = Duration(seconds: 10);
 
   // get all the messages of a chat
-  Stream<Message> getMessages(String chatId) {
-    return _fireStore
+  Stream<QuerySnapshot> getMessages(String chatId) {
+    return _chatRoomRef
         .doc(chatId)
         .collection('messages')
         .orderBy('time')
         .limit(30)
-        .snapshots()
-        .map((event) => Message.fromMap(event.docs.first.data()));
+        .snapshots();
   }
 
   // send a new message
@@ -25,7 +25,7 @@ class MessageService {
     try {
       // getting the reference of the chat to get id
       DocumentReference messageRef =
-          _fireStore.doc(chatId).collection('messages').doc();
+          _chatRoomRef.doc(chatId).collection('messages').doc();
       message.id = messageRef.id;
       await messageRef.set(message.toMap()).timeout(_timeLimit);
       return message;
@@ -41,7 +41,7 @@ class MessageService {
   // delete a message
   Future<bool> deleteMessage(String chatId, String messageId) async {
     try {
-      await _fireStore
+      await _chatRoomRef
           .doc(chatId)
           .collection('messages')
           .doc(messageId)
@@ -60,7 +60,7 @@ class MessageService {
   // edit a message
   Future<Message> editMessage(String chatId, Message message) async {
     try {
-      await _fireStore
+      await _chatRoomRef
           .doc(chatId)
           .collection('messages')
           .doc(message.id)

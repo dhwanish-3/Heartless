@@ -8,17 +8,17 @@ import 'package:heartless/shared/models/activity.dart';
 
 class ActivityService {
   final _uid = FirebaseAuth.instance.currentUser!.uid;
-  var _fireStore = FirebaseFirestore.instance
+  var _patientRef = FirebaseFirestore.instance
       .collection('Patients'); // *fake(not used) initializing
 
   static const Duration _timeLimit = Duration(seconds: 10);
 
   ActivityService() {
-    _fireStore = FirebaseFirestore.instance
+    _patientRef = FirebaseFirestore.instance
         .collection('Patients')
         .doc(_uid)
         .collection(
-            'WeeklyData'); //! updating the collection NOTE: this is the definition actually used for _fireStore
+            'WeeklyData'); //! updating the collection NOTE: this is the definition actually used for _patientRef
   }
 
   // to get start of the week of a given date
@@ -40,7 +40,7 @@ class ActivityService {
     // activity can be marked as completed only if it belongs to the current week
     DateTime startOfWeek = getStartOfWeekOfDate(DateTime.now());
     try {
-      await _fireStore
+      await _patientRef
           .doc(startOfWeek.toString())
           .collection('Activities')
           .doc(activityId)
@@ -59,8 +59,10 @@ class ActivityService {
   Future<Activity> addActivity(Activity activity) async {
     try {
       DateTime startOfWeek = getStartOfWeekOfDate(activity.time);
-      DocumentReference documentReference =
-          _fireStore.doc(startOfWeek.toString()).collection('Activities').doc();
+      DocumentReference documentReference = _patientRef
+          .doc(startOfWeek.toString())
+          .collection('Activities')
+          .doc();
       // getting the id for the new activity from the reference
       activity.id = documentReference.id;
       await documentReference.set(activity.toMap()).timeout(_timeLimit);
@@ -81,7 +83,7 @@ class ActivityService {
         return false;
       }
       DateTime startOfWeek = getStartOfWeekOfDate(activity.time);
-      await _fireStore
+      await _patientRef
           .doc(startOfWeek.toString())
           .collection('Activities')
           .doc(activity.id)
@@ -104,7 +106,7 @@ class ActivityService {
         return false;
       }
       DateTime startOfWeek = getStartOfWeekOfDate(activity.time);
-      await _fireStore
+      await _patientRef
           .doc(startOfWeek.toString())
           .collection('Activities')
           .doc(activity.id)
@@ -126,7 +128,7 @@ class ActivityService {
       DateTime startOfWeek = getStartOfWeekOfDate(date);
       DateTime startOfDay = getStartOfDay(date);
 
-      QuerySnapshot querySnapshot = await _fireStore
+      QuerySnapshot querySnapshot = await _patientRef
           .doc(startOfWeek.toString())
           .collection('Activities')
           .where('time', isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
@@ -157,7 +159,7 @@ class ActivityService {
 
     try {
       // get all the activities with status upcoming
-      QuerySnapshot querySnapshot = await _fireStore
+      QuerySnapshot querySnapshot = await _patientRef
           .doc(startOfWeek.toString())
           .collection('Activities')
           .where('status', isEqualTo: Status.upcoming.index)
@@ -172,7 +174,7 @@ class ActivityService {
         Activity activity =
             Activity.fromMap(element.data() as Map<String, dynamic>);
         if (activity.time.isBefore(DateTime.now())) {
-          await _fireStore
+          await _patientRef
               .doc(element.id)
               .update({'status': Status.missed.index}).timeout(_timeLimit);
         }
@@ -193,7 +195,7 @@ class ActivityService {
     DateTime startOfWeek = getStartOfWeekOfDate(dateTime);
     DateTime startOfDay = getStartOfDay(dateTime);
     try {
-      QuerySnapshot querySnapshot = await _fireStore
+      QuerySnapshot querySnapshot = await _patientRef
           .doc(startOfWeek.toString())
           .collection('Activities')
           .where('time', isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
@@ -224,7 +226,7 @@ class ActivityService {
     DateTime startOfWeek = getStartOfWeekOfDate(dateTime);
     DateTime startOfDay = getStartOfDay(dateTime);
     try {
-      QuerySnapshot querySnapshot = await _fireStore
+      QuerySnapshot querySnapshot = await _patientRef
           .doc(startOfWeek.toString())
           .collection('Activities')
           .where('time', isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
@@ -254,7 +256,7 @@ class ActivityService {
     DateTime startOfWeek = getStartOfWeekOfDate(dateTime);
     DateTime startOfDay = getStartOfDay(dateTime);
     try {
-      QuerySnapshot querySnapshot = await _fireStore
+      QuerySnapshot querySnapshot = await _patientRef
           .doc(startOfWeek.toString())
           .collection('Activities')
           .where('time', isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))

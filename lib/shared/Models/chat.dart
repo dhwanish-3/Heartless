@@ -25,7 +25,7 @@ class ChatUser {
 
 class ChatRoom {
   String id = '';
-  List<String> users = [];
+  List<String> users = []; // List of user ids for quick access in queries
   ChatUser user1 = ChatUser();
   ChatUser user2 = ChatUser();
 
