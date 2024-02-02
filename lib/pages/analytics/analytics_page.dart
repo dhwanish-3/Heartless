@@ -4,16 +4,24 @@ import 'package:heartless/widgets/analytics/hero.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class AnalyticsPage extends StatelessWidget {
-  const AnalyticsPage({super.key});
+  final String type;
+  const AnalyticsPage({super.key, this.type = "med"});
 
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+    String title = type == "med"
+        ? "MEDICINE"
+        : type == "exercise"
+            ? "EXERCISE"
+            : type == "food"
+                ? "NUTRITION"
+                : "MEDICINE";
     return Scaffold(
       body: SlidingUpPanel(
-        minHeight: height * 0.7,
-        maxHeight: 800,
+        minHeight: height * 0.75,
+        maxHeight: height,
         collapsed: Container(
           decoration: const BoxDecoration(
             color: Colors.grey,
@@ -23,7 +31,20 @@ class AnalyticsPage extends StatelessWidget {
             ),
           ),
         ),
-        panel: const Text("this is the panel"),
+        panel: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Constants.primaryColor,
+            title: Text(
+              title,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 24,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+            centerTitle: true,
+          ),
+        ),
         body: const HeroWidget(),
         backdropEnabled: true,
         backdropOpacity: 0.1,
