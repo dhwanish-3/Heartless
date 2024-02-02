@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:heartless/pages/auth/choose_user_type.dart';
 import 'package:heartless/pages/auth/create_password.dart';
 import 'package:heartless/pages/auth/dummy_home.dart';
+import 'package:heartless/pages/auth/dummy_nurse_home.dart';
 import 'package:heartless/pages/auth/forgot_password.dart';
 import 'package:heartless/pages/auth/splash_screen.dart';
 import 'package:heartless/pages/auth/login_page.dart';
@@ -37,6 +38,12 @@ class Routes {
       // ! Patient routes ! //
       case RouteNames.patientHome:
         return MaterialPageRoute(builder: (_) => const DummyHome());
+
+      // ! Nurse routes ! //
+      case RouteNames.nurseHome:
+        return MaterialPageRoute(builder: (_) => const DummyNurseHome());
+
+      // todo: add doctor routes
       default:
         return MaterialPageRoute(builder: (_) => Container());
     }
