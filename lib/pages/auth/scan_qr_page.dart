@@ -93,6 +93,10 @@ class _ScanQRState extends State<ScanQR> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  Image.network(
+                    user!.imageUrl,
+                    height: 100,
+                  ),
                   Text(
                     user!.name,
                     style: const TextStyle(
@@ -100,7 +104,6 @@ class _ScanQRState extends State<ScanQR> {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  Image.network(user!.imageUrl),
                 ],
               ),
               ElevatedButton(onPressed: addUser, child: const Text('Add User'))

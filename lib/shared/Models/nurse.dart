@@ -17,10 +17,12 @@ class Nurse extends AppUser {
     email = map['email'];
     phone = map['phone'];
     password = map['password'];
+    userType = UserType.values[map['userType']];
     patients = map['patients'] is Iterable ? List.from(map['patients']) : [];
     doctors = map['doctors'] is Iterable ? List.from(map['doctors']) : [];
   }
 
+  @override
   Map<String, dynamic> toMap() {
     return {
       'uid': uid,
@@ -29,6 +31,7 @@ class Nurse extends AppUser {
       'email': email,
       'phone': phone,
       'password': password,
+      'userType': userType.index,
       'patients': patients,
       'doctors': doctors,
     };

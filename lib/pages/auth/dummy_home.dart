@@ -31,35 +31,40 @@ class _DummyHomeState extends State<DummyHome> {
       appBar: AppBar(
         title: const Text('Dummy Home'),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Welcome ${authNotifier.patient!.name}',
-              style: const TextStyle(fontSize: 20),
-            ),
-            Image.network(authNotifier.patient!.imageUrl),
-            Text(authNotifier.patient!.name),
-            Text(authNotifier.patient!.email),
-            Text(authNotifier.patient!.uid),
-            QrImageView(
-                data: authNotifier.patient!.uid,
-                size: 200,
-                backgroundColor: Colors.white,
-                errorStateBuilder: (cxt, err) {
-                  return const Center(
-                    child: Text("Uh oh! Something went wrong..."),
-                  );
-                }),
-            ElevatedButton(
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (_) => const ScanQR()));
-                },
-                child: const Text('Scan QR')),
-            ElevatedButton(onPressed: logout, child: const Text('Logout')),
-          ],
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Welcome ${authNotifier.patient!.name}',
+                style: const TextStyle(fontSize: 20),
+              ),
+              Image.network(
+                authNotifier.patient!.imageUrl,
+                height: 200,
+              ),
+              Text(authNotifier.patient!.name),
+              Text(authNotifier.patient!.email),
+              Text(authNotifier.patient!.uid),
+              QrImageView(
+                  data: authNotifier.patient!.uid,
+                  size: 200,
+                  backgroundColor: Colors.white,
+                  errorStateBuilder: (cxt, err) {
+                    return const Center(
+                      child: Text("Uh oh! Something went wrong..."),
+                    );
+                  }),
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (_) => const ScanQR()));
+                  },
+                  child: const Text('Scan QR')),
+              ElevatedButton(onPressed: logout, child: const Text('Logout')),
+            ],
+          ),
         ),
       ),
     );
