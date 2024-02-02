@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/backend/controllers/patient_controller.dart';
 import 'package:heartless/main.dart';
+import 'package:heartless/pages/auth/scan_qr_page.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 class DummyHome extends StatefulWidget {
   const DummyHome({super.key});
@@ -41,6 +43,21 @@ class _DummyHomeState extends State<DummyHome> {
             Text(authNotifier.patient!.name),
             Text(authNotifier.patient!.email),
             Text(authNotifier.patient!.uid),
+            QrImageView(
+                data: authNotifier.patient!.uid,
+                size: 200,
+                backgroundColor: Colors.white,
+                errorStateBuilder: (cxt, err) {
+                  return const Center(
+                    child: Text("Uh oh! Something went wrong..."),
+                  );
+                }),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (_) => const ScanQR()));
+                },
+                child: const Text('Scan QR')),
             ElevatedButton(onPressed: logout, child: const Text('Logout')),
           ],
         ),
