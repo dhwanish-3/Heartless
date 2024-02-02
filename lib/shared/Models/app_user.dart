@@ -17,11 +17,11 @@ String userTypeToString(UserType userType) {
 // convert string to enum
 UserType stringToUserType(String userType) {
   switch (userType) {
-    case 'patient':
+    case 'Patient':
       return UserType.patient;
-    case 'nurse':
+    case 'Nurse':
       return UserType.nurse;
-    case 'doctor':
+    case 'Doctor':
       return UserType.doctor;
     default:
       return UserType.patient;
@@ -39,4 +39,26 @@ class AppUser {
   UserType userType = UserType.patient;
 
   AppUser();
+
+  AppUser.fromMap(Map<String, dynamic> map) {
+    uid = map['uid'];
+    name = map['name'];
+    imageUrl = map['imageUrl'];
+    email = map['email'];
+    phone = map['phone'];
+    password = map['password'];
+    userType = UserType.values[map['userType']];
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'uid': uid,
+      'name': name,
+      'imageUrl': imageUrl,
+      'email': email,
+      'phone': phone,
+      'password': password,
+      'userType': userType.index,
+    };
+  }
 }
