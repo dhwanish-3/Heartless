@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heartless/pages/chat/select_chat.dart';
 import 'package:heartless/widgets/chat/chat_tile.dart';
 
 const data = [
@@ -76,21 +77,32 @@ class ContactsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // navigation to create new chat page
+    void onPressed() {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const SelectChatPage()));
+    }
+
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Chats'),
-        ),
-        body: ListView.builder(
-          itemCount: data.length,
-          itemBuilder: (context, index) {
-            final entry = data[index];
-            return ChatTile(
-              name: entry['name'].toString(),
-              time: entry['time'].toString(),
-              latestMessage: entry['latestMessage'].toString(),
-              unreadMessages: entry['unreadMessages'] as int,
-            );
-          },
-        ));
+      appBar: AppBar(
+        title: const Text('Chats'),
+      ),
+      body: ListView.builder(
+        itemCount: data.length,
+        itemBuilder: (context, index) {
+          final entry = data[index];
+          return ChatTile(
+            name: entry['name'].toString(),
+            time: entry['time'].toString(),
+            latestMessage: entry['latestMessage'].toString(),
+            unreadMessages: entry['unreadMessages'] as int,
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: onPressed,
+        child: const Icon(Icons.chat),
+      ),
+    );
   }
 }
