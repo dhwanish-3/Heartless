@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:heartless/backend/services/misc/connect_users.dart';
-import 'package:heartless/backend/services/misc/user_details.dart';
 import 'package:heartless/main.dart';
 import 'package:heartless/services/utils/qr_scanner.dart';
 import 'package:heartless/shared/models/app_user.dart';
@@ -12,7 +11,7 @@ class ScanQR extends StatefulWidget {
   const ScanQR({super.key});
 
   @override
-  _ScanQRState createState() => _ScanQRState();
+  State<ScanQR> createState() => _ScanQRState();
 }
 
 class _ScanQRState extends State<ScanQR> {
@@ -26,7 +25,7 @@ class _ScanQRState extends State<ScanQR> {
       log(value);
       setState(() async {
         qrCodeResult = value;
-        user = await UserDetails.getUserDetails(value);
+        user = await ConnectUsers.getUserDetails(value);
       });
     });
   }
