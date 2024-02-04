@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:heartless/backend/controllers/patient_controller.dart';
+import 'package:heartless/backend/controllers/nurse_controller.dart';
 import 'package:heartless/main.dart';
 import 'package:heartless/pages/auth/scan_qr_page.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
-class DummyHome extends StatefulWidget {
-  const DummyHome({super.key});
+class DummyNurseHome extends StatefulWidget {
+  const DummyNurseHome({super.key});
 
   @override
-  State<DummyHome> createState() => _DummyHomeState();
+  State<DummyNurseHome> createState() => _DummyHomeState();
 }
 
-class _DummyHomeState extends State<DummyHome> {
+class _DummyHomeState extends State<DummyNurseHome> {
   void logout() async {
     AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
-    await PatientController().logout(authNotifier);
+    await NurseController().logout(authNotifier);
     if (context.mounted) {
       // ! ensure that the widget is mounted before navigating
       Navigator.pushNamed(context, '/login');
@@ -29,7 +29,7 @@ class _DummyHomeState extends State<DummyHome> {
         Provider.of<AuthNotifier>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Dummy Home'),
+        title: const Text('Dummy Nurse Home'),
       ),
       body: SingleChildScrollView(
         child: Center(
@@ -37,18 +37,18 @@ class _DummyHomeState extends State<DummyHome> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Welcome ${authNotifier.patient!.name}',
+                'Welcome ${authNotifier.nurse!.name}',
                 style: const TextStyle(fontSize: 20),
               ),
               Image.network(
-                authNotifier.patient!.imageUrl,
+                authNotifier.nurse!.imageUrl,
                 height: 200,
               ),
-              Text(authNotifier.patient!.name),
-              Text(authNotifier.patient!.email),
-              Text(authNotifier.patient!.uid),
+              Text(authNotifier.nurse!.name),
+              Text(authNotifier.nurse!.email),
+              Text(authNotifier.nurse!.uid),
               QrImageView(
-                  data: authNotifier.patient!.uid,
+                  data: authNotifier.nurse!.uid,
                   size: 200,
                   backgroundColor: Colors.white,
                   errorStateBuilder: (cxt, err) {

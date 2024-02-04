@@ -34,7 +34,7 @@ class _HorizontalCalendarState extends State<HorizontalCalendar> {
       locale: 'en',
       appbar: false,
       weekDay: WeekDay.short,
-      fullCalendarDay: WeekDay.short,
+      // fullCalendarDay: WeekDay.short,
       selectedDateColor: Colors.white,
       selectedDayPosition: SelectedDayPosition.center,
       initialDate: DateTime.now(),
