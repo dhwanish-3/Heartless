@@ -14,8 +14,6 @@ class _HorizontalCalendarState extends State<HorizontalCalendar> {
       CalendarSliderController();
   DateTime _selectedDateNotAppBar = DateTime.now();
 
-  Random random = Random();
-
   @override
   Widget build(BuildContext context) {
     return CalendarSlider(
