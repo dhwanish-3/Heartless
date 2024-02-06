@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:heartless/backend/controllers/patient_controller.dart';
 import 'package:heartless/main.dart';
 import 'package:heartless/pages/auth/scan_qr_page.dart';
+import 'package:heartless/pages/chat/contacts_page.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -63,6 +64,14 @@ class _DummyHomeState extends State<DummyHome> {
                   },
                   child: const Text('Scan QR')),
               ElevatedButton(onPressed: logout, child: const Text('Logout')),
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const ContactsPage()));
+                  },
+                  child: const Text('Contacts page')),
             ],
           ),
         ),

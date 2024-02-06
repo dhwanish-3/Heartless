@@ -20,19 +20,7 @@ class _HorizontalCalendarState extends State<HorizontalCalendar> {
       backgroundColor: Colors.transparent,
       dateColor: Colors.black,
       controller: _calendarSliderControllerNotAppBar,
-
-      // ! must discuss with user Harikrishnan
-      // leading: GestureDetector(
-      //     onTap: () {
-      //       _calendarSliderControllerNotAppBar.goToDay(DateTime.now());
-      //     },
-      //     child: Image.asset(
-      //       'assets/Icons/todo.png',
-      //       height: 40,
-      //       color: Colors.black,
-      //     )),
       locale: 'en',
-      appbar: false,
       weekDay: WeekDay.short,
       // fullCalendarDay: WeekDay.short,
       selectedDateColor: Colors.white,
