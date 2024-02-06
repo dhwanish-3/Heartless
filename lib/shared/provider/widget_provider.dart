@@ -1,5 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:heartless/pages/log/diary_model.dart';
 import 'package:heartless/shared/models/app_user.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+class Structure {
+  List<Diary>? DiaryStructureList;
+  List<String>? DiaryStructureStringList;
+  Structure({this.DiaryStructureList, this.DiaryStructureStringList});
+}
 
 class WidgetNotifier with ChangeNotifier {
   // for circular progress indicator
@@ -47,5 +57,77 @@ class WidgetNotifier with ChangeNotifier {
   void changeToggleSelection(int index) {
     _toggleSelectionIndex = index;
     notifyListeners();
+  }
+
+  //for diary
+  List<Diary>? _diaryList = [];
+  List<String>? _diaryListString = [];
+
+  List<Diary>? get diaryList => _diaryList;
+  List<String>? get diaryJsonList => _diaryListString;
+
+  void SetDiaryList(List<Diary> list, List<String> stringList) {
+    _diaryList = list;
+    _diaryListString = stringList;
+    notifyListeners();
+  }
+
+  void addtoDiary(Diary diary) {
+    _diaryList!.add(diary);
+    _diaryListString!.add(jsonEncode(diary.toMap()));
+    saveDiary();
+    notifyListeners();
+  }
+
+  void updateDiary(Diary diary, int index) {
+    _diaryList![index] = diary;
+    _diaryListString![index] = jsonEncode(diary.toMap());
+    saveDiary();
+    notifyListeners();
+  }
+
+  void deleteDiary(Diary diary) {
+    _diaryList!.remove(diary);
+    _diaryListString!.remove(jsonEncode(diary.toMap()));
+    saveDiary();
+    notifyListeners();
+  }
+
+  Future<bool> saveDiary() async {
+    final SharedPreferences sp = await SharedPreferences.getInstance();
+
+    sp.setStringList('DiaryList', _diaryListString ?? []);
+    notifyListeners();
+    return true;
+  }
+
+  List<String>? getDiarydiary(Map<String, dynamic> data) {
+    return data['diary'] is Iterable ? List.from(data['diary']) : null;
+  }
+
+  getDiaryFormFirebase(String uid) async {
+    //todo
+  }
+
+  Future<Structure> getDiary() async {
+    final SharedPreferences sp = await SharedPreferences.getInstance();
+    List<String>? dairySP = sp.getStringList('DiaryList');
+    _diaryListString = dairySP;
+
+    debugPrint('diary Stirng in get Diary$_diaryListString');
+    List<Diary> diaryList = [];
+    for (String dairy in _diaryListString ?? []) {
+      diaryList.add(Diary.fromMap(jsonDecode(dairy)));
+    }
+    notifyListeners();
+    debugPrint('diary string get Diary$_diaryListString');
+    Structure structure = Structure(
+        DiaryStructureList: diaryList,
+        DiaryStructureStringList: _diaryListString);
+    return structure;
+  }
+
+  void ClearDiaryList() async {
+    //todo
   }
 }
