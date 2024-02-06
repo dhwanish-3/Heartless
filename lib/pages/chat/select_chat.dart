@@ -27,21 +27,27 @@ class _MyWidgetState extends State<SelectChatPage> {
               authNotifier.patient!.uid)
           .then((value) {
         log(value.toString());
-        users = value;
+        setState(() {
+          users = value;
+        });
       });
     } else if (widgetNotifier.userType == UserType.doctor) {
       ConnectUsersController.getAllUsersConnectedToDoctor(
               authNotifier.doctor!.uid)
           .then((value) {
         log(value.toString());
-        users = value;
+        setState(() {
+          users = value;
+        });
       });
     } else if (widgetNotifier.userType == UserType.nurse) {
       ConnectUsersController.getAllUsersConnectedToNurse(
               authNotifier.nurse!.uid)
           .then((value) {
         log(value.toString());
-        users = value;
+        setState(() {
+          users = value;
+        });
       });
     }
     super.initState();
