@@ -39,7 +39,10 @@ class ChatService {
       // // getting the reference of the chat to get id
       // DocumentReference chatRef = _chatRoomRef.doc();
       // chatRoom.id = chatRef.id;
-      await _chatRoomRef.add(chatRoom.toMap()).timeout(_timeLimit);
+      await _chatRoomRef
+          .doc(chatRoom.id)
+          .set(chatRoom.toMap())
+          .timeout(_timeLimit);
       return chatRoom;
     } on FirebaseAuthException {
       throw UnAutherizedException();

@@ -94,7 +94,8 @@ class _MyWidgetState extends State<SelectChatPage> {
       other.imageUrl = user.imageUrl;
       other.unreadMessages = 0;
       ChatRoom chatRoom = ChatRoom(me, other);
-      chatRoom.id = '$me.id_${other.id}';
+      chatRoom.id = '${me.id}_${other.id}';
+      log(chatRoom.toMap().toString());
       await ChatService().addChatRoom(chatRoom);
       goToChat(chatRoom.id);
     }

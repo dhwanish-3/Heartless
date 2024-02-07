@@ -21,7 +21,7 @@ class MessageService {
   }
 
   // send a new message
-  Future<Message> sendMessage(String chatId, Message message) async {
+  static Future<Message> sendMessage(String chatId, Message message) async {
     try {
       // getting the reference of the chat to get id
       DocumentReference messageRef =

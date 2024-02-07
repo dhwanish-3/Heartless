@@ -1,18 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/backend/services/chat/chat_service.dart';
+import 'package:heartless/pages/chat/chat_page.dart';
 import 'package:heartless/pages/chat/select_chat.dart';
 import 'package:heartless/shared/models/chat.dart';
 import 'package:heartless/widgets/chat/chat_tile.dart';
-
-const data = [
-  {
-    "name": 'Dr AnilKumar Dr Anilkumar Anilkumar Anilkumar',
-    "time": '9:00 AM',
-    "latestMessage":
-        "Did you have dinner. If not do you want to have it with me some time or the other",
-    "unreadMessages": 3
-  },
-];
 
 class ContactsPage extends StatefulWidget {
   const ContactsPage({super.key});
@@ -34,32 +25,36 @@ class _ContactsPageState extends State<ContactsPage> {
       appBar: AppBar(
         title: const Text('Chats'),
       ),
-      // body: ListView.builder(
-      //   itemCount: data.length,
-      //   itemBuilder: (context, index) {
-      //     final entry = data[index];
-      //     return ChatTile(
-      //       name: entry['name'].toString(),
-      //       time: entry['time'].toString(),
-      //       latestMessage: entry['latestMessage'].toString(),
-      //       unreadMessages: entry['unreadMessages'] as int,
-      //     );
-      //   },
-      // ),
       body: StreamBuilder(
         stream: ChatService.getChatRooms(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (snapshot.hasData) {
+          if (snapshot.hasData && snapshot.data.docs.isEmpty) {
+            return const Center(
+              child: Text('No chats yet'),
+            );
+          } else if (snapshot.hasData && snapshot.data.docs.isNotEmpty) {
             return ListView.builder(
               itemCount: snapshot.data.docs.length,
               itemBuilder: (BuildContext context, int index) {
-                ChatUser chatUser = ChatUser.fromMap(snapshot.data.docs[index]);
-                return ChatTile(
-                  name: chatUser.name,
-                  time: '9:00 AM',
-                  latestMessage:
-                      'Did you have dinner. If not do you want to have it with me some time or the other',
-                  unreadMessages: 3,
+                // log(snapshot.data.docs[index].data().toString());
+                ChatRoom chatRoom =
+                    ChatRoom.fromMap(snapshot.data.docs[index].data());
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ChatPage(
+                                  chatId: chatRoom.id,
+                                )));
+                  },
+                  child: ChatTile(
+                    name: chatRoom.user2!.name, // chatRoom.other.name,
+                    time: '9:00 AM',
+                    latestMessage:
+                        'Did you have dinner. If not do you want to have it with me some time or the other',
+                    unreadMessages: 3,
+                  ),
                 );
               },
             );
@@ -70,7 +65,6 @@ class _ContactsPageState extends State<ContactsPage> {
           }
         },
       ),
-
       floatingActionButton: FloatingActionButton(
         onPressed: onPressed,
         child: const Icon(Icons.chat),
