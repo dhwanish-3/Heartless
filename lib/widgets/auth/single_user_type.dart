@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:heartless/main.dart';
 import 'package:heartless/shared/constants.dart';
+import 'package:heartless/shared/provider/auth_notifier.dart';
 
 class SingleUserType extends StatelessWidget {
   final int type;
@@ -9,11 +11,13 @@ class SingleUserType extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AuthNotifier authNotifier =
+        Provider.of<AuthNotifier>(context, listen: false);
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     double containerWidth = isSelected ? width * 0.7 : width * 0.6;
-    double imageHeight = isSelected ? 100 : 80;
-    double fontSize = isSelected ? 30 : 26;
+    double imageHeight = isSelected ? 75 : 60;
+    double fontSize = isSelected ? 22 : 20;
     final String imageUrl = type == 1
         ? 'assets/Icons/patient.png'
         : type == 2
@@ -22,7 +26,7 @@ class SingleUserType extends StatelessWidget {
                 ? 'assets/Icons/doctor.png'
                 : 'assets/Icons/doctor.png';
 
-    final String value = type == 1
+    final String userType = type == 1
         ? 'PATIENT'
         : type == 2
             ? 'NURSE'
@@ -30,68 +34,74 @@ class SingleUserType extends StatelessWidget {
                 ? 'DOCTOR'
                 : 'DOCTOR';
 
-    return Container(
-        width: containerWidth,
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: Theme.of(context).canvasColor,
-          borderRadius: BorderRadius.circular(20),
-          border: isSelected
-              ? Border.all(color: Constants.primaryColor, width: 2)
-              : Border.all(color: Colors.black, width: 1),
-          boxShadow: isSelected
-              ? const [
-                  BoxShadow(
-                    color: Colors.grey,
-                    offset: Offset(0, 2),
-                    blurRadius: 2,
-                    spreadRadius: 1,
-                  ),
-                ]
-              : null,
-        ),
-        child:
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          type != 1
-              ? Expanded(
-                  flex: 1,
-                  child: Container(
-                    height: imageHeight,
-                    width: imageHeight,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage(imageUrl),
-                        fit: BoxFit.contain,
+    return Consumer<AuthNotifier>(
+      builder: (context, value, child) {
+        return Container(
+            width: containerWidth,
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: Theme.of(context).canvasColor,
+              borderRadius: BorderRadius.circular(20),
+              border: isSelected
+                  ? Border.all(color: Constants.primaryColor, width: 2)
+                  : Border.all(color: Colors.black, width: 1),
+              boxShadow: isSelected
+                  ? const [
+                      BoxShadow(
+                        color: Colors.grey,
+                        offset: Offset(0, 0),
+                        blurRadius: 0.5,
+                        spreadRadius: 0,
                       ),
-                    ),
-                  ))
-              : const SizedBox(height: 0, width: 0),
-          Expanded(
-            flex: 2,
-            child: Text(
-              value,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: fontSize,
-                fontWeight: FontWeight.w800,
-                color: Theme.of(context).shadowColor,
-              ),
+                    ]
+                  : null,
             ),
-          ),
-          type == 1
-              ? Expanded(
-                  flex: 1,
-                  child: Container(
-                    height: imageHeight,
-                    width: imageHeight,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage(imageUrl),
-                        fit: BoxFit.contain,
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  type != 1
+                      ? Expanded(
+                          flex: 1,
+                          child: Container(
+                            height: imageHeight,
+                            width: imageHeight,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: AssetImage(imageUrl),
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          ))
+                      : const SizedBox(height: 0, width: 0),
+                  Expanded(
+                    flex: 2,
+                    child: Text(
+                      userType,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: fontSize,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 2,
+                        color: Theme.of(context).shadowColor,
                       ),
                     ),
-                  ))
-              : const SizedBox(height: 0, width: 0),
-        ]));
+                  ),
+                  type == 1
+                      ? Expanded(
+                          flex: 1,
+                          child: Container(
+                            height: imageHeight,
+                            width: imageHeight,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: AssetImage(imageUrl),
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          ))
+                      : const SizedBox(height: 0, width: 0),
+                ]));
+      },
+    );
   }
 }
