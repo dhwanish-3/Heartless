@@ -97,7 +97,7 @@ class _SignUpPageState extends State<SignUpPage> {
           await patientSignUp();
           widgetNotifier.setLoading(false);
         } else if (authNotifier.userType == UserType.nurse) {
-          nurseSignUp();
+          await nurseSignUp();
           widgetNotifier.setLoading(false);
         } // todo : add doctor
       }
