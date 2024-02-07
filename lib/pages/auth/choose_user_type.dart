@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import "package:flutter_svg/svg.dart";
+import 'package:heartless/shared/constants.dart';
 import 'package:heartless/widgets/miscellaneous/right_trailing_button.dart';
 import 'package:heartless/widgets/auth/user_type.dart';
 
@@ -24,18 +25,20 @@ class ChooseUserPage extends StatelessWidget {
             left: 0,
             child: SvgPicture.asset(
               'assets/illustrations/cool_design.svg',
-              height: height * 0.25,
+              height: height * 0.22,
             ),
           ),
           Positioned(
-              top: height * 0.15,
-              left: 50,
+              top: height * 0.20,
+              // left: 40,
               child: const Text(
-                'Specify Your Role',
+                // 'Specify Your Role',
+                'SPECIFY YOUR ROLE',
                 textAlign: TextAlign.start,
                 style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.w800,
+                  fontSize: 26,
+                  fontWeight: FontWeight.w500,
+                  letterSpacing: 1.5,
                 ),
               )),
           Positioned(
@@ -44,7 +47,7 @@ class ChooseUserPage extends StatelessWidget {
           ),
           Positioned(
             bottom: 80,
-            right: 60,
+            right: 40,
             child: GestureDetector(
                 onTap: goToLoginOrSignupPage,
                 child: const RightButton(text: 'Next')),

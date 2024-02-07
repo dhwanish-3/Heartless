@@ -22,7 +22,7 @@ class _MyWidgetState extends State<SelectChatPage> {
         Provider.of<WidgetNotifier>(context, listen: false);
     AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
-    if (widgetNotifier.userType == UserType.patient) {
+    if (authNotifier.userType == UserType.patient) {
       ConnectUsersController.getAllUsersConnectedToPatient(
               authNotifier.patient!.uid)
           .then((value) {
@@ -31,7 +31,7 @@ class _MyWidgetState extends State<SelectChatPage> {
           users = value;
         });
       });
-    } else if (widgetNotifier.userType == UserType.doctor) {
+    } else if (authNotifier.userType == UserType.doctor) {
       ConnectUsersController.getAllUsersConnectedToDoctor(
               authNotifier.doctor!.uid)
           .then((value) {
@@ -40,7 +40,7 @@ class _MyWidgetState extends State<SelectChatPage> {
           users = value;
         });
       });
-    } else if (widgetNotifier.userType == UserType.nurse) {
+    } else if (authNotifier.userType == UserType.nurse) {
       ConnectUsersController.getAllUsersConnectedToNurse(
               authNotifier.nurse!.uid)
           .then((value) {

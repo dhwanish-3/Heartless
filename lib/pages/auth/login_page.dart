@@ -87,10 +87,10 @@ class _LoginPageState extends State<LoginPage> {
       if (_formKey.currentState!.validate()) {
         widgetNotifier.setLoading(true);
         _formKey.currentState!.save();
-        if (widgetNotifier.userType == UserType.patient) {
+        if (authNotifier.userType == UserType.patient) {
           await patientLogin();
           widgetNotifier.setLoading(false);
-        } else if (widgetNotifier.userType == UserType.nurse) {
+        } else if (authNotifier.userType == UserType.nurse) {
           await nurseLogin();
           widgetNotifier.setLoading(false);
         } // todo : add doctor
@@ -98,12 +98,12 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     void googleSignIn() async {
-      if (widgetNotifier.userType == UserType.patient) {
+      if (authNotifier.userType == UserType.patient) {
         bool success = await _patientController.googleSignIn(authNotifier);
         if (success && context.mounted) {
           goToPatientHome();
         }
-      } else if (widgetNotifier.userType == UserType.nurse) {
+      } else if (authNotifier.userType == UserType.nurse) {
         bool success = await _nurseController.googleSignIn(authNotifier);
         if (success && context.mounted) {
           goToNurseHome();
@@ -146,7 +146,7 @@ class _LoginPageState extends State<LoginPage> {
                         height: 20,
                       ),
                       Text(
-                        '${userTypeToString(widgetNotifier.userType)} Login',
+                        '${userTypeToString(authNotifier.userType)} Login',
                         style: Theme.of(context).textTheme.headlineMedium,
                       ),
                       const SizedBox(
