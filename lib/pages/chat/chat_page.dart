@@ -1,54 +1,16 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:heartless/backend/services/chat/message_service.dart';
+import 'package:heartless/main.dart';
+import 'package:heartless/shared/models/message.dart';
+import 'package:heartless/shared/provider/auth_notifier.dart';
 import 'package:heartless/widgets/chat/message_tile.dart';
 import 'package:heartless/widgets/chat/msg_input_field.dart';
 
-const data = [
-  {"message": "Hello", "isSender": true, "time": "9:00 AM"},
-  {"message": "How are you My dear", "isSender": false, "time": "9:00 AM"},
-  {"message": "I am fine", "isSender": true, "time": "9:00 AM"},
-  {
-    "message": "Now this is a message that is long enough",
-    "isSender": false,
-    "time": "9:00 AM"
-  },
-  {
-    "message": "This is also a messgage that could go beyond the screen",
-    "isSender": true,
-    "time": "9:00 AM"
-  },
-  {
-    "message": '''How are you My dear
-Now this has gone beyound one line''',
-    "isSender": false,
-    "time": "9:00 AM"
-  },
-  {"message": "a", "isSender": true, "time": "9:00 AM"},
-  {"message": "a", "isSender": false, "time": "9:00 AM"},
-  {
-    "message": '''
-this is a long message that is going to go beyond the screen
-this is a long message that is going to go beyond the screen''',
-    "isSender": true,
-    "time": "11:00 PM"
-  },
-  {
-    "message": "Now consecutive message from sender",
-    "isSender": true,
-    "time": "11:00 PM"
-  },
-  {"message": "I am fine", "isSender": true, "time": "11:00 PM"},
-  {"message": "How are you My dear", "isSender": false, "time": "11:00 PM"},
-  {
-    "message": "consecutive messafe from the other side",
-    "isSender": false,
-    "time": "11:00 PM"
-  },
-  {"message": "I am fine", "isSender": false, "time": "11:00 PM"},
-  {"message": "I am fine", "isSender": true, "time": "11:00 PM"},
-];
-
 class ChatPage extends StatefulWidget {
-  const ChatPage({super.key});
+  final String chatId;
+  const ChatPage({super.key, required this.chatId});
 
   @override
   State<ChatPage> createState() => _ChatPageState();
@@ -56,8 +18,30 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   TextEditingController messageController = TextEditingController();
+
+  @override
+  void dispose() {
+    messageController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    AuthNotifier authNotifier =
+        Provider.of<AuthNotifier>(context, listen: false);
+    // function to send message
+    void sendMessage() async {
+      if (messageController.text.isNotEmpty) {
+        Message message = Message();
+        message.message = messageController.text;
+        message.senderId = authNotifier.patient!.uid;
+        message.time = DateTime.now();
+        message.receiverId = widget.chatId;
+        await MessageService.sendMessage(widget.chatId, message);
+        messageController.clear();
+      }
+    }
+
     final double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
         //* the textInput widget does not move up in ios
@@ -68,21 +52,42 @@ class _ChatPageState extends State<ChatPage> {
           Container(
             height: screenHeight * 0.92,
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-            child: ListView.builder(
-              itemCount: data.length,
-              itemBuilder: (context, index) {
-                final entry = data[index];
-                return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 5),
-                    child: MessageTile(
-                      message: entry['message'].toString(),
-                      isSender: entry['isSender'] as bool,
-                      time: entry['time'].toString(),
-                    ));
+            child: StreamBuilder(
+              stream: MessageService.getMessages(widget.chatId),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData && snapshot.data.docs.isEmpty) {
+                  return const Center(
+                    child: Text("No messages yet"),
+                  );
+                } else if (snapshot.hasData && snapshot.data.docs.isNotEmpty) {
+                  log("Data: ${snapshot.data.docs.length}");
+                  return ListView.builder(
+                    itemCount: snapshot.data.docs.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      Message message =
+                          Message.fromMap(snapshot.data.docs[index].data());
+                      return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 5),
+                          child: MessageTile(
+                            message: message.message,
+                            isSender:
+                                message.senderId == authNotifier.patient!.uid,
+                            time: message.time.toString(),
+                          ));
+                    },
+                  );
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
               },
             ),
           ),
-          const MessageField(),
+          MessageField(
+            messageController: messageController,
+            sendMessage: sendMessage,
+          ),
         ],
       ),
     ));

@@ -18,13 +18,31 @@ class ChatService {
         .snapshots();
   }
 
+  // check if a chat exists
+  static Future<bool> chatExists(String chatId) async {
+    try {
+      DocumentSnapshot chat =
+          await _chatRoomRef.doc(chatId).get().timeout(_timeLimit);
+      return chat.exists;
+    } on FirebaseAuthException {
+      throw UnAutherizedException();
+    } on SocketException {
+      throw FetchDataException('No Internet Connection');
+    } on TimeoutException {
+      throw ApiNotRespondingException('Server is not responding');
+    }
+  }
+
   // add a new chat
   Future<ChatRoom> addChatRoom(ChatRoom chatRoom) async {
     try {
-      // getting the reference of the chat to get id
-      DocumentReference chatRef = _chatRoomRef.doc();
-      chatRoom.id = chatRef.id;
-      await _chatRoomRef.add(chatRoom.toMap()).timeout(_timeLimit);
+      // // getting the reference of the chat to get id
+      // DocumentReference chatRef = _chatRoomRef.doc();
+      // chatRoom.id = chatRef.id;
+      await _chatRoomRef
+          .doc(chatRoom.id)
+          .set(chatRoom.toMap())
+          .timeout(_timeLimit);
       return chatRoom;
     } on FirebaseAuthException {
       throw UnAutherizedException();

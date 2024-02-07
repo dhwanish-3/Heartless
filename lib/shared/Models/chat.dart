@@ -26,14 +26,14 @@ class ChatUser {
 class ChatRoom {
   String id = '';
   List<String> users = []; // List of user ids for quick access in queries
-  ChatUser user1 = ChatUser();
-  ChatUser user2 = ChatUser();
+  ChatUser? user1;
+  ChatUser? user2;
 
-  ChatRoom(ChatUser user1, ChatUser user2) {
-    user1 = user1;
-    user2 = user2;
-    users.add(user1.id);
-    users.add(user2.id);
+  ChatRoom(ChatUser firstUser, ChatUser secondUser) {
+    user1 = firstUser;
+    user2 = secondUser;
+    users.add(user1!.id);
+    users.add(user2!.id);
   }
 
   ChatRoom.fromMap(Map<String, dynamic> map) {
@@ -47,8 +47,8 @@ class ChatRoom {
     return {
       'id': id,
       'users': users,
-      'user1': user1.toMap(),
-      'user2': user2.toMap(),
+      'user1': user1!.toMap(),
+      'user2': user2!.toMap(),
     };
   }
 }
