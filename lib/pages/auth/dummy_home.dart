@@ -3,6 +3,7 @@ import 'package:heartless/backend/controllers/patient_controller.dart';
 import 'package:heartless/main.dart';
 import 'package:heartless/pages/auth/scan_qr_page.dart';
 import 'package:heartless/pages/chat/contacts_page.dart';
+import 'package:heartless/services/local_storage/local_storage.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -18,6 +19,7 @@ class _DummyHomeState extends State<DummyHome> {
     AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
     await PatientController().logout(authNotifier);
+    await LocalStorage.clearUser();
     if (context.mounted) {
       // ! ensure that the widget is mounted before navigating
       Navigator.pushNamed(context, '/login');
@@ -30,7 +32,7 @@ class _DummyHomeState extends State<DummyHome> {
         Provider.of<AuthNotifier>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Dummy Home'),
+        title: const Text('Dummy Patient Home'),
       ),
       body: SingleChildScrollView(
         child: Center(
