@@ -11,7 +11,7 @@ class MessageService {
   static const Duration _timeLimit = Duration(seconds: 10);
 
   // get all the messages of a chat
-  Stream<QuerySnapshot> getMessages(String chatId) {
+  static Stream<QuerySnapshot> getMessages(String chatId) {
     return _chatRoomRef
         .doc(chatId)
         .collection('messages')

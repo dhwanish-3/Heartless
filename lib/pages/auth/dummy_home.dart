@@ -71,7 +71,7 @@ class _DummyHomeState extends State<DummyHome> {
                         MaterialPageRoute(
                             builder: (context) => const ContactsPage()));
                   },
-                  child: const Text('Contacts page')),
+                  child: const Text('Chats')),
             ],
           ),
         ),
