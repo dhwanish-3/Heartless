@@ -93,10 +93,10 @@ class _SignUpPageState extends State<SignUpPage> {
       if (_formKey.currentState!.validate()) {
         widgetNotifier.setLoading(true);
         _formKey.currentState!.save();
-        if (widgetNotifier.userType == UserType.patient) {
+        if (authNotifier.userType == UserType.patient) {
           await patientSignUp();
           widgetNotifier.setLoading(false);
-        } else if (widgetNotifier.userType == UserType.nurse) {
+        } else if (authNotifier.userType == UserType.nurse) {
           nurseSignUp();
           widgetNotifier.setLoading(false);
         } // todo : add doctor
@@ -104,12 +104,12 @@ class _SignUpPageState extends State<SignUpPage> {
     }
 
     void googleSignIn() async {
-      if (widgetNotifier.userType == UserType.patient) {
+      if (authNotifier.userType == UserType.patient) {
         bool success = await _patientController.googleSignIn(authNotifier);
         if (success && context.mounted) {
           goToPatientHome();
         }
-      } else if (widgetNotifier.userType == UserType.nurse) {
+      } else if (authNotifier.userType == UserType.nurse) {
         bool success = await _nurseController.googleSignIn(authNotifier);
         if (success && context.mounted) {
           goToNurseHome();
@@ -148,7 +148,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         height: 20,
                       ),
                       Text(
-                        '${userTypeToString(widgetNotifier.userType)} SignUp',
+                        '${userTypeToString(authNotifier.userType)} SignUp',
                         style: Theme.of(context).textTheme.headlineMedium,
                       ),
                       const SizedBox(

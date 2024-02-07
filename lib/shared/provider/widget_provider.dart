@@ -36,14 +36,6 @@ class WidgetNotifier with ChangeNotifier {
     notifyListeners();
   }
 
-  // choose user type in choose user type page
-  UserType _userType = UserType.patient;
-  UserType get userType => _userType;
-  void setUserType(UserType userType) {
-    _userType = userType;
-    notifyListeners();
-  }
-
   // login or signup toggle
   bool _showLogin = true;
   bool get showLogin => _showLogin;

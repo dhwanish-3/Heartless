@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/main.dart';
 import 'package:heartless/shared/models/app_user.dart';
-import 'package:heartless/shared/provider/widget_provider.dart';
+import 'package:heartless/shared/provider/auth_notifier.dart';
 import 'package:heartless/widgets/auth/single_user_type.dart';
 
 class UserTypeWidget extends StatefulWidget {
@@ -32,14 +32,14 @@ class _UserTypeState extends State<UserTypeWidget> {
   }
 
   Widget buildChooseUserTypeWidget(UserType userType, BuildContext context) {
-    WidgetNotifier widgetNotifier =
-        Provider.of<WidgetNotifier>(context, listen: false);
-    final isSelected = widgetNotifier.userType == userType;
+    AuthNotifier authNotifier =
+        Provider.of<AuthNotifier>(context, listen: false);
+    final isSelected = authNotifier.userType == userType;
 
     return GestureDetector(
       onTap: () {
         setState(() {
-          widgetNotifier.setUserType(userType);
+          authNotifier.setUserType(userType);
         });
       },
       child: AnimatedContainer(

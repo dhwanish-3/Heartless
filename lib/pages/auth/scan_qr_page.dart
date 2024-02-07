@@ -40,32 +40,32 @@ class _ScanQRState extends State<ScanQR> {
       if (user != null) {
         // connent doctor and patient
         log(user!.userType.toString());
-        log(widgetNotifier.userType.toString());
-        if ((widgetNotifier.userType == UserType.doctor &&
+        log(authNotifier.userType.toString());
+        if ((authNotifier.userType == UserType.doctor &&
             user!.userType == UserType.patient)) {
           await ConnectUsers.connectPatientAndDoctor(
               patientId: user!.uid, doctorId: authNotifier.doctor!.uid);
-        } else if (widgetNotifier.userType == UserType.patient &&
+        } else if (authNotifier.userType == UserType.patient &&
             user!.userType == UserType.doctor) {
           await ConnectUsers.connectPatientAndDoctor(
               patientId: authNotifier.patient!.uid, doctorId: user!.uid);
         }
         // connect nurse and patient
-        else if (widgetNotifier.userType == UserType.nurse &&
+        else if (authNotifier.userType == UserType.nurse &&
             user!.userType == UserType.patient) {
           await ConnectUsers.connectNurseAndPatient(
               patientId: user!.uid, nurseId: authNotifier.nurse!.uid);
-        } else if (widgetNotifier.userType == UserType.patient &&
+        } else if (authNotifier.userType == UserType.patient &&
             user!.userType == UserType.nurse) {
           await ConnectUsers.connectNurseAndPatient(
               patientId: authNotifier.patient!.uid, nurseId: user!.uid);
         }
         // connect doctor and nurse
-        else if (widgetNotifier.userType == UserType.doctor &&
+        else if (authNotifier.userType == UserType.doctor &&
             user!.userType == UserType.nurse) {
           await ConnectUsers.connectDoctorAndNurse(
               doctorId: authNotifier.doctor!.uid, nurseId: user!.uid);
-        } else if (widgetNotifier.userType == UserType.nurse &&
+        } else if (authNotifier.userType == UserType.nurse &&
             user!.userType == UserType.doctor) {
           await ConnectUsers.connectDoctorAndNurse(
               doctorId: user!.uid, nurseId: authNotifier.nurse!.uid);

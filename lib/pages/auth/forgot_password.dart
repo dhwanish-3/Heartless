@@ -88,11 +88,11 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     Future<void> submitForm() async {
       if (_formKey.currentState!.validate()) {
         _formKey.currentState!.save();
-        if (widgetNotifier.userType == UserType.patient) {
+        if (authNotifier.userType == UserType.patient) {
           patientForgotPassword();
-        } else if (widgetNotifier.userType == UserType.nurse) {
+        } else if (authNotifier.userType == UserType.nurse) {
           nurseForgotPassword();
-        } else if (widgetNotifier.userType == UserType.doctor) {
+        } else if (authNotifier.userType == UserType.doctor) {
           // todo: add doctor forgot password
         }
       }
