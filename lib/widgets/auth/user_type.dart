@@ -45,7 +45,7 @@ class _UserTypeState extends State<UserTypeWidget> {
       child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           curve: Curves.easeInOut,
-          // height: isSelected ? 300 : 200,
+          // height: isSelected ? 110 : 90,
           child: SingleUserType(
             type: userType.index + 1,
             isSelected: isSelected,
