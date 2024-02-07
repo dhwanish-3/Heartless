@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:heartless/backend/controllers/nurse_controller.dart';
 import 'package:heartless/main.dart';
 import 'package:heartless/pages/auth/scan_qr_page.dart';
+import 'package:heartless/pages/chat/contacts_page.dart';
+import 'package:heartless/services/local_storage/local_storage.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -17,6 +19,7 @@ class _DummyHomeState extends State<DummyNurseHome> {
     AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
     await NurseController().logout(authNotifier);
+    await LocalStorage.clearUser();
     if (context.mounted) {
       // ! ensure that the widget is mounted before navigating
       Navigator.pushNamed(context, '/login');
@@ -63,6 +66,14 @@ class _DummyHomeState extends State<DummyNurseHome> {
                   },
                   child: const Text('Scan QR')),
               ElevatedButton(onPressed: logout, child: const Text('Logout')),
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const ContactsPage()));
+                  },
+                  child: const Text('Chats')),
             ],
           ),
         ),
