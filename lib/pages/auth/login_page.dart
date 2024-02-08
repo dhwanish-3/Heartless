@@ -3,6 +3,7 @@ import "package:flutter_svg/svg.dart";
 import "package:heartless/backend/controllers/nurse_controller.dart";
 import "package:heartless/backend/controllers/patient_controller.dart";
 import "package:heartless/main.dart";
+import "package:heartless/services/local_storage/local_storage.dart";
 import "package:heartless/shared/models/app_user.dart";
 import "package:heartless/shared/models/nurse.dart";
 import 'package:heartless/shared/models/patient.dart';
@@ -67,6 +68,7 @@ class _LoginPageState extends State<LoginPage> {
       authNotifier.setPatient(patient);
       bool success = await _patientController.login(authNotifier);
       if (success && context.mounted) {
+        await LocalStorage.saveUser(authNotifier);
         goToPatientHome();
       }
     }
@@ -79,6 +81,7 @@ class _LoginPageState extends State<LoginPage> {
       authNotifier.setNurse(nurse);
       bool success = await _nurseController.login(authNotifier);
       if (success && context.mounted) {
+        await LocalStorage.saveUser(authNotifier);
         goToNurseHome();
       }
     }
@@ -101,11 +104,13 @@ class _LoginPageState extends State<LoginPage> {
       if (authNotifier.userType == UserType.patient) {
         bool success = await _patientController.googleSignIn(authNotifier);
         if (success && context.mounted) {
+          await LocalStorage.saveUser(authNotifier);
           goToPatientHome();
         }
       } else if (authNotifier.userType == UserType.nurse) {
         bool success = await _nurseController.googleSignIn(authNotifier);
         if (success && context.mounted) {
+          await LocalStorage.saveUser(authNotifier);
           goToNurseHome();
         }
       }
