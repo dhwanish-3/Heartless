@@ -52,12 +52,12 @@ class Reminder extends StatelessWidget {
       decoration: BoxDecoration(
         // color: Theme.of(context).canvasColor,
         color: bgColor,
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 0.5,
-            blurRadius: 2,
-            offset: const Offset(0, 3),
+            color: Colors.grey,
+            spreadRadius: 0,
+            blurRadius: 0.5,
+            offset: Offset(0, 1),
           ),
         ],
         borderRadius: BorderRadius.circular(20),
@@ -135,7 +135,7 @@ class Reminder extends StatelessWidget {
                                   color: Colors.black.withOpacity(0.5),
                                   spreadRadius: 0,
                                   blurRadius: 2,
-                                  offset: const Offset(0, 3),
+                                  offset: const Offset(0, 2),
                                 ),
                               ],
                             ),
