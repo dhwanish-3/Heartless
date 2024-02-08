@@ -27,7 +27,7 @@ class _MyWidgetState extends State<SelectChatPage> {
         Provider.of<AuthNotifier>(context, listen: false);
     if (authNotifier.userType == UserType.patient) {
       ConnectUsersController.getAllUsersConnectedToPatient(
-              authNotifier.patient!.uid)
+              authNotifier.appUser!.uid)
           .then((value) {
         log(value.toString());
         setState(() {
@@ -72,21 +72,25 @@ class _MyWidgetState extends State<SelectChatPage> {
         Provider.of<AuthNotifier>(context, listen: false);
     // create a new chat
     void createNewChat(AppUser user) async {
+      log("message");
       // check if chat already exists
       if (await ChatService.chatExists(
-          '${authNotifier.patient!.uid}_${user.uid}')) {
-        goToChat('${authNotifier.patient!.uid}_${user.uid}');
+          '${authNotifier.appUser!.uid}_${user.uid}')) {
+        log("one");
+        goToChat('${authNotifier.appUser!.uid}_${user.uid}');
         return;
       } else if (await ChatService.chatExists(
-          '${user.uid}_${authNotifier.patient!.uid}')) {
-        goToChat('${user.uid}_${authNotifier.patient!.uid}');
+          '${user.uid}_${authNotifier.appUser!.uid}')) {
+        log("two");
+        goToChat('${user.uid}_${authNotifier.appUser!.uid}');
         return;
       }
       // create a new chat
+      log("three");
       ChatUser me = ChatUser();
-      me.id = authNotifier.patient!.uid;
-      me.name = authNotifier.patient!.name;
-      me.imageUrl = authNotifier.patient!.imageUrl;
+      me.id = authNotifier.appUser!.uid;
+      me.name = authNotifier.appUser!.name;
+      me.imageUrl = authNotifier.appUser!.imageUrl;
       me.unreadMessages = 0;
       ChatUser other = ChatUser();
       other.id = user.uid;

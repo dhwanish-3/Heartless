@@ -19,6 +19,15 @@ class AuthNotifier with ChangeNotifier {
     notifyListeners();
   }
 
+  // app user
+  AppUser? _appUser;
+  AppUser? get appUser => _appUser;
+
+  void setAppUser(AppUser user) {
+    _appUser = user;
+    notifyListeners();
+  }
+
   // if user is patient
   Patient? _patient;
   Patient? get patient => _patient;
