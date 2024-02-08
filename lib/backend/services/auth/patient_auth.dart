@@ -63,7 +63,7 @@ class PatientAuth {
   }
 
   // set patient details to firebase
-  Future<bool> setPateintDetails(AuthNotifier authNotifier) async {
+  Future<bool> setPatientDetails(AuthNotifier authNotifier) async {
     try {
       await _patientRef
           .doc(authNotifier.patient!.uid)
@@ -135,11 +135,12 @@ class PatientAuth {
           authNotifier.patient!.email = result.user!.email!;
           authNotifier.patient!.name = result.user!.displayName!;
           authNotifier.patient!.imageUrl = result.user!.photoURL!;
-          authNotifier.setLoggedIn(true);
-          authNotifier.setUserType(UserType.patient);
           bool success =
-              await setPateintDetails(authNotifier).timeout(_timeLimit);
+              await setPatientDetails(authNotifier).timeout(_timeLimit);
           if (success) {
+            authNotifier.setLoggedIn(true);
+            authNotifier.setUserType(UserType.patient);
+            authNotifier.setAppUser(authNotifier.patient!);
             return true;
           } else {
             await _auth.signOut();
@@ -175,6 +176,7 @@ class PatientAuth {
         if (success) {
           authNotifier.setLoggedIn(true);
           authNotifier.setUserType(UserType.patient);
+          authNotifier.setAppUser(authNotifier.patient!);
           return true;
         } else {
           await _auth.signOut();
@@ -204,10 +206,11 @@ class PatientAuth {
       User? user = _auth.currentUser;
       if (user != null) {
         bool success =
-            await setPateintDetails(authNotifier).timeout(_timeLimit);
+            await setPatientDetails(authNotifier).timeout(_timeLimit);
         if (success) {
           authNotifier.setLoggedIn(true);
           authNotifier.setUserType(UserType.patient);
+          authNotifier.setAppUser(authNotifier.patient!);
           return true;
         } else {
           await _auth // ! Let us hope that this never happens
@@ -232,6 +235,7 @@ class PatientAuth {
       await _auth.signOut().timeout(_timeLimit);
       authNotifier.setLoggedIn(false);
       authNotifier.setPatient(Patient());
+      authNotifier.setAppUser(AppUser());
       return true;
     } on FirebaseAuthException {
       throw UnAutherizedException();

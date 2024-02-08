@@ -129,10 +129,11 @@ class NurseAuth {
           authNotifier.nurse!.email = result.user!.email!;
           authNotifier.nurse!.name = result.user!.displayName!;
           authNotifier.nurse!.imageUrl = result.user!.photoURL!;
-          authNotifier.setLoggedIn(true);
-          authNotifier.setUserType(UserType.nurse);
           bool success = await setNurseDetails(authNotifier);
           if (success) {
+            authNotifier.setLoggedIn(true);
+            authNotifier.setUserType(UserType.nurse);
+            authNotifier.setNurse(authNotifier.nurse!);
             return true;
           } else {
             await _auth.signOut();
@@ -167,6 +168,7 @@ class NurseAuth {
         if (success) {
           authNotifier.setLoggedIn(true);
           authNotifier.setUserType(UserType.nurse);
+          authNotifier.setAppUser(authNotifier.nurse!);
           return true;
         } else {
           await _auth.signOut();
@@ -199,6 +201,7 @@ class NurseAuth {
         if (success) {
           authNotifier.setLoggedIn(true);
           authNotifier.setUserType(UserType.nurse);
+          authNotifier.setAppUser(authNotifier.nurse!);
           return true;
         } else {
           await _auth // ! Let us hope that this never happens
@@ -223,6 +226,7 @@ class NurseAuth {
       await _auth.signOut().timeout(_timeLimit);
       authNotifier.setLoggedIn(false);
       authNotifier.setNurse(Nurse());
+      authNotifier.setAppUser(AppUser());
       return true;
     } on FirebaseAuthException {
       throw UnAutherizedException();

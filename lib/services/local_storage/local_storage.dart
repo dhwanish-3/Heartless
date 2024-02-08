@@ -45,10 +45,13 @@ class LocalStorage {
       // set user details
       if (userType == userTypeToString(UserType.patient)) {
         authNotifier.setPatient(Patient.fromMap(userMap));
+        authNotifier.setAppUser(Patient.fromMap(userMap));
       } else if (userType == userTypeToString(UserType.doctor)) {
         authNotifier.setDoctor(Doctor.fromMap(userMap));
+        authNotifier.setAppUser(Doctor.fromMap(userMap));
       } else if (userType == userTypeToString(UserType.nurse)) {
         authNotifier.setNurse(Nurse.fromMap(userMap));
+        authNotifier.setAppUser(Nurse.fromMap(userMap));
       }
       return true;
     }

@@ -34,7 +34,7 @@ class _ChatPageState extends State<ChatPage> {
       if (messageController.text.isNotEmpty) {
         Message message = Message();
         message.message = messageController.text;
-        message.senderId = authNotifier.patient!.uid;
+        message.senderId = authNotifier.appUser!.uid;
         message.time = DateTime.now();
         message.receiverId = widget.chatId;
         await MessageService.sendMessage(widget.chatId, message);
@@ -71,7 +71,7 @@ class _ChatPageState extends State<ChatPage> {
                           child: MessageTile(
                             message: message.message,
                             isSender:
-                                message.senderId == authNotifier.patient!.uid,
+                                message.senderId == authNotifier.appUser!.uid,
                             time: message.time.toString(),
                           ));
                     },
