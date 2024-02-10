@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/main.dart';
-import 'package:heartless/pages/log/add_button.dart';
-import 'package:heartless/pages/log/cutom_rect.dart';
-import 'package:heartless/pages/log/diary_list.dart';
-import 'package:heartless/pages/log/diary_model.dart';
-import 'package:heartless/pages/log/hero_dialog.dart';
+import 'package:heartless/widgets/log/add_button.dart';
+import 'package:heartless/widgets/log/cutom_rect.dart';
+import 'package:heartless/widgets/log/diary_list.dart';
+import 'package:heartless/widgets/log/diary_model.dart';
+import 'package:heartless/widgets/log/hero_dialog.dart';
 import 'package:heartless/shared/provider/widget_provider.dart';
 
 const String _heroAddTodo = 'add-todo-hero';
@@ -39,46 +39,47 @@ class _DiaryMainState extends State<DiaryMain> {
   Widget build(BuildContext context) {
     WidgetNotifier widgetNotifier =
         Provider.of<WidgetNotifier>(context, listen: false);
-    return Scaffold(
-        body: Stack(
+    return
+        // Scaffold(
+        //     body:
+        Stack(
       children: [
-        Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Color.fromARGB(255, 8, 123, 255),
-                Color.fromARGB(158, 0, 119, 255),
-                Color.fromARGB(161, 121, 206, 255),
-              ],
-              stops: [0, 0, 1],
-            ),
-          ),
-        ),
-        SafeArea(
-            child: Column(
+        // Container(
+        //   decoration: const BoxDecoration(
+        //     gradient: LinearGradient(
+        //       begin: Alignment.topLeft,
+        //       end: Alignment.bottomRight,
+        //       colors: [
+        //         Color.fromARGB(255, 8, 123, 255),
+        //         Color.fromARGB(158, 0, 119, 255),
+        //         Color.fromARGB(161, 121, 206, 255),
+        //       ],
+        //       stops: [0, 0, 1],
+        //     ),
+        //   ),
+        // ),
+        Column(
           children: [
-            SizedBox(
-              height: 56,
-              child: TextButton(
-                onPressed: () {},
-                child: const Text(
-                  'Your Diary',
-                  style: TextStyle(
-                      fontSize: 20,
-                      color: Color.fromARGB(255, 255, 255, 255),
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
+            // SizedBox(
+            //   height: 56,
+            //   child: TextButton(
+            //     onPressed: () {},
+            //     child: const Text(
+            //       'Your Diary',
+            //       style: TextStyle(
+            //           fontSize: 20,
+            //           color: Color.fromARGB(255, 255, 255, 255),
+            //           fontWeight: FontWeight.bold),
+            //     ),
+            //   ),
+            // ),
             Consumer<WidgetNotifier>(
               builder: (context, value, child) {
                 return const Expanded(child: DiaryList());
               },
             ),
           ],
-        )),
+        ),
         Align(
           alignment: Alignment.bottomRight,
           child: Padding(
@@ -134,6 +135,7 @@ class _DiaryMainState extends State<DiaryMain> {
           ),
         )
       ],
-    ));
+    );
+    // );
   }
 }
