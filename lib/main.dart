@@ -35,8 +35,7 @@ class MyApp extends StatelessWidget {
       theme: themeNotifier.lightTheme,
       darkTheme: themeNotifier.darkTheme,
       themeMode: ThemeNotifier.themeMode,
-      // initialRoute: '/',
-      home: const MedicalLogPage(),
+      initialRoute: '/',
       onGenerateRoute: Routes.generateRoutes,
     );
   }
