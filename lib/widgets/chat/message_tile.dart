@@ -21,7 +21,7 @@ class MessageTile extends StatelessWidget {
         constraints: BoxConstraints(
           maxWidth: screenWidth * 0.8,
           minHeight: 30,
-          minWidth: 100,
+          minWidth: 115,
         ),
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         decoration: BoxDecoration(

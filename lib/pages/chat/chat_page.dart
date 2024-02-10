@@ -1,16 +1,18 @@
 import 'dart:developer';
+import 'package:intl/intl.dart';
 
 import 'package:flutter/material.dart';
 import 'package:heartless/backend/services/chat/message_service.dart';
 import 'package:heartless/main.dart';
+import 'package:heartless/shared/models/chat.dart';
 import 'package:heartless/shared/models/message.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
 import 'package:heartless/widgets/chat/message_tile.dart';
 import 'package:heartless/widgets/chat/msg_input_field.dart';
 
 class ChatPage extends StatefulWidget {
-  final String chatId;
-  const ChatPage({super.key, required this.chatId});
+  final ChatRoom chatRoom;
+  const ChatPage({super.key, required this.chatRoom});
 
   @override
   State<ChatPage> createState() => _ChatPageState();
@@ -36,10 +38,19 @@ class _ChatPageState extends State<ChatPage> {
         message.message = messageController.text;
         message.senderId = authNotifier.appUser!.uid;
         message.time = DateTime.now();
-        message.receiverId = widget.chatId;
-        await MessageService.sendMessage(widget.chatId, message);
+        message.receiverId =
+            widget.chatRoom.user1!.id == authNotifier.appUser!.uid
+                ? widget.chatRoom.user2!.id
+                : widget.chatRoom.user1!.id;
+        await MessageService.sendMessage(widget.chatRoom.id, message);
         messageController.clear();
       }
+    }
+
+    // formatting the time to show in the chat with Oct 11, 20023 10:00 AM/PM format
+    String formattedTime(DateTime time) {
+      DateFormat formatter = DateFormat('MMM d, yyyy hh:mm a');
+      return formatter.format(time);
     }
 
     final double screenHeight = MediaQuery.of(context).size.height;
@@ -53,13 +64,15 @@ class _ChatPageState extends State<ChatPage> {
             height: screenHeight * 0.92,
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
             child: StreamBuilder(
-              stream: MessageService.getMessages(widget.chatId),
+              stream: MessageService.getMessages(widget.chatRoom.id),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData && snapshot.data.docs.isEmpty) {
                   return const Center(
                     child: Text("No messages yet"),
                   );
                 } else if (snapshot.hasData && snapshot.data.docs.isNotEmpty) {
+                  // mark all messages as read
+                  MessageService.markMessagesAsRead(widget.chatRoom.id);
                   log("Data: ${snapshot.data.docs.length}");
                   return ListView.builder(
                     itemCount: snapshot.data.docs.length,
@@ -72,7 +85,7 @@ class _ChatPageState extends State<ChatPage> {
                             message: message.message,
                             isSender:
                                 message.senderId == authNotifier.appUser!.uid,
-                            time: message.time.toString(),
+                            time: formattedTime(message.time),
                           ));
                     },
                   );
@@ -86,7 +99,9 @@ class _ChatPageState extends State<ChatPage> {
           ),
           MessageField(
             messageController: messageController,
-            sendMessage: sendMessage,
+            sendMessage: () {
+              sendMessage();
+            },
           ),
         ],
       ),

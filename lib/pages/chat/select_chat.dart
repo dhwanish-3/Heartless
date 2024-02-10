@@ -57,12 +57,12 @@ class _MyWidgetState extends State<SelectChatPage> {
   }
 
   // navigate to chat page
-  void goToChat(String chatId) {
+  void goToChat(ChatRoom chatRoom) {
     Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => ChatPage(
-                  chatId: chatId,
+                  chatRoom: chatRoom,
                 )));
   }
 
@@ -73,16 +73,19 @@ class _MyWidgetState extends State<SelectChatPage> {
     // create a new chat
     void createNewChat(AppUser user) async {
       log("message");
+      ChatRoom? chatRoom = await ChatService.chatExists(
+          '${authNotifier.appUser!.uid}_${user.uid}');
       // check if chat already exists
-      if (await ChatService.chatExists(
-          '${authNotifier.appUser!.uid}_${user.uid}')) {
+      if (chatRoom != null) {
         log("one");
-        goToChat('${authNotifier.appUser!.uid}_${user.uid}');
+        goToChat(chatRoom);
         return;
-      } else if (await ChatService.chatExists(
-          '${user.uid}_${authNotifier.appUser!.uid}')) {
+      }
+      chatRoom = await ChatService.chatExists(
+          '${user.uid}_${authNotifier.appUser!.uid}');
+      if (chatRoom != null) {
         log("two");
-        goToChat('${user.uid}_${authNotifier.appUser!.uid}');
+        goToChat(chatRoom);
         return;
       }
       // create a new chat
@@ -92,16 +95,20 @@ class _MyWidgetState extends State<SelectChatPage> {
       me.name = authNotifier.appUser!.name;
       me.imageUrl = authNotifier.appUser!.imageUrl;
       me.unreadMessages = 0;
+      me.isOnline = true;
+      me.lastSeen = DateTime.now();
       ChatUser other = ChatUser();
       other.id = user.uid;
       other.name = user.name;
       other.imageUrl = user.imageUrl;
       other.unreadMessages = 0;
-      ChatRoom chatRoom = ChatRoom(me, other);
+      other.isOnline = false;
+      other.lastSeen = DateTime.now();
+      chatRoom = ChatRoom(me, other);
       chatRoom.id = '${me.id}_${other.id}';
       log(chatRoom.toMap().toString());
       await ChatService().addChatRoom(chatRoom);
-      goToChat(chatRoom.id);
+      goToChat(chatRoom);
     }
 
     return Scaffold(

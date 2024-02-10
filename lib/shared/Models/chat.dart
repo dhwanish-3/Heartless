@@ -3,6 +3,8 @@ class ChatUser {
   String name = '';
   String imageUrl = '';
   int unreadMessages = 0;
+  bool isOnline = false;
+  DateTime lastSeen = DateTime.now();
 
   ChatUser();
 
@@ -11,6 +13,8 @@ class ChatUser {
     name = map['name'];
     imageUrl = map['imageUrl'];
     unreadMessages = map['unreadMessages'];
+    isOnline = map['isOnline'];
+    lastSeen = map['lastSeen'].toDate();
   }
 
   Map<String, dynamic> toMap() {
@@ -19,6 +23,8 @@ class ChatUser {
       'name': name,
       'imageUrl': imageUrl,
       'unreadMessages': unreadMessages,
+      'isOnline': isOnline,
+      'lastSeen': lastSeen,
     };
   }
 }
