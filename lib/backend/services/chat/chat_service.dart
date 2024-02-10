@@ -70,7 +70,7 @@ class ChatService {
   static Stream<QuerySnapshot> getLastMessage(String chatId) {
     return _chatRoomRef
         .doc(chatId)
-        .collection("Messages")
+        .collection("messages")
         .orderBy('time', descending: true)
         .limit(1)
         .snapshots();
