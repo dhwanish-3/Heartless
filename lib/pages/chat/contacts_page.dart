@@ -27,19 +27,19 @@ class _ContactsPageState extends State<ContactsPage> {
 
     // calculating the number of unread messages for the current user fot a particular chatRoom
     int calculateUnreadMessagesCount(ChatRoom chatRoom) {
-      if (chatRoom.user1!.id == authNotifier.appUser!.uid) {
-        return chatRoom.user1!.unreadMessages;
+      if (chatRoom.user1Ref!.id == authNotifier.appUser!.uid) {
+        return chatRoom.user1.unreadMessages;
       } else {
-        return chatRoom.user2!.unreadMessages;
+        return chatRoom.user2.unreadMessages;
       }
     }
 
     // getting the name of the chat user
     String getChatUserName(ChatRoom chatRoom) {
-      if (chatRoom.user1!.id == authNotifier.appUser!.uid) {
-        return chatRoom.user2!.name;
+      if (chatRoom.user1Ref!.id == authNotifier.appUser!.uid) {
+        return chatRoom.user2.name;
       } else {
-        return chatRoom.user1!.name;
+        return chatRoom.user1.name;
       }
     }
 

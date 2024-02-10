@@ -16,18 +16,19 @@ class SplashServices {
         log("User data fetched");
         return true;
       } else {
-        try {
-          if (await PatientAuth().initializePatient(authNotifier)) {
-            log("User initialized. Saving to local storage");
-            await LocalStorage.saveUser(authNotifier);
-            return true;
-          } else {
-            return false;
-          }
-        } catch (e) {
-          log("ERROR in splash services: $e");
-          return false;
-        }
+        // try {
+        //   if (await PatientAuth().initializePatient(authNotifier)) {
+        //     log("User initialized. Saving to local storage");
+        //     await LocalStorage.saveUser(authNotifier);
+        //     return true;
+        //   } else {
+        //     return false;
+        //   }
+        // } catch (e) {
+        //   log("ERROR in splash services: $e");
+        //   return false;
+        // }
+        return false;
       }
     } else {
       return false;

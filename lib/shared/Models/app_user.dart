@@ -35,6 +35,9 @@ class AppUser {
   String imageUrl = '';
   String? phone;
   String password = '';
+  int unreadMessages = 0;
+  bool isOnline = false;
+  DateTime lastSeen = DateTime.now();
 
   UserType userType = UserType.patient;
 
@@ -48,6 +51,9 @@ class AppUser {
     phone = map['phone'];
     password = map['password'];
     userType = UserType.values[map['userType']];
+    unreadMessages = map['unreadMessages'] ?? 0;
+    isOnline = map['isOnline'] ?? false;
+    lastSeen = map['lastSeen'].toDate();
   }
 
   Map<String, dynamic> toMap() {
@@ -59,6 +65,9 @@ class AppUser {
       'phone': phone,
       'password': password,
       'userType': userType.index,
+      'unreadMessages': unreadMessages,
+      'isOnline': isOnline,
+      'lastSeen': lastSeen,
     };
   }
 }

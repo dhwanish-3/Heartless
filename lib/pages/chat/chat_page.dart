@@ -39,9 +39,9 @@ class _ChatPageState extends State<ChatPage> {
         message.senderId = authNotifier.appUser!.uid;
         message.time = DateTime.now();
         message.receiverId =
-            widget.chatRoom.user1!.id == authNotifier.appUser!.uid
-                ? widget.chatRoom.user2!.id
-                : widget.chatRoom.user1!.id;
+            widget.chatRoom.user1.uid == authNotifier.appUser!.uid
+                ? widget.chatRoom.user2.uid
+                : widget.chatRoom.user2.uid;
         await MessageService.sendMessage(widget.chatRoom.id, message);
         messageController.clear();
       }

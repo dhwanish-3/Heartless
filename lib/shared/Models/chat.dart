@@ -1,60 +1,43 @@
-class ChatUser {
-  String id = '';
-  String name = '';
-  String imageUrl = '';
-  int unreadMessages = 0;
-  bool isOnline = false;
-  DateTime lastSeen = DateTime.now();
-
-  ChatUser();
-
-  ChatUser.fromMap(Map<String, dynamic> map) {
-    id = map['id'];
-    name = map['name'];
-    imageUrl = map['imageUrl'];
-    unreadMessages = map['unreadMessages'];
-    isOnline = map['isOnline'];
-    lastSeen = map['lastSeen'].toDate();
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'name': name,
-      'imageUrl': imageUrl,
-      'unreadMessages': unreadMessages,
-      'isOnline': isOnline,
-      'lastSeen': lastSeen,
-    };
-  }
-}
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:heartless/shared/models/app_user.dart';
 
 class ChatRoom {
   String id = '';
   List<String> users = []; // List of user ids for quick access in queries
-  ChatUser? user1;
-  ChatUser? user2;
+  // reference to the users in the chat
+  DocumentReference? user1Ref;
+  DocumentReference? user2Ref;
 
-  ChatRoom(ChatUser firstUser, ChatUser secondUser) {
-    user1 = firstUser;
-    user2 = secondUser;
-    users.add(user1!.id);
-    users.add(user2!.id);
+  ChatRoom(DocumentReference user1, DocumentReference user2) {
+    user1Ref = user1;
+    user2Ref = user2;
+    users.add(user1.id);
+    users.add(user2.id);
   }
 
   ChatRoom.fromMap(Map<String, dynamic> map) {
     id = map['id'];
     users = List<String>.from(map['users']);
-    user1 = ChatUser.fromMap(map['user1']);
-    user2 = ChatUser.fromMap(map['user2']);
+    user1Ref = map['user1Ref'];
+    user2Ref = map['user2Ref'];
   }
 
   Map<String, dynamic> toMap() {
     return {
       'id': id,
       'users': users,
-      'user1': user1!.toMap(),
-      'user2': user2!.toMap(),
+      'user1Ref': user1Ref,
+      'user2Ref': user2Ref,
     };
   }
+
+  // function to get user1 data as AppUser
+  AppUser get user1 => AppUser.fromMap(user1Ref!.get().then((value) {
+        return value.data() as Map<String, dynamic>;
+      }) as Map<String, dynamic>);
+
+  // function to get user2 data as AppUser
+  AppUser get user2 => AppUser.fromMap(user2Ref!.get().then((value) {
+        return value.data() as Map<String, dynamic>;
+      }) as Map<String, dynamic>);
 }
