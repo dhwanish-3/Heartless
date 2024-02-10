@@ -127,6 +127,7 @@ class PatientAuth {
             authNotifier, result.user!.email!)) {
           authNotifier.setLoggedIn(true);
           authNotifier.setUserType(UserType.patient);
+          authNotifier.setAppUser(authNotifier.patient!);
           return true;
         } else {
           // * if not then create a new account

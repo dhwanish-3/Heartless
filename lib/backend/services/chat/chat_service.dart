@@ -19,11 +19,13 @@ class ChatService {
   }
 
   // check if a chat exists
-  static Future<bool> chatExists(String chatId) async {
+  static Future<ChatRoom?> chatExists(String chatId) async {
     try {
       DocumentSnapshot chat =
           await _chatRoomRef.doc(chatId).get().timeout(_timeLimit);
-      return chat.exists;
+      return chat.exists
+          ? ChatRoom.fromMap(chat.data()! as Map<String, dynamic>)
+          : null;
     } on FirebaseAuthException {
       throw UnAutherizedException();
     } on SocketException {
@@ -33,12 +35,9 @@ class ChatService {
     }
   }
 
-  // add a new chat
+  // create a new chatroom
   Future<ChatRoom> addChatRoom(ChatRoom chatRoom) async {
     try {
-      // // getting the reference of the chat to get id
-      // DocumentReference chatRef = _chatRoomRef.doc();
-      // chatRoom.id = chatRef.id;
       await _chatRoomRef
           .doc(chatRoom.id)
           .set(chatRoom.toMap())
