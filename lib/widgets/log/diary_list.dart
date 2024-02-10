@@ -1,9 +1,12 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:heartless/main.dart';
-import 'package:heartless/pages/log/cutom_rect.dart';
-import 'package:heartless/pages/log/diary_model.dart';
-import 'package:heartless/pages/log/hero_dialog.dart';
+import 'package:heartless/shared/constants.dart';
+import 'package:heartless/widgets/log/cutom_rect.dart';
+import 'package:heartless/widgets/log/diary_model.dart';
+import 'package:heartless/widgets/log/hero_dialog.dart';
 import 'package:heartless/shared/provider/widget_provider.dart';
 
 class DiaryList extends StatefulWidget {
@@ -48,72 +51,116 @@ class _DiaryListState extends State<DiaryList> {
     }
 
     return Consumer<WidgetNotifier>(builder: (context, value, child) {
-      return MasonryGridView.builder(
-        gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-        ),
-        itemCount: value.diaryList!.length,
-        padding: const EdgeInsets.all(12),
-        itemBuilder: (context, index) {
-          final diary = value.diaryList![index];
-          return GestureDetector(
-            onDoubleTap: () {
-              showPopUpDelete(diary);
-              debugPrint(widgetNotifier.diaryList.toString());
-            },
-            onTap: () {
-              Navigator.of(context).push(
-                HeroDialogRoute(
-                  builder: (context) => Center(
-                    child: DiaryPopCard(
-                      index: index,
+      // log(vajbkhvjhv.toString());
+      List<Diary> vajbkhvjhv = [
+        Diary('title', 'body this is the one', DateTime.now()),
+        Diary('title', 'body', DateTime.now()),
+        Diary('title', 'it was a nice day today', DateTime.now()),
+        Diary('title', 'body', DateTime.now()),
+        Diary('title', 'food was okay. Sleep got disturbed', DateTime.now()),
+        Diary('title', 'body', DateTime.now()),
+        Diary('title', 'body', DateTime.now()),
+        Diary('title', 'body', DateTime.now()),
+        Diary('title', 'body', DateTime.now()),
+        Diary('title', 'body', DateTime.now()),
+        Diary('title', 'body', DateTime.now()),
+        Diary('title', 'body', DateTime.now()),
+        Diary('title', 'body', DateTime.now()),
+        Diary('title', 'body', DateTime.now()),
+        Diary('title', 'body', DateTime.now()),
+        Diary('title', 'body', DateTime.now()),
+        Diary('title', 'body', DateTime.now()),
+        Diary('title', 'body', DateTime.now()),
+        Diary('title', 'body', DateTime.now()),
+      ];
+      double calculateHeight(int length) {
+        if (length % 2 == 0) {
+          return (length / 2) * 200;
+        } else {
+          return ((length + 1) / 2) * 200;
+        }
+      }
+
+      return SizedBox(
+        height: calculateHeight(vajbkhvjhv.length),
+        child: MasonryGridView.builder(
+          physics: const NeverScrollableScrollPhysics(),
+          // physics: const PageScrollPhysics(),
+          gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+          ),
+          itemCount: vajbkhvjhv.length,
+          padding: const EdgeInsets.all(12),
+          itemBuilder: (context, index) {
+            final diary = vajbkhvjhv[index];
+            return GestureDetector(
+              onDoubleTap: () {
+                showPopUpDelete(diary);
+                debugPrint(widgetNotifier.diaryList.toString());
+              },
+              onTap: () {
+                Navigator.of(context).push(
+                  HeroDialogRoute(
+                    builder: (context) => Center(
+                      child: DiaryPopCard(
+                        index: index,
+                      ),
                     ),
                   ),
-                ),
-              );
-            },
-            child: Wrap(
-              direction: Axis.horizontal,
-              children: [
-                Hero(
-                  createRectTween: (begin, end) {
-                    return CustomRectTween(
-                        begin: begin as Rect, end: end as Rect);
-                  },
-                  tag: diary.title + diary.dateCreated.toString(),
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        left: 4.0, right: 4, bottom: 5, top: 5),
-                    child: Material(
-                      color: const Color.fromARGB(255, 149, 255, 191),
-                      borderRadius: BorderRadius.circular(24),
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            bottom: 20, top: 10, right: 20, left: 20),
-                        child: Column(
-                          children: [
-                            Text(
-                              diary.title,
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
-                            ),
-                            const SizedBox(height: 2),
-                            Text(diary.dateCreated.toString().substring(0, 10)),
-                            const Divider(
-                              thickness: 0.5,
-                            ),
-                            Text(diary.body)
-                          ],
+                );
+              },
+              child: Wrap(
+                direction: Axis.horizontal,
+                children: [
+                  Hero(
+                    createRectTween: (begin, end) {
+                      return CustomRectTween(
+                          begin: begin as Rect, end: end as Rect);
+                    },
+                    tag: diary.title + diary.dateCreated.toString(),
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          left: 4.0, right: 4, bottom: 5, top: 5),
+                      child: Material(
+                        elevation: 1,
+                        // color: const Color.fromARGB(255, 149, 255, 191),
+                        color: Constants.primaryColor.withOpacity(0.5),
+                        borderRadius: BorderRadius.circular(24),
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              bottom: 20, top: 10, right: 20, left: 20),
+                          child: Column(
+                            children: [
+                              Text(
+                                diary.title,
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                diary.dateCreated.toString().substring(0, 10),
+                                style: TextStyle(
+                                  color: Theme.of(context).canvasColor,
+                                ),
+                              ),
+                              const Divider(
+                                thickness: 0.5,
+                              ),
+                              Text(diary.body)
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          );
-        },
+                ],
+              ),
+            );
+          },
+        ),
       );
     });
   }

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:heartless/pages/log/medical_log_page.dart';
 import 'package:heartless/services/routes/routes.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
 import 'package:heartless/shared/provider/theme_provider.dart';
+import 'package:heartless/widgets/log/main_diary.dart';
 import 'package:provider/provider.dart';
 export 'package:provider/provider.dart'; //* Exporting provider package to all other files
 import 'package:heartless/shared/provider/widget_provider.dart';
@@ -33,7 +35,8 @@ class MyApp extends StatelessWidget {
       theme: themeNotifier.lightTheme,
       darkTheme: themeNotifier.darkTheme,
       themeMode: ThemeNotifier.themeMode,
-      initialRoute: '/',
+      // initialRoute: '/',
+      home: const MedicalLogPage(),
       onGenerateRoute: Routes.generateRoutes,
     );
   }

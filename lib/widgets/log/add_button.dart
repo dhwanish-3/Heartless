@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/main.dart';
-import 'package:heartless/pages/log/cutom_rect.dart';
-import 'package:heartless/pages/log/diary_model.dart';
-import 'package:heartless/pages/log/hero_dialog.dart';
+import 'package:heartless/widgets/log/cutom_rect.dart';
+import 'package:heartless/widgets/log/diary_model.dart';
+import 'package:heartless/widgets/log/hero_dialog.dart';
 import 'package:heartless/shared/provider/widget_provider.dart';
 
 class AddDiaryButton extends StatefulWidget {
