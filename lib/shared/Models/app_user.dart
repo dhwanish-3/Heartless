@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 enum UserType { patient, nurse, doctor }
 
 // convert enum to string
@@ -33,7 +31,7 @@ UserType stringToUserType(String userType) {
 class AppUser {
   String uid = '';
   String email = '';
-  String name = '';
+  String name = 'MRS. XYZ';
   String imageUrl = '';
   String? phone;
   String password = '';

@@ -1,7 +1,5 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:heartless/shared/models/app_user.dart';
+import 'package:heartless/shared/Models/app_user.dart';
 
 class ChatRoom {
   String id = '';
@@ -34,17 +32,27 @@ class ChatRoom {
     };
   }
 
-  // function to get user1 data as AppUser
-  AppUser get user1 {
-    log("get user 1");
-    return AppUser.fromMap(user1Ref!.get().then((value) {
-      log(value.data().toString());
-      return value.data() as Map<String, dynamic>;
-    }) as Map<String, dynamic>);
+  // function to get user1 data
+  Future<AppUser> getUser1() async {
+    DocumentSnapshot<Map<String, dynamic>> user1Snapshot =
+        await user1Ref!.get();
+    return AppUser.fromMap(user1Snapshot.data()!);
   }
 
-  // function to get user2 data as AppUser
-  AppUser get user2 => AppUser.fromMap(user2Ref!.get().then((value) {
-        return value.data() as Map<String, dynamic>;
-      }) as Map<String, dynamic>);
+  // function to get user2 data
+  Future<AppUser> getUser2() async {
+    DocumentSnapshot<Map<String, dynamic>> user2Snapshot =
+        await user2Ref!.get();
+    return AppUser.fromMap(user2Snapshot.data()!);
+  }
+
+  // function to get user1 stream
+  Stream<DocumentSnapshot<Map<String, dynamic>>> getUser1Stream() {
+    return user1Ref!.snapshots();
+  }
+
+  // function to get user2 stream
+  Stream<DocumentSnapshot<Map<String, dynamic>>> getUser2Stream() {
+    return user2Ref!.snapshots();
+  }
 }
