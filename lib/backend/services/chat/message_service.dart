@@ -105,8 +105,8 @@ class MessageService {
           .timeout(_timeLimit);
 
       // update the count of unread messages for the receiver
-      AppUser user1 = chatRoom.user1;
-      AppUser user2 = chatRoom.user2;
+      AppUser user1 = await chatRoom.getUser1();
+      AppUser user2 = await chatRoom.getUser2();
       if (user1.uid == message.receiverId && user1.unreadMessages > 0) {
         await chatRoom.user1Ref!.update({
           'unreadMessages': FieldValue.increment(-1),
