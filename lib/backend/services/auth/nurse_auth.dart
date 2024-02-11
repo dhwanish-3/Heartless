@@ -121,6 +121,7 @@ class NurseAuth {
         if (await getNurseDetailswithEmail(authNotifier, result.user!.email!)) {
           authNotifier.setLoggedIn(true);
           authNotifier.setUserType(UserType.nurse);
+          authNotifier.setAppUser(authNotifier.nurse!);
           return true;
         } else {
           // * if not then create a new account
@@ -133,7 +134,7 @@ class NurseAuth {
           if (success) {
             authNotifier.setLoggedIn(true);
             authNotifier.setUserType(UserType.nurse);
-            authNotifier.setNurse(authNotifier.nurse!);
+            authNotifier.setAppUser(authNotifier.nurse!);
             return true;
           } else {
             await _auth.signOut();

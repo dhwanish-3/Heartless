@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 enum UserType { patient, nurse, doctor }
 
 // convert enum to string
@@ -53,7 +55,7 @@ class AppUser {
     userType = UserType.values[map['userType']];
     unreadMessages = map['unreadMessages'] ?? 0;
     isOnline = map['isOnline'] ?? false;
-    lastSeen = map['lastSeen'].toDate();
+    lastSeen = DateTime.parse(map['lastSeen'] ?? DateTime.now());
   }
 
   Map<String, dynamic> toMap() {
@@ -67,7 +69,7 @@ class AppUser {
       'userType': userType.index,
       'unreadMessages': unreadMessages,
       'isOnline': isOnline,
-      'lastSeen': lastSeen,
+      'lastSeen': lastSeen.toString(),
     };
   }
 }

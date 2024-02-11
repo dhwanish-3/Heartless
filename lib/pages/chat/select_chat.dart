@@ -87,10 +87,10 @@ class _MyWidgetState extends State<SelectChatPage> {
         return;
       }
       // create a new chat
-      DocumentReference me = FirebaseFirestore.instance
+      DocumentReference<Map<String, dynamic>> me = FirebaseFirestore.instance
           .collection('${userTypeToString(authNotifier.userType)}s')
           .doc(authNotifier.appUser!.uid);
-      DocumentReference other = FirebaseFirestore.instance
+      DocumentReference<Map<String, dynamic>> other = FirebaseFirestore.instance
           .collection('${userTypeToString(user.userType)}s')
           .doc(user.uid);
       chatRoom = ChatRoom(me, other);

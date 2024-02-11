@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -25,18 +26,21 @@ class MessageService {
   // send a new message
   static Future<Message> sendMessage(String chatId, Message message) async {
     try {
+      log("sending message");
       // getting the reference of the chat to get id
       DocumentReference messageRef =
           _chatRoomRef.doc(chatId).collection('messages').doc();
       message.id = messageRef.id;
       await messageRef.set(message.toMap()).timeout(_timeLimit);
-
+      log("added message");
       // increment the count of unread messages for the receiver
       await _chatRoomRef.doc(chatId).get().then((value) async {
         if (value.exists) {
           if (value.data() != null) {
             DocumentReference user1Ref = value.data()!['user1Ref'];
             DocumentReference user2Ref = value.data()!['user2Ref'];
+            log("sending messsage");
+            log(user1Ref.toString());
             if (user1Ref.id == message.receiverId) {
               await user1Ref.update({
                 'unreadMessages': FieldValue.increment(1),
