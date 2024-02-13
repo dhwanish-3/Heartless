@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:heartless/shared/models/app_user.dart';
 import 'package:intl/intl.dart';
 
 import 'package:flutter/material.dart';
@@ -12,7 +13,8 @@ import 'package:heartless/widgets/chat/msg_input_field.dart';
 
 class ChatPage extends StatefulWidget {
   final ChatRoom chatRoom;
-  const ChatPage({super.key, required this.chatRoom});
+  final AppUser chatUser;
+  const ChatPage({super.key, required this.chatRoom, required this.chatUser});
 
   @override
   State<ChatPage> createState() => _ChatPageState();
@@ -26,6 +28,27 @@ class _ChatPageState extends State<ChatPage> {
     messageController.dispose();
     super.dispose();
   }
+
+  // @override
+  // void initState() {
+  //   // getting the user details for the chat receiver
+  //   AuthNotifier authNotifier =
+  //       Provider.of<AuthNotifier>(context, listen: false);
+  //   if (authNotifier.appUser!.uid == widget.chatRoom.user1Ref!.id) {
+  //     widget.chatRoom.getUser2().then((value) {
+  //       setState(() {
+  //         chatUser = value as AppUser;
+  //       });
+  //     });
+  //   } else {
+  //     widget.chatRoom.getUser1().then((value) {
+  //       setState(() {
+  //         chatUser = value as AppUser;
+  //       });
+  //     });
+  //   }
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -62,61 +85,76 @@ class _ChatPageState extends State<ChatPage> {
 
     final double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
+        appBar: AppBar(
+            title: Column(
+          children: [
+            Text(widget.chatUser.name, style: const TextStyle(fontSize: 18)),
+            Text(
+              widget.chatUser.isOnline
+                  ? "Online"
+                  : "Last seen ${formattedTime(widget.chatUser.lastSeen)}",
+              style: const TextStyle(fontSize: 12),
+            ),
+          ],
+        )),
+
         //* the textInput widget does not move up in ios
         //resizeToAvoidBottomInset: false,
         body: SingleChildScrollView(
-      child: Column(
-        children: [
-          Container(
-            height: screenHeight * 0.92,
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-            child: StreamBuilder(
-              stream: MessageService.getMessages(widget.chatRoom.id),
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (snapshot.hasData && snapshot.data.docs.isEmpty) {
-                  return const Center(
-                    child: Text("No messages yet"),
-                  );
-                } else if (snapshot.hasData && snapshot.data.docs.isNotEmpty) {
-                  // mark all messages as read
-                  MessageService.markMessagesAsRead(widget.chatRoom.id);
-                  log("Data: ${snapshot.data.docs.length}");
-                  return ListView.builder(
-                    itemCount: snapshot.data.docs.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      Message message =
-                          Message.fromMap(snapshot.data.docs[index].data());
-                      return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 5),
-                          child: GestureDetector(
-                            onDoubleTap: () {
-                              deleteMessage(message);
-                            },
-                            child: MessageTile(
-                              message: message.message,
-                              isSender:
-                                  message.senderId == authNotifier.appUser!.uid,
-                              time: formattedTime(message.time),
-                            ),
-                          ));
-                    },
-                  );
-                } else {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-              },
-            ),
+          child: Column(
+            children: [
+              Container(
+                height: screenHeight * 0.8,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+                child: StreamBuilder(
+                  stream: MessageService.getMessages(widget.chatRoom.id),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.hasData && snapshot.data.docs.isEmpty) {
+                      return const Center(
+                        child: Text("No messages yet"),
+                      );
+                    } else if (snapshot.hasData &&
+                        snapshot.data.docs.isNotEmpty) {
+                      // mark all messages as read
+                      MessageService.markMessagesAsRead(widget.chatRoom.id);
+                      log("Data: ${snapshot.data.docs.length}");
+                      return ListView.builder(
+                        itemCount: snapshot.data.docs.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          Message message =
+                              Message.fromMap(snapshot.data.docs[index].data());
+                          return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 5),
+                              child: GestureDetector(
+                                onDoubleTap: () {
+                                  deleteMessage(message);
+                                },
+                                child: MessageTile(
+                                  message: message.message,
+                                  isSender: message.senderId ==
+                                      authNotifier.appUser!.uid,
+                                  time: formattedTime(message.time),
+                                ),
+                              ));
+                        },
+                      );
+                    } else {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                  },
+                ),
+              ),
+              MessageField(
+                messageController: messageController,
+                sendMessage: () {
+                  sendMessage();
+                },
+              ),
+            ],
           ),
-          MessageField(
-            messageController: messageController,
-            sendMessage: () {
-              sendMessage();
-            },
-          ),
-        ],
-      ),
-    ));
+        ));
   }
 }

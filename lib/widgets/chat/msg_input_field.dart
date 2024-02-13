@@ -18,9 +18,7 @@ class _MessageFieldState extends State<MessageField> {
     final double screenHeight = MediaQuery.of(context).size.height;
     return Container(
         width: screenWidth,
-        constraints: BoxConstraints(
-          minHeight: screenHeight * 0.07,
-        ),
+        height: screenHeight * 0.07,
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         decoration: BoxDecoration(
           color: Constants.customGray,

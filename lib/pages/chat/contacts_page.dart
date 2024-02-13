@@ -20,6 +20,17 @@ class ContactsPage extends StatefulWidget {
 
 class _ContactsPageState extends State<ContactsPage> {
   @override
+  void initState() {
+    // updating the online status of the current user
+    AuthNotifier authNotifier =
+        Provider.of<AuthNotifier>(context, listen: false);
+    ChatService.updateOnlineStatus(
+        authNotifier.appUser!.uid, true, authNotifier.appUser!.userType);
+
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
@@ -55,120 +66,146 @@ class _ContactsPageState extends State<ContactsPage> {
       }
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Chats'),
-      ),
-      body: StreamBuilder(
-        stream: ChatService.getChatRooms(),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (snapshot.hasData && snapshot.data.docs.isEmpty) {
-            return const Center(
-              child: Text('No chats yet'),
-            );
-          } else if (snapshot.hasData && snapshot.data.docs.isNotEmpty) {
-            log(snapshot.data.docs.length.toString());
-            return ListView.builder(
-              itemCount: snapshot.data.docs.length,
-              itemBuilder: (BuildContext context, int index) {
-                log(snapshot.data.docs[index].data().toString());
-                ChatRoom chatRoom =
-                    ChatRoom.fromMap(snapshot.data.docs[index].data());
-                log(chatRoom.toMap().toString());
-                return StreamBuilder(
-                  stream: chatRoom.getUser1Stream(),
-                  builder: (BuildContext context, AsyncSnapshot snapshot1) {
-                    if (snapshot1.hasData) {
-                      AppUser user1 = AppUser.fromMap(snapshot1.data.data());
-                      return StreamBuilder(
-                        stream: chatRoom.getUser2Stream(),
-                        builder:
-                            (BuildContext context, AsyncSnapshot snapshot2) {
-                          if (snapshot2.hasData) {
-                            AppUser user2 =
-                                AppUser.fromMap(snapshot2.data.data());
-                            return StreamBuilder(
-                                stream: ChatService.getLastMessage(chatRoom.id),
-                                builder: (BuildContext context,
-                                    AsyncSnapshot snapshot) {
-                                  if (snapshot.hasData &&
-                                      snapshot.data.docs.isEmpty) {
-                                    return GestureDetector(
-                                      onTap: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) => ChatPage(
-                                                      chatRoom: chatRoom,
-                                                    )));
-                                      },
-                                      child: ChatTile(
-                                        imageUrl: getImageUrl(user1, user2),
-                                        name: getChatUserName(user1,
-                                            user2), // chatRoom.other.name,
-                                        time: "",
-                                        latestMessage: "",
-                                        unreadMessages:
-                                            calculateUnreadMessagesCount(
-                                                user1, user2),
-                                      ),
-                                    );
-                                  }
-                                  if (snapshot.hasData &&
-                                      snapshot.data.docs.isNotEmpty) {
-                                    Message message = Message.fromMap(
-                                        snapshot.data.docs[0].data());
-                                    log(message.toMap().toString());
-                                    return GestureDetector(
-                                      onTap: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) => ChatPage(
-                                                      chatRoom: chatRoom,
-                                                    )));
-                                      },
-                                      child: ChatTile(
-                                        name: getChatUserName(user1,
-                                            user2), // chatRoom.other.name,
-                                        imageUrl: getImageUrl(user1, user2),
-                                        time: message.time.toString(),
-                                        latestMessage: message.message,
-                                        unreadMessages:
-                                            calculateUnreadMessagesCount(
-                                                user1, user2),
-                                      ),
-                                    );
-                                  } else {
-                                    return Container();
-                                  }
-                                });
-                          } else {
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          }
-                        },
-                      );
-                    } else {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-                  },
-                );
-              },
-            );
-          } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: onPressed,
-        child: const Icon(Icons.chat),
+    return WillPopScope(
+      onWillPop: () async {
+        // updating the online status of the current user
+        ChatService.updateOnlineStatus(
+            authNotifier.appUser!.uid, false, authNotifier.appUser!.userType);
+        // updating the last seen of the current user
+        ChatService.updateLastSeen(authNotifier.appUser!.uid, DateTime.now(),
+            authNotifier.appUser!.userType);
+        return true;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Chats'),
+        ),
+        body: StreamBuilder(
+          stream: ChatService.getChatRooms(),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (snapshot.hasData && snapshot.data.docs.isEmpty) {
+              return const Center(
+                child: Text('No chats yet'),
+              );
+            } else if (snapshot.hasData && snapshot.data.docs.isNotEmpty) {
+              log(snapshot.data.docs.length.toString());
+              return ListView.builder(
+                itemCount: snapshot.data.docs.length,
+                itemBuilder: (BuildContext context, int index) {
+                  log(snapshot.data.docs[index].data().toString());
+                  ChatRoom chatRoom =
+                      ChatRoom.fromMap(snapshot.data.docs[index].data());
+                  log(chatRoom.toMap().toString());
+                  return StreamBuilder(
+                    stream: chatRoom.getUser1Stream(),
+                    builder: (BuildContext context, AsyncSnapshot snapshot1) {
+                      if (snapshot1.hasData) {
+                        AppUser user1 = AppUser.fromMap(snapshot1.data.data());
+                        return StreamBuilder(
+                          stream: chatRoom.getUser2Stream(),
+                          builder:
+                              (BuildContext context, AsyncSnapshot snapshot2) {
+                            if (snapshot2.hasData) {
+                              AppUser user2 =
+                                  AppUser.fromMap(snapshot2.data.data());
+                              return StreamBuilder(
+                                  stream:
+                                      ChatService.getLastMessage(chatRoom.id),
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot snapshot) {
+                                    if (snapshot.hasData &&
+                                        snapshot.data.docs.isEmpty) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ChatPage(
+                                                        chatRoom: chatRoom,
+                                                        chatUser: user1.uid ==
+                                                                authNotifier
+                                                                    .appUser!
+                                                                    .uid
+                                                            ? user2
+                                                            : user1,
+                                                      )));
+                                        },
+                                        child: ChatTile(
+                                          imageUrl: getImageUrl(user1, user2),
+                                          name: getChatUserName(user1,
+                                              user2), // chatRoom.other.name,
+                                          time: "",
+                                          latestMessage: "",
+                                          unreadMessages:
+                                              calculateUnreadMessagesCount(
+                                                  user1, user2),
+                                        ),
+                                      );
+                                    }
+                                    if (snapshot.hasData &&
+                                        snapshot.data.docs.isNotEmpty) {
+                                      Message message = Message.fromMap(
+                                          snapshot.data.docs[0].data());
+                                      log(message.toMap().toString());
+                                      return GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ChatPage(
+                                                        chatRoom: chatRoom,
+                                                        chatUser: user1.uid ==
+                                                                authNotifier
+                                                                    .appUser!
+                                                                    .uid
+                                                            ? user2
+                                                            : user1,
+                                                      )));
+                                        },
+                                        child: ChatTile(
+                                          name: getChatUserName(user1,
+                                              user2), // chatRoom.other.name,
+                                          imageUrl: getImageUrl(user1, user2),
+                                          time: message.time.toString(),
+                                          latestMessage: message.message,
+                                          unreadMessages:
+                                              calculateUnreadMessagesCount(
+                                                  user1, user2),
+                                        ),
+                                      );
+                                    } else {
+                                      return Container();
+                                    }
+                                  });
+                            } else {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+                          },
+                        );
+                      } else {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                    },
+                  );
+                },
+              );
+            } else {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          },
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: onPressed,
+          child: const Icon(Icons.chat),
+        ),
       ),
     );
   }
