@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:heartless/backend/controllers/nurse_controller.dart';
 import 'package:heartless/backend/controllers/patient_controller.dart';
@@ -56,9 +57,28 @@ class _DummyHomeState extends State<DummyHome> {
                   'Welcome ${authNotifier.appUser!.name}',
                   style: const TextStyle(fontSize: 20),
                 ),
-                Image.network(
-                  authNotifier.appUser!.imageUrl,
-                  height: 200,
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(30),
+                  child: CachedNetworkImage(
+                    imageUrl: authNotifier.appUser!.imageUrl,
+                    height: 52,
+                    width: 52,
+                    placeholder: (context, url) =>
+                        const CircularProgressIndicator(),
+                    // todo: modify the error widget
+                    errorWidget: (context, url, error) => Container(
+                        height: 52,
+                        width: 52,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          color: Theme.of(context).shadowColor,
+                        ),
+                        child: const Icon(
+                          Icons.person_2_outlined,
+                          color: Colors.black,
+                          size: 30,
+                        )),
+                  ),
                 ),
                 Text(authNotifier.appUser!.name),
                 Text(authNotifier.appUser!.email),

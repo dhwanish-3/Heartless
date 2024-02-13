@@ -80,10 +80,12 @@ class PatientAuth {
   }
 
   // initialize patient
+  //! found some errors in this method
   Future<bool> initializePatient(AuthNotifier authNotifier) async {
     try {
       User? user = _auth.currentUser;
       if (user != null) {
+        authNotifier.setPatient(Patient());
         authNotifier.patient!.uid = user.uid;
         if (await getPateintDetails(authNotifier).timeout(_timeLimit)) {
           authNotifier.setLoggedIn(true);

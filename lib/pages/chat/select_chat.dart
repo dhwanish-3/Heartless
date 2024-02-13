@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:heartless/backend/controllers/connect_users_controller.dart';
 import 'package:heartless/backend/services/chat/chat_service.dart';
@@ -72,38 +73,26 @@ class _MyWidgetState extends State<SelectChatPage> {
         Provider.of<AuthNotifier>(context, listen: false);
     // create a new chat
     void createNewChat(AppUser user) async {
-      log("message");
       ChatRoom? chatRoom = await ChatService.chatExists(
           '${authNotifier.appUser!.uid}_${user.uid}');
       // check if chat already exists
       if (chatRoom != null) {
-        log("one");
         goToChat(chatRoom);
         return;
       }
       chatRoom = await ChatService.chatExists(
           '${user.uid}_${authNotifier.appUser!.uid}');
       if (chatRoom != null) {
-        log("two");
         goToChat(chatRoom);
         return;
       }
       // create a new chat
-      log("three");
-      ChatUser me = ChatUser();
-      me.id = authNotifier.appUser!.uid;
-      me.name = authNotifier.appUser!.name;
-      me.imageUrl = authNotifier.appUser!.imageUrl;
-      me.unreadMessages = 0;
-      me.isOnline = true;
-      me.lastSeen = DateTime.now();
-      ChatUser other = ChatUser();
-      other.id = user.uid;
-      other.name = user.name;
-      other.imageUrl = user.imageUrl;
-      other.unreadMessages = 0;
-      other.isOnline = false;
-      other.lastSeen = DateTime.now();
+      DocumentReference<Map<String, dynamic>> me = FirebaseFirestore.instance
+          .collection('${userTypeToString(authNotifier.userType)}s')
+          .doc(authNotifier.appUser!.uid);
+      DocumentReference<Map<String, dynamic>> other = FirebaseFirestore.instance
+          .collection('${userTypeToString(user.userType)}s')
+          .doc(user.uid);
       chatRoom = ChatRoom(me, other);
       chatRoom.id = '${me.id}_${other.id}';
       log(chatRoom.toMap().toString());

@@ -18,6 +18,9 @@ class Doctor extends AppUser {
     phone = map['phone'];
     password = map['password'];
     userType = UserType.values[map['userType']];
+    unreadMessages = map['unreadMessages'];
+    isOnline = map['isOnline'];
+    lastSeen = DateTime.parse(map['lastSeen'] ?? DateTime.now());
     patients = map['patients'] is Iterable ? List.from(map['patients']) : [];
     doctors = map['doctors'] is Iterable ? List.from(map['doctors']) : [];
   }
@@ -32,6 +35,9 @@ class Doctor extends AppUser {
       'phone': phone,
       'password': password,
       'userType': userType.index,
+      'unreadMessages': unreadMessages,
+      'isOnline': isOnline,
+      'lastSeen': lastSeen.toString(),
       'patients': patients,
       'doctors': doctors,
     };

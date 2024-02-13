@@ -34,14 +34,16 @@ class _ChatPageState extends State<ChatPage> {
     // function to send message
     void sendMessage() async {
       if (messageController.text.isNotEmpty) {
+        log("starting to send message");
         Message message = Message();
         message.message = messageController.text;
         message.senderId = authNotifier.appUser!.uid;
         message.time = DateTime.now();
         message.receiverId =
-            widget.chatRoom.user1!.id == authNotifier.appUser!.uid
-                ? widget.chatRoom.user2!.id
-                : widget.chatRoom.user1!.id;
+            widget.chatRoom.user1Ref!.id == authNotifier.appUser!.uid
+                ? widget.chatRoom.user2Ref!.id
+                : widget.chatRoom.user2Ref!.id;
+        log("sending message 2");
         await MessageService.sendMessage(widget.chatRoom.id, message);
         messageController.clear();
       }
