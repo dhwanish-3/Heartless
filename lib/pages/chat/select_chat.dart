@@ -37,7 +37,7 @@ class _MyWidgetState extends State<SelectChatPage> {
       });
     } else if (authNotifier.userType == UserType.doctor) {
       ConnectUsersController.getAllUsersConnectedToDoctor(
-              authNotifier.doctor!.uid)
+              authNotifier.appUser!.uid)
           .then((value) {
         log(value.toString());
         setState(() {
@@ -46,7 +46,7 @@ class _MyWidgetState extends State<SelectChatPage> {
       });
     } else if (authNotifier.userType == UserType.nurse) {
       ConnectUsersController.getAllUsersConnectedToNurse(
-              authNotifier.nurse!.uid)
+              authNotifier.appUser!.uid)
           .then((value) {
         log(value.toString());
         setState(() {

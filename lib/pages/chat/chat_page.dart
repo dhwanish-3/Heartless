@@ -49,6 +49,11 @@ class _ChatPageState extends State<ChatPage> {
       }
     }
 
+    // function to delete message
+    void deleteMessage(Message message) {
+      MessageService().deleteMessage(widget.chatRoom, message);
+    }
+
     // formatting the time to show in the chat with Oct 11, 20023 10:00 AM/PM format
     String formattedTime(DateTime time) {
       DateFormat formatter = DateFormat('MMM d, yyyy hh:mm a');
@@ -83,11 +88,16 @@ class _ChatPageState extends State<ChatPage> {
                           Message.fromMap(snapshot.data.docs[index].data());
                       return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 5),
-                          child: MessageTile(
-                            message: message.message,
-                            isSender:
-                                message.senderId == authNotifier.appUser!.uid,
-                            time: formattedTime(message.time),
+                          child: GestureDetector(
+                            onDoubleTap: () {
+                              deleteMessage(message);
+                            },
+                            child: MessageTile(
+                              message: message.message,
+                              isSender:
+                                  message.senderId == authNotifier.appUser!.uid,
+                              time: formattedTime(message.time),
+                            ),
                           ));
                     },
                   );
