@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:heartless/services/exceptions/app_exceptions.dart';
+import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/shared/models/chat.dart';
 
 class ChatService {
@@ -26,6 +28,64 @@ class ChatService {
       return chat.exists
           ? ChatRoom.fromMap(chat.data()! as Map<String, dynamic>)
           : null;
+    } on FirebaseAuthException {
+      throw UnAutherizedException();
+    } on SocketException {
+      throw FetchDataException('No Internet Connection');
+    } on TimeoutException {
+      throw ApiNotRespondingException('Server is not responding');
+    }
+  }
+
+  // update the online status of the user
+  static Future<void> updateOnlineStatus(
+      String uid, bool isOnline, UserType userType) async {
+    try {
+      if (userType == UserType.patient) {
+        await FirebaseFirestore.instance
+            .collection("Patients")
+            .doc(uid)
+            .update({'isOnline': isOnline}).timeout(_timeLimit);
+      } else if (userType == UserType.doctor) {
+        await FirebaseFirestore.instance
+            .collection("Doctors")
+            .doc(uid)
+            .update({'isOnline': isOnline}).timeout(_timeLimit);
+      } else if (userType == UserType.nurse) {
+        await FirebaseFirestore.instance
+            .collection("Nurses")
+            .doc(uid)
+            .update({'isOnline': isOnline}).timeout(_timeLimit);
+      }
+    } on FirebaseAuthException {
+      throw UnAutherizedException();
+    } on SocketException {
+      throw FetchDataException('No Internet Connection');
+    } on TimeoutException {
+      throw ApiNotRespondingException('Server is not responding');
+    }
+  }
+
+  // update the last seen of the user
+  static Future<void> updateLastSeen(
+      String uid, DateTime lastSeen, UserType userType) async {
+    try {
+      if (userType == UserType.patient) {
+        await FirebaseFirestore.instance
+            .collection("Patients")
+            .doc(uid)
+            .update({'lastSeen': lastSeen.toString()}).timeout(_timeLimit);
+      } else if (userType == UserType.doctor) {
+        await FirebaseFirestore.instance
+            .collection("Doctors")
+            .doc(uid)
+            .update({'lastSeen': lastSeen.toString()}).timeout(_timeLimit);
+      } else if (userType == UserType.nurse) {
+        await FirebaseFirestore.instance
+            .collection("Nurses")
+            .doc(uid)
+            .update({'lastSeen': lastSeen.toString()}).timeout(_timeLimit);
+      }
     } on FirebaseAuthException {
       throw UnAutherizedException();
     } on SocketException {

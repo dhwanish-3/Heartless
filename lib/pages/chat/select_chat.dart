@@ -58,13 +58,13 @@ class _MyWidgetState extends State<SelectChatPage> {
   }
 
   // navigate to chat page
-  void goToChat(ChatRoom chatRoom) {
+  void goToChat(ChatRoom chatRoom, AppUser chatUser) {
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => ChatPage(
-                  chatRoom: chatRoom,
-                )));
+          builder: (context) =>
+              ChatPage(chatRoom: chatRoom, chatUser: chatUser),
+        ));
   }
 
   @override
@@ -77,13 +77,13 @@ class _MyWidgetState extends State<SelectChatPage> {
           '${authNotifier.appUser!.uid}_${user.uid}');
       // check if chat already exists
       if (chatRoom != null) {
-        goToChat(chatRoom);
+        goToChat(chatRoom, user);
         return;
       }
       chatRoom = await ChatService.chatExists(
           '${user.uid}_${authNotifier.appUser!.uid}');
       if (chatRoom != null) {
-        goToChat(chatRoom);
+        goToChat(chatRoom, user);
         return;
       }
       // create a new chat
@@ -97,7 +97,7 @@ class _MyWidgetState extends State<SelectChatPage> {
       chatRoom.id = '${me.id}_${other.id}';
       log(chatRoom.toMap().toString());
       await ChatService().addChatRoom(chatRoom);
-      goToChat(chatRoom);
+      goToChat(chatRoom, user);
     }
 
     return Scaffold(
