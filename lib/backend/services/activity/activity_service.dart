@@ -280,4 +280,33 @@ class ActivityService {
       throw ApiNotRespondingException('Server is not responding');
     }
   }
+
+  // getting all the activities for a given period
+  Future<List<Activity>> getAllActivitiesForAPeriod(
+      DateTime start, DateTime end) async {
+    try {
+      DateTime startOfWeek = getStartOfWeekOfDate(start);
+      DateTime endOfWeek = getStartOfWeekOfDate(end);
+      List<Activity> activities = [];
+      while (startOfWeek.isBefore(endOfWeek)) {
+        QuerySnapshot querySnapshot = await _patientRef
+            .doc(startOfWeek.toString())
+            .collection('Activities')
+            .get()
+            .timeout(_timeLimit);
+        for (var element in querySnapshot.docs) {
+          activities
+              .add(Activity.fromMap(element.data() as Map<String, dynamic>));
+        }
+        startOfWeek = startOfWeek.add(const Duration(days: 7));
+      }
+      return activities;
+    } on FirebaseAuthException {
+      throw UnAutherizedException();
+    } on SocketException {
+      throw FetchDataException('No Internet Connection');
+    } on TimeoutException {
+      throw ApiNotRespondingException('Server is not responding');
+    }
+  }
 }
