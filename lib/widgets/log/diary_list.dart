@@ -123,8 +123,7 @@ class _DiaryListState extends State<DiaryList> {
                           left: 4.0, right: 4, bottom: 5, top: 5),
                       child: Material(
                         elevation: 1,
-                        // color: const Color.fromARGB(255, 149, 255, 191),
-                        color: Constants.primaryColor.withOpacity(0.5),
+                        color: const Color.fromARGB(255, 133, 215, 204),
                         borderRadius: BorderRadius.circular(24),
                         child: Padding(
                           padding: const EdgeInsets.only(
