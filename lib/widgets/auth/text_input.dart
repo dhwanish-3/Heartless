@@ -13,15 +13,17 @@ class TextFieldInput extends StatelessWidget {
   final String? endIcon;
   final String? endIconAlt;
   final TextInputType textInputType;
+  final int maxLines;
   const TextFieldInput({
     Key? key,
     required this.textEditingController,
-    required this.startIcon,
+    this.startIcon = '',
     this.endIcon,
     this.endIconAlt,
     this.passwordShown = false,
     this.labelText = "",
     required this.hintText,
+    this.maxLines = 1,
     this.textInputType = TextInputType.name,
   }) : super(key: key);
 
@@ -42,6 +44,7 @@ class TextFieldInput extends StatelessWidget {
         controller: textEditingController,
         keyboardType: textInputType,
         obscureText: passwordShown,
+        maxLines: maxLines,
         obscuringCharacter: '•',
         style: Theme.of(context).textTheme.bodyMedium,
         decoration: InputDecoration(
@@ -60,13 +63,16 @@ class TextFieldInput extends StatelessWidget {
           // labelStyle: Theme.of(context).textTheme.headlineSmall,
           hintText: hintText,
           hintStyle: Theme.of(context).textTheme.labelMedium,
-          prefixIcon: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-            child: SvgPicture.asset(
-              startIcon,
-              height: 23,
-            ),
-          ),
+          prefixIcon: startIcon == ''
+              ? null
+              : Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                  child: SvgPicture.asset(
+                    startIcon,
+                    height: 23,
+                  ),
+                ),
           suffixIcon: (endIcon != null)
               ? GestureDetector(
                   onTap: () {
