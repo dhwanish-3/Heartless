@@ -8,17 +8,15 @@ import 'package:heartless/services/exceptions/app_exceptions.dart';
 import 'package:heartless/shared/models/activity.dart';
 
 class ActivityService {
-  final _dataRef = FirebaseFirestore.instance
-      .collection('Patients')
-      .doc(FirebaseAuth.instance.currentUser!.uid)
-      .collection("WeeklyData");
-
   // mark as completed
-  Future<bool> markAsCompleted(String activityId) async {
+  Future<bool> markAsCompleted(String activityId, String patientId) async {
     // activity can be marked as completed only if it belongs to the current week
     DateTime startOfWeek = DateService.getStartOfWeekOfDate(DateTime.now());
     try {
-      await _dataRef
+      await FirebaseFirestore.instance
+          .collection('Patients')
+          .doc(patientId)
+          .collection("WeeklyData")
           .doc(startOfWeek.toString())
           .collection('Activities')
           .doc(activityId)
@@ -38,8 +36,13 @@ class ActivityService {
   Future<Activity> addActivity(Activity activity) async {
     try {
       DateTime startOfWeek = DateService.getStartOfWeekOfDate(activity.time);
-      DocumentReference documentReference =
-          _dataRef.doc(startOfWeek.toString()).collection('Activities').doc();
+      DocumentReference documentReference = FirebaseFirestore.instance
+          .collection('Patients')
+          .doc(activity.patientId)
+          .collection("WeeklyData")
+          .doc(startOfWeek.toString())
+          .collection('Activities')
+          .doc();
       // getting the id for the new activity from the reference
       activity.id = documentReference.id;
       await documentReference
@@ -62,7 +65,10 @@ class ActivityService {
         return false;
       }
       DateTime startOfWeek = DateService.getStartOfWeekOfDate(activity.time);
-      await _dataRef
+      await FirebaseFirestore.instance
+          .collection('Patients')
+          .doc(activity.patientId)
+          .collection("WeeklyData")
           .doc(startOfWeek.toString())
           .collection('Activities')
           .doc(activity.id)
@@ -85,7 +91,10 @@ class ActivityService {
         return false;
       }
       DateTime startOfWeek = DateService.getStartOfWeekOfDate(activity.time);
-      await _dataRef
+      await FirebaseFirestore.instance
+          .collection('Patients')
+          .doc(activity.patientId)
+          .collection("WeeklyData")
           .doc(startOfWeek.toString())
           .collection('Activities')
           .doc(activity.id)
@@ -102,43 +111,34 @@ class ActivityService {
   }
 
   // to get all activities of the day
-  Future<List<Activity>> getAllActivitiesOfTheDate(DateTime date) async {
-    try {
-      DateTime startOfWeek = DateService.getStartOfWeekOfDate(date);
-      DateTime startOfDay = DateService.getStartOfDay(date);
-
-      QuerySnapshot querySnapshot = await _dataRef
-          .doc(startOfWeek.toString())
-          .collection('Activities')
-          .where('time', isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
-          .where('time',
-              isLessThan:
-                  Timestamp.fromDate(startOfDay.add(const Duration(days: 1))))
-          .get()
-          .timeout(DateService.timeLimit);
-      List<Activity> activities = [];
-      for (var element in querySnapshot.docs) {
-        activities
-            .add(Activity.fromMap(element.data() as Map<String, dynamic>));
-      }
-      return activities;
-    } on FirebaseAuthException {
-      throw UnAutherizedException();
-    } on SocketException {
-      throw FetchDataException('No Internet Connection');
-    } on TimeoutException {
-      throw ApiNotRespondingException('Server is not responding');
-    }
+  static Stream<QuerySnapshot> getAllActivitiesOfTheDate(
+      DateTime date, String patientId) {
+    DateTime startOfWeek = DateService.getStartOfWeekOfDate(date);
+    DateTime startOfDay = DateService.getStartOfDay(date);
+    return FirebaseFirestore.instance
+        .collection('Patients')
+        .doc(patientId)
+        .collection("WeeklyData")
+        .doc(startOfWeek.toString())
+        .collection('Activities')
+        .where('time', isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
+        .where('time',
+            isLessThan:
+                Timestamp.fromDate(startOfDay.add(const Duration(days: 1))))
+        .snapshots();
   }
 
   // to get update the activity status according to the time
-  Future<bool> updateActivityStatus() async {
+  static Future<bool> updateActivityStatus(String patientId) async {
     // get the Datetime with for the start of the week
     DateTime startOfWeek = DateService.getStartOfWeekOfDate(DateTime.now());
 
     try {
       // get all the activities with status upcoming
-      QuerySnapshot querySnapshot = await _dataRef
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('Patients')
+          .doc(patientId)
+          .collection("WeeklyData")
           .doc(startOfWeek.toString())
           .collection('Activities')
           .where('status', isEqualTo: Status.upcoming.index)
@@ -153,8 +153,13 @@ class ActivityService {
         Activity activity =
             Activity.fromMap(element.data() as Map<String, dynamic>);
         if (activity.time.isBefore(DateTime.now())) {
-          await _dataRef.doc(element.id).update(
-              {'status': Status.missed.index}).timeout(DateService.timeLimit);
+          await FirebaseFirestore.instance
+              .collection('Patients')
+              .doc(patientId)
+              .collection("WeeklyData")
+              .doc(element.id)
+              .update({'status': Status.missed.index}).timeout(
+                  DateService.timeLimit);
         }
       }
       return true;
@@ -168,123 +173,72 @@ class ActivityService {
   }
 
   // to get all completed activities of the day
-  Future<List<Activity>> getCompletedActivitiesOftheDay(
-      DateTime dateTime) async {
+  static Stream<QuerySnapshot> getCompletedActivitiesOftheDay(
+      DateTime dateTime, String patientId) {
     DateTime startOfWeek = DateService.getStartOfWeekOfDate(dateTime);
     DateTime startOfDay = DateService.getStartOfDay(dateTime);
-    try {
-      QuerySnapshot querySnapshot = await _dataRef
-          .doc(startOfWeek.toString())
-          .collection('Activities')
-          .where('time', isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
-          .where('time',
-              isLessThan:
-                  Timestamp.fromDate(startOfDay.add(const Duration(days: 1))))
-          .where('status', isEqualTo: Status.completed.index)
-          .get()
-          .timeout(DateService.timeLimit);
-      List<Activity> activities = [];
-      for (var element in querySnapshot.docs) {
-        activities
-            .add(Activity.fromMap(element.data() as Map<String, dynamic>));
-      }
-      return activities;
-    } on FirebaseAuthException {
-      throw UnAutherizedException();
-    } on SocketException {
-      throw FetchDataException('No Internet Connection');
-    } on TimeoutException {
-      throw ApiNotRespondingException('Server is not responding');
-    }
+    return FirebaseFirestore.instance
+        .collection('Patients')
+        .doc(patientId)
+        .collection("WeeklyData")
+        .doc(startOfWeek.toString())
+        .collection('Activities')
+        .where('time', isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
+        .where('time',
+            isLessThan:
+                Timestamp.fromDate(startOfDay.add(const Duration(days: 1))))
+        .where('status', isEqualTo: Status.completed.index)
+        .snapshots();
   }
 
   // to get all upcoming activities of the day
-  Future<List<Activity>> getUpcomingActivitiesOftheDay(
-      DateTime dateTime) async {
+  static Stream<QuerySnapshot> getUpcomingActivitiesOftheDay(
+      DateTime dateTime, String patientId) {
     DateTime startOfWeek = DateService.getStartOfWeekOfDate(dateTime);
     DateTime startOfDay = DateService.getStartOfDay(dateTime);
-    try {
-      QuerySnapshot querySnapshot = await _dataRef
-          .doc(startOfWeek.toString())
-          .collection('Activities')
-          .where('time', isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
-          .where('time',
-              isLessThan:
-                  Timestamp.fromDate(startOfDay.add(const Duration(days: 1))))
-          .where('status', isEqualTo: Status.upcoming.index)
-          .get()
-          .timeout(DateService.timeLimit);
-      List<Activity> activities = [];
-      for (var element in querySnapshot.docs) {
-        activities
-            .add(Activity.fromMap(element.data() as Map<String, dynamic>));
-      }
-      return activities;
-    } on FirebaseAuthException {
-      throw UnAutherizedException();
-    } on SocketException {
-      throw FetchDataException('No Internet Connection');
-    } on TimeoutException {
-      throw ApiNotRespondingException('Server is not responding');
-    }
+    return FirebaseFirestore.instance
+        .collection('Patients')
+        .doc(patientId)
+        .collection("WeeklyData")
+        .doc(startOfWeek.toString())
+        .collection('Activities')
+        .where('time', isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
+        .where('time',
+            isLessThan:
+                Timestamp.fromDate(startOfDay.add(const Duration(days: 1))))
+        .where('status', isEqualTo: Status.upcoming.index)
+        .snapshots();
   }
 
   // to get all missed activities of the day
-  Future<List<Activity>> getMissedActivitiesOftheDay(DateTime dateTime) async {
+  static Stream<QuerySnapshot> getMissedActivitiesOftheDay(
+      DateTime dateTime, String patientId) {
     DateTime startOfWeek = DateService.getStartOfWeekOfDate(dateTime);
     DateTime startOfDay = DateService.getStartOfDay(dateTime);
-    try {
-      QuerySnapshot querySnapshot = await _dataRef
-          .doc(startOfWeek.toString())
-          .collection('Activities')
-          .where('time', isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
-          .where('time',
-              isLessThan:
-                  Timestamp.fromDate(startOfDay.add(const Duration(days: 1))))
-          .where('status', isEqualTo: Status.missed.index)
-          .get()
-          .timeout(DateService.timeLimit);
-      List<Activity> activities = [];
-      for (var element in querySnapshot.docs) {
-        activities
-            .add(Activity.fromMap(element.data() as Map<String, dynamic>));
-      }
-      return activities;
-    } on FirebaseAuthException {
-      throw UnAutherizedException();
-    } on SocketException {
-      throw FetchDataException('No Internet Connection');
-    } on TimeoutException {
-      throw ApiNotRespondingException('Server is not responding');
-    }
+    return FirebaseFirestore.instance
+        .collection('Patients')
+        .doc(patientId)
+        .collection("WeeklyData")
+        .doc(startOfWeek.toString())
+        .collection('Activities')
+        .where('time', isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
+        .where('time',
+            isLessThan:
+                Timestamp.fromDate(startOfDay.add(const Duration(days: 1))))
+        .where('status', isEqualTo: Status.missed.index)
+        .snapshots();
   }
 
   // to get all the activities for a given period
-  Future<List<Activity>> getAllActivitiesForAPeriod(
-      DateTime start, DateTime end) async {
-    try {
-      DateTime startOfWeek = DateService.getStartOfWeekOfDate(start);
-      DateTime endOfWeek = DateService.getStartOfWeekOfDate(end);
-      List<Activity> activities = [];
-      while (startOfWeek.isBefore(endOfWeek)) {
-        QuerySnapshot querySnapshot = await _dataRef
-            .doc(startOfWeek.toString())
-            .collection('Activities')
-            .get()
-            .timeout(DateService.timeLimit);
-        for (var element in querySnapshot.docs) {
-          activities
-              .add(Activity.fromMap(element.data() as Map<String, dynamic>));
-        }
-        startOfWeek = startOfWeek.add(const Duration(days: 7));
-      }
-      return activities;
-    } on FirebaseAuthException {
-      throw UnAutherizedException();
-    } on SocketException {
-      throw FetchDataException('No Internet Connection');
-    } on TimeoutException {
-      throw ApiNotRespondingException('Server is not responding');
-    }
+  static Stream<QuerySnapshot> getAllActivitiesForAWeek(
+      DateTime date, String patientId) {
+    DateTime startOfWeek = DateService.getStartOfWeekOfDate(date);
+    return FirebaseFirestore.instance
+        .collection('Patients')
+        .doc(patientId)
+        .collection("WeeklyData")
+        .doc(startOfWeek.toString())
+        .collection('Activities')
+        .snapshots();
   }
 }

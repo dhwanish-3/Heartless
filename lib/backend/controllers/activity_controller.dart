@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:heartless/backend/controllers/base_controller.dart';
 import 'package:heartless/backend/services/activity/activity_service.dart';
 import 'package:heartless/shared/models/activity.dart';
@@ -5,9 +6,9 @@ import 'package:heartless/shared/models/activity.dart';
 class ActivityController with BaseController {
   final ActivityService _activityService = ActivityService();
 
-  Future<bool> markAsCompleted(String activityId) async {
+  Future<bool> markAsCompleted(String activityId, String patientId) async {
     if (await _activityService
-        .markAsCompleted(activityId)
+        .markAsCompleted(activityId, patientId)
         .then((value) => handleSuccess(value, "Activity marked as completed"))
         .catchError(handleError)) {
       return true;
@@ -49,77 +50,27 @@ class ActivityController with BaseController {
     }
   }
 
-  Future<List<Activity>> getAllActivitiesOfTheDate(DateTime date) async {
+  static Stream<QuerySnapshot> getAllActivitiesOfTheDate(
+      DateTime date, String patientId) {
     // Update activity status
-    if (!await _activityService.updateActivityStatus().then((value) {
-      handleSuccess(value, "Activity status updated");
-      return true;
-    }).catchError(handleError)) {
-      return [];
-    }
-    List<Activity> result = [];
-    if (await _activityService.getAllActivitiesOfTheDate(date).then((value) {
-      handleSuccess(value, "Activities fetched");
-      if (value == []) {
-        return false;
-      } else {
-        result = value;
-        return true;
-      }
-    }).catchError(handleError)) {}
-    return result;
+    ActivityService.updateActivityStatus(patientId);
+    return ActivityService.getAllActivitiesOfTheDate(date, patientId);
   }
 
-  Future<List<Activity>> getUpcomingActivitiesOftheDay(DateTime date) async {
+  Stream<QuerySnapshot> getUpcomingActivitiesOftheDay(
+      DateTime date, String patientId) {
     // Update activity status
-    if (!await _activityService.updateActivityStatus().then((value) {
-      handleSuccess(value, "Activity status updated");
-      return true;
-    }).catchError(handleError)) {
-      return [];
-    }
-    List<Activity> result = [];
-    if (await _activityService
-        .getUpcomingActivitiesOftheDay(date)
-        .then((value) {
-      handleSuccess(value, "Activities fetched");
-      if (value == []) {
-        return false;
-      } else {
-        result = value;
-        return true;
-      }
-    }).catchError(handleError)) {}
-    return result;
+    ActivityService.updateActivityStatus(patientId);
+    return ActivityService.getUpcomingActivitiesOftheDay(date, patientId);
   }
 
-  Future<List<Activity>> getCompletedActivitiesOftheDay(DateTime date) async {
-    List<Activity> result = [];
-    if (await _activityService
-        .getCompletedActivitiesOftheDay(date)
-        .then((value) {
-      handleSuccess(value, "Activities fetched");
-      if (value == []) {
-        return false;
-      } else {
-        result = value;
-        return true;
-      }
-    }).catchError(handleError)) {}
-    return result;
+  static Stream<QuerySnapshot> getCompletedActivitiesOftheDay(
+      DateTime date, String patientId) {
+    return ActivityService.getCompletedActivitiesOftheDay(date, patientId);
   }
 
-  Future<List<Activity>> getMissedActivitiesOftheDay(DateTime date) async {
-    List<Activity> result = [];
-    if (await _activityService.getMissedActivitiesOftheDay(date).then((value) {
-      handleSuccess(value, "Activities fetched");
-      if (value == []) {
-        return false;
-      } else {
-        result = value;
-        return true;
-      }
-    }).catchError(handleError)) {}
-    return result;
+  static Stream<QuerySnapshot> getMissedActivitiesOftheDay(
+      DateTime date, String patientId) {
+    return ActivityService.getMissedActivitiesOftheDay(date, patientId);
   }
 }
