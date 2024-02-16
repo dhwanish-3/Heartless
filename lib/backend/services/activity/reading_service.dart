@@ -78,7 +78,7 @@ class ReadingService {
   }
 
   // get all readings of a day
-  static Stream<QuerySnapshot<Map<String, dynamic>>> getReadingsOfDay(
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllReadingsOfTheDate(
       DateTime date, String patientId) {
     DateTime startOfDay = DateService.getStartOfDay(date);
     DateTime endOfDay = startOfDay.add(const Duration(days: 1));
@@ -93,8 +93,8 @@ class ReadingService {
         .snapshots();
   }
 
-  // get all the readings for a given period
-  static Stream<QuerySnapshot<Map<String, dynamic>>> getReadingsOfAWeek(
+  // get all the readings for a given week
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllReadingsOfTheWeek(
       DateTime date, String patientId) {
     DateTime startOfWeek = DateService.getStartOfWeekOfDate(date);
     return FirebaseFirestore.instance

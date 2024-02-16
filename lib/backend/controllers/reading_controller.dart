@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:heartless/backend/controllers/base_controller.dart';
 import 'package:heartless/backend/services/activity/reading_service.dart';
 import 'package:heartless/shared/models/reading.dart';
@@ -22,5 +23,17 @@ class ReadingController with BaseController {
     ReadingService.deleteReading(reading)
         .then((value) => handleSuccess(true, "Reading deleted"))
         .catchError(handleError);
+  }
+
+  // get all readings of the date
+  static Stream<QuerySnapshot> getAllReadingsOfTheDate(
+      DateTime date, String patientId) {
+    return ReadingService.getAllReadingsOfTheDate(date, patientId);
+  }
+
+  // get all readings of the week
+  static Stream<QuerySnapshot> getAllReadingsOfTheWeek(
+      DateTime date, String patientId) {
+    return ReadingService.getAllReadingsOfTheWeek(date, patientId);
   }
 }
