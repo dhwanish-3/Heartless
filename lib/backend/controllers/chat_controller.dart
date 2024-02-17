@@ -96,7 +96,7 @@ class ChatController with BaseController {
     message.receiverId = chatRoom.user1Ref!.id == authNotifier.appUser!.uid
         ? chatRoom.user2Ref!.id
         : chatRoom.user1Ref!.id;
-    return MessageService.sendMessage(chatRoom.id, message)
+    return MessageService.sendMessage(chatRoom, message)
         .then((value) => handleSuccess(true, "Message Sent Successfully"))
         .catchError((error) => handleError(error));
   }
@@ -116,7 +116,7 @@ class ChatController with BaseController {
   }
 
   // to mark all messages as read
-  static Future<bool> markMessagesAsRead(String chatId) {
-    return MessageService.markMessagesAsRead(chatId);
+  static Future<bool> markMessagesAsRead(ChatRoom chatRoom) {
+    return MessageService.markMessagesAsRead(chatRoom);
   }
 }

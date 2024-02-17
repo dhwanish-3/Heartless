@@ -90,7 +90,7 @@ class _ChatPageState extends State<ChatPage> {
                       int newNumberOfMessages = snapshot.data.docs.length;
                       // mark all messages as read
                       if (numberOfMessages != newNumberOfMessages) {
-                        ChatController.markMessagesAsRead(widget.chatRoom.id);
+                        ChatController.markMessagesAsRead(widget.chatRoom);
                         numberOfMessages = newNumberOfMessages;
                       }
                       log("Data: ${snapshot.data.docs.length}");

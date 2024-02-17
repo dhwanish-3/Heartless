@@ -40,11 +40,11 @@ class _ContactsPageState extends State<ContactsPage> {
     }
 
     // calculating the number of unread messages for the current user fot a particular chatRoom
-    int calculateUnreadMessagesCount(AppUser user1, AppUser user2) {
-      if (user1.uid == authNotifier.appUser!.uid) {
-        return user1.unreadMessages;
+    int calculateUnreadMessagesCount(ChatRoom chatRoom) {
+      if (chatRoom.user1Ref!.id == authNotifier.appUser!.uid) {
+        return chatRoom.user1UnreadMessages;
       } else {
-        return user2.unreadMessages;
+        return chatRoom.user2UnreadMessages;
       }
     }
 
@@ -139,7 +139,7 @@ class _ContactsPageState extends State<ContactsPage> {
                                           latestMessage: "",
                                           unreadMessages:
                                               calculateUnreadMessagesCount(
-                                                  user1, user2),
+                                                  chatRoom),
                                         ),
                                       );
                                     }
@@ -172,7 +172,7 @@ class _ContactsPageState extends State<ContactsPage> {
                                           latestMessage: message.message,
                                           unreadMessages:
                                               calculateUnreadMessagesCount(
-                                                  user1, user2),
+                                                  chatRoom),
                                         ),
                                       );
                                     } else {
