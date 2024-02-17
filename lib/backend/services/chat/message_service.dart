@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:heartless/services/exceptions/app_exceptions.dart';
-import 'package:heartless/shared/Models/app_user.dart';
 import 'package:heartless/shared/models/chat.dart';
 import 'package:heartless/shared/models/message.dart';
 
@@ -16,39 +15,33 @@ class MessageService {
   static Stream<QuerySnapshot> getMessages(String chatId) {
     return _chatRoomRef
         .doc(chatId)
-        .collection('messages')
+        .collection('Messages')
         .orderBy('time')
         .limit(30)
         .snapshots();
   }
 
   // send a new message
-  static Future<Message> sendMessage(String chatId, Message message) async {
+  static Future<Message> sendMessage(ChatRoom chatRoom, Message message) async {
     try {
       // getting the reference of the chat to get id
       DocumentReference messageRef =
-          _chatRoomRef.doc(chatId).collection('messages').doc();
+          _chatRoomRef.doc(chatRoom.id).collection('Messages').doc();
       message.id = messageRef.id;
       await messageRef.set(message.toMap()).timeout(_timeLimit);
 
       // increment the count of unread messages for the receiver
-      await _chatRoomRef.doc(chatId).get().then((value) async {
-        if (value.exists) {
-          if (value.data() != null) {
-            DocumentReference user1Ref = value.data()!['user1Ref'];
-            DocumentReference user2Ref = value.data()!['user2Ref'];
-            if (user1Ref.id == message.receiverId) {
-              await user1Ref.update({
-                'unreadMessages': FieldValue.increment(1),
-              });
-            } else if (user2Ref.id == message.receiverId) {
-              await user2Ref.update({
-                'unreadMessages': FieldValue.increment(1),
-              });
-            }
-          }
-        }
-      });
+      if (message.receiverId == chatRoom.user1Ref!.id) {
+        chatRoom.user1UnreadMessages++;
+        _chatRoomRef.doc(chatRoom.id).update({
+          'user1UnreadMessages': FieldValue.increment(1),
+        });
+      } else if (message.receiverId == chatRoom.user2Ref!.id) {
+        chatRoom.user2UnreadMessages++;
+        _chatRoomRef.doc(chatRoom.id).update({
+          'user2UnreadMessages': FieldValue.increment(1),
+        });
+      }
       return message;
     } on FirebaseAuthException {
       throw UnAutherizedException();
@@ -60,26 +53,21 @@ class MessageService {
   }
 
   // mark all messages as read
-  static Future<bool> markMessagesAsRead(String chatId) async {
+  static Future<bool> markMessagesAsRead(ChatRoom chatRoom) async {
     try {
-      await _chatRoomRef.doc(chatId).get().then((value) async {
-        if (value.exists) {
-          if (value.data() != null) {
-            DocumentReference user1Ref = value.data()!['user1Ref'];
-            DocumentReference user2Ref = value.data()!['user2Ref'];
-            // update the count of unread messages for the receiver
-            if (user1Ref.id == FirebaseAuth.instance.currentUser!.uid) {
-              await user1Ref.update({
-                'unreadMessages': 0,
-              });
-            } else if (user2Ref.id == FirebaseAuth.instance.currentUser!.uid) {
-              await user2Ref.update({
-                'unreadMessages': 0,
-              });
-            }
-          }
-        }
-      });
+      // update the count of unread messages for the current user
+      if (FirebaseAuth.instance.currentUser!.uid == chatRoom.user1Ref!.id) {
+        chatRoom.user1UnreadMessages = 0;
+        await _chatRoomRef.doc(chatRoom.id).update({
+          'user1UnreadMessages': 0,
+        });
+      } else if (FirebaseAuth.instance.currentUser!.uid ==
+          chatRoom.user2Ref!.id) {
+        chatRoom.user2UnreadMessages = 0;
+        await _chatRoomRef.doc(chatRoom.id).update({
+          'user2UnreadMessages': 0,
+        });
+      }
       return true;
     } on FirebaseAuthException {
       throw UnAutherizedException();
@@ -96,23 +84,23 @@ class MessageService {
       // deleting the message
       await _chatRoomRef
           .doc(chatRoom.id)
-          .collection('messages')
+          .collection('Messages')
           .doc(message.id)
           .delete()
           .timeout(_timeLimit);
 
-      // update the count of unread messages for the receiver
-      // getting the user's details in the chat
-      AppUser user1 = await chatRoom.getUser1();
-      AppUser user2 = await chatRoom.getUser2();
       // decrement the count of unread messages for the receiver only if the message is unread
-      if (user1.uid == message.receiverId && user1.unreadMessages > 0) {
-        await chatRoom.user1Ref!.update({
-          'unreadMessages': FieldValue.increment(-1),
+      if (chatRoom.user1Ref!.id == message.receiverId &&
+          chatRoom.user1UnreadMessages > 0) {
+        chatRoom.user1UnreadMessages--;
+        await _chatRoomRef.doc(chatRoom.id).update({
+          'user1UnreadMessages': FieldValue.increment(-1),
         });
-      } else if (user2.uid == message.receiverId && user2.unreadMessages > 0) {
-        await chatRoom.user2Ref!.update({
-          'unreadMessages': FieldValue.increment(-1),
+      } else if (chatRoom.user2Ref!.id == message.receiverId &&
+          chatRoom.user2UnreadMessages > 0) {
+        chatRoom.user2UnreadMessages--;
+        await _chatRoomRef.doc(chatRoom.id).update({
+          'user2UnreadMessages': FieldValue.increment(-1),
         });
       }
       return true;
@@ -130,7 +118,7 @@ class MessageService {
     try {
       await _chatRoomRef
           .doc(chatId)
-          .collection('messages')
+          .collection('Messages')
           .doc(message.id)
           .update(message.toMap())
           .timeout(_timeLimit);

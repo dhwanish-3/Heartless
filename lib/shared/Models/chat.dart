@@ -4,9 +4,15 @@ import 'package:heartless/shared/Models/app_user.dart';
 class ChatRoom {
   String id = '';
   List<String> users = []; // List of user ids for quick access in queries
+
   // reference to the users in the chat
   DocumentReference<Map<String, dynamic>>? user1Ref;
   DocumentReference<Map<String, dynamic>>? user2Ref;
+
+  // unread messages count for user1
+  int _user1UnreadMessages = 0;
+  // unread messages count for user2
+  int _user2UnreadMessages = 0;
 
   ChatRoom(DocumentReference<Map<String, dynamic>> user1,
       DocumentReference<Map<String, dynamic>> user2) {
@@ -21,6 +27,8 @@ class ChatRoom {
     users = List<String>.from(map['users']);
     user1Ref = map['user1Ref'];
     user2Ref = map['user2Ref'];
+    _user1UnreadMessages = map['user1UnreadMessages'];
+    _user2UnreadMessages = map['user2UnreadMessages'];
   }
 
   Map<String, dynamic> toMap() {
@@ -29,6 +37,8 @@ class ChatRoom {
       'users': users,
       'user1Ref': user1Ref,
       'user2Ref': user2Ref,
+      'user1UnreadMessages': _user1UnreadMessages,
+      'user2UnreadMessages': _user2UnreadMessages,
     };
   }
 
@@ -54,5 +64,18 @@ class ChatRoom {
   // function to get user2 stream
   Stream<DocumentSnapshot<Map<String, dynamic>>> getUser2Stream() {
     return user2Ref!.snapshots();
+  }
+
+  // getters for unread messages count
+  int get user1UnreadMessages => _user1UnreadMessages;
+  int get user2UnreadMessages => _user2UnreadMessages;
+
+  // setters for unread messages count
+  set user1UnreadMessages(int value) {
+    _user1UnreadMessages = value;
+  }
+
+  set user2UnreadMessages(int value) {
+    _user2UnreadMessages = value;
   }
 }
