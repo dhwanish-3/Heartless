@@ -5,7 +5,11 @@ import 'package:heartless/shared/provider/widget_provider.dart';
 
 class RightButton extends StatelessWidget {
   final String text;
-  const RightButton({super.key, required this.text});
+  final String imageUrl;
+  const RightButton(
+      {super.key,
+      required this.text,
+      this.imageUrl = 'assets/Icons/rightNav.svg'});
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +51,7 @@ class RightButton extends StatelessWidget {
                 Expanded(
                   flex: 1,
                   child: SvgPicture.asset(
-                    'assets/Icons/rightNav.svg',
+                    imageUrl,
                     height: 20,
                   ),
                 ),
