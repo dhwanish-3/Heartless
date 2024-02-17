@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:heartless/backend/services/chat/chat_service.dart';
+import 'package:heartless/backend/controllers/chat_controller.dart';
 import 'package:heartless/main.dart';
 import 'package:heartless/pages/chat/chat_page.dart';
 import 'package:heartless/pages/chat/select_chat.dart';
@@ -24,7 +24,7 @@ class _ContactsPageState extends State<ContactsPage> {
     // updating the online status of the current user
     AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
-    ChatService.updateOnlineStatus(
+    ChatController.updateOnlineStatus(
         authNotifier.appUser!.uid, true, authNotifier.appUser!.userType);
 
     super.initState();
@@ -69,10 +69,10 @@ class _ContactsPageState extends State<ContactsPage> {
     return WillPopScope(
       onWillPop: () async {
         // updating the online status of the current user
-        ChatService.updateOnlineStatus(
+        ChatController.updateOnlineStatus(
             authNotifier.appUser!.uid, false, authNotifier.appUser!.userType);
         // updating the last seen of the current user
-        ChatService.updateLastSeen(authNotifier.appUser!.uid, DateTime.now(),
+        ChatController.updateLastSeen(authNotifier.appUser!.uid, DateTime.now(),
             authNotifier.appUser!.userType);
         return true;
       },
@@ -81,7 +81,7 @@ class _ContactsPageState extends State<ContactsPage> {
           title: const Text('Chats'),
         ),
         body: StreamBuilder(
-          stream: ChatService.getChatRooms(),
+          stream: ChatController.getChatRooms(),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.hasData && snapshot.data.docs.isEmpty) {
               return const Center(
@@ -109,8 +109,8 @@ class _ContactsPageState extends State<ContactsPage> {
                               AppUser user2 =
                                   AppUser.fromMap(snapshot2.data.data());
                               return StreamBuilder(
-                                  stream:
-                                      ChatService.getLastMessage(chatRoom.id),
+                                  stream: ChatController.getLastMessage(
+                                      chatRoom.id),
                                   builder: (BuildContext context,
                                       AsyncSnapshot snapshot) {
                                     if (snapshot.hasData &&

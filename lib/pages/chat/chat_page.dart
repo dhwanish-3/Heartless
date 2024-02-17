@@ -1,9 +1,8 @@
 import 'dart:developer';
+import 'package:heartless/backend/controllers/chat_controller.dart';
 import 'package:heartless/shared/models/app_user.dart';
 import 'package:intl/intl.dart';
-
 import 'package:flutter/material.dart';
-import 'package:heartless/backend/services/chat/message_service.dart';
 import 'package:heartless/main.dart';
 import 'package:heartless/shared/models/chat.dart';
 import 'package:heartless/shared/models/message.dart';
@@ -29,52 +28,24 @@ class _ChatPageState extends State<ChatPage> {
     super.dispose();
   }
 
-  // @override
-  // void initState() {
-  //   // getting the user details for the chat receiver
-  //   AuthNotifier authNotifier =
-  //       Provider.of<AuthNotifier>(context, listen: false);
-  //   if (authNotifier.appUser!.uid == widget.chatRoom.user1Ref!.id) {
-  //     widget.chatRoom.getUser2().then((value) {
-  //       setState(() {
-  //         chatUser = value as AppUser;
-  //       });
-  //     });
-  //   } else {
-  //     widget.chatRoom.getUser1().then((value) {
-  //       setState(() {
-  //         chatUser = value as AppUser;
-  //       });
-  //     });
-  //   }
-  //   super.initState();
-  // }
+  int numberOfMessages = 0;
 
   @override
   Widget build(BuildContext context) {
     AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
     // function to send message
-    void sendMessage() async {
+    void sendMessage() {
       if (messageController.text.isNotEmpty) {
-        log("starting to send message");
-        Message message = Message();
-        message.message = messageController.text;
-        message.senderId = authNotifier.appUser!.uid;
-        message.time = DateTime.now();
-        message.receiverId =
-            widget.chatRoom.user1Ref!.id == authNotifier.appUser!.uid
-                ? widget.chatRoom.user2Ref!.id
-                : widget.chatRoom.user2Ref!.id;
-        log("sending message 2");
-        await MessageService.sendMessage(widget.chatRoom.id, message);
+        ChatController()
+            .sendMessage(widget.chatRoom, authNotifier, messageController.text);
         messageController.clear();
       }
     }
 
     // function to delete message
     void deleteMessage(Message message) {
-      MessageService().deleteMessage(widget.chatRoom, message);
+      ChatController().deleteMessage(widget.chatRoom, message);
     }
 
     // formatting the time to show in the chat with Oct 11, 20023 10:00 AM/PM format
@@ -108,7 +79,7 @@ class _ChatPageState extends State<ChatPage> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                 child: StreamBuilder(
-                  stream: MessageService.getMessages(widget.chatRoom.id),
+                  stream: ChatController.getMessages(widget.chatRoom.id),
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
                     if (snapshot.hasData && snapshot.data.docs.isEmpty) {
                       return const Center(
@@ -116,8 +87,12 @@ class _ChatPageState extends State<ChatPage> {
                       );
                     } else if (snapshot.hasData &&
                         snapshot.data.docs.isNotEmpty) {
+                      int newNumberOfMessages = snapshot.data.docs.length;
                       // mark all messages as read
-                      MessageService.markMessagesAsRead(widget.chatRoom.id);
+                      if (numberOfMessages != newNumberOfMessages) {
+                        ChatController.markMessagesAsRead(widget.chatRoom.id);
+                        numberOfMessages = newNumberOfMessages;
+                      }
                       log("Data: ${snapshot.data.docs.length}");
                       return ListView.builder(
                         itemCount: snapshot.data.docs.length,
@@ -148,11 +123,8 @@ class _ChatPageState extends State<ChatPage> {
                 ),
               ),
               MessageField(
-                messageController: messageController,
-                sendMessage: () {
-                  sendMessage();
-                },
-              ),
+                  messageController: messageController,
+                  sendMessage: sendMessage),
             ],
           ),
         ));

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -95,8 +94,8 @@ class ChatService {
     }
   }
 
-  // create a new chatroom
-  Future<ChatRoom> addChatRoom(ChatRoom chatRoom) async {
+  // create a new chat room
+  static Future<ChatRoom> createChatRoom(ChatRoom chatRoom) async {
     try {
       await _chatRoomRef
           .doc(chatRoom.id)
@@ -112,8 +111,8 @@ class ChatService {
     }
   }
 
-  // delete a chat
-  Future<bool> deleteChatRoom(String chatId) async {
+  // delete a chat room
+  static Future<bool> deleteChatRoom(String chatId) async {
     try {
       await _chatRoomRef.doc(chatId).delete().timeout(_timeLimit);
       return true;
