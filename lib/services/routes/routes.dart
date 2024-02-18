@@ -42,7 +42,10 @@ class Routes {
       case RouteNames.nurseHome:
         return MaterialPageRoute(builder: (_) => const DummyHome());
 
-      // todo: add doctor routes
+      // ! Doctor routes ! //
+      case RouteNames.doctorHome:
+        return MaterialPageRoute(builder: (_) => const DummyHome());
+
       default:
         return MaterialPageRoute(builder: (_) => Container());
     }

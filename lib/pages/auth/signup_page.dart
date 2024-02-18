@@ -1,10 +1,12 @@
 import "package:flutter/material.dart";
 import "package:flutter_svg/svg.dart";
+import "package:heartless/backend/controllers/doctor_controller.dart";
 import "package:heartless/backend/controllers/nurse_controller.dart";
 import "package:heartless/backend/controllers/patient_controller.dart";
 import "package:heartless/main.dart";
 import "package:heartless/services/local_storage/local_storage.dart";
 import 'package:heartless/shared/models/app_user.dart';
+import "package:heartless/shared/models/doctor.dart";
 import 'package:heartless/shared/models/nurse.dart';
 import 'package:heartless/shared/models/patient.dart';
 import "package:heartless/shared/constants.dart";
@@ -29,10 +31,10 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
 
-// for patient, nurse and doctor login purpose respectively
+  // for patient, nurse and doctor login purpose respectively
   final PatientController _patientController = PatientController();
   final NurseController _nurseController = NurseController();
-  // todo: add doctor controller
+  final DoctorController _doctorController = DoctorController();
 
   @override
   void dispose() {
@@ -64,7 +66,11 @@ class _SignUpPageState extends State<SignUpPage> {
       Navigator.pushNamed(context, '/nurseHome'); // todo : add correct name
     }
 
-// patient signup
+    void goToDoctorHome() {
+      Navigator.pushNamed(context, '/doctorHome'); // todo : add correct name
+    }
+
+    // patient signup
     Future<void> patientSignUp() async {
       Patient patient = Patient();
       patient.name = _nameController.text;
@@ -92,6 +98,20 @@ class _SignUpPageState extends State<SignUpPage> {
       }
     }
 
+    // doctor signup
+    Future<void> doctorSignUp() async {
+      Doctor doctor = Doctor();
+      doctor.name = _nameController.text;
+      doctor.email = _emailController.text;
+      doctor.password = _passwordController.text;
+      authNotifier.setDoctor(doctor);
+      bool success = await _doctorController.signUp(authNotifier);
+      if (success && context.mounted) {
+        await LocalStorage.saveUser(authNotifier);
+        goToDoctorHome();
+      }
+    }
+
     void submitForm() async {
       if (_formKey.currentState!.validate()) {
         widgetNotifier.setLoading(true);
@@ -102,7 +122,10 @@ class _SignUpPageState extends State<SignUpPage> {
         } else if (authNotifier.userType == UserType.nurse) {
           await nurseSignUp();
           widgetNotifier.setLoading(false);
-        } // todo : add doctor
+        } else if (authNotifier.userType == UserType.doctor) {
+          await doctorSignUp();
+          widgetNotifier.setLoading(false);
+        }
       }
     }
 
@@ -118,6 +141,12 @@ class _SignUpPageState extends State<SignUpPage> {
         if (success && context.mounted) {
           await LocalStorage.saveUser(authNotifier);
           goToNurseHome();
+        }
+      } else if (authNotifier.userType == UserType.doctor) {
+        bool success = await _doctorController.googleSignIn(authNotifier);
+        if (success && context.mounted) {
+          await LocalStorage.saveUser(authNotifier);
+          goToDoctorHome();
         }
       }
     }

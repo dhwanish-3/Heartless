@@ -1,9 +1,11 @@
 import "package:flutter/material.dart";
 import "package:flutter_svg/svg.dart";
+import "package:heartless/backend/controllers/doctor_controller.dart";
 import "package:heartless/backend/controllers/nurse_controller.dart";
 import "package:heartless/backend/controllers/patient_controller.dart";
 import "package:heartless/main.dart";
 import 'package:heartless/shared/models/app_user.dart';
+import "package:heartless/shared/models/doctor.dart";
 import 'package:heartless/shared/models/nurse.dart';
 import 'package:heartless/shared/models/patient.dart';
 import "package:heartless/shared/provider/auth_notifier.dart";
@@ -26,7 +28,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   // for patient, nurse and doctor login purpose respectively
   final PatientController _patientController = PatientController();
   final NurseController _nurseController = NurseController();
-  // todo: add doctor controller
+  final DoctorController _doctorController = DoctorController();
 
   @override
   void dispose() {
@@ -85,6 +87,21 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       }
     }
 
+    void doctorForgotPassword() async {
+      widgetNotifier.setLoading(true);
+      Doctor doctor = Doctor();
+      doctor.email = _emailController.text;
+      authNotifier.setDoctor(doctor);
+      if (await _doctorController.sendResetEmail(authNotifier)) {
+        // since verification by otp input is not yet functional user is redirected to login page
+        widgetNotifier.setLoading(false);
+        goToLoginPage();
+      } else {
+        // in case the sendResetEmail function returns false
+        widgetNotifier.setLoading(false);
+      }
+    }
+
     Future<void> submitForm() async {
       if (_formKey.currentState!.validate()) {
         _formKey.currentState!.save();
@@ -93,7 +110,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         } else if (authNotifier.userType == UserType.nurse) {
           nurseForgotPassword();
         } else if (authNotifier.userType == UserType.doctor) {
-          // todo: add doctor forgot password
+          doctorForgotPassword();
         }
       }
     }
