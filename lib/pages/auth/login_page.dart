@@ -1,10 +1,12 @@
 import "package:flutter/material.dart";
 import "package:flutter_svg/svg.dart";
+import "package:heartless/backend/controllers/doctor_controller.dart";
 import "package:heartless/backend/controllers/nurse_controller.dart";
 import "package:heartless/backend/controllers/patient_controller.dart";
 import "package:heartless/main.dart";
 import "package:heartless/services/local_storage/local_storage.dart";
 import 'package:heartless/shared/models/app_user.dart';
+import "package:heartless/shared/models/doctor.dart";
 import 'package:heartless/shared/models/nurse.dart';
 import 'package:heartless/shared/models/patient.dart';
 import "package:heartless/shared/provider/auth_notifier.dart";
@@ -30,7 +32,7 @@ class _LoginPageState extends State<LoginPage> {
   // for patient, nurse and doctor login purpose respectively
   final PatientController _patientController = PatientController();
   final NurseController _nurseController = NurseController();
-  // todo: add doctor controller
+  final DoctorController _doctorController = DoctorController();
 
   @override
   void dispose() {
@@ -60,6 +62,10 @@ class _LoginPageState extends State<LoginPage> {
       Navigator.pushNamed(context, '/nurseHome'); // todo : add correct name
     }
 
+    void goToDoctorHome() {
+      Navigator.pushNamed(context, '/doctorHome'); // todo : add correct name
+    }
+
     // patient login
     Future<void> patientLogin() async {
       Patient patient = Patient();
@@ -86,6 +92,19 @@ class _LoginPageState extends State<LoginPage> {
       }
     }
 
+    // doctor login
+    Future<void> doctorLogin() async {
+      Doctor doctor = Doctor();
+      doctor.email = _emailController.text;
+      doctor.password = _passwordController.text;
+      authNotifier.setDoctor(doctor);
+      bool success = await _doctorController.login(authNotifier);
+      if (success && context.mounted) {
+        await LocalStorage.saveUser(authNotifier);
+        goToDoctorHome();
+      }
+    }
+
     void submitForm() async {
       if (_formKey.currentState!.validate()) {
         widgetNotifier.setLoading(true);
@@ -96,7 +115,10 @@ class _LoginPageState extends State<LoginPage> {
         } else if (authNotifier.userType == UserType.nurse) {
           await nurseLogin();
           widgetNotifier.setLoading(false);
-        } // todo : add doctor
+        } else if (authNotifier.userType == UserType.doctor) {
+          await doctorLogin();
+          widgetNotifier.setLoading(false);
+        }
       }
     }
 
@@ -112,6 +134,12 @@ class _LoginPageState extends State<LoginPage> {
         if (success && context.mounted) {
           await LocalStorage.saveUser(authNotifier);
           goToNurseHome();
+        }
+      } else if (authNotifier.userType == UserType.doctor) {
+        bool success = await _doctorController.googleSignIn(authNotifier);
+        if (success && context.mounted) {
+          await LocalStorage.saveUser(authNotifier);
+          goToDoctorHome();
         }
       }
     }

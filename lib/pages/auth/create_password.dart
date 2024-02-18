@@ -9,6 +9,7 @@ import 'package:heartless/widgets/miscellaneous/right_trailing_button.dart';
 import 'package:heartless/widgets/auth/text_input.dart';
 import "package:heartless/shared/provider/widget_provider.dart";
 
+// ! This page is not currently in use
 class CreatePasswordPage extends StatefulWidget {
   const CreatePasswordPage({super.key});
 
@@ -28,11 +29,6 @@ class _CreatePasswordPageState extends State<CreatePasswordPage> {
     super.dispose();
     _confirmPasswordController.dispose();
     _passwordController.dispose();
-  }
-
-  @override
-  void initState() {
-    super.initState();
   }
 
   @override

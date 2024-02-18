@@ -23,16 +23,6 @@ class _VerificationPageState extends State<VerificationPage> {
   final userEmail = "dhwanish";
 
   @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     double svgHeight = 0.15 * screenHeight;
