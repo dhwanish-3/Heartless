@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 class Constants {
   static const primaryColor = Color.fromARGB(255, 52, 190, 171);
   static const darkPrimaryColor = Color.fromARGB(255, 212, 64, 64);
+  static const cardColor = Color.fromARGB(255, 240, 240, 240);
+  static const darkCardColor = Color.fromARGB(255, 50, 50, 50);
+  static const lightPrimaryColor = Color.fromARGB(255, 202, 230, 226);
   static const customGray = Color.fromARGB(255, 160, 168, 176);
   static const notifColor = Color.fromARGB(255, 251, 188, 5);
   static const foodColor = Color.fromARGB(178, 255, 104, 56);
