@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:heartless/main.dart';
 import 'package:heartless/shared/constants.dart';
 import 'package:heartless/shared/provider/widget_provider.dart';
+import 'package:heartless/widgets/auth/email_phone_toggle.dart';
 import 'package:heartless/widgets/auth/text_input.dart';
 import 'package:heartless/widgets/schedule/date_picker_button.dart';
 import 'package:heartless/widgets/schedule/time_picker_button.dart';
