@@ -11,11 +11,13 @@ import 'package:heartless/shared/models/nurse.dart';
 import 'package:heartless/shared/models/patient.dart';
 import "package:heartless/shared/constants.dart";
 import "package:heartless/shared/provider/auth_notifier.dart";
+import "package:heartless/widgets/auth/email_phone_toggle.dart";
 import 'package:heartless/widgets/auth/google_button.dart';
 import 'package:heartless/widgets/miscellaneous/left_trailing_button.dart';
 import 'package:heartless/widgets/miscellaneous/right_trailing_button.dart';
 import 'package:heartless/widgets/auth/text_input.dart';
 import "package:heartless/shared/provider/widget_provider.dart";
+import "package:intl_phone_field/intl_phone_field.dart";
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -26,6 +28,7 @@ class SignUpPage extends StatefulWidget {
 
 class _SignUpPageState extends State<SignUpPage> {
   final _formKey = GlobalKey<FormState>();
+  final _phoneFormKey = GlobalKey<FormState>();
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -163,141 +166,203 @@ class _SignUpPageState extends State<SignUpPage> {
                 height: screenHeight * 0.2,
               ),
             ),
-            Center(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 5,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset(
-                        'assets/illustrations/signup.svg',
-                        height: svgHeight,
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Text(
-                        '${userTypeToString(authNotifier.userType)} SignUp',
-                        style: Theme.of(context).textTheme.headlineMedium,
-                      ),
-                      const SizedBox(
-                        height: 40,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                        ),
-                        child: Form(
-                          key: _formKey,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              TextFieldInput(
-                                textEditingController: _nameController,
-                                hintText: 'Enter your email',
-                                labelText: 'name',
-                                startIcon: 'assets/Icons/user.svg',
-                                textInputType: TextInputType.name,
+
+            SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 5,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 40),
+                    SvgPicture.asset(
+                      'assets/illustrations/signup.svg',
+                      height: svgHeight,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      '${userTypeToString(authNotifier.userType)} SignUp',
+                      style: Theme.of(context).textTheme.headlineMedium,
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    const ToggleButton(emailPhoneToggle: true),
+                    const SizedBox(height: 10),
+                    Consumer<WidgetNotifier>(builder: (context, value, child) {
+                      return widgetNotifier.emailPhoneToggle == true
+                          ? Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 20,
                               ),
-                              TextFieldInput(
-                                textEditingController: _emailController,
-                                hintText: 'Enter your email',
-                                labelText: 'email',
-                                startIcon: 'assets/Icons/Email.svg',
-                                textInputType: TextInputType.emailAddress,
+                              child: Form(
+                                key: _formKey,
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    TextFieldInput(
+                                      textEditingController: _nameController,
+                                      hintText: 'Enter your email',
+                                      labelText: 'name',
+                                      startIcon: 'assets/Icons/user.svg',
+                                      textInputType: TextInputType.name,
+                                    ),
+                                    TextFieldInput(
+                                      textEditingController: _emailController,
+                                      hintText: 'Enter your email',
+                                      labelText: 'email',
+                                      startIcon: 'assets/Icons/Email.svg',
+                                      textInputType: TextInputType.emailAddress,
+                                    ),
+                                    Consumer<WidgetNotifier>(
+                                        builder: (context, value, child) {
+                                      return TextFieldInput(
+                                        textEditingController:
+                                            _passwordController,
+                                        hintText: 'Enter your password',
+                                        labelText: 'password',
+                                        startIcon: 'assets/Icons/lock.svg',
+                                        endIcon: 'assets/Icons/eyeClosed.svg',
+                                        endIconAlt:
+                                            'assets/Icons/eyeOpened.svg',
+                                        passwordShown:
+                                            widgetNotifier.passwordShown,
+                                        textInputType:
+                                            TextInputType.visiblePassword,
+                                      );
+                                    }),
+                                  ],
+                                ),
                               ),
-                              Consumer<WidgetNotifier>(
-                                  builder: (context, value, child) {
-                                return TextFieldInput(
-                                  textEditingController: _passwordController,
-                                  hintText: 'Enter your password',
-                                  labelText: 'password',
-                                  startIcon: 'assets/Icons/lock.svg',
-                                  endIcon: 'assets/Icons/eyeClosed.svg',
-                                  endIconAlt: 'assets/Icons/eyeOpened.svg',
-                                  passwordShown: widgetNotifier.passwordShown,
-                                  textInputType: TextInputType.visiblePassword,
-                                );
-                              }),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 30, vertical: 20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            GestureDetector(
-                                onTap: goBack, child: const LeftButton()),
-                            GestureDetector(
-                                onTap: submitForm,
-                                child: const RightButton(text: 'SignUp')),
-                          ],
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                            )
+                          : Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                              ),
+                              child: Form(
+                                  key: _phoneFormKey,
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      const SizedBox(height: 20),
+                                      TextFieldInput(
+                                        textEditingController: _nameController,
+                                        hintText: 'Enter your email',
+                                        labelText: 'name',
+                                        startIcon: 'assets/Icons/user.svg',
+                                        textInputType: TextInputType.name,
+                                      ),
+                                      const SizedBox(height: 10),
+                                      SizedBox(
+                                        width: screenWidth * 0.82,
+                                        child: IntlPhoneField(
+                                          decoration: InputDecoration(
+                                            labelText: 'Phone Number',
+                                            labelStyle: const TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 18,
+                                            ),
+                                            counterText: '',
+                                            border: const OutlineInputBorder(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(15))),
+                                            focusedBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  color: Theme.of(context)
+                                                      .primaryColor,
+                                                ),
+                                                borderRadius:
+                                                    const BorderRadius.all(
+                                                        Radius.circular(15))),
+                                          ),
+                                          onChanged: (phone) {
+                                            print(phone.completeNumber);
+                                          },
+                                        ),
+                                      ),
+                                      const SizedBox(height: 20),
+                                    ],
+                                  )));
+                    }),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 30, vertical: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            "Already have an account?",
-                            style: Theme.of(context).textTheme.labelMedium,
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              widgetNotifier.toggleLoginSignup();
-                            },
-                            child: Text(
-                              "Log in",
-                              style: Theme.of(context).textTheme.headlineSmall,
-                            ),
-                          )
+                          GestureDetector(
+                              onTap: goBack, child: const LeftButton()),
+                          GestureDetector(
+                              onTap: submitForm,
+                              child: const RightButton(text: 'SignUp')),
                         ],
                       ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.fromLTRB(30, 0, 10, 0),
-                              child: Divider(
-                                thickness: 1,
-                                color: Colors.grey[300],
-                              ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Already have an account?",
+                          style: Theme.of(context).textTheme.labelMedium,
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            widgetNotifier.toggleLoginSignup();
+                          },
+                          child: Text(
+                            "Log in",
+                            style: Theme.of(context).textTheme.headlineSmall,
+                          ),
+                        )
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(30, 0, 10, 0),
+                            child: Divider(
+                              thickness: 1,
+                              color: Colors.grey[300],
                             ),
                           ),
-                          const Text(
-                            'OR',
-                            style: TextStyle(
-                              color: Constants.customGray,
+                        ),
+                        const Text(
+                          'OR',
+                          style: TextStyle(
+                            color: Constants.customGray,
+                          ),
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 0, 30, 0),
+                            child: Divider(
+                              thickness: 1,
+                              color: Colors.grey[300],
                             ),
                           ),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.fromLTRB(10, 0, 30, 0),
-                              child: Divider(
-                                thickness: 1,
-                                color: Colors.grey[300],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Padding(
-                          padding: const EdgeInsets.all(20),
-                          child: InkWell(
-                              onTap: googleSignIn,
-                              child: GoogleButton(screenWidth: screenWidth))),
-                    ],
-                  ),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: InkWell(
+                            onTap: googleSignIn,
+                            child: GoogleButton(screenWidth: screenWidth))),
+                    //! this sizedBox has been added so as to ensure that the page would overflow the height constraints, to ensure proper ordering of elements
+                    const SizedBox(height: 150),
+                  ],
                 ),
               ),
             ),
+            // ),
           ],
         ),
       ),
