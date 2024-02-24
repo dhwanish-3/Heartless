@@ -263,6 +263,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                       SizedBox(
                                         width: screenWidth * 0.82,
                                         child: IntlPhoneField(
+                                          initialCountryCode: 'IN',
                                           decoration: InputDecoration(
                                             labelText: 'Phone Number',
                                             labelStyle: const TextStyle(
