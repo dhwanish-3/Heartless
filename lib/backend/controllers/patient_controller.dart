@@ -1,3 +1,4 @@
+import 'package:heartless/backend/constants.dart';
 import 'package:heartless/backend/services/auth/patient_auth.dart';
 import 'package:heartless/backend/controllers/base_controller.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
@@ -19,6 +20,22 @@ class PatientController with BaseController {
     if (await _patientAuth
         .signUpPatient(authNotifier)
         .then((value) => handleSuccess(value, "Signed up"))
+        .catchError(handleError)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<PhoneAuth> sendCodeforPhoneLogin(AuthNotifier authNotifier) async {
+    return await _patientAuth.phoneSignIn(authNotifier);
+  }
+
+  Future<bool> verifyCodeforPhoneLogin(
+      AuthNotifier authNotifier, String code) async {
+    if (await _patientAuth
+        .signInWithPhoneCredential(authNotifier: authNotifier, otp: code)
+        .then((value) => handleSuccess(value, "Verified OTP"))
         .catchError(handleError)) {
       return true;
     } else {

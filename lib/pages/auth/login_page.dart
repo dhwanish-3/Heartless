@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter_svg/svg.dart";
+import "package:heartless/backend/constants.dart";
 import "package:heartless/backend/controllers/doctor_controller.dart";
 import "package:heartless/backend/controllers/nurse_controller.dart";
 import "package:heartless/backend/controllers/patient_controller.dart";
@@ -117,6 +118,39 @@ class _LoginPageState extends State<LoginPage> {
           widgetNotifier.setLoading(false);
         } else if (authNotifier.userType == UserType.doctor) {
           await doctorLogin();
+          widgetNotifier.setLoading(false);
+        }
+      }
+    }
+
+    // patient login with phone
+    void patientLoginWithPhone() async {
+      Patient patient = Patient();
+      patient.phone = _emailController.text;
+      authNotifier.setPatient(patient);
+      PhoneAuth status =
+          await _patientController.sendCodeforPhoneLogin(authNotifier);
+      if (status == PhoneAuth.autoVerified) {
+        goToPatientHome();
+      } else if (status == PhoneAuth.codeSent && context.mounted) {
+        Navigator.pushNamed(context, '/phoneOtp');
+      }
+    }
+
+    void phoneLoginSubmitForm() async {
+      if (_formKey.currentState!.validate()) {
+        widgetNotifier.setLoading(true);
+        _formKey.currentState!.save();
+        Patient patient = Patient();
+        authNotifier.setPatient(patient);
+        if (authNotifier.userType == UserType.patient) {
+          patientLoginWithPhone();
+          widgetNotifier.setLoading(false);
+        } else if (authNotifier.userType == UserType.nurse) {
+          // await nurseLoginWithPhone();
+          widgetNotifier.setLoading(false);
+        } else if (authNotifier.userType == UserType.doctor) {
+          // await doctorLoginWithPhone();
           widgetNotifier.setLoading(false);
         }
       }
