@@ -20,7 +20,7 @@ class _DatePickerButtonState extends State<DatePickerButton> {
       context: context,
       initialDate: widget.selectedDate,
       firstDate: DateTime(2015, 8),
-      lastDate: DateTime(2101),
+      lastDate: DateTime(2025),
     );
     if (picked != null && picked != widget.selectedDate) {
       if (picked.isBefore(DateTime.now())) {
@@ -51,6 +51,8 @@ class _DatePickerButtonState extends State<DatePickerButton> {
   @override
   Widget build(BuildContext context) {
     List<String> daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    print(widget.selectedDate.month);
+    print(widget.selectedDate.weekday);
     return GestureDetector(
         onTap: () {
           _selectDate(context);
@@ -144,7 +146,7 @@ class _DatePickerButtonState extends State<DatePickerButton> {
                   flex: 4,
                   child: Text(
                     textAlign: TextAlign.center,
-                    daysOfWeek[widget.selectedDate.weekday].toString(),
+                    daysOfWeek[widget.selectedDate.weekday - 1].toString(),
                     style: TextStyle(
                       fontSize: 18,
                       color: Theme.of(context).shadowColor,
