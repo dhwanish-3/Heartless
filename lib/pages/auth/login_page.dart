@@ -270,6 +270,7 @@ class _LoginPageState extends State<LoginPage> {
                                       SizedBox(
                                         width: screenWidth * 0.82,
                                         child: IntlPhoneField(
+                                          initialCountryCode: 'IN',
                                           decoration: InputDecoration(
                                             labelText: 'Phone Number',
                                             labelStyle: const TextStyle(
