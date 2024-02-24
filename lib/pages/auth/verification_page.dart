@@ -8,6 +8,7 @@ import 'package:heartless/widgets/miscellaneous/left_trailing_button.dart';
 import 'package:heartless/widgets/miscellaneous/right_trailing_button.dart';
 
 class VerificationPage extends StatefulWidget {
+  //! email or phone number should be appropriately sent from page
   const VerificationPage({super.key});
 
   @override

@@ -4,17 +4,19 @@ class CustomTextButton extends StatelessWidget {
   final String text;
   final double containerWidth;
   final bool isHighlighted;
+  final double height;
   const CustomTextButton({
     super.key,
     required this.text,
     required this.containerWidth,
     this.isHighlighted = false,
+    this.height = 30,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 30,
+      height: height,
       width: containerWidth,
       // padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(

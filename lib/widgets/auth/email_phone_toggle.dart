@@ -17,39 +17,81 @@ class ToggleButton extends StatelessWidget {
     double screenWidth = MediaQuery.of(context).size.width;
     WidgetNotifier widgetNotifier =
         Provider.of<WidgetNotifier>(context, listen: false);
-    return Container(
-      width: screenWidth * 0.8,
-      height: 45,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        color: Theme.of(context).canvasColor,
-        border: Border.all(
-          color: Constants.customGray,
-        ),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(2),
-        child: GestureDetector(
-          onTap: () {
-            widgetNotifier.toggleEmailPhone();
-          },
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              CustomTextButton(
-                text: 'Email',
-                containerWidth: screenWidth * 0.38,
-                isHighlighted: emailPhoneToggle,
-              ),
-              CustomTextButton(
-                text: 'Phone',
-                containerWidth: screenWidth * 0.38,
-                isHighlighted: !emailPhoneToggle,
-              ),
-            ],
+
+    return Consumer<WidgetNotifier>(builder: (context, value, child) {
+      return Container(
+        width: screenWidth * 0.8,
+        height: 42,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: Theme.of(context).canvasColor,
+          border: Border.all(
+            color: Constants.customGray,
           ),
         ),
-      ),
-    );
+        child: Padding(
+          padding: const EdgeInsets.all(1),
+          child: GestureDetector(
+            onTap: () {
+              widgetNotifier.toggleEmailPhone();
+            },
+            child: Stack(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: GestureDetector(
+                        onTap: () {
+                          widgetNotifier.toggleEmailPhone();
+                        },
+                        child: CustomTextButton(
+                          height: 40,
+                          text: 'Email',
+                          containerWidth: screenWidth * 0.38,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: GestureDetector(
+                        onTap: () {
+                          widgetNotifier.toggleEmailPhone();
+                        },
+                        child: CustomTextButton(
+                          height: 40,
+                          text: 'Phone',
+                          containerWidth: screenWidth * 0.38,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                AnimatedAlign(
+                  alignment: widgetNotifier.emailPhoneToggle
+                      ? Alignment.centerLeft
+                      : Alignment.centerRight,
+                  duration: const Duration(milliseconds: 200),
+                  curve: Curves.easeInOut,
+                  child: SizedBox(
+                    height: 40,
+                    child: FractionallySizedBox(
+                      widthFactor: 0.5,
+                      child: CustomTextButton(
+                        text:
+                            widgetNotifier.emailPhoneToggle ? 'Email' : 'Phone',
+                        containerWidth: screenWidth * 0.38,
+                        isHighlighted: true,
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+      );
+    });
   }
 }
