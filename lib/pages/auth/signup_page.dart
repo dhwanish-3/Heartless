@@ -1,10 +1,14 @@
+import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:flutter_svg/svg.dart";
 import "package:heartless/backend/controllers/doctor_controller.dart";
 import "package:heartless/backend/controllers/nurse_controller.dart";
 import "package:heartless/backend/controllers/patient_controller.dart";
+import "package:heartless/backend/services/auth/patient_auth.dart";
 import "package:heartless/main.dart";
+import "package:heartless/pages/auth/verification_page.dart";
 import "package:heartless/services/local_storage/local_storage.dart";
+import "package:heartless/services/utils/toast_message.dart";
 import 'package:heartless/shared/models/app_user.dart';
 import "package:heartless/shared/models/doctor.dart";
 import 'package:heartless/shared/models/nurse.dart';
@@ -29,10 +33,12 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
   final _formKey = GlobalKey<FormState>();
   final _phoneFormKey = GlobalKey<FormState>();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
+  String _phoneNumber = '';
 
   // for patient, nurse and doctor login purpose respectively
   final PatientController _patientController = PatientController();
@@ -127,6 +133,79 @@ class _SignUpPageState extends State<SignUpPage> {
           widgetNotifier.setLoading(false);
         } else if (authNotifier.userType == UserType.doctor) {
           await doctorSignUp();
+          widgetNotifier.setLoading(false);
+        }
+      }
+    }
+
+    // patient login with phone
+    Future<void> patientLoginWithPhone(String phoneNumber) async {
+      Patient patient = Patient();
+      patient.name = _nameController.text;
+      patient.phone = _phoneNumber;
+      authNotifier.setPatient(patient);
+      authNotifier.setAppUser(patient);
+      bool alreadyExists = await PatientAuth()
+          .getPatientDetailswithPhone(authNotifier, phoneNumber);
+      if (alreadyExists) {
+        authNotifier.setPatient(Patient());
+        ToastMessage().showError("User already exists. Please login");
+        return;
+      }
+      _auth.verifyPhoneNumber(
+        phoneNumber: phoneNumber,
+        verificationCompleted: (PhoneAuthCredential credential) async {
+          try {
+            User? user = (await _auth.signInWithCredential(credential)).user;
+            if (user != null) {
+              authNotifier.patient!.uid = user.uid;
+              await PatientAuth().setPatientDetails(authNotifier);
+              await LocalStorage.saveUser(authNotifier);
+              authNotifier.setAppUser(authNotifier.patient!);
+              ToastMessage().showSuccess("Logged in successfully");
+              goToPatientHome();
+            } else {
+              await _auth.signOut();
+              ToastMessage().showError("Failed to login");
+            }
+          } catch (e) {
+            ToastMessage().showError(e.toString());
+          }
+        },
+        verificationFailed: (FirebaseAuthException e) {
+          ToastMessage().showError("Verification failed");
+        },
+        codeSent: (String verificationId, int? resendToken) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => VerificationPage(
+                verificationId: verificationId,
+              ),
+            ),
+          );
+        },
+        codeAutoRetrievalTimeout: (String verificationId) {
+          ToastMessage().showError("Code auto retrieval timeout");
+        },
+      );
+    }
+
+    void phoneLoginSubmitForm() async {
+      if (_phoneFormKey.currentState!.validate() &&
+          _phoneNumber.isNotEmpty &&
+          _phoneNumber.length == 13) {
+        _phoneFormKey.currentState!.save();
+        widgetNotifier.setLoading(true);
+
+        if (authNotifier.userType == UserType.patient) {
+          await patientLoginWithPhone(_phoneNumber);
+          widgetNotifier.setLoading(false);
+        } else if (authNotifier.userType == UserType.nurse) {
+          // await nurseLoginWithPhone();
+          widgetNotifier.setLoading(false);
+        } else if (authNotifier.userType == UserType.doctor) {
+          // await doctorLoginWithPhone();
           widgetNotifier.setLoading(false);
         }
       }
@@ -285,6 +364,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                           ),
                                           onChanged: (phone) {
                                             print(phone.completeNumber);
+                                            _phoneNumber = phone.completeNumber;
                                           },
                                         ),
                                       ),
@@ -301,7 +381,9 @@ class _SignUpPageState extends State<SignUpPage> {
                           GestureDetector(
                               onTap: goBack, child: const LeftButton()),
                           GestureDetector(
-                              onTap: submitForm,
+                              onTap: widgetNotifier.emailPhoneToggle == true
+                                  ? submitForm
+                                  : phoneLoginSubmitForm,
                               child: const RightButton(text: 'SignUp')),
                         ],
                       ),

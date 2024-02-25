@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:heartless/services/exceptions/app_exceptions.dart';
 import 'package:heartless/shared/models/app_user.dart';
@@ -21,6 +22,30 @@ class PatientAuth {
     try {
       return await _patientRef
           .where('email', isEqualTo: email)
+          .get()
+          .then((value) {
+        if (value.docs.isNotEmpty) {
+          authNotifier.setPatient(Patient.fromMap(value.docs.first.data()));
+          return true;
+        } else {
+          return false;
+        }
+      }).timeout(_timeLimit);
+    } on FirebaseAuthException {
+      throw UnAutherizedException();
+    } on SocketException {
+      throw FetchDataException('No Internet Connection');
+    } on TimeoutException {
+      throw ApiNotRespondingException('Server is not responding');
+    }
+  }
+
+  // get patient using phone number
+  Future<bool> getPatientDetailswithPhone(
+      AuthNotifier authNotifier, String phone) async {
+    try {
+      return await _patientRef
+          .where('phone', isEqualTo: phone)
           .get()
           .then((value) {
         if (value.docs.isNotEmpty) {
