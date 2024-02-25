@@ -1,11 +1,14 @@
+import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:flutter_svg/svg.dart";
-import "package:heartless/backend/constants.dart";
 import "package:heartless/backend/controllers/doctor_controller.dart";
 import "package:heartless/backend/controllers/nurse_controller.dart";
 import "package:heartless/backend/controllers/patient_controller.dart";
+import "package:heartless/backend/services/auth/patient_auth.dart";
 import "package:heartless/main.dart";
+import "package:heartless/pages/auth/verification_page.dart";
 import "package:heartless/services/local_storage/local_storage.dart";
+import "package:heartless/services/utils/toast_message.dart";
 import 'package:heartless/shared/models/app_user.dart';
 import "package:heartless/shared/models/doctor.dart";
 import 'package:heartless/shared/models/nurse.dart';
@@ -32,11 +35,13 @@ class _LoginPageState extends State<LoginPage> {
   final _phoneFormKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
+  String _phoneNumber = '';
   // for patient, nurse and doctor login purpose respectively
   final PatientController _patientController = PatientController();
   final NurseController _nurseController = NurseController();
   final DoctorController _doctorController = DoctorController();
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   void dispose() {
@@ -127,27 +132,59 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     // patient login with phone
-    void patientLoginWithPhone() async {
+    Future<void> patientLoginWithPhone() async {
       Patient patient = Patient();
-      patient.phone = _emailController.text;
+      patient.phone = _phoneNumber;
       authNotifier.setPatient(patient);
-      PhoneAuth status =
-          await _patientController.sendCodeforPhoneLogin(authNotifier);
-      if (status == PhoneAuth.autoVerified) {
-        goToPatientHome();
-      } else if (status == PhoneAuth.codeSent && context.mounted) {
-        Navigator.pushNamed(context, '/phoneOtp');
+      authNotifier.setAppUser(patient);
+      bool alreadyExists = await PatientAuth()
+          .getPatientDetailswithPhone(authNotifier, _phoneNumber);
+      if (!alreadyExists) {
+        ToastMessage().showError("User does not exist");
+        return;
       }
+      _auth.verifyPhoneNumber(
+        phoneNumber: _phoneNumber,
+        verificationCompleted: (PhoneAuthCredential credential) async {
+          try {
+            User? user = (await _auth.signInWithCredential(credential)).user;
+            if (user != null) {
+              authNotifier.setAppUser(authNotifier.patient!);
+              await LocalStorage.saveUser(authNotifier);
+              ToastMessage().showSuccess("Logged in successfully");
+            } else {
+              await _auth.signOut();
+              ToastMessage().showError("User does not exist");
+            }
+          } catch (e) {
+            ToastMessage().showError(e.toString());
+          }
+        },
+        verificationFailed: (FirebaseAuthException e) {
+          ToastMessage().showError("Verification failed");
+        },
+        codeSent: (String verificationId, int? resendToken) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => VerificationPage(
+                verificationId: verificationId,
+              ),
+            ),
+          );
+        },
+        codeAutoRetrievalTimeout: (String verificationId) {
+          ToastMessage().showError("Code auto retrieval timeout");
+        },
+      );
     }
 
     void phoneLoginSubmitForm() async {
-      if (_formKey.currentState!.validate()) {
+      if (_phoneFormKey.currentState!.validate()) {
         widgetNotifier.setLoading(true);
-        _formKey.currentState!.save();
-        Patient patient = Patient();
-        authNotifier.setPatient(patient);
+        _phoneFormKey.currentState!.save();
         if (authNotifier.userType == UserType.patient) {
-          patientLoginWithPhone();
+          await patientLoginWithPhone();
           widgetNotifier.setLoading(false);
         } else if (authNotifier.userType == UserType.nurse) {
           // await nurseLoginWithPhone();
@@ -325,7 +362,7 @@ class _LoginPageState extends State<LoginPage> {
                                                         Radius.circular(15))),
                                           ),
                                           onChanged: (phone) {
-                                            print(phone.completeNumber);
+                                            _phoneNumber = phone.completeNumber;
                                           },
                                         ),
                                       ),
@@ -342,7 +379,9 @@ class _LoginPageState extends State<LoginPage> {
                           GestureDetector(
                               onTap: goBack, child: const LeftButton()),
                           GestureDetector(
-                              onTap: submitForm,
+                              onTap: widgetNotifier.emailPhoneToggle == true
+                                  ? submitForm
+                                  : phoneLoginSubmitForm,
                               child: const RightButton(text: 'Login')),
                         ],
                       ),

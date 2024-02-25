@@ -1,7 +1,10 @@
+import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:flutter_svg/svg.dart";
-import "package:heartless/backend/controllers/patient_controller.dart";
+import "package:heartless/backend/services/auth/patient_auth.dart";
 import "package:heartless/main.dart";
+import "package:heartless/services/local_storage/local_storage.dart";
+import "package:heartless/services/utils/toast_message.dart";
 import "package:heartless/shared/provider/auth_notifier.dart";
 import 'package:heartless/widgets/auth/otp_input_field.dart';
 import 'package:heartless/widgets/miscellaneous/left_trailing_button.dart';
@@ -9,20 +12,18 @@ import 'package:heartless/widgets/miscellaneous/right_trailing_button.dart';
 
 class VerificationPage extends StatefulWidget {
   //! email or phone number should be appropriately sent from page
-  const VerificationPage({super.key});
+  final String? verificationId;
+  const VerificationPage({super.key, this.verificationId});
 
   @override
   State<VerificationPage> createState() => _VerificationPageState();
 }
 
 class _VerificationPageState extends State<VerificationPage> {
-  final PatientController _patientController = PatientController();
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _otpController = TextEditingController();
 
-  //! must fetch userEmail from authNotifier
-  final userEmail = "dhwanish";
-
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
@@ -34,18 +35,45 @@ class _VerificationPageState extends State<VerificationPage> {
           context); //! idk what happens if this is the first page i.e. nothing to pop
     }
 
-    void goToCreatePasswordPage() {
-      Navigator.pushNamed(
-          context, '/create_password'); // todo : add correct name
+    void goToPatientHome() {
+      Navigator.pushNamed(context, '/patientHome'); // todo : add correct name
     }
 
     Future<void> submitForm() async {
-      if (_formKey.currentState!.validate()) {
+      if (_formKey.currentState!.validate() && widget.verificationId != null) {
         _formKey.currentState!.save();
-        bool success = await _patientController.verifyOTP(
-            authNotifier, _otpController.text);
-        if (success) {
-          goToCreatePasswordPage();
+        try {
+          bool alreadyExists = await PatientAuth().getPatientDetailswithPhone(
+              authNotifier, authNotifier.patient!.phone!);
+          PhoneAuthCredential credential = PhoneAuthProvider.credential(
+              verificationId: widget.verificationId ?? "Shit",
+              smsCode: _otpController.text);
+          User? user = (await _auth.signInWithCredential(credential)).user;
+          if (alreadyExists) {
+            if (user != null) {
+              await LocalStorage.saveUser(authNotifier);
+              authNotifier.setAppUser(authNotifier.patient!);
+              ToastMessage().showSuccess("Logged in successfully");
+              goToPatientHome();
+            } else {
+              await _auth.signOut();
+              ToastMessage().showError("User does not exist");
+            }
+          } else {
+            if (user != null) {
+              authNotifier.patient!.uid = user.uid;
+              await PatientAuth().setPatientDetails(authNotifier);
+              await LocalStorage.saveUser(authNotifier);
+              authNotifier.setAppUser(authNotifier.patient!);
+              ToastMessage().showSuccess("Logged in successfully");
+              goToPatientHome();
+            } else {
+              await _auth.signOut();
+              ToastMessage().showError("User does not exist");
+            }
+          }
+        } catch (e) {
+          ToastMessage().showError(e.toString());
         }
       }
     }
@@ -67,60 +95,64 @@ class _VerificationPageState extends State<VerificationPage> {
               horizontal: 10,
               vertical: 5,
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                const SizedBox(
-                  height: 120,
-                ),
-                SvgPicture.asset(
-                  'assets/illustrations/forgot_pass.svg',
-                  height: svgHeight,
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  'Enter Verification Code',
-                  style: Theme.of(context).textTheme.headlineMedium,
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  '''Enter code that we have sent to your email''',
-                  style: Theme.of(context).textTheme.labelMedium,
-                  textAlign: TextAlign.center,
-                ),
-                Text(
-                  "${userEmail.substring(0, 2)}********@gmail.com",
-                  style: Theme.of(context).textTheme.titleSmall,
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                OtpWidget(otpController: _otpController),
-                const SizedBox(
-                  height: 20,
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      GestureDetector(onTap: goBack, child: const LeftButton()),
-                      GestureDetector(
-                          onTap: submitForm,
-                          child: const RightButton(text: 'Verify')),
-                    ],
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const SizedBox(
+                    height: 120,
                   ),
-                ),
-                const SizedBox(
-                  height: 20,
-                )
-              ],
+                  SvgPicture.asset(
+                    'assets/illustrations/forgot_pass.svg',
+                    height: svgHeight,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    'Enter Verification Code',
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    '''Enter code that we have sent to your phone number''',
+                    style: Theme.of(context).textTheme.labelMedium,
+                    textAlign: TextAlign.center,
+                  ),
+                  Text(
+                    authNotifier.appUser!.phone!,
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  OtpWidget(otpController: _otpController),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 30, vertical: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        GestureDetector(
+                            onTap: goBack, child: const LeftButton()),
+                        GestureDetector(
+                            onTap: submitForm,
+                            child: const RightButton(text: 'Verify')),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  )
+                ],
+              ),
             ),
           ),
         ],

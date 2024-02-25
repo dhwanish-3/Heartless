@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:heartless/backend/constants.dart';
 import 'package:heartless/services/exceptions/app_exceptions.dart';
 import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/shared/models/patient.dart';
@@ -15,7 +15,6 @@ class PatientAuth {
   final _patientRef = FirebaseFirestore.instance.collection('Patients');
   static const Duration _timeLimit = Duration(seconds: 10);
   String? _otp;
-  String? _verificationId;
 
   // get patient using email
   Future<bool> getPatientDetailswithEmail(
@@ -135,79 +134,6 @@ class PatientAuth {
   }
 
   /* Authentication */
-  Future<bool> signInWithPhoneCredential(
-      {required AuthNotifier authNotifier,
-      String? otp,
-      PhoneAuthCredential? credential}) async {
-    try {
-      PhoneAuthCredential createdCredential = credential ??
-          PhoneAuthProvider.credential(
-            verificationId: _verificationId!,
-            smsCode: otp ?? (throw UnAutherizedException()),
-          );
-      await _auth.signInWithCredential(createdCredential).then((value) async {
-        if (value.user != null) {
-          if (await getPatientDetailswithPhone(
-              authNotifier, value.user!.phoneNumber!)) {
-            authNotifier.setLoggedIn(true);
-            authNotifier.setUserType(UserType.patient);
-            authNotifier.setAppUser(authNotifier.patient!);
-          } else {
-            authNotifier.setPatient(Patient());
-            authNotifier.patient!.uid = value.user!.uid;
-            authNotifier.patient!.name = authNotifier.patient!.name;
-            await setPatientDetails(authNotifier).timeout(_timeLimit);
-            authNotifier.setLoggedIn(true);
-            authNotifier.setUserType(UserType.patient);
-            authNotifier.setAppUser(authNotifier.patient!);
-          }
-        }
-      });
-      _verificationId = null;
-      return true;
-    } on FirebaseAuthException {
-      throw UnAutherizedException();
-    } on SocketException {
-      throw FetchDataException('No Internet Connection');
-    } on TimeoutException {
-      throw ApiNotRespondingException('Server is not responding');
-    }
-  }
-
-  // phone sign in
-  Future<PhoneAuth> phoneSignIn(AuthNotifier authNotifier) async {
-    PhoneAuth returnValue = PhoneAuth.pending;
-    try {
-      await _auth.verifyPhoneNumber(
-        phoneNumber: authNotifier.patient!.phone!,
-        verificationCompleted: (PhoneAuthCredential credential) async {
-          await signInWithPhoneCredential(
-              authNotifier: authNotifier, credential: credential);
-          returnValue = PhoneAuth.autoVerified;
-        },
-        verificationFailed: (FirebaseAuthException e) {
-          returnValue = PhoneAuth.verificationFailed;
-          throw UnAutherizedException();
-        },
-        codeSent: (String verificationId, int? resendToken) {
-          returnValue = PhoneAuth.codeSent;
-          // authNotifier.setVerificationId(verificationId);
-          _verificationId = verificationId;
-        },
-        codeAutoRetrievalTimeout: (String verificationId) {
-          returnValue = PhoneAuth.codeAutoRetrievalTimeOut;
-          // authNotifier.setVerificationId(verificationId);
-        },
-      );
-      return returnValue;
-    } on FirebaseAuthException {
-      throw UnAutherizedException();
-    } on SocketException {
-      throw FetchDataException('No Internet Connection');
-    } on TimeoutException {
-      throw ApiNotRespondingException('Server is not responding');
-    }
-  }
 
   // google sign in
   Future<bool> googleSignIn(AuthNotifier authNotifier) async {
