@@ -1,8 +1,6 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:heartless/widgets/log/diary_model.dart';
-import 'package:heartless/shared/models/app_user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Structure {

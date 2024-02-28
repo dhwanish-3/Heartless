@@ -97,6 +97,7 @@ class _SignUpPageState extends State<SignUpPage> {
       if (alreadyExists) {
         authNotifier.setAppUser(AppUser());
         ToastMessage().showError("User already exists. Please login");
+        widgetNotifier.setLoading(false);
         return;
       }
       _auth.verifyPhoneNumber(
@@ -109,6 +110,7 @@ class _SignUpPageState extends State<SignUpPage> {
               await AuthService().setUserDetails(authNotifier);
               await LocalStorage.saveUser(authNotifier);
               ToastMessage().showSuccess("Logged in successfully");
+              widgetNotifier.setLoading(false);
               goHome();
             } else {
               await _auth.signOut();
@@ -117,9 +119,11 @@ class _SignUpPageState extends State<SignUpPage> {
           } catch (e) {
             ToastMessage().showError(e.toString());
           }
+          widgetNotifier.setLoading(false);
         },
         verificationFailed: (FirebaseAuthException e) {
           ToastMessage().showError("Verification failed");
+          widgetNotifier.setLoading(false);
         },
         codeSent: (String verificationId, int? resendToken) {
           Navigator.push(
@@ -130,9 +134,11 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
             ),
           );
+          widgetNotifier.setLoading(false);
         },
         codeAutoRetrievalTimeout: (String verificationId) {
           ToastMessage().showError("Code auto retrieval timeout");
+          widgetNotifier.setLoading(false);
         },
       );
     }
@@ -144,7 +150,6 @@ class _SignUpPageState extends State<SignUpPage> {
         _phoneFormKey.currentState!.save();
         widgetNotifier.setLoading(true);
         await loginWithPhone(_phoneNumber);
-        widgetNotifier.setLoading(false);
       }
     }
 

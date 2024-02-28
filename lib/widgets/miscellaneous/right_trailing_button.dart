@@ -13,8 +13,6 @@ class RightButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    WidgetNotifier widgetNotifier =
-        Provider.of<WidgetNotifier>(context, listen: false);
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Container(

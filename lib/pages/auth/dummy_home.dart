@@ -2,14 +2,11 @@ import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:heartless/backend/controllers/doctor_controller.dart';
-import 'package:heartless/backend/controllers/nurse_controller.dart';
-import 'package:heartless/backend/controllers/patient_controller.dart';
+import 'package:heartless/backend/controllers/auth_controller.dart';
 import 'package:heartless/main.dart';
 import 'package:heartless/pages/auth/scan_qr_page.dart';
 import 'package:heartless/pages/chat/contacts_page.dart';
 import 'package:heartless/services/local_storage/local_storage.dart';
-import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -21,19 +18,15 @@ class DummyHome extends StatefulWidget {
 }
 
 class _DummyHomeState extends State<DummyHome> {
+  final AuthController _authController = AuthController();
   @override
   Widget build(BuildContext context) {
     AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
+
+    // ! logout function
     void logout() async {
-      if (authNotifier.userType == UserType.patient) {
-        await PatientController().logout(authNotifier);
-      } else if (authNotifier.userType == UserType.doctor) {
-        await DoctorController()
-            .logout(authNotifier); // todo: implement doctor logout
-      } else if (authNotifier.userType == UserType.nurse) {
-        await NurseController().logout(authNotifier);
-      }
+      await _authController.logout(authNotifier);
       await LocalStorage.clearUser();
       if (context.mounted) {
         // ! ensure that the widget is mounted before navigating

@@ -11,9 +11,6 @@ class SingleUserType extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AuthNotifier authNotifier =
-        Provider.of<AuthNotifier>(context, listen: false);
-    double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     double containerWidth = isSelected ? width * 0.7 : width * 0.6;
     double imageHeight = isSelected ? 75 : 60;
