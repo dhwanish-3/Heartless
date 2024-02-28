@@ -3,6 +3,8 @@ class RouteNames {
   static const String splash = '/';
   static const String choosUserType = '/chooseUserType';
 
+  static const String home = '/home';
+
   // * auth routes
   // login Signup toggle
   static const String loginOrSignup = '/loginOrSignup';

@@ -1,3 +1,7 @@
+import 'package:heartless/shared/models/doctor.dart';
+import 'package:heartless/shared/models/nurse.dart';
+import 'package:heartless/shared/models/patient.dart';
+
 enum UserType { patient, nurse, doctor }
 
 // convert enum to string
@@ -65,5 +69,30 @@ class AppUser {
       'isOnline': isOnline,
       'lastSeen': lastSeen.toString(),
     };
+  }
+
+  static dynamic getInstance(UserType userType) {
+    if (userType == UserType.patient) {
+      return Patient();
+    } else if (userType == UserType.nurse) {
+      return Nurse();
+    } else if (userType == UserType.doctor) {
+      return Doctor();
+    } else {
+      return AppUser();
+    }
+  }
+
+  static dynamic getInstanceFromMap(
+      UserType userType, Map<String, dynamic> map) {
+    if (userType == UserType.patient) {
+      return Patient.fromMap(map);
+    } else if (userType == UserType.nurse) {
+      return Nurse.fromMap(map);
+    } else if (userType == UserType.doctor) {
+      return Doctor.fromMap(map);
+    } else {
+      return AppUser.fromMap(map);
+    }
   }
 }

@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:heartless/backend/controllers/doctor_controller.dart';
 import 'package:heartless/backend/controllers/nurse_controller.dart';
 import 'package:heartless/backend/controllers/patient_controller.dart';
 import 'package:heartless/main.dart';
@@ -18,32 +21,32 @@ class DummyHome extends StatefulWidget {
 }
 
 class _DummyHomeState extends State<DummyHome> {
-  void logout() async {
-    AuthNotifier authNotifier =
-        Provider.of<AuthNotifier>(context, listen: false);
-    if (authNotifier.userType == UserType.patient) {
-      await PatientController().logout(authNotifier);
-    } else if (authNotifier.userType == UserType.doctor) {
-      // await DoctorController().logout(authNotifier); // todo: implement doctor logout
-    } else if (authNotifier.userType == UserType.nurse) {
-      await NurseController().logout(authNotifier);
-    }
-    await LocalStorage.clearUser();
-    if (context.mounted) {
-      // ! ensure that the widget is mounted before navigating
-      Navigator.pushNamed(context, '/login');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
+    void logout() async {
+      if (authNotifier.userType == UserType.patient) {
+        await PatientController().logout(authNotifier);
+      } else if (authNotifier.userType == UserType.doctor) {
+        await DoctorController()
+            .logout(authNotifier); // todo: implement doctor logout
+      } else if (authNotifier.userType == UserType.nurse) {
+        await NurseController().logout(authNotifier);
+      }
+      await LocalStorage.clearUser();
+      if (context.mounted) {
+        // ! ensure that the widget is mounted before navigating
+        Navigator.pushNamed(context, '/login');
+      }
+    }
+
     if (authNotifier.appUser == null) {
       return const Scaffold(
         body: Text("APP user is null"),
       );
     } else {
+      log((authNotifier.appUser!.imageUrl));
       return Scaffold(
         appBar: AppBar(
           title: const Text('Dummy Home'),
@@ -60,7 +63,10 @@ class _DummyHomeState extends State<DummyHome> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(30),
                   child: CachedNetworkImage(
-                    imageUrl: authNotifier.appUser!.imageUrl,
+                    imageUrl:
+                        Uri.parse(authNotifier.appUser!.imageUrl).isAbsolute
+                            ? authNotifier.appUser!.imageUrl
+                            : 'https://via.placeholder.com/150',
                     height: 52,
                     width: 52,
                     placeholder: (context, url) =>

@@ -34,6 +34,8 @@ class Routes {
       case RouteNames.resetPassword:
         return MaterialPageRoute(builder: (_) => const CreatePasswordPage());
 
+      case RouteNames.home:
+        return MaterialPageRoute(builder: (_) => const DummyHome());
       // ! Patient routes ! //
       case RouteNames.patientHome:
         return MaterialPageRoute(builder: (_) => const DummyHome());
