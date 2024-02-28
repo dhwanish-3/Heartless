@@ -90,7 +90,6 @@ class _LoginPageState extends State<LoginPage> {
     // patient login with phone
     Future<void> loginWithPhone() async {
       AppUser appUser = AppUser.getInstance(authNotifier.userType);
-      // Patient patient = Patient();
       appUser.phone = _phoneNumber;
       authNotifier.setAppUser(appUser);
       bool alreadyExists = await AuthService()
@@ -108,6 +107,8 @@ class _LoginPageState extends State<LoginPage> {
             if (user != null) {
               await LocalStorage.saveUser(authNotifier);
               ToastMessage().showSuccess("Logged in successfully");
+              widgetNotifier.setLoading(false);
+              goHome();
             } else {
               await _auth.signOut();
               ToastMessage().showError("User does not exist");
@@ -144,7 +145,6 @@ class _LoginPageState extends State<LoginPage> {
         widgetNotifier.setLoading(true);
         _phoneFormKey.currentState!.save();
         await loginWithPhone();
-        // widgetNotifier.setLoading(false);
       }
     }
 

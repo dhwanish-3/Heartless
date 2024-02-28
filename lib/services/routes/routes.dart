@@ -34,19 +34,15 @@ class Routes {
       case RouteNames.resetPassword:
         return MaterialPageRoute(builder: (_) => const CreatePasswordPage());
 
+      // * common routes * //
       case RouteNames.home:
         return MaterialPageRoute(builder: (_) => const DummyHome());
+
       // ! Patient routes ! //
-      case RouteNames.patientHome:
-        return MaterialPageRoute(builder: (_) => const DummyHome());
 
       // ! Nurse routes ! //
-      case RouteNames.nurseHome:
-        return MaterialPageRoute(builder: (_) => const DummyHome());
 
       // ! Doctor routes ! //
-      case RouteNames.doctorHome:
-        return MaterialPageRoute(builder: (_) => const DummyHome());
 
       default:
         return MaterialPageRoute(builder: (_) => Container());
