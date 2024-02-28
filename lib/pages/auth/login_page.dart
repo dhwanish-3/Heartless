@@ -1,16 +1,14 @@
 import "dart:developer";
-
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:flutter_svg/svg.dart";
 import "package:heartless/backend/controllers/auth_controller.dart";
-import "package:heartless/backend/services/auth/patient_auth.dart";
+import "package:heartless/backend/services/auth/auth.dart";
 import "package:heartless/main.dart";
 import "package:heartless/pages/auth/verification_page.dart";
 import "package:heartless/services/local_storage/local_storage.dart";
 import "package:heartless/services/utils/toast_message.dart";
 import 'package:heartless/shared/models/app_user.dart';
-import 'package:heartless/shared/models/patient.dart';
 import "package:heartless/shared/provider/auth_notifier.dart";
 import "package:heartless/shared/constants.dart";
 import "package:heartless/widgets/auth/email_phone_toggle.dart";
@@ -90,15 +88,16 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     // patient login with phone
-    Future<void> patientLoginWithPhone() async {
-      Patient patient = Patient();
-      patient.phone = _phoneNumber;
-      authNotifier.setPatient(patient);
-      authNotifier.setAppUser(patient);
-      bool alreadyExists = await PatientAuth()
-          .getPatientDetailswithPhone(authNotifier, _phoneNumber);
+    Future<void> loginWithPhone() async {
+      AppUser appUser = AppUser.getInstance(authNotifier.userType);
+      // Patient patient = Patient();
+      appUser.phone = _phoneNumber;
+      authNotifier.setAppUser(appUser);
+      bool alreadyExists = await AuthService()
+          .getUserDetailswithPhone(authNotifier, _phoneNumber);
       if (!alreadyExists) {
         ToastMessage().showError("User does not exist");
+        widgetNotifier.setLoading(false);
         return;
       }
       _auth.verifyPhoneNumber(
@@ -107,7 +106,6 @@ class _LoginPageState extends State<LoginPage> {
           try {
             User? user = (await _auth.signInWithCredential(credential)).user;
             if (user != null) {
-              authNotifier.setAppUser(authNotifier.patient!);
               await LocalStorage.saveUser(authNotifier);
               ToastMessage().showSuccess("Logged in successfully");
             } else {
@@ -117,9 +115,11 @@ class _LoginPageState extends State<LoginPage> {
           } catch (e) {
             ToastMessage().showError(e.toString());
           }
+          widgetNotifier.setLoading(false);
         },
         verificationFailed: (FirebaseAuthException e) {
           ToastMessage().showError("Verification failed");
+          widgetNotifier.setLoading(false);
         },
         codeSent: (String verificationId, int? resendToken) {
           Navigator.push(
@@ -130,9 +130,11 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
           );
+          widgetNotifier.setLoading(false);
         },
         codeAutoRetrievalTimeout: (String verificationId) {
           ToastMessage().showError("Code auto retrieval timeout");
+          widgetNotifier.setLoading(false);
         },
       );
     }
@@ -141,16 +143,8 @@ class _LoginPageState extends State<LoginPage> {
       if (_phoneFormKey.currentState!.validate()) {
         widgetNotifier.setLoading(true);
         _phoneFormKey.currentState!.save();
-        if (authNotifier.userType == UserType.patient) {
-          await patientLoginWithPhone();
-          widgetNotifier.setLoading(false);
-        } else if (authNotifier.userType == UserType.nurse) {
-          // await nurseLoginWithPhone();
-          widgetNotifier.setLoading(false);
-        } else if (authNotifier.userType == UserType.doctor) {
-          // await doctorLoginWithPhone();
-          widgetNotifier.setLoading(false);
-        }
+        await loginWithPhone();
+        // widgetNotifier.setLoading(false);
       }
     }
 
