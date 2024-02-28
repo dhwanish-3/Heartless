@@ -2,7 +2,7 @@ import 'package:heartless/shared/models/app_user.dart';
 
 class Doctor extends AppUser {
   List<String> patients = []; // list of patients handled
-  List<String> doctors = []; // list of nurses reporting
+  List<String> nurses = []; // list of nurses reporting
 
   Doctor() {
     userType = UserType.doctor;
@@ -21,7 +21,7 @@ class Doctor extends AppUser {
     isOnline = map['isOnline'];
     lastSeen = DateTime.parse(map['lastSeen'] ?? DateTime.now());
     patients = map['patients'] is Iterable ? List.from(map['patients']) : [];
-    doctors = map['doctors'] is Iterable ? List.from(map['doctors']) : [];
+    nurses = map['nurses'] is Iterable ? List.from(map['nurses']) : [];
   }
 
   @override
@@ -37,7 +37,7 @@ class Doctor extends AppUser {
       'isOnline': isOnline,
       'lastSeen': lastSeen.toString(),
       'patients': patients,
-      'doctors': doctors,
+      'nurses': nurses,
     };
   }
 }

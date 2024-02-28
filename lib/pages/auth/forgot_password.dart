@@ -1,13 +1,8 @@
 import "package:flutter/material.dart";
 import "package:flutter_svg/svg.dart";
-import "package:heartless/backend/controllers/doctor_controller.dart";
-import "package:heartless/backend/controllers/nurse_controller.dart";
-import "package:heartless/backend/controllers/patient_controller.dart";
+import "package:heartless/backend/controllers/auth_controller.dart";
 import "package:heartless/main.dart";
 import 'package:heartless/shared/models/app_user.dart';
-import "package:heartless/shared/models/doctor.dart";
-import 'package:heartless/shared/models/nurse.dart';
-import 'package:heartless/shared/models/patient.dart';
 import "package:heartless/shared/provider/auth_notifier.dart";
 import "package:heartless/shared/provider/widget_provider.dart";
 import 'package:heartless/widgets/miscellaneous/left_trailing_button.dart';
@@ -25,10 +20,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
 
-  // for patient, nurse and doctor login purpose respectively
-  final PatientController _patientController = PatientController();
-  final NurseController _nurseController = NurseController();
-  final DoctorController _doctorController = DoctorController();
+  final AuthController _authController = AuthController();
 
   @override
   void dispose() {
@@ -56,43 +48,13 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     }
 
     // patient forgot password
-    void patientForgotPassword() async {
+    void forgotPassword() async {
       widgetNotifier.setLoading(true);
-      Patient patient = Patient();
-      patient.email = _emailController.text;
-      authNotifier.setPatient(patient);
+      AppUser appUser = AppUser.getInstance(authNotifier.userType);
+      appUser.email = _emailController.text;
+      authNotifier.setAppUser(appUser);
 
-      if (await _patientController.sendResetEmail(authNotifier)) {
-        // since verification by otp input is not yet functional user is redirected to login page
-        widgetNotifier.setLoading(false);
-        goToLoginPage();
-      } else {
-        // in case the sendResetEmail function returns false
-        widgetNotifier.setLoading(false);
-      }
-    }
-
-    void nurseForgotPassword() async {
-      widgetNotifier.setLoading(true);
-      Nurse nurse = Nurse();
-      nurse.email = _emailController.text;
-      authNotifier.setNurse(nurse);
-      if (await _nurseController.sendResetEmail(authNotifier)) {
-        // since verification by otp input is not yet functional user is redirected to login page
-        widgetNotifier.setLoading(false);
-        goToLoginPage();
-      } else {
-        // in case the sendResetEmail function returns false
-        widgetNotifier.setLoading(false);
-      }
-    }
-
-    void doctorForgotPassword() async {
-      widgetNotifier.setLoading(true);
-      Doctor doctor = Doctor();
-      doctor.email = _emailController.text;
-      authNotifier.setDoctor(doctor);
-      if (await _doctorController.sendResetEmail(authNotifier)) {
+      if (await _authController.sendResetEmail(authNotifier)) {
         // since verification by otp input is not yet functional user is redirected to login page
         widgetNotifier.setLoading(false);
         goToLoginPage();
@@ -105,13 +67,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     Future<void> submitForm() async {
       if (_formKey.currentState!.validate()) {
         _formKey.currentState!.save();
-        if (authNotifier.userType == UserType.patient) {
-          patientForgotPassword();
-        } else if (authNotifier.userType == UserType.nurse) {
-          nurseForgotPassword();
-        } else if (authNotifier.userType == UserType.doctor) {
-          doctorForgotPassword();
-        }
+        forgotPassword();
       }
     }
 

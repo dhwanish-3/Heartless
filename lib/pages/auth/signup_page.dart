@@ -1,17 +1,13 @@
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:flutter_svg/svg.dart";
-import "package:heartless/backend/controllers/doctor_controller.dart";
-import "package:heartless/backend/controllers/nurse_controller.dart";
-import "package:heartless/backend/controllers/patient_controller.dart";
+import "package:heartless/backend/controllers/auth_controller.dart";
 import "package:heartless/backend/services/auth/patient_auth.dart";
 import "package:heartless/main.dart";
 import "package:heartless/pages/auth/verification_page.dart";
 import "package:heartless/services/local_storage/local_storage.dart";
 import "package:heartless/services/utils/toast_message.dart";
 import 'package:heartless/shared/models/app_user.dart';
-import "package:heartless/shared/models/doctor.dart";
-import 'package:heartless/shared/models/nurse.dart';
 import 'package:heartless/shared/models/patient.dart';
 import "package:heartless/shared/constants.dart";
 import "package:heartless/shared/provider/auth_notifier.dart";
@@ -35,15 +31,12 @@ class _SignUpPageState extends State<SignUpPage> {
   final _phoneFormKey = GlobalKey<FormState>();
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  final AuthController _authController = AuthController();
+
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   String _phoneNumber = '';
-
-  // for patient, nurse and doctor login purpose respectively
-  final PatientController _patientController = PatientController();
-  final NurseController _nurseController = NurseController();
-  final DoctorController _doctorController = DoctorController();
 
   @override
   void dispose() {
@@ -67,57 +60,21 @@ class _SignUpPageState extends State<SignUpPage> {
       Navigator.pop(context);
     }
 
-    void goToPatientHome() {
-      Navigator.pushNamed(context, '/patientHome'); // todo : add correct name
-    }
-
-    void goToNurseHome() {
-      Navigator.pushNamed(context, '/nurseHome'); // todo : add correct name
-    }
-
-    void goToDoctorHome() {
-      Navigator.pushNamed(context, '/doctorHome'); // todo : add correct name
+    void goHome() {
+      Navigator.pushNamed(context, '/home');
     }
 
     // patient signup
-    Future<void> patientSignUp() async {
-      Patient patient = Patient();
-      patient.name = _nameController.text;
-      patient.email = _emailController.text;
-      patient.password = _passwordController.text;
-      authNotifier.setPatient(patient);
-      bool success = await _patientController.signUp(authNotifier);
+    Future<void> signUp() async {
+      AppUser appUser = AppUser.getInstance(authNotifier.userType);
+      appUser.name = _nameController.text;
+      appUser.email = _emailController.text;
+      appUser.password = _passwordController.text;
+      authNotifier.setAppUser(appUser);
+      bool success = await _authController.signUp(authNotifier);
       if (success && context.mounted) {
         await LocalStorage.saveUser(authNotifier);
-        goToPatientHome();
-      }
-    }
-
-    // nurse signup
-    Future<void> nurseSignUp() async {
-      Nurse nurse = Nurse();
-      nurse.name = _nameController.text;
-      nurse.email = _emailController.text;
-      nurse.password = _passwordController.text;
-      authNotifier.setNurse(nurse);
-      bool success = await _nurseController.signUp(authNotifier);
-      if (success && context.mounted) {
-        await LocalStorage.saveUser(authNotifier);
-        goToNurseHome();
-      }
-    }
-
-    // doctor signup
-    Future<void> doctorSignUp() async {
-      Doctor doctor = Doctor();
-      doctor.name = _nameController.text;
-      doctor.email = _emailController.text;
-      doctor.password = _passwordController.text;
-      authNotifier.setDoctor(doctor);
-      bool success = await _doctorController.signUp(authNotifier);
-      if (success && context.mounted) {
-        await LocalStorage.saveUser(authNotifier);
-        goToDoctorHome();
+        goHome();
       }
     }
 
@@ -125,16 +82,8 @@ class _SignUpPageState extends State<SignUpPage> {
       if (_formKey.currentState!.validate()) {
         widgetNotifier.setLoading(true);
         _formKey.currentState!.save();
-        if (authNotifier.userType == UserType.patient) {
-          await patientSignUp();
-          widgetNotifier.setLoading(false);
-        } else if (authNotifier.userType == UserType.nurse) {
-          await nurseSignUp();
-          widgetNotifier.setLoading(false);
-        } else if (authNotifier.userType == UserType.doctor) {
-          await doctorSignUp();
-          widgetNotifier.setLoading(false);
-        }
+        await signUp();
+        widgetNotifier.setLoading(false);
       }
     }
 
@@ -163,7 +112,7 @@ class _SignUpPageState extends State<SignUpPage> {
               await LocalStorage.saveUser(authNotifier);
               authNotifier.setAppUser(authNotifier.patient!);
               ToastMessage().showSuccess("Logged in successfully");
-              goToPatientHome();
+              goHome();
             } else {
               await _auth.signOut();
               ToastMessage().showError("Failed to login");
@@ -212,24 +161,10 @@ class _SignUpPageState extends State<SignUpPage> {
     }
 
     void googleSignIn() async {
-      if (authNotifier.userType == UserType.patient) {
-        bool success = await _patientController.googleSignIn(authNotifier);
-        if (success && context.mounted) {
-          await LocalStorage.saveUser(authNotifier);
-          goToPatientHome();
-        }
-      } else if (authNotifier.userType == UserType.nurse) {
-        bool success = await _nurseController.googleSignIn(authNotifier);
-        if (success && context.mounted) {
-          await LocalStorage.saveUser(authNotifier);
-          goToNurseHome();
-        }
-      } else if (authNotifier.userType == UserType.doctor) {
-        bool success = await _doctorController.googleSignIn(authNotifier);
-        if (success && context.mounted) {
-          await LocalStorage.saveUser(authNotifier);
-          goToDoctorHome();
-        }
+      bool success = await _authController.googleSignIn(authNotifier);
+      if (success && context.mounted) {
+        await LocalStorage.saveUser(authNotifier);
+        goHome();
       }
     }
 
