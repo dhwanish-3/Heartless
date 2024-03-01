@@ -3,11 +3,15 @@ import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:heartless/backend/controllers/auth_controller.dart';
+import 'package:heartless/backend/controllers/connect_users_controller.dart';
 import 'package:heartless/main.dart';
 import 'package:heartless/pages/auth/scan_qr_page.dart';
 import 'package:heartless/pages/chat/contacts_page.dart';
+import 'package:heartless/pages/schedule/create_task_page.dart';
 import 'package:heartless/services/local_storage/local_storage.dart';
+import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
+import 'package:heartless/shared/provider/widget_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class DummyHome extends StatefulWidget {
@@ -19,6 +23,46 @@ class DummyHome extends StatefulWidget {
 
 class _DummyHomeState extends State<DummyHome> {
   final AuthController _authController = AuthController();
+
+  List<AppUser> users = []; // list of patients
+
+  @override
+  void initState() {
+    WidgetNotifier widgetNotifier =
+        Provider.of<WidgetNotifier>(context, listen: false);
+    AuthNotifier authNotifier =
+        Provider.of<AuthNotifier>(context, listen: false);
+    if (authNotifier.userType == UserType.patient) {
+      ConnectUsersController.getAllUsersConnectedToPatient(
+              authNotifier.appUser!.uid)
+          .then((value) {
+        log(value.toString());
+        setState(() {
+          users = value;
+        });
+      });
+    } else if (authNotifier.userType == UserType.doctor) {
+      ConnectUsersController.getAllUsersConnectedToDoctor(
+              authNotifier.appUser!.uid)
+          .then((value) {
+        log(value.toString());
+        setState(() {
+          users = value;
+        });
+      });
+    } else if (authNotifier.userType == UserType.nurse) {
+      ConnectUsersController.getAllUsersConnectedToNurse(
+              authNotifier.appUser!.uid)
+          .then((value) {
+        log(value.toString());
+        setState(() {
+          users = value;
+        });
+      });
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     AuthNotifier authNotifier =
@@ -97,7 +141,33 @@ class _DummyHomeState extends State<DummyHome> {
                           MaterialPageRoute(builder: (_) => const ScanQR()));
                     },
                     child: const Text('Scan QR')),
-                ElevatedButton(onPressed: logout, child: const Text('Logout')),
+                Column(
+                  children: [
+                    SizedBox(
+                      height: 200,
+                      child: ListView.builder(
+                        itemCount: users.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          AppUser user = users[index];
+                          return ListTile(
+                            title: Text(user.name),
+                            leading: CircleAvatar(
+                              backgroundImage: NetworkImage(user.imageUrl),
+                            ),
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => TaskFormPage(
+                                            patient: user,
+                                          )));
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
                 ElevatedButton(
                     onPressed: () {
                       Navigator.push(
@@ -106,6 +176,7 @@ class _DummyHomeState extends State<DummyHome> {
                               builder: (context) => const ContactsPage()));
                     },
                     child: const Text('Chats')),
+                ElevatedButton(onPressed: logout, child: const Text('Logout')),
               ],
             ),
           ),
