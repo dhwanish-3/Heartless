@@ -29,34 +29,13 @@ class _DummyHomeState extends State<DummyHome> {
   void initState() {
     AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
-    if (authNotifier.userType == UserType.patient) {
-      ConnectUsersController.getAllUsersConnectedToPatient(
-              authNotifier.appUser!.uid)
-          .then((value) {
-        log(value.toString());
-        setState(() {
-          users = value;
-        });
+    ConnectUsersController.getAllPatientsHandledByUser(
+            authNotifier.appUser!.uid, authNotifier.appUser!.userType)
+        .then((value) {
+      setState(() {
+        users = value;
       });
-    } else if (authNotifier.userType == UserType.doctor) {
-      ConnectUsersController.getAllUsersConnectedToDoctor(
-              authNotifier.appUser!.uid)
-          .then((value) {
-        log(value.toString());
-        setState(() {
-          users = value;
-        });
-      });
-    } else if (authNotifier.userType == UserType.nurse) {
-      ConnectUsersController.getAllUsersConnectedToNurse(
-              authNotifier.appUser!.uid)
-          .then((value) {
-        log(value.toString());
-        setState(() {
-          users = value;
-        });
-      });
-    }
+    });
     super.initState();
   }
 
@@ -140,7 +119,7 @@ class _DummyHomeState extends State<DummyHome> {
                     child: const Text('Scan QR')),
                 Column(
                   children: [
-                    const Text('Connected Users'),
+                    const Text('List of patients (tap to view profile)'),
                     SizedBox(
                       height: 200,
                       child: ListView.builder(

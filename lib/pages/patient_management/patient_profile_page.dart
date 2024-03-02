@@ -1,31 +1,8 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:heartless/backend/controllers/connect_users_controller.dart';
-import 'package:heartless/main.dart';
 import 'package:heartless/shared/constants.dart';
 import 'package:heartless/shared/models/app_user.dart';
-import 'package:heartless/shared/provider/auth_notifier.dart';
 import 'package:heartless/widgets/patient_management/person_info.dart';
-
-//! to be fetched from backend
-const supervisorList = [
-  {
-    "imageUrl":
-        'https://media.licdn.com/dms/image/D5603AQEbspLobZAZcw/profile-displayphoto-shrink_800_800/0/1687762033709?e=1714003200&v=beta&t=CaFKqrEJGIgBpEjdiDncwpVXIBtWkkar2pmgzjB_Wzs',
-    "name": 'Dr. John Doe'
-  },
-  {
-    "imageUrl":
-        'https://media.licdn.com/dms/image/D5603AQEbspLobZAZcw/profile-displayphoto-shrink_800_800/0/1687762033709?e=1714003200&v=beta&t=CaFKqrEJGIgBpEjdiDncwpVXIBtWkkar2pmgzjB_Wzs',
-    "name": 'Rn. Shelly Anissa'
-  },
-  {
-    "imageUrl":
-        'https://media.licdn.com/dms/image/D5603AQEbspLobZAZcw/profile-displayphoto-shrink_800_800/0/1687762033709?e=1714003200&v=beta&t=CaFKqrEJGIgBpEjdiDncwpVXIBtWkkar2pmgzjB_Wzs',
-    "name": 'Dr. Kunal Nair'
-  }
-];
 
 class PatientProfilePage extends StatefulWidget {
   final AppUser patient;
@@ -40,27 +17,12 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
 
   @override
   void initState() {
-    AuthNotifier authNotifier =
-        Provider.of<AuthNotifier>(context, listen: false);
-    if (authNotifier.userType == UserType.doctor) {
-      ConnectUsersController.getAllUsersConnectedToDoctor(
-              authNotifier.appUser!.uid)
-          .then((value) {
-        log(value.toString());
-        setState(() {
-          supervisors = value;
-        });
+    ConnectUsersController.getAllUsersConnectedToPatient(widget.patient.uid)
+        .then((value) {
+      setState(() {
+        supervisors = value;
       });
-    } else if (authNotifier.userType == UserType.nurse) {
-      ConnectUsersController.getAllUsersConnectedToNurse(
-              authNotifier.appUser!.uid)
-          .then((value) {
-        log(value.toString());
-        setState(() {
-          supervisors = value;
-        });
-      });
-    }
+    });
     super.initState();
   }
 
