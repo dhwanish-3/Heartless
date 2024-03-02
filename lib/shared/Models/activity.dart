@@ -1,42 +1,13 @@
-enum Status { completed, upcoming, missed }
-
-enum Type { medicine, excercise, diet }
-
-// Convert Status enum to String
-String statusToString(Status status) {
-  switch (status) {
-    case Status.completed:
-      return 'Completed';
-    case Status.upcoming:
-      return 'Upcoming';
-    case Status.missed:
-      return 'Missed';
-    default:
-      return 'Unknown';
-  }
-}
-
-// Convert Type enum to String
-String typeToString(Type type) {
-  switch (type) {
-    case Type.medicine:
-      return 'Medicine';
-    case Type.excercise:
-      return 'Excercise';
-    case Type.diet:
-      return 'Diet';
-    default:
-      return 'Unknown';
-  }
-}
+import 'package:heartless/services/enums/activity_status.dart';
+import 'package:heartless/services/enums/activity_type.dart';
 
 class Activity {
   String id = '';
   String name = '';
   DateTime time = DateTime.now();
   String description = '';
-  Status status = Status.upcoming;
-  Type type = Type.medicine;
+  ActivityStatus status = ActivityStatus.upcoming;
+  ActivityType type = ActivityType.medicine;
   String patientId = '';
 
   Activity();
@@ -46,8 +17,8 @@ class Activity {
     name = map['name'];
     time = map['time'].toDate(); // Convert Timestamp to DateTime
     description = map['description'];
-    status = Status.values[map['status']];
-    type = Type.values[map['type']];
+    status = ActivityStatus.values[map['status']];
+    type = ActivityType.values[map['type']];
     patientId = map['patientId'];
   }
 

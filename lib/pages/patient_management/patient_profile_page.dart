@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:heartless/backend/controllers/chat_controller.dart';
 import 'package:heartless/backend/controllers/connect_users_controller.dart';
+import 'package:heartless/main.dart';
+import 'package:heartless/pages/analytics/analytics_page.dart';
+import 'package:heartless/pages/chat/chat_page.dart';
+import 'package:heartless/pages/log/medical_log_page.dart';
+import 'package:heartless/pages/schedule/schedule_page.dart';
 import 'package:heartless/shared/constants.dart';
 import 'package:heartless/shared/models/app_user.dart';
+import 'package:heartless/shared/models/chat.dart';
+import 'package:heartless/shared/provider/auth_notifier.dart';
 import 'package:heartless/widgets/patient_management/person_info.dart';
 
 class PatientProfilePage extends StatefulWidget {
@@ -42,7 +50,9 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
               const SizedBox(
                 height: 20,
               ),
-              const ControlPanel(),
+              ControlPanel(
+                patient: widget.patient,
+              ),
               const SizedBox(
                 height: 20,
               ),
@@ -147,12 +157,35 @@ class SupervisorTile extends StatelessWidget {
 }
 
 class ControlPanel extends StatelessWidget {
+  final AppUser patient;
   const ControlPanel({
     super.key,
+    required this.patient,
   });
 
   @override
   Widget build(BuildContext context) {
+    AuthNotifier authNotifier =
+        Provider.of<AuthNotifier>(context, listen: false);
+
+    // navigate to chat page
+    void goToChat(ChatRoom chatRoom, AppUser chatUser) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                ChatPage(chatRoom: chatRoom, chatUser: chatUser),
+          ));
+    }
+
+    void createNewChat(AppUser user) async {
+      ChatRoom? chatRoom =
+          await ChatController().createChatRoom(authNotifier, user);
+      if (chatRoom != null) {
+        goToChat(chatRoom, user);
+      }
+    }
+
     return Container(
         // height: height * 0.3,
         margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -171,115 +204,119 @@ class ControlPanel extends StatelessWidget {
                 textAlign: TextAlign.start,
                 style: Theme.of(context).textTheme.headlineMedium),
             const SizedBox(
-              height: 4,
+              height: 10,
             ),
-            const Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  RowImages(
-                    imageUrl1: 'assets/Icons/schedule.png',
-                    imageUrl2: 'assets/Icons/charts.png',
-                    text1: 'Schedule',
-                    text2: 'Analytics',
+            SizedBox(
+              height: 230,
+              child: GridView(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    childAspectRatio: 1.5,
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  RowImages(
-                    imageUrl1: 'assets/Icons/chat.png',
-                    imageUrl2: 'assets/Icons/diary.png',
-                    text1: 'Chat',
-                    text2: 'Health Log',
-                  ),
-                  SizedBox(height: 10),
-                ])
+                  children: [
+                    PanelCard(
+                      imageUrl: 'assets/Icons/schedule.png',
+                      text: 'Schedule',
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SchedulePage(
+                                      patient: patient,
+                                    )));
+                      },
+                    ),
+                    PanelCard(
+                      imageUrl: 'assets/Icons/charts.png',
+                      text: 'Analytics',
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const AnalyticsPage()));
+                      },
+                    ),
+                    PanelCard(
+                        imageUrl: 'assets/Icons/chat.png',
+                        text: 'Chat',
+                        onTap: () {
+                          createNewChat(patient);
+                        }),
+                    PanelCard(
+                      imageUrl: 'assets/Icons/diary.png',
+                      text: 'Health Log',
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => const MedicalLogPage()));
+                      },
+                    ),
+                  ]),
+            )
           ],
         ));
-  }
-}
-
-class RowImages extends StatelessWidget {
-  final String imageUrl1;
-  final String imageUrl2;
-  final String text1;
-  final String text2;
-  const RowImages({
-    super.key,
-    required this.imageUrl1,
-    required this.imageUrl2,
-    required this.text1,
-    required this.text2,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        PanelCard(
-          imageUrl: imageUrl1,
-          text: text1,
-        ),
-        PanelCard(
-          imageUrl: imageUrl2,
-          text: text2,
-        ),
-      ],
-    );
   }
 }
 
 class PanelCard extends StatelessWidget {
   final String imageUrl;
   final String text;
+  final Function() onTap;
   const PanelCard({
     super.key,
     required this.imageUrl,
     required this.text,
+    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        height: 140,
-        width: 150,
-        decoration: BoxDecoration(
-          color: Constants.lightPrimaryColor,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: Theme.of(context).brightness == Brightness.light
-                  ? Colors.grey
-                  : Colors.black,
-              spreadRadius: 1,
-              blurRadius: 1,
-              offset: const Offset(0, 3),
-            ),
-          ],
-        ),
-        child: Stack(
-          children: [
-            Align(
-              alignment: Alignment.center,
-              child: SizedBox(
-                height: 60,
-                child: Column(
-                  children: [
-                    Image.asset(
-                      imageUrl,
-                      height: 35,
-                    ),
-                    Text(text,
-                        style: const TextStyle(
-                          color: Colors.black,
-                        )
-                        // style: Theme.of(context).textTheme.bodySmall,
-                        )
-                  ],
-                ),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+          height: 140,
+          width: 150,
+          decoration: BoxDecoration(
+            color: Constants.lightPrimaryColor,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: Theme.of(context).brightness == Brightness.light
+                    ? Colors.grey
+                    : Colors.black,
+                spreadRadius: 1,
+                blurRadius: 1,
+                offset: const Offset(0, 3),
               ),
-            )
-          ],
-        ));
+            ],
+          ),
+          child: Stack(
+            children: [
+              Align(
+                alignment: Alignment.center,
+                child: SizedBox(
+                  height: 60,
+                  child: Column(
+                    children: [
+                      Image.asset(
+                        imageUrl,
+                        height: 35,
+                      ),
+                      Text(text,
+                          style: const TextStyle(
+                            color: Colors.black,
+                          )
+                          // style: Theme.of(context).textTheme.bodySmall,
+                          )
+                    ],
+                  ),
+                ),
+              )
+            ],
+          )),
+    );
   }
 }

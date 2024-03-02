@@ -1,51 +1,54 @@
 import 'package:flutter/material.dart';
+import 'package:heartless/services/enums/activity_status.dart';
+import 'package:heartless/services/enums/activity_type.dart';
 import 'package:heartless/shared/constants.dart';
+import 'package:heartless/shared/models/activity.dart';
+import 'package:intl/intl.dart';
 
 //* type :- medicine 0 : food 1 : exercise 2
 //* status :- active 0: done 1: missed 2
 
-class Reminder extends StatelessWidget {
-  final String title;
-  final String description;
-  final String time;
-  final int type;
-  final int status;
+class ReminderCard extends StatelessWidget {
+  final Activity activity;
 
   //! to be taken from provider
   final bool isPatient = true;
-  const Reminder(
-      {super.key,
-      required this.title,
-      required this.description,
-      required this.time,
-      required this.type,
-      this.status = 0});
+  const ReminderCard({super.key, required this.activity});
 
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double containerWidth = 0.9 * screenWidth;
-    String buttonUrl = (status == 0)
+    String buttonUrl = (activity.status == ActivityStatus.upcoming)
         ? 'assets/Icons/bell.png'
-        : (status == 1)
+        : (activity.status == ActivityStatus.completed)
             ? 'assets/Icons/tick2.png'
             : 'assets/Icons/wrong.png';
-    String trailLabel = (status == 0) ? 'Swipe right to mark as done >>' : '';
-    String imageUrl = (type == 0)
+    String trailLabel = (activity.status == ActivityStatus.upcoming)
+        ? 'Swipe right to mark as done >>'
+        : '';
+    String imageUrl = (activity.type == ActivityType.medicine)
         ? 'assets/Icons/med2.png'
-        : type == 1
+        : activity.type == ActivityType.diet
             ? 'assets/Icons/food2.png'
-            : type == 2
+            : activity.type == ActivityType.excercise
                 ? 'assets/Icons/exercise.png'
                 : 'assets/Icons/exercise.png';
-    Color bgColor = type == 0
+    Color bgColor = activity.type == ActivityType.medicine
         ? Constants.medColor
-        : type == 1
+        : activity.type == ActivityType.diet
             ? Constants.foodColor
-            : type == 2
+            : activity.type == ActivityType.excercise
                 ? Constants.exerciseColor
                 : Constants.exerciseColor;
     // bgColor = Constants.primaryColor.withOpacity(0.1);
+
+    // formatting the time to show in the chat with Oct 11, 20023 10:00 AM/PM format
+    String formattedTime(DateTime time) {
+      DateFormat formatter = DateFormat('MMM d, yyyy hh:mm a');
+      return formatter.format(time);
+    }
+
     return Container(
       height: 85,
       width: containerWidth,
@@ -98,7 +101,7 @@ class Reminder extends StatelessWidget {
                           SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
                             child: Text(
-                              title,
+                              activity.name,
                               textAlign: TextAlign.left,
                               // style: Theme.of(context).textTheme.bodyLarge,
                               style: const TextStyle(
@@ -110,7 +113,7 @@ class Reminder extends StatelessWidget {
                           ),
                           SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
-                            child: Text(description,
+                            child: Text(activity.description,
                                 textAlign: TextAlign.left,
                                 style: const TextStyle(
                                   color: Colors.black,
@@ -147,7 +150,7 @@ class Reminder extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      time,
+                      formattedTime(activity.time),
                       // style: Theme.of(context).textTheme.headlineSmall,
                       style: const TextStyle(
                         color: Colors.white,

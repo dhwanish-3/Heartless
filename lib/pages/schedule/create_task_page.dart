@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'dart:developer';
 import 'package:heartless/backend/controllers/activity_controller.dart';
-import 'package:heartless/main.dart';
+import 'package:heartless/services/enums/activity_status.dart';
+import 'package:heartless/services/enums/activity_type.dart';
 import 'package:heartless/services/utils/toast_message.dart';
 import 'package:heartless/shared/constants.dart';
 import 'package:heartless/shared/models/activity.dart';
 import 'package:heartless/shared/models/app_user.dart';
-import 'package:heartless/shared/provider/widget_provider.dart';
 import 'package:heartless/widgets/auth/text_input.dart';
 import 'package:heartless/widgets/schedule/date_picker_button.dart';
 import 'package:heartless/widgets/schedule/time_picker_button.dart';
@@ -48,8 +47,8 @@ class _TaskFormPageState extends State<TaskFormPage> {
     Activity activity = Activity();
     activity.name = _titleController.text;
     activity.description = _descriptionController.text;
-    activity.type = Type.medicine;
-    activity.status = Status.upcoming;
+    activity.type = ActivityType.medicine;
+    activity.status = ActivityStatus.upcoming;
     activity.patientId = widget.patient.uid;
 
     // add activity from start date to end date
@@ -69,8 +68,6 @@ class _TaskFormPageState extends State<TaskFormPage> {
 
   @override
   Widget build(BuildContext context) {
-    WidgetNotifier widgetNotifier =
-        Provider.of<WidgetNotifier>(context, listen: false);
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(

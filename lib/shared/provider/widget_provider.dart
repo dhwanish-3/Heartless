@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:heartless/services/enums/schedule_toggle_type.dart';
 import 'package:heartless/widgets/log/diary_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -42,10 +43,18 @@ class WidgetNotifier with ChangeNotifier {
     notifyListeners();
   }
 
-  int _toggleSelectionIndex = 0;
-  int get toggleSelectionIndex => _toggleSelectionIndex;
-  void changeToggleSelection(int index) {
-    _toggleSelectionIndex = index;
+  ScheduleToggleType _scheduleToggleType = ScheduleToggleType.all;
+  ScheduleToggleType get scheduleToggleType => _scheduleToggleType;
+  void changeToggleSelection(ScheduleToggleType scheduleToggleType) {
+    _scheduleToggleType = scheduleToggleType;
+    notifyListeners();
+  }
+
+  // date selected in the schedule page
+  DateTime _selectedDate = DateTime.now();
+  DateTime get selectedDate => _selectedDate;
+  void setSelectedDate(DateTime date) {
+    _selectedDate = date;
     notifyListeners();
   }
 
