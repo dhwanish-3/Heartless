@@ -2,6 +2,22 @@ import 'package:heartless/backend/services/misc/connect_users.dart';
 import 'package:heartless/shared/models/app_user.dart';
 
 class ConnectUsersController {
+  // Method to get all patients handled by a nurse or doctor
+  static Future<List<AppUser>> getAllPatientsHandledByUser(
+      String userId, UserType userType) async {
+    List<AppUser> patients = [];
+    if (userType == UserType.doctor) {
+      await ConnectUsers.getDoctorPatients(userId).then((value) {
+        patients.addAll(value);
+      });
+    } else if (userType == UserType.nurse) {
+      await ConnectUsers.getNursePatients(userId).then((value) {
+        patients.addAll(value);
+      });
+    }
+    return patients;
+  }
+
   // Method to get all nurses and doctors related to a patient
   static Future<List<AppUser>> getAllUsersConnectedToPatient(
       String patientId) async {
