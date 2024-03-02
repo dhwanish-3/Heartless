@@ -1,8 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter_svg/svg.dart";
-import "package:heartless/backend/controllers/patient_controller.dart";
 import "package:heartless/main.dart";
-import "package:heartless/shared/provider/auth_notifier.dart";
 import "package:heartless/shared/provider/theme_provider.dart";
 import 'package:heartless/widgets/miscellaneous/left_trailing_button.dart';
 import 'package:heartless/widgets/miscellaneous/right_trailing_button.dart';
@@ -18,7 +16,6 @@ class CreatePasswordPage extends StatefulWidget {
 }
 
 class _CreatePasswordPageState extends State<CreatePasswordPage> {
-  final PatientController _patientController = PatientController();
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
@@ -39,7 +36,6 @@ class _CreatePasswordPageState extends State<CreatePasswordPage> {
     WidgetNotifier widgetNotifier =
         Provider.of<WidgetNotifier>(context, listen: false);
     final themeProvider = Provider.of<ThemeNotifier>(context);
-    AuthNotifier authNotifier = Provider.of<AuthNotifier>(context);
 
     void goBack() {
       Navigator.pop(
@@ -60,11 +56,7 @@ class _CreatePasswordPageState extends State<CreatePasswordPage> {
           );
         }
         _formKey.currentState!.save();
-        bool success = await _patientController.setNewPassword(
-            authNotifier, _passwordController.text);
-        if (success) {
-          goToLoginPage();
-        }
+        goToLoginPage();
       }
     }
 

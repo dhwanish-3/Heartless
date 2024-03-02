@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:heartless/main.dart';
+import 'package:heartless/backend/controllers/activity_controller.dart';
+import 'package:heartless/services/enums/activity_status.dart';
+import 'package:heartless/services/enums/activity_type.dart';
+import 'package:heartless/services/utils/toast_message.dart';
 import 'package:heartless/shared/constants.dart';
-import 'package:heartless/shared/provider/widget_provider.dart';
+import 'package:heartless/shared/models/activity.dart';
+import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/widgets/auth/text_input.dart';
 import 'package:heartless/widgets/schedule/date_picker_button.dart';
 import 'package:heartless/widgets/schedule/time_picker_button.dart';
 
 class TaskFormPage extends StatefulWidget {
-  const TaskFormPage({super.key});
+  final AppUser patient;
+  const TaskFormPage({super.key, required this.patient});
 
   @override
   State<TaskFormPage> createState() => _TaskFormPageState();
@@ -15,17 +20,54 @@ class TaskFormPage extends StatefulWidget {
 
 class _TaskFormPageState extends State<TaskFormPage> {
   final _formKey = GlobalKey<FormState>();
+  final ActivityController _activityController = ActivityController();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+
+  bool clicked = false;
+
   TimeOfDay _selectedTime = TimeOfDay.now();
   String dateDropDownValue = 'Specify a Period';
   String typeDropDownValue = 'Exercise';
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now();
+
+  void _submitForm() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+    // handling multiple clicks
+    if (clicked) {
+      ToastMessage().showError('Please wait for the previous task to complete');
+      return;
+    }
+    clicked = true;
+
+    // create activity
+    Activity activity = Activity();
+    activity.name = _titleController.text;
+    activity.description = _descriptionController.text;
+    activity.type = ActivityType.medicine;
+    activity.status = ActivityStatus.upcoming;
+    activity.patientId = widget.patient.uid;
+
+    // add activity from start date to end date
+    while (startDate.isBefore(endDate) || startDate.isAtSameMomentAs(endDate)) {
+      activity.time = DateTime(
+        startDate.year,
+        startDate.month,
+        startDate.day,
+        _selectedTime.hour,
+        _selectedTime.minute,
+      );
+      await _activityController.addActivity(activity);
+      startDate = startDate.add(const Duration(days: 1));
+    }
+    clicked = false;
+  }
+
   @override
   Widget build(BuildContext context) {
-    WidgetNotifier widgetNotifier =
-        Provider.of<WidgetNotifier>(context, listen: false);
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -43,11 +85,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
           ),
           actions: [
             IconButton(
-              onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  // widgetNotifier.setWidget(WidgetType.schedule);
-                }
-              },
+              onPressed: _submitForm,
               icon: const Icon(Icons.save),
             ),
           ],

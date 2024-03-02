@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:heartless/widgets/schedule/reminder_card.dart';
 
 class TestingPage extends StatefulWidget {
   const TestingPage({super.key});
@@ -13,20 +12,8 @@ class _TestingPageState extends State<TestingPage> {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Reminder(
-            title: 'Paracetamol ',
-            description: "the best medicine out there",
-            time: '9:00 AM',
-            type: 0),
-        SizedBox(height: 20),
-        Reminder(
-            title: 'Paracetoamol',
-            description: "the best medicine out there",
-            time: '9:00 AM',
-            type: 0,
-            status: 2),
-      ])),
+        child: Text("Testing Page"),
+      ),
     );
   }
 }

@@ -36,8 +36,9 @@ class _ChatTileState extends State<ChatTile> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(30),
                 child: CachedNetworkImage(
-                  imageUrl:
-                      "https://i.pinimg.com/736x/64/81/22/6481225432795d8cdf48f0f85800cf66.jpg",
+                  imageUrl: Uri.parse(widget.imageUrl).isAbsolute
+                      ? widget.imageUrl
+                      : "https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png",
                   height: 52,
                   width: 52,
                   placeholder: (context, url) =>

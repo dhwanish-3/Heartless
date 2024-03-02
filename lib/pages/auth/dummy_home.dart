@@ -1,10 +1,13 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:heartless/backend/controllers/nurse_controller.dart';
-import 'package:heartless/backend/controllers/patient_controller.dart';
+import 'package:heartless/backend/controllers/auth_controller.dart';
+import 'package:heartless/backend/controllers/connect_users_controller.dart';
 import 'package:heartless/main.dart';
 import 'package:heartless/pages/auth/scan_qr_page.dart';
 import 'package:heartless/pages/chat/contacts_page.dart';
+import 'package:heartless/pages/patient_management/patient_profile_page.dart';
 import 'package:heartless/services/local_storage/local_storage.dart';
 import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
@@ -18,32 +21,45 @@ class DummyHome extends StatefulWidget {
 }
 
 class _DummyHomeState extends State<DummyHome> {
-  void logout() async {
+  final AuthController _authController = AuthController();
+
+  List<AppUser> users = []; // list of patients
+
+  @override
+  void initState() {
     AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
-    if (authNotifier.userType == UserType.patient) {
-      await PatientController().logout(authNotifier);
-    } else if (authNotifier.userType == UserType.doctor) {
-      // await DoctorController().logout(authNotifier); // todo: implement doctor logout
-    } else if (authNotifier.userType == UserType.nurse) {
-      await NurseController().logout(authNotifier);
-    }
-    await LocalStorage.clearUser();
-    if (context.mounted) {
-      // ! ensure that the widget is mounted before navigating
-      Navigator.pushNamed(context, '/login');
-    }
+    ConnectUsersController.getAllPatientsHandledByUser(
+            authNotifier.appUser!.uid, authNotifier.appUser!.userType)
+        .then((value) {
+      setState(() {
+        users = value;
+      });
+    });
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
+
+    // ! logout function
+    void logout() async {
+      await _authController.logout(authNotifier);
+      await LocalStorage.clearUser();
+      if (context.mounted) {
+        // ! ensure that the widget is mounted before navigating
+        Navigator.pushNamed(context, '/login');
+      }
+    }
+
     if (authNotifier.appUser == null) {
       return const Scaffold(
         body: Text("APP user is null"),
       );
     } else {
+      log((authNotifier.appUser!.imageUrl));
       return Scaffold(
         appBar: AppBar(
           title: const Text('Dummy Home'),
@@ -60,7 +76,10 @@ class _DummyHomeState extends State<DummyHome> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(30),
                   child: CachedNetworkImage(
-                    imageUrl: authNotifier.appUser!.imageUrl,
+                    imageUrl:
+                        Uri.parse(authNotifier.appUser!.imageUrl).isAbsolute
+                            ? authNotifier.appUser!.imageUrl
+                            : 'https://via.placeholder.com/150',
                     height: 52,
                     width: 52,
                     placeholder: (context, url) =>
@@ -98,7 +117,34 @@ class _DummyHomeState extends State<DummyHome> {
                           MaterialPageRoute(builder: (_) => const ScanQR()));
                     },
                     child: const Text('Scan QR')),
-                ElevatedButton(onPressed: logout, child: const Text('Logout')),
+                Column(
+                  children: [
+                    const Text('List of patients (tap to view profile)'),
+                    SizedBox(
+                      height: 200,
+                      child: ListView.builder(
+                        itemCount: users.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          AppUser user = users[index];
+                          return ListTile(
+                            title: Text(user.name),
+                            leading: CircleAvatar(
+                              backgroundImage: NetworkImage(user.imageUrl),
+                            ),
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => PatientProfilePage(
+                                            patient: user,
+                                          )));
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
                 ElevatedButton(
                     onPressed: () {
                       Navigator.push(
@@ -107,6 +153,7 @@ class _DummyHomeState extends State<DummyHome> {
                               builder: (context) => const ContactsPage()));
                     },
                     child: const Text('Chats')),
+                ElevatedButton(onPressed: logout, child: const Text('Logout')),
               ],
             ),
           ),

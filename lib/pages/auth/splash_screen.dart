@@ -25,7 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Future.delayed(const Duration(seconds: 3), () {
       SplashServices().hasLoggedIn(authNotifier).then((value) {
         if (value) {
-          Navigator.pushNamed(context, '/patientHome');
+          Navigator.pushNamed(context, '/home');
         } else {
           Navigator.pushNamed(context, '/chooseUserType');
         }
@@ -37,8 +37,6 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-      // resizeToAvoidBottomInset: false, //to prevent pixel overflow
-
       body: Stack(children: [
         Positioned(
           left: 0,

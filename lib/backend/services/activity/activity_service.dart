@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:heartless/backend/services/activity/date_service.dart';
+import 'package:heartless/services/enums/activity_status.dart';
 import 'package:heartless/services/exceptions/app_exceptions.dart';
 import 'package:heartless/shared/models/activity.dart';
 
@@ -20,7 +20,7 @@ class ActivityService {
           .doc(startOfWeek.toString())
           .collection('Activities')
           .doc(activityId)
-          .update({'status': Status.completed.index}).timeout(
+          .update({'status': ActivityStatus.completed.index}).timeout(
               DateService.timeLimit);
       return true;
     } on FirebaseAuthException {
@@ -141,7 +141,7 @@ class ActivityService {
           .collection("WeeklyData")
           .doc(startOfWeek.toString())
           .collection('Activities')
-          .where('status', isEqualTo: Status.upcoming.index)
+          .where('status', isEqualTo: ActivityStatus.upcoming.index)
           .where('time',
               isLessThan: Timestamp.fromDate(DateTime.now().add(const Duration(
                   minutes: -10)))) //! giving a buffer time of 10 minutes
@@ -158,7 +158,7 @@ class ActivityService {
               .doc(patientId)
               .collection("WeeklyData")
               .doc(element.id)
-              .update({'status': Status.missed.index}).timeout(
+              .update({'status': ActivityStatus.missed.index}).timeout(
                   DateService.timeLimit);
         }
       }
@@ -187,7 +187,7 @@ class ActivityService {
         .where('time',
             isLessThan:
                 Timestamp.fromDate(startOfDay.add(const Duration(days: 1))))
-        .where('status', isEqualTo: Status.completed.index)
+        .where('status', isEqualTo: ActivityStatus.completed.index)
         .snapshots();
   }
 
@@ -206,7 +206,7 @@ class ActivityService {
         .where('time',
             isLessThan:
                 Timestamp.fromDate(startOfDay.add(const Duration(days: 1))))
-        .where('status', isEqualTo: Status.upcoming.index)
+        .where('status', isEqualTo: ActivityStatus.upcoming.index)
         .snapshots();
   }
 
@@ -225,7 +225,7 @@ class ActivityService {
         .where('time',
             isLessThan:
                 Timestamp.fromDate(startOfDay.add(const Duration(days: 1))))
-        .where('status', isEqualTo: Status.missed.index)
+        .where('status', isEqualTo: ActivityStatus.missed.index)
         .snapshots();
   }
 

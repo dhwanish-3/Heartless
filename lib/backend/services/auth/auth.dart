@@ -5,25 +5,39 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:heartless/services/exceptions/app_exceptions.dart';
 import 'package:heartless/shared/models/app_user.dart';
-import 'package:heartless/shared/models/doctor.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
 
-class DoctorAuth {
+class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final _patientRef = FirebaseFirestore.instance.collection('Patients');
   final _doctorRef = FirebaseFirestore.instance.collection('Doctors');
-  static const Duration _timeLimit = Duration(seconds: 10);
-  String? _otp;
+  final _nurseRef = FirebaseFirestore.instance.collection('Nurses');
 
-  // get doctor using email
-  Future<bool> getDoctorDetailswithEmail(
+  static const Duration _timeLimit = Duration(seconds: 10);
+
+  // get collection reference
+  CollectionReference<Map<String, dynamic>> _getCollection(UserType userType) {
+    if (userType == UserType.patient) {
+      return _patientRef;
+    } else if (userType == UserType.doctor) {
+      return _doctorRef;
+    } else if (userType == UserType.nurse) {
+      return _nurseRef;
+    }
+    throw UnimplementedError();
+  }
+
+  // get user using email
+  Future<bool> getUserDetailswithEmail(
       AuthNotifier authNotifier, String email) async {
     try {
-      return await _doctorRef
+      return await _getCollection(authNotifier.userType)
           .where('email', isEqualTo: email)
           .get()
           .then((value) {
         if (value.docs.isNotEmpty) {
-          authNotifier.setDoctor(Doctor.fromMap(value.docs.first.data()));
+          authNotifier.setAppUser(AppUser.getInstanceFromMap(
+              authNotifier.userType, value.docs.first.data()));
           return true;
         } else {
           return false;
@@ -38,12 +52,41 @@ class DoctorAuth {
     }
   }
 
-  // get doctor details from firebase
-  Future<bool> getDoctorDetails(AuthNotifier authNotifier) async {
+  // get patient using phone number
+  Future<bool> getUserDetailswithPhone(
+      AuthNotifier authNotifier, String phone) async {
     try {
-      return await _doctorRef.doc(authNotifier.doctor!.uid).get().then((value) {
+      return await _getCollection(authNotifier.userType)
+          .where('phone', isEqualTo: phone)
+          .get()
+          .then((value) {
+        if (value.docs.isNotEmpty) {
+          authNotifier.setAppUser(AppUser.getInstanceFromMap(
+              authNotifier.userType, value.docs.first.data()));
+          return true;
+        } else {
+          return false;
+        }
+      }).timeout(_timeLimit);
+    } on FirebaseAuthException {
+      throw UnAutherizedException();
+    } on SocketException {
+      throw FetchDataException('No Internet Connection');
+    } on TimeoutException {
+      throw ApiNotRespondingException('Server is not responding');
+    }
+  }
+
+  // get patient details from firebase
+  Future<bool> getUserDetails(AuthNotifier authNotifier) async {
+    try {
+      return await _getCollection(authNotifier.userType)
+          .doc(authNotifier.appUser!.uid)
+          .get()
+          .then((value) {
         if (value.exists && value.data() != null) {
-          authNotifier.setDoctor(Doctor.fromMap(value.data()!));
+          authNotifier.setAppUser(
+              AppUser.getInstanceFromMap(authNotifier.userType, value.data()!));
           return true;
         } else {
           return false;
@@ -58,12 +101,12 @@ class DoctorAuth {
     }
   }
 
-  // set doctor details to firebase
-  Future<bool> setDoctorDetails(AuthNotifier authNotifier) async {
+  // set user details to firebase !requires that appUser to be assigned the instance of the user according to userType
+  Future<bool> setUserDetails(AuthNotifier authNotifier) async {
     try {
-      await _doctorRef
-          .doc(authNotifier.doctor!.uid)
-          .set(authNotifier.doctor!.toMap())
+      await _getCollection(authNotifier.userType)
+          .doc(authNotifier.appUser!.uid)
+          .set(authNotifier.appUser!.toMap())
           .timeout(_timeLimit);
       return true;
     } on FirebaseAuthException {
@@ -75,13 +118,14 @@ class DoctorAuth {
     }
   }
 
-  // initialize doctor
-  Future<bool> initializeDoctor(AuthNotifier authNotifier) async {
+  // initialize user !required to have authNotifier.userType set!
+  Future<bool> initializeUser(AuthNotifier authNotifier) async {
     try {
       User? user = _auth.currentUser;
       if (user != null) {
-        authNotifier.doctor!.uid = user.uid;
-        if (await getDoctorDetails(authNotifier)) {
+        authNotifier.setAppUser(AppUser());
+        authNotifier.appUser!.uid = user.uid;
+        if (await getUserDetails(authNotifier).timeout(_timeLimit)) {
           authNotifier.setLoggedIn(true);
           return true;
         } else {
@@ -118,24 +162,20 @@ class DoctorAuth {
 
       if (result.user != null) {
         // * check if the user already had an account
-        if (await getDoctorDetailswithEmail(
-            authNotifier, result.user!.email!)) {
+        if (await getUserDetailswithEmail(authNotifier, result.user!.email!)) {
           authNotifier.setLoggedIn(true);
-          authNotifier.setUserType(UserType.doctor);
-          authNotifier.setAppUser(authNotifier.doctor!);
           return true;
         } else {
           // * if not then create a new account
-          authNotifier.setDoctor(Doctor());
-          authNotifier.doctor!.uid = result.user!.uid;
-          authNotifier.doctor!.email = result.user!.email!;
-          authNotifier.doctor!.name = result.user!.displayName!;
-          authNotifier.doctor!.imageUrl = result.user!.photoURL!;
-          bool success = await setDoctorDetails(authNotifier);
+          AppUser appUser = AppUser.getInstance(authNotifier.userType);
+          appUser.uid = result.user!.uid;
+          appUser.email = result.user!.email!;
+          appUser.name = result.user!.displayName!;
+          appUser.imageUrl = result.user!.photoURL!;
+          authNotifier.setAppUser(appUser);
+          bool success = await setUserDetails(authNotifier).timeout(_timeLimit);
           if (success) {
             authNotifier.setLoggedIn(true);
-            authNotifier.setUserType(UserType.doctor);
-            authNotifier.setAppUser(authNotifier.doctor!);
             return true;
           } else {
             await _auth.signOut();
@@ -154,23 +194,21 @@ class DoctorAuth {
     }
   }
 
-  // login for doctor
-  Future<bool> loginDoctor(AuthNotifier authNotifier) async {
+  // login ! requires authNotifier.appUser to be assigned the instance of the user according to userType
+  Future<bool> login(AuthNotifier authNotifier) async {
     try {
       await _auth
           .signInWithEmailAndPassword(
-              email: authNotifier.doctor!.email,
-              password: authNotifier.doctor!.password)
+              email: authNotifier.appUser!.email,
+              password: authNotifier.appUser!.password)
           .timeout(_timeLimit);
 
       User? user = _auth.currentUser;
       if (user != null) {
-        authNotifier.doctor!.uid = user.uid;
-        bool success = await getDoctorDetails(authNotifier).timeout(_timeLimit);
+        authNotifier.appUser!.uid = user.uid;
+        bool success = await getUserDetails(authNotifier).timeout(_timeLimit);
         if (success) {
           authNotifier.setLoggedIn(true);
-          authNotifier.setUserType(UserType.doctor);
-          authNotifier.setAppUser(authNotifier.doctor!);
           return true;
         } else {
           await _auth.signOut();
@@ -188,22 +226,20 @@ class DoctorAuth {
     }
   }
 
-  // signup for doctor
-  Future<bool> signUpDoctor(AuthNotifier authNotifier) async {
+  // signup ! requires authNotifier.appUser to be assigned the instance of the user according to userType
+  Future<bool> signUp(AuthNotifier authNotifier) async {
     try {
       await _auth
           .createUserWithEmailAndPassword(
-              email: authNotifier.doctor!.email,
-              password: authNotifier.doctor!.password)
-          .then((value) => authNotifier.doctor!.uid = value.user!.uid)
+              email: authNotifier.appUser!.email,
+              password: authNotifier.appUser!.password)
+          .then((value) => authNotifier.appUser!.uid = value.user!.uid)
           .timeout(_timeLimit);
       User? user = _auth.currentUser;
       if (user != null) {
-        bool success = await setDoctorDetails(authNotifier).timeout(_timeLimit);
+        bool success = await setUserDetails(authNotifier).timeout(_timeLimit);
         if (success) {
           authNotifier.setLoggedIn(true);
-          authNotifier.setUserType(UserType.doctor);
-          authNotifier.setAppUser(authNotifier.doctor!);
           return true;
         } else {
           await _auth // ! Let us hope that this never happens
@@ -222,12 +258,11 @@ class DoctorAuth {
     }
   }
 
-  // logout for doctor
-  Future<bool> logoutDoctor(AuthNotifier authNotifier) async {
+  // logout
+  Future<bool> logout(AuthNotifier authNotifier) async {
     try {
       await _auth.signOut().timeout(_timeLimit);
       authNotifier.setLoggedIn(false);
-      authNotifier.setDoctor(Doctor());
       authNotifier.setAppUser(AppUser());
       return true;
     } on FirebaseAuthException {
@@ -244,55 +279,9 @@ class DoctorAuth {
   Future<bool> sendPasswordResetEmail(AuthNotifier authNotifier) async {
     try {
       await _auth
-          .sendPasswordResetEmail(email: authNotifier.doctor!.email.toString())
+          .sendPasswordResetEmail(email: authNotifier.appUser!.email.toString())
           .timeout(_timeLimit);
       return true;
-    } on FirebaseAuthException {
-      throw UnAutherizedException();
-    } on SocketException {
-      throw FetchDataException('No Internet Connection');
-    } on TimeoutException {
-      throw ApiNotRespondingException('Server is not responding');
-    }
-  }
-
-  // verify otp
-  Future<bool> verifyOTP(AuthNotifier authNotifier, String code) async {
-    try {
-      //! Really do have a doubt on which method to use for verification
-      //! verifyPasswordResetCode or confirmPasswordReset
-      String email =
-          await _auth.verifyPasswordResetCode(code).timeout(_timeLimit);
-      if (email == authNotifier.doctor!.email) {
-        _otp = code; // saving it for later use
-        return true;
-      } else {
-        throw FirebaseAuthException;
-      }
-    } on FirebaseAuthException {
-      throw UnAutherizedException();
-    } on SocketException {
-      throw FetchDataException('No Internet Connection');
-    } on TimeoutException {
-      throw ApiNotRespondingException('Server is not responding');
-    }
-  }
-
-  // set new password
-  Future<bool> setNewPassword(
-      AuthNotifier authNotifier, String newPassword) async {
-    try {
-      if (_otp != null) {
-        await _auth
-            .confirmPasswordReset(code: _otp!, newPassword: newPassword)
-            .timeout(_timeLimit);
-
-        _otp = null; // clearing otp
-        authNotifier.doctor!.password = newPassword;
-        return true;
-      } else {
-        throw FirebaseAuthException;
-      }
     } on FirebaseAuthException {
       throw UnAutherizedException();
     } on SocketException {

@@ -7,7 +7,6 @@ import 'package:heartless/pages/chat/chat_page.dart';
 import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/shared/models/chat.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
-import 'package:heartless/shared/provider/widget_provider.dart';
 
 class SelectChatPage extends StatefulWidget {
   const SelectChatPage({super.key});
@@ -20,8 +19,6 @@ class _MyWidgetState extends State<SelectChatPage> {
   List<AppUser> users = []; // list of users to chat with
   @override
   void initState() {
-    WidgetNotifier widgetNotifier =
-        Provider.of<WidgetNotifier>(context, listen: false);
     AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
     if (authNotifier.userType == UserType.patient) {

@@ -1,11 +1,12 @@
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:flutter_svg/svg.dart";
-import "package:heartless/backend/services/auth/patient_auth.dart";
+import "package:heartless/backend/services/auth/auth.dart";
 import "package:heartless/main.dart";
 import "package:heartless/services/local_storage/local_storage.dart";
 import "package:heartless/services/utils/toast_message.dart";
 import "package:heartless/shared/provider/auth_notifier.dart";
+import "package:heartless/shared/provider/widget_provider.dart";
 import 'package:heartless/widgets/auth/otp_input_field.dart';
 import 'package:heartless/widgets/miscellaneous/left_trailing_button.dart';
 import 'package:heartless/widgets/miscellaneous/right_trailing_button.dart';
@@ -28,45 +29,49 @@ class _VerificationPageState extends State<VerificationPage> {
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     double svgHeight = 0.15 * screenHeight;
-    AuthNotifier authNotifier = Provider.of<AuthNotifier>(context);
+    AuthNotifier authNotifier =
+        Provider.of<AuthNotifier>(context, listen: false);
+    WidgetNotifier widgetNotifier =
+        Provider.of<WidgetNotifier>(context, listen: false);
 
     void goBack() {
       Navigator.pop(
           context); //! idk what happens if this is the first page i.e. nothing to pop
     }
 
-    void goToPatientHome() {
-      Navigator.pushNamed(context, '/patientHome'); // todo : add correct name
+    void goHome() {
+      Navigator.pushNamed(context, '/home'); // todo : add correct name
     }
 
     Future<void> submitForm() async {
       if (_formKey.currentState!.validate() && widget.verificationId != null) {
         _formKey.currentState!.save();
+        widgetNotifier.setLoading(true);
         try {
-          bool alreadyExists = await PatientAuth().getPatientDetailswithPhone(
-              authNotifier, authNotifier.patient!.phone!);
+          bool alreadyExists = await AuthService().getUserDetailswithPhone(
+              authNotifier, authNotifier.appUser!.phone!);
           PhoneAuthCredential credential = PhoneAuthProvider.credential(
-              verificationId: widget.verificationId ?? "Shit",
+              verificationId: widget.verificationId ?? "ERROR",
               smsCode: _otpController.text);
           User? user = (await _auth.signInWithCredential(credential)).user;
           if (alreadyExists) {
             if (user != null) {
               await LocalStorage.saveUser(authNotifier);
-              authNotifier.setAppUser(authNotifier.patient!);
               ToastMessage().showSuccess("Logged in successfully");
-              goToPatientHome();
+              widgetNotifier.setLoading(false);
+              goHome();
             } else {
               await _auth.signOut();
               ToastMessage().showError("User does not exist");
             }
           } else {
             if (user != null) {
-              authNotifier.patient!.uid = user.uid;
-              await PatientAuth().setPatientDetails(authNotifier);
+              authNotifier.appUser!.uid = user.uid;
+              await AuthService().setUserDetails(authNotifier);
               await LocalStorage.saveUser(authNotifier);
-              authNotifier.setAppUser(authNotifier.patient!);
               ToastMessage().showSuccess("Logged in successfully");
-              goToPatientHome();
+              widgetNotifier.setLoading(false);
+              goHome();
             } else {
               await _auth.signOut();
               ToastMessage().showError("User does not exist");
@@ -75,6 +80,7 @@ class _VerificationPageState extends State<VerificationPage> {
         } catch (e) {
           ToastMessage().showError(e.toString());
         }
+        widgetNotifier.setLoading(false);
       }
     }
 
@@ -124,7 +130,7 @@ class _VerificationPageState extends State<VerificationPage> {
                     textAlign: TextAlign.center,
                   ),
                   Text(
-                    authNotifier.appUser!.phone!,
+                    authNotifier.appUser!.phone ?? "**********",
                     style: Theme.of(context).textTheme.titleSmall,
                   ),
                   const SizedBox(
