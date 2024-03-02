@@ -1,72 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:heartless/backend/controllers/activity_controller.dart';
+import 'package:heartless/main.dart';
+import 'package:heartless/services/enums/schedule_toggle_type.dart';
+import 'package:heartless/shared/models/activity.dart';
+import 'package:heartless/shared/models/app_user.dart';
+import 'package:heartless/shared/provider/widget_provider.dart';
 import 'package:heartless/widgets/schedule/calendar.dart';
 import 'package:heartless/widgets/schedule/multi_toggle_panel.dart';
 import 'package:heartless/widgets/schedule/reminder_card.dart';
 
-const data = [
-  {
-    "time": "9:00 AM",
-    "title": "Paracetamol",
-    "description": "the best medicine out there",
-    "type": 0,
-    "status": 0
-  },
-  {
-    "time": "11:00 AM",
-    "title": "Cereal",
-    "type": 1,
-    "status": 0,
-    "description": "food is good",
-  },
-  {
-    "time": "9:00 PM",
-    "title": "Paracetamol",
-    "description": "the best medicine out there",
-    "type": 2,
-    "status": 0
-  },
-  {
-    "time": "11:00 PM",
-    "title": "Cereal",
-    "type": 1,
-    "status": 0,
-    "description": "Food is good for health",
-  },
-  {
-    "time": "11:00 AM",
-    "title": "Cereal",
-    "type": 1,
-    "status": 0,
-    "description": "food is good",
-  },
-  {
-    "time": "9:00 PM",
-    "title": "Paracetamol",
-    "description": "the best medicine out there",
-    "type": 2,
-    "status": 0
-  },
-  {
-    "time": "11:00 PM",
-    "title": "Cereal",
-    "type": 0,
-    "status": 1,
-    "description": "Food is good for health",
-  },
-  {
-    "time": "11:00 PM",
-    "title": "Cereal",
-    "type": 2,
-    "status": 2,
-    "description": "Food is good for health",
-  },
-];
-
 class SchedulePage extends StatelessWidget {
-  const SchedulePage({super.key});
+  final AppUser patient;
+  const SchedulePage({super.key, required this.patient});
 
   @override
   Widget build(BuildContext context) {
+    WidgetNotifier widgetNotifier = Provider.of<WidgetNotifier>(context);
+    Widget buildScheduleWidget(Activity activity) {
+      // if the toggle is not in all tab, then show the reminders of the selected type
+      if (widgetNotifier.scheduleToggleType != ScheduleToggleType.all) {
+        return widgetNotifier.scheduleToggleType.type == activity.type
+            ? Container(
+                margin:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+                child: ReminderCard(
+                  activity: activity,
+                ),
+              )
+            : Container();
+      } else {
+        return Container(
+          margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+          child: ReminderCard(
+            activity: activity,
+          ),
+        );
+      }
+    }
+
     return Scaffold(
       body: SafeArea(
           child: SingleChildScrollView(
@@ -75,26 +46,28 @@ class SchedulePage extends StatelessWidget {
             const HorizontalCalendar(),
             const SizedBox(height: 10),
             const MutltiToggle(),
-            // const MySlider(),
             const SizedBox(height: 20),
-            ListView.builder(
-              shrinkWrap: true,
-              itemCount: data.length,
-              physics: const NeverScrollableScrollPhysics(),
-              itemBuilder: (context, index) {
-                return Container(
-                  margin:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
-                  child: Reminder(
-                    title: data[index]['title'] as String,
-                    description: data[index]['description'] as String,
-                    time: data[index]['time'] as String,
-                    type: data[index]['type'] as int,
-                    status: data[index]['status'] as int,
-                  ),
-                );
-              },
-            ),
+            StreamBuilder(
+                stream: ActivityController.getAllActivitiesOfTheDate(
+                    widgetNotifier.selectedDate, patient.uid),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.hasData && snapshot.data.docs.isNotEmpty) {
+                    return ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: snapshot.data.docs.length,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          Activity activity = Activity.fromMap(
+                              snapshot.data.docs[index].data()
+                                  as Map<String, dynamic>);
+                          return buildScheduleWidget(activity);
+                        });
+                  } else {
+                    return const Center(
+                      child: Text("No reminders yet"),
+                    );
+                  }
+                }),
           ],
         ),
       )),
