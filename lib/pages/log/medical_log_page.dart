@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heartless/shared/constants.dart';
 import 'package:heartless/widgets/log/diary_list.dart';
 import 'package:heartless/widgets/log/medical_metrics.dart';
 
@@ -32,7 +33,9 @@ class MedicalLogPage extends StatelessWidget {
                 margin: const EdgeInsets.symmetric(horizontal: 30),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  color: Colors.grey.withOpacity(0.4),
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? Constants.cardColor
+                      : Constants.darkCardColor,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
