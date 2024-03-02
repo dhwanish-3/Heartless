@@ -1,5 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:heartless/backend/controllers/connect_users_controller.dart';
+import 'package:heartless/main.dart';
 import 'package:heartless/shared/constants.dart';
+import 'package:heartless/shared/models/app_user.dart';
+import 'package:heartless/shared/provider/auth_notifier.dart';
 import 'package:heartless/widgets/patient_management/person_info.dart';
 
 //! to be fetched from backend
@@ -21,13 +27,46 @@ const supervisorList = [
   }
 ];
 
-class PatientProfilePage extends StatelessWidget {
-  const PatientProfilePage({super.key});
+class PatientProfilePage extends StatefulWidget {
+  final AppUser patient;
+  const PatientProfilePage({super.key, required this.patient});
+
+  @override
+  State<PatientProfilePage> createState() => _PatientProfilePageState();
+}
+
+class _PatientProfilePageState extends State<PatientProfilePage> {
+  List<AppUser> supervisors = [];
+
+  @override
+  void initState() {
+    AuthNotifier authNotifier =
+        Provider.of<AuthNotifier>(context, listen: false);
+    if (authNotifier.userType == UserType.doctor) {
+      ConnectUsersController.getAllUsersConnectedToDoctor(
+              authNotifier.appUser!.uid)
+          .then((value) {
+        log(value.toString());
+        setState(() {
+          supervisors = value;
+        });
+      });
+    } else if (authNotifier.userType == UserType.nurse) {
+      ConnectUsersController.getAllUsersConnectedToNurse(
+              authNotifier.appUser!.uid)
+          .then((value) {
+        log(value.toString());
+        setState(() {
+          supervisors = value;
+        });
+      });
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    return const Scaffold(
+    return Scaffold(
         body: SafeArea(
       child: SingleChildScrollView(
         child: Column(
@@ -35,18 +74,21 @@ class PatientProfilePage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               PersonalInfoWidget(
-                name: 'Shelly Anissa',
-                imageUrl:
-                    'https://media.licdn.com/dms/image/D5603AQEbspLobZAZcw/profile-displayphoto-shrink_800_800/0/1687762033709?e=1714003200&v=beta&t=CaFKqrEJGIgBpEjdiDncwpVXIBtWkkar2pmgzjB_Wzs',
+                name: widget.patient.name,
+                imageUrl: widget.patient.imageUrl,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
-              ControlPanel(),
-              SizedBox(
+              const ControlPanel(),
+              const SizedBox(
                 height: 20,
               ),
-              SupervisorListContainer(),
+              supervisors.isNotEmpty
+                  ? SupervisorListContainer(
+                      supervisorList: supervisors,
+                    )
+                  : Container(),
             ]),
       ),
     ));
@@ -54,7 +96,8 @@ class PatientProfilePage extends StatelessWidget {
 }
 
 class SupervisorListContainer extends StatelessWidget {
-  const SupervisorListContainer({super.key});
+  final List<AppUser> supervisorList;
+  const SupervisorListContainer({super.key, required this.supervisorList});
 
   @override
   Widget build(BuildContext context) {
@@ -83,8 +126,8 @@ class SupervisorListContainer extends StatelessWidget {
               return Column(
                 children: [
                   SupervisorTile(
-                    imageUrl: supervisor['imageUrl'] as String,
-                    name: supervisor['name'] as String,
+                    imageUrl: supervisor.imageUrl,
+                    name: supervisor.name,
                   ),
                   const SizedBox(height: 10),
                 ],

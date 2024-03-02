@@ -7,11 +7,10 @@ import 'package:heartless/backend/controllers/connect_users_controller.dart';
 import 'package:heartless/main.dart';
 import 'package:heartless/pages/auth/scan_qr_page.dart';
 import 'package:heartless/pages/chat/contacts_page.dart';
-import 'package:heartless/pages/schedule/create_task_page.dart';
+import 'package:heartless/pages/patient_management/patient_profile_page.dart';
 import 'package:heartless/services/local_storage/local_storage.dart';
 import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
-import 'package:heartless/shared/provider/widget_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class DummyHome extends StatefulWidget {
@@ -28,8 +27,6 @@ class _DummyHomeState extends State<DummyHome> {
 
   @override
   void initState() {
-    WidgetNotifier widgetNotifier =
-        Provider.of<WidgetNotifier>(context, listen: false);
     AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
     if (authNotifier.userType == UserType.patient) {
@@ -143,6 +140,7 @@ class _DummyHomeState extends State<DummyHome> {
                     child: const Text('Scan QR')),
                 Column(
                   children: [
+                    const Text('Connected Users'),
                     SizedBox(
                       height: 200,
                       child: ListView.builder(
@@ -158,7 +156,7 @@ class _DummyHomeState extends State<DummyHome> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => TaskFormPage(
+                                      builder: (context) => PatientProfilePage(
                                             patient: user,
                                           )));
                             },
