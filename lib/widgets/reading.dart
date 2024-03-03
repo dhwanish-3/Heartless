@@ -40,7 +40,7 @@ class Reading extends StatelessWidget {
                   child: Text(
                     reading,
                     style: const TextStyle(
-                      fontSize: 26,
+                      fontSize: 20,
                       fontWeight: FontWeight.w800,
                       color: Constants.primaryColor,
                     ),
@@ -56,7 +56,7 @@ class Reading extends StatelessWidget {
                   comment,
                   textAlign: TextAlign.start,
                   style: TextStyle(
-                    fontSize: 15,
+                    fontSize: 12,
                     fontWeight: FontWeight.w500,
                     color: Theme.of(context).shadowColor,
                   ),
