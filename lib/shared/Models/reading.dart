@@ -20,8 +20,7 @@ class Reading {
   String patientId = '';
 
   Reading(
-      {required this.id,
-      required this.time,
+      {required this.time,
       required this.value,
       required this.unit,
       required this.comments,

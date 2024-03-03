@@ -1,9 +1,13 @@
 import 'package:calendar_slider/calendar_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:heartless/backend/controllers/reading_controller.dart';
 import 'package:heartless/main.dart';
+import 'package:heartless/services/utils/toast_message.dart';
 import 'package:heartless/shared/constants.dart';
+import 'package:heartless/shared/models/app_user.dart';
+import 'package:heartless/shared/models/reading.dart';
 import 'package:heartless/shared/provider/widget_provider.dart';
-import 'package:heartless/widgets/reading.dart';
+import 'package:heartless/widgets/reading_tile.dart';
 
 List<Map<String, String>> readings = [
   {
@@ -30,6 +34,7 @@ List<Map<String, String>> readings = [
 ];
 
 class DayWiseLog extends StatelessWidget {
+  final AppUser patient;
   final String unit; //mg/dL for glucose, kg for weight, bpm for heart rate
   final String label1;
   final String hintText1;
@@ -37,8 +42,10 @@ class DayWiseLog extends StatelessWidget {
   final int readingCount;
   final String label2;
   final String hintText2;
-  const DayWiseLog({
+
+  DayWiseLog({
     super.key,
+    required this.patient,
     required this.unit,
     this.readingCount = 1,
     this.label1 = 'Reading',
@@ -47,11 +54,38 @@ class DayWiseLog extends StatelessWidget {
     this.hintText2 = '72',
   });
 
-  void showFormDialog(BuildContext context) {
-    final formKey = GlobalKey<FormState>();
-    final entryController = TextEditingController();
-    final commentController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+  final TextEditingController _entryController = TextEditingController();
+  final TextEditingController _commentController = TextEditingController();
+  bool clicked = false;
 
+  // function called when submitting the form to add new reading/log
+  void _submitForm() async {
+    // todo: need for adding some kind of indicator that the form is being submitted
+    if (!formKey.currentState!.validate()) {
+      return;
+    }
+    // handling multiple clicks
+    if (clicked) {
+      ToastMessage().showError('Please wait for the previous task to complete');
+      return;
+    }
+    clicked = true;
+    // creating a new reading object
+    Reading reading = Reading(
+      time: DateTime.now(),
+      value: _entryController.text,
+      unit: unit,
+      comments: _commentController.text,
+      type: ReadingType.heartRate,
+      patientId: patient.uid,
+    );
+    await ReadingController().addReading(reading);
+    clicked = false;
+    // todo: turn off the indicator
+  }
+
+  void showFormDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (context) {
@@ -63,7 +97,7 @@ class DayWiseLog extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 TextFormField(
-                  controller: entryController,
+                  controller: _entryController,
                   decoration: InputDecoration(
                     labelText: '$label1 ($unit)',
                     hintText: hintText1,
@@ -92,7 +126,7 @@ class DayWiseLog extends StatelessWidget {
                   style: Theme.of(context)
                       .textTheme
                       .bodySmall, //!should see how it looks in actual mobile
-                  controller: commentController,
+                  controller: _commentController,
                   decoration: const InputDecoration(
                     labelText: 'Comment',
                   ),
@@ -108,15 +142,8 @@ class DayWiseLog extends StatelessWidget {
               },
             ),
             TextButton(
+              onPressed: _submitForm,
               child: const Text('Submit'),
-              onPressed: () {
-                print(entryController.text);
-                print(commentController.text);
-                // if (formKey.currentState.validate()) {
-                //   // Process data.
-                //   Navigator.of(context).pop();
-                // }
-              },
             ),
           ],
         );
@@ -127,6 +154,7 @@ class DayWiseLog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     WidgetNotifier widgetNotifier = Provider.of<WidgetNotifier>(context);
+    widgetNotifier.setSelectedDate(DateTime.now());
     return Scaffold(
         floatingActionButton: FloatingActionButton(
           onPressed: () {
@@ -153,26 +181,52 @@ class DayWiseLog extends StatelessWidget {
             widgetNotifier.setSelectedDate(date);
           },
         ),
-        body: SafeArea(
-            child: ListView.builder(
-          itemCount: readings.length,
-          itemBuilder: (context, index) {
-            return Column(
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 5,
-                  ),
-                  child: Reading(
-                    reading: readings[index]['reading'] as String,
-                    comment: readings[index]['comment'] as String,
-                    time: readings[index]['time'] as String,
-                  ),
-                ),
-              ],
-            );
-          },
-        )));
+        body: Column(
+          children: [
+            StreamBuilder(
+                stream: ReadingController.getAllReadingsOfTheDate(
+                    widgetNotifier.selectedDate, patient.uid),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.hasData && snapshot.data.docs.isNotEmpty) {
+                    return ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: snapshot.data.docs.length,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          Reading reading =
+                              Reading.fromMap(snapshot.data.docs[index].data());
+                          return ReadingTile(
+                            reading: reading.value,
+                            comment: reading.comments,
+                            time: reading.time.toString(),
+                          );
+                        });
+                  } else {
+                    return const Text("No reading available");
+                  }
+                })
+          ],
+        )
+        //  ListView.builder(
+        //   itemCount: readings.length,
+        //   itemBuilder: (context, index) {
+        //     return Column(
+        //       children: [
+        //         Container(
+        //           padding: const EdgeInsets.symmetric(
+        //             horizontal: 20,
+        //             vertical: 5,
+        //           ),
+        //           child: ReadingTile(
+        //             reading: readings[index]['reading'] as String,
+        //             comment: readings[index]['comment'] as String,
+        //             time: readings[index]['time'] as String,
+        //           ),
+        //         ),
+        //       ],
+        //     );
+        //   },
+        // )
+        );
   }
 }
