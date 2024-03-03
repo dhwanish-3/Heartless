@@ -45,7 +45,7 @@ class ReminderCard extends StatelessWidget {
 
     // formatting the time to show in the chat with Oct 11, 20023 10:00 AM/PM format
     String formattedTime(DateTime time) {
-      DateFormat formatter = DateFormat('MMM d, yyyy hh:mm a');
+      DateFormat formatter = DateFormat('hh:mm a');
       return formatter.format(time);
     }
 
