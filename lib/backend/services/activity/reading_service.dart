@@ -7,18 +7,18 @@ import 'package:heartless/services/exceptions/app_exceptions.dart';
 import 'package:heartless/shared/models/reading.dart';
 
 class ReadingService {
-  static final _dataRef = FirebaseFirestore.instance
-      .collection('Patients')
-      .doc(FirebaseAuth.instance.currentUser!.uid)
-      .collection("WeeklyData");
-
   // add a new reading
   static Future<void> addReading(Reading reading) async {
     try {
       DateTime startOfWeek = DateService.getStartOfWeekOfDate(reading.time);
       // getting the id of the new document
-      DocumentReference docRef =
-          _dataRef.doc(startOfWeek.toString()).collection("Readings").doc();
+      DocumentReference docRef = FirebaseFirestore.instance
+          .collection('Patients')
+          .doc(reading.patientId)
+          .collection("WeeklyData")
+          .doc(startOfWeek.toString())
+          .collection("Readings")
+          .doc();
       reading.id = docRef.id;
       // adding the reading to the database
       await docRef.set(reading.toMap()).timeout(DateService.timeLimit);
@@ -39,7 +39,10 @@ class ReadingService {
       }
       DateTime startOfWeek = DateService.getStartOfWeekOfDate(reading.time);
 
-      await _dataRef
+      await FirebaseFirestore.instance
+          .collection('Patients')
+          .doc(reading.patientId)
+          .collection("WeeklyData")
           .doc(startOfWeek.toString())
           .collection("Readings")
           .doc(reading.id)
@@ -62,7 +65,10 @@ class ReadingService {
       }
       DateTime startOfWeek = DateService.getStartOfWeekOfDate(reading.time);
 
-      await _dataRef
+      await FirebaseFirestore.instance
+          .collection('Patients')
+          .doc(reading.patientId)
+          .collection("WeeklyData")
           .doc(startOfWeek.toString())
           .collection("Readings")
           .doc(reading.id)
@@ -80,13 +86,14 @@ class ReadingService {
   // get all readings of a day
   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllReadingsOfTheDate(
       DateTime date, String patientId) {
+    DateTime startOfWeek = DateService.getStartOfWeekOfDate(date);
     DateTime startOfDay = DateService.getStartOfDay(date);
     DateTime endOfDay = startOfDay.add(const Duration(days: 1));
     return FirebaseFirestore.instance
         .collection('Patients')
         .doc(patientId)
         .collection('WeeklyData')
-        .doc(startOfDay.toString())
+        .doc(startOfWeek.toString())
         .collection('Readings')
         .where('time', isGreaterThanOrEqualTo: startOfDay)
         .where('time', isLessThan: endOfDay)

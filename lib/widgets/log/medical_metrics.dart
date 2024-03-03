@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:heartless/pages/log/daywise_log.dart';
 import 'package:heartless/shared/constants.dart';
+import 'package:heartless/shared/models/app_user.dart';
 
 class MedicalMetrics extends StatelessWidget {
-  const MedicalMetrics({super.key});
+  final AppUser patient;
+  const MedicalMetrics({super.key, required this.patient});
 
   @override
   Widget build(BuildContext context) {
@@ -26,50 +29,55 @@ class MedicalMetrics extends StatelessWidget {
             Text('  Medical Metrics',
                 textAlign: TextAlign.start,
                 style: Theme.of(context).textTheme.headlineMedium),
-            const RowImages(
-              imageUrl1: 'assets/Icons/heartRateCard.png',
-              imageUrl2: 'assets/Icons/bpCard.png',
+            SizedBox(
+              height: 320,
+              child: GridView(
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    childAspectRatio: 1,
+                  ),
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => DayWiseLog(
+                                      unit: 'WPM',
+                                      patient: patient,
+                                    )));
+                      },
+                      child: Expanded(
+                        child: Image.asset(
+                          'assets/Icons/heartRateCard.png',
+                          height: 150,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Image.asset(
+                        'assets/Icons/bpCard.png',
+                        height: 150,
+                      ),
+                    ),
+                    Expanded(
+                      child: Image.asset(
+                        'assets/Icons/weightCard.png',
+                        height: 150,
+                      ),
+                    ),
+                    Expanded(
+                      child: Image.asset(
+                        'assets/Icons/glucoseCard.png',
+                        height: 150,
+                      ),
+                    ),
+                  ]),
             ),
-            const SizedBox(
-              height: 10,
-            ),
-            const RowImages(
-              imageUrl1: 'assets/Icons/weightCard.png',
-              imageUrl2: 'assets/Icons/glucoseCard.png',
-            )
           ],
         ));
-  }
-}
-
-class RowImages extends StatelessWidget {
-  final String imageUrl1;
-  final String imageUrl2;
-  const RowImages({
-    super.key,
-    required this.imageUrl1,
-    required this.imageUrl2,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          flex: 1,
-          child: Image.asset(
-            imageUrl1,
-            height: 150,
-          ),
-        ),
-        Expanded(
-          flex: 1,
-          child: Image.asset(
-            imageUrl2,
-            height: 150,
-          ),
-        ),
-      ],
-    );
   }
 }

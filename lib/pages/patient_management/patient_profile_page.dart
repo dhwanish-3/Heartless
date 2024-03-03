@@ -195,7 +195,7 @@ class ControlPanel extends StatelessWidget {
               : Constants.darkCardColor,
           borderRadius: BorderRadius.circular(20),
         ),
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -207,13 +207,14 @@ class ControlPanel extends StatelessWidget {
               height: 10,
             ),
             SizedBox(
-              height: 230,
+              height: 330,
               child: GridView(
+                  physics: const NeverScrollableScrollPhysics(),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10,
-                    childAspectRatio: 1.5,
+                    childAspectRatio: 1,
                   ),
                   children: [
                     PanelCard(
@@ -251,7 +252,9 @@ class ControlPanel extends StatelessWidget {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (_) => const MedicalLogPage()));
+                                builder: (_) => MedicalLogPage(
+                                      patient: patient,
+                                    )));
                       },
                     ),
                   ]),

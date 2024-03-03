@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/shared/constants.dart';
+import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/widgets/log/diary_list.dart';
 import 'package:heartless/widgets/log/medical_metrics.dart';
 
 class MedicalLogPage extends StatelessWidget {
-  const MedicalLogPage({super.key});
+  final AppUser patient;
+  const MedicalLogPage({super.key, required this.patient});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +26,9 @@ class MedicalLogPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 10),
-              const MedicalMetrics(),
+              MedicalMetrics(
+                patient: patient,
+              ),
               const SizedBox(
                 height: 20,
               ),

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/shared/constants.dart';
 
-class Reading extends StatelessWidget {
+class ReadingTile extends StatelessWidget {
   final String comment;
   final String reading;
   final String time;
 
-  const Reading(
+  const ReadingTile(
       {super.key, this.comment = '', this.time = '', required this.reading});
 
   @override
