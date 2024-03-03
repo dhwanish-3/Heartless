@@ -1,11 +1,12 @@
+import 'package:calendar_slider/calendar_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:heartless/backend/controllers/activity_controller.dart';
 import 'package:heartless/main.dart';
 import 'package:heartless/services/enums/schedule_toggle_type.dart';
+import 'package:heartless/shared/constants.dart';
 import 'package:heartless/shared/models/activity.dart';
 import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/shared/provider/widget_provider.dart';
-import 'package:heartless/widgets/schedule/calendar.dart';
 import 'package:heartless/widgets/schedule/multi_toggle_panel.dart';
 import 'package:heartless/widgets/schedule/reminder_card.dart';
 
@@ -39,14 +40,36 @@ class SchedulePage extends StatelessWidget {
     }
 
     return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(180),
+        child: Column(
+          children: [
+            CalendarSlider(
+              //     // controller: calendarSliderController, //* controller is not needed here
+              selectedDayPosition: SelectedDayPosition.center,
+              fullCalendarWeekDay: WeekDay.short,
+              selectedTileBackgroundColor: Constants.primaryColor,
+              monthYearButtonBackgroundColor: Constants.cardColor,
+              monthYearTextColor: Colors.black,
+              tileBackgroundColor: Theme.of(context).cardColor,
+              selectedDateColor: Colors.white,
+              dateColor: Theme.of(context).shadowColor,
+              locale: 'en',
+              initialDate: widgetNotifier.selectedDate,
+              firstDate: DateTime.now().subtract(const Duration(days: 180)),
+              lastDate: DateTime.now().add(const Duration(days: 100)),
+              onDateSelected: (date) async {
+                widgetNotifier.setSelectedDate(date);
+              },
+            ),
+            const MutltiToggle(),
+          ],
+        ),
+      ),
       body: SafeArea(
           child: SingleChildScrollView(
         child: Column(
           children: [
-            const HorizontalCalendar(),
-            const SizedBox(height: 10),
-            const MutltiToggle(),
-            const SizedBox(height: 20),
             StreamBuilder(
                 stream: ActivityController.getAllActivitiesOfTheDate(
                     widgetNotifier.selectedDate, patient.uid),
