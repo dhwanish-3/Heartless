@@ -53,7 +53,7 @@ class WidgetNotifier with ChangeNotifier {
   // date selected in the schedule page
   DateTime _selectedDate = DateTime.now();
   DateTime get selectedDate => _selectedDate;
-  void setSelectedDate(DateTime date) {
+  Future<void> setSelectedDate(DateTime date) async {
     _selectedDate = date;
     notifyListeners();
   }

@@ -7,6 +7,7 @@ import 'package:heartless/shared/constants.dart';
 import 'package:heartless/shared/models/activity.dart';
 import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/shared/provider/widget_provider.dart';
+import 'package:heartless/widgets/schedule/calendar.dart';
 import 'package:heartless/widgets/schedule/multi_toggle_panel.dart';
 import 'package:heartless/widgets/schedule/reminder_card.dart';
 
@@ -45,7 +46,7 @@ class SchedulePage extends StatelessWidget {
         child: Column(
           children: [
             CalendarSlider(
-              //     // controller: calendarSliderController, //* controller is not needed here
+              // controller: calendarSliderController, //* controller is not needed here
               selectedDayPosition: SelectedDayPosition.center,
               fullCalendarWeekDay: WeekDay.short,
               selectedTileBackgroundColor: Constants.primaryColor,
@@ -55,11 +56,15 @@ class SchedulePage extends StatelessWidget {
               selectedDateColor: Colors.white,
               dateColor: Theme.of(context).shadowColor,
               locale: 'en',
-              initialDate: widgetNotifier.selectedDate,
+              initialDate: DateTime.now(),
               firstDate: DateTime.now().subtract(const Duration(days: 180)),
               lastDate: DateTime.now().add(const Duration(days: 100)),
-              onDateSelected: (date) async {
-                widgetNotifier.setSelectedDate(date);
+              onDateSelected: (date) {
+                //* choice to be made as to whether this be made as a stateful widget or be rebuilt with provider
+                // setState(() {
+                //   selectedDateAppBBar = date;
+                //   debugPrint(selectedDateAppBBar.toString());
+                // });
               },
             ),
             const MutltiToggle(),

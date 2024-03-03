@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heartless/shared/constants.dart';
 
 class MedicalMetrics extends StatelessWidget {
   const MedicalMetrics({super.key});
@@ -12,7 +13,9 @@ class MedicalMetrics extends StatelessWidget {
         width: width * 0.85,
         margin: const EdgeInsets.symmetric(horizontal: 30),
         decoration: BoxDecoration(
-          color: Colors.grey.withOpacity(0.4),
+          color: Theme.of(context).brightness == Brightness.light
+              ? Constants.cardColor
+              : Constants.darkCardColor,
           borderRadius: BorderRadius.circular(20),
         ),
         padding: const EdgeInsets.all(10.0),
