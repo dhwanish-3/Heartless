@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'package:heartless/backend/controllers/chat_controller.dart';
+import 'package:heartless/services/date/date_service.dart';
 import 'package:heartless/shared/models/app_user.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:heartless/main.dart';
 import 'package:heartless/shared/models/chat.dart';
@@ -48,12 +48,6 @@ class _ChatPageState extends State<ChatPage> {
       ChatController().deleteMessage(widget.chatRoom, message);
     }
 
-    // formatting the time to show in the chat with Oct 11, 20023 10:00 AM/PM format
-    String formattedTime(DateTime time) {
-      DateFormat formatter = DateFormat('MMM d, yyyy hh:mm a');
-      return formatter.format(time);
-    }
-
     final double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
         appBar: AppBar(
@@ -63,7 +57,7 @@ class _ChatPageState extends State<ChatPage> {
             Text(
               widget.chatUser.isOnline
                   ? "Online"
-                  : "Last seen ${formattedTime(widget.chatUser.lastSeen)}",
+                  : "Last seen ${DateService.getFormattedTimeWithAMPM(widget.chatUser.lastSeen)}",
               style: const TextStyle(fontSize: 12),
             ),
           ],
@@ -109,7 +103,8 @@ class _ChatPageState extends State<ChatPage> {
                                   message: message.message,
                                   isSender: message.senderId ==
                                       authNotifier.appUser!.uid,
-                                  time: formattedTime(message.time),
+                                  time: DateService.getFormattedTimeWithAMPM(
+                                      message.time),
                                 ),
                               ));
                         },

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:heartless/services/date/date_service.dart';
 import 'package:heartless/services/enums/activity_status.dart';
 import 'package:heartless/services/enums/activity_type.dart';
 import 'package:heartless/shared/constants.dart';
 import 'package:heartless/shared/models/activity.dart';
-import 'package:intl/intl.dart';
 
 //* type :- medicine 0 : food 1 : exercise 2
 //* status :- active 0: done 1: missed 2
@@ -42,12 +42,6 @@ class ReminderCard extends StatelessWidget {
                 ? Constants.exerciseColor
                 : Constants.exerciseColor;
     // bgColor = Constants.primaryColor.withOpacity(0.1);
-
-    // formatting the time to show in the chat with Oct 11, 20023 10:00 AM/PM format
-    String formattedTime(DateTime time) {
-      DateFormat formatter = DateFormat('hh:mm a');
-      return formatter.format(time);
-    }
 
     return Container(
       height: 85,
@@ -150,7 +144,7 @@ class ReminderCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      formattedTime(activity.time),
+                      DateService.getFormattedTimeWithAMPM(activity.time),
                       // style: Theme.of(context).textTheme.headlineSmall,
                       style: const TextStyle(
                         color: Colors.white,

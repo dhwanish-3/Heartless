@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:heartless/backend/services/activity/date_service.dart';
+import 'package:heartless/services/date/date_service.dart';
 import 'package:heartless/services/enums/activity_status.dart';
 import 'package:heartless/services/exceptions/app_exceptions.dart';
 import 'package:heartless/shared/models/activity.dart';
@@ -11,7 +11,7 @@ class ActivityService {
   // mark as completed
   Future<bool> markAsCompleted(String activityId, String patientId) async {
     // activity can be marked as completed only if it belongs to the current week
-    DateTime startOfWeek = DateService.getStartOfWeekOfDate(DateTime.now());
+    DateTime startOfWeek = DateService.getStartOfWeek(DateTime.now());
     try {
       await FirebaseFirestore.instance
           .collection('Patients')
@@ -35,7 +35,7 @@ class ActivityService {
   // to add an activity
   Future<Activity> addActivity(Activity activity) async {
     try {
-      DateTime startOfWeek = DateService.getStartOfWeekOfDate(activity.time);
+      DateTime startOfWeek = DateService.getStartOfWeek(activity.time);
       DocumentReference documentReference = FirebaseFirestore.instance
           .collection('Patients')
           .doc(activity.patientId)
@@ -64,7 +64,7 @@ class ActivityService {
       if (activity.id == '') {
         return false;
       }
-      DateTime startOfWeek = DateService.getStartOfWeekOfDate(activity.time);
+      DateTime startOfWeek = DateService.getStartOfWeek(activity.time);
       await FirebaseFirestore.instance
           .collection('Patients')
           .doc(activity.patientId)
@@ -90,7 +90,7 @@ class ActivityService {
       if (activity.id == '') {
         return false;
       }
-      DateTime startOfWeek = DateService.getStartOfWeekOfDate(activity.time);
+      DateTime startOfWeek = DateService.getStartOfWeek(activity.time);
       await FirebaseFirestore.instance
           .collection('Patients')
           .doc(activity.patientId)
@@ -113,7 +113,7 @@ class ActivityService {
   // to get all activities of the day
   static Stream<QuerySnapshot> getAllActivitiesOfTheDate(
       DateTime date, String patientId) {
-    DateTime startOfWeek = DateService.getStartOfWeekOfDate(date);
+    DateTime startOfWeek = DateService.getStartOfWeek(date);
     DateTime startOfDay = DateService.getStartOfDay(date);
     return FirebaseFirestore.instance
         .collection('Patients')
@@ -131,7 +131,7 @@ class ActivityService {
   // to get update the activity status according to the time
   static Future<bool> updateActivityStatus(String patientId) async {
     // get the Datetime with for the start of the week
-    DateTime startOfWeek = DateService.getStartOfWeekOfDate(DateTime.now());
+    DateTime startOfWeek = DateService.getStartOfWeek(DateTime.now());
 
     try {
       // get all the activities with status upcoming
@@ -175,7 +175,7 @@ class ActivityService {
   // to get all completed activities of the day
   static Stream<QuerySnapshot> getCompletedActivitiesOftheDay(
       DateTime dateTime, String patientId) {
-    DateTime startOfWeek = DateService.getStartOfWeekOfDate(dateTime);
+    DateTime startOfWeek = DateService.getStartOfWeek(dateTime);
     DateTime startOfDay = DateService.getStartOfDay(dateTime);
     return FirebaseFirestore.instance
         .collection('Patients')
@@ -194,7 +194,7 @@ class ActivityService {
   // to get all upcoming activities of the day
   static Stream<QuerySnapshot> getUpcomingActivitiesOftheDay(
       DateTime dateTime, String patientId) {
-    DateTime startOfWeek = DateService.getStartOfWeekOfDate(dateTime);
+    DateTime startOfWeek = DateService.getStartOfWeek(dateTime);
     DateTime startOfDay = DateService.getStartOfDay(dateTime);
     return FirebaseFirestore.instance
         .collection('Patients')
@@ -213,7 +213,7 @@ class ActivityService {
   // to get all missed activities of the day
   static Stream<QuerySnapshot> getMissedActivitiesOftheDay(
       DateTime dateTime, String patientId) {
-    DateTime startOfWeek = DateService.getStartOfWeekOfDate(dateTime);
+    DateTime startOfWeek = DateService.getStartOfWeek(dateTime);
     DateTime startOfDay = DateService.getStartOfDay(dateTime);
     return FirebaseFirestore.instance
         .collection('Patients')
@@ -232,7 +232,7 @@ class ActivityService {
   // to get all the activities for a given period
   static Stream<QuerySnapshot> getAllActivitiesForAWeek(
       DateTime date, String patientId) {
-    DateTime startOfWeek = DateService.getStartOfWeekOfDate(date);
+    DateTime startOfWeek = DateService.getStartOfWeek(date);
     return FirebaseFirestore.instance
         .collection('Patients')
         .doc(patientId)
