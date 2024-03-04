@@ -3,7 +3,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:heartless/main.dart';
 import 'package:heartless/shared/constants.dart';
 import 'package:heartless/widgets/log/cutom_rect.dart';
-import 'package:heartless/shared/models/diary_model.dart';
+import 'package:heartless/shared/models/diary.dart';
 import 'package:heartless/widgets/log/hero_dialog.dart';
 import 'package:heartless/shared/provider/widget_provider.dart';
 
@@ -47,31 +47,22 @@ class _DiaryListState extends State<DiaryList> {
         Diary(
             title: 'title',
             body: 'body this is the one',
-            dateCreated: DateTime.now()),
-        Diary(title: 'title', body: 'body', dateCreated: DateTime.now()),
+            time: DateTime.now(),
+            patientId: ''),
+        Diary(
+            title: 'title', body: 'body', time: DateTime.now(), patientId: ''),
         Diary(
             title: 'title',
             body: 'it wasdateCreated: a nice day today',
-            dateCreated: DateTime.now()),
-        Diary(title: 'title', body: 'body', dateCreated: DateTime.now()),
+            time: DateTime.now(),
+            patientId: ''),
+        Diary(
+            title: 'title', body: 'body', time: DateTime.now(), patientId: ''),
         Diary(
             title: 'title',
             body: 'food wdateCreated:as okay. Sleep got disturbed',
-            dateCreated: DateTime.now()),
-        Diary(title: 'title', body: 'body', dateCreated: DateTime.now()),
-        Diary(title: 'title', body: 'body', dateCreated: DateTime.now()),
-        Diary(title: 'title', body: 'body', dateCreated: DateTime.now()),
-        Diary(title: 'title', body: 'body', dateCreated: DateTime.now()),
-        Diary(title: 'title', body: 'body', dateCreated: DateTime.now()),
-        Diary(title: 'title', body: 'body', dateCreated: DateTime.now()),
-        Diary(title: 'title', body: 'body', dateCreated: DateTime.now()),
-        Diary(title: 'title', body: 'body', dateCreated: DateTime.now()),
-        Diary(title: 'title', body: 'body', dateCreated: DateTime.now()),
-        Diary(title: 'title', body: 'body', dateCreated: DateTime.now()),
-        Diary(title: 'title', body: 'body', dateCreated: DateTime.now()),
-        Diary(title: 'title', body: 'body', dateCreated: DateTime.now()),
-        Diary(title: 'title', body: 'body', dateCreated: DateTime.now()),
-        Diary(title: 'title', body: 'body', dateCreated: DateTime.now()),
+            time: DateTime.now(),
+            patientId: ''),
       ];
       double calculateHeight(int length) {
         if (length % 2 == 0) {
@@ -117,7 +108,7 @@ class _DiaryListState extends State<DiaryList> {
                       return CustomRectTween(
                           begin: begin as Rect, end: end as Rect);
                     },
-                    tag: diary.title + diary.dateCreated.toString(),
+                    tag: diary.title + diary.time.toString(),
                     child: Padding(
                       padding: const EdgeInsets.only(
                           left: 4.0, right: 4, bottom: 5, top: 5),
@@ -141,7 +132,7 @@ class _DiaryListState extends State<DiaryList> {
                               ),
                               const SizedBox(height: 2),
                               Text(
-                                diary.dateCreated.toString().substring(0, 10),
+                                diary.time.toString().substring(0, 10),
                                 style: TextStyle(
                                   color: Theme.of(context).canvasColor,
                                 ),
@@ -176,7 +167,7 @@ class DiaryPopCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Hero(
-      tag: diaryList[index].title + diaryList[index].dateCreated.toString(),
+      tag: diaryList[index].title + diaryList[index].time.toString(),
       createRectTween: (begin, end) {
         return CustomRectTween(begin: begin as Rect, end: end as Rect);
       },
@@ -201,8 +192,7 @@ class DiaryPopCard extends StatelessWidget {
                         hintText: 'Title',
                         border: InputBorder.none),
                   ),
-                  Text(
-                      diaryList[index].dateCreated.toString().substring(0, 10)),
+                  Text(diaryList[index].time.toString().substring(0, 10)),
                   Container(
                     constraints: const BoxConstraints(
                         maxHeight: 500,

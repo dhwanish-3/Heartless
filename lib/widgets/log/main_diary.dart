@@ -3,7 +3,7 @@ import 'package:heartless/main.dart';
 import 'package:heartless/widgets/log/add_button.dart';
 import 'package:heartless/widgets/log/cutom_rect.dart';
 import 'package:heartless/widgets/log/diary_list.dart';
-import 'package:heartless/shared/models/diary_model.dart';
+import 'package:heartless/shared/models/diary.dart';
 import 'package:heartless/widgets/log/hero_dialog.dart';
 import 'package:heartless/shared/provider/widget_provider.dart';
 
