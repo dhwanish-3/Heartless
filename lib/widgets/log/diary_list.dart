@@ -1,11 +1,9 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:heartless/main.dart';
 import 'package:heartless/shared/constants.dart';
 import 'package:heartless/widgets/log/cutom_rect.dart';
-import 'package:heartless/widgets/log/diary_model.dart';
+import 'package:heartless/shared/models/diary_model.dart';
 import 'package:heartless/widgets/log/hero_dialog.dart';
 import 'package:heartless/shared/provider/widget_provider.dart';
 
@@ -17,10 +15,9 @@ class DiaryList extends StatefulWidget {
 }
 
 class _DiaryListState extends State<DiaryList> {
+  List<Diary> diaryList = [];
   @override
   Widget build(BuildContext context) {
-    WidgetNotifier widgetNotifier =
-        Provider.of<WidgetNotifier>(context, listen: false);
     showPopUpDelete(Diary diary) {
       return showDialog(
           context: context,
@@ -39,39 +36,42 @@ class _DiaryListState extends State<DiaryList> {
                       Navigator.pop(context);
                     },
                     child: const Text('No')),
-                ElevatedButton(
-                    onPressed: () {
-                      widgetNotifier.deleteDiary(diary);
-                      Navigator.pop(context);
-                    },
-                    child: const Text('Yes'))
+                ElevatedButton(onPressed: () {}, child: const Text('Yes'))
               ],
             );
           });
     }
 
     return Consumer<WidgetNotifier>(builder: (context, value, child) {
-      // log(vajbkhvjhv.toString());
-      List<Diary> vajbkhvjhv = [
-        Diary('title', 'body this is the one', DateTime.now()),
-        Diary('title', 'body', DateTime.now()),
-        Diary('title', 'it was a nice day today', DateTime.now()),
-        Diary('title', 'body', DateTime.now()),
-        Diary('title', 'food was okay. Sleep got disturbed', DateTime.now()),
-        Diary('title', 'body', DateTime.now()),
-        Diary('title', 'body', DateTime.now()),
-        Diary('title', 'body', DateTime.now()),
-        Diary('title', 'body', DateTime.now()),
-        Diary('title', 'body', DateTime.now()),
-        Diary('title', 'body', DateTime.now()),
-        Diary('title', 'body', DateTime.now()),
-        Diary('title', 'body', DateTime.now()),
-        Diary('title', 'body', DateTime.now()),
-        Diary('title', 'body', DateTime.now()),
-        Diary('title', 'body', DateTime.now()),
-        Diary('title', 'body', DateTime.now()),
-        Diary('title', 'body', DateTime.now()),
-        Diary('title', 'body', DateTime.now()),
+      List<Diary> diaryList = [
+        Diary(
+            title: 'title',
+            body: 'body this is the one',
+            dateCreated: DateTime.now()),
+        Diary(title: 'title', body: 'body', dateCreated: DateTime.now()),
+        Diary(
+            title: 'title',
+            body: 'it wasdateCreated: a nice day today',
+            dateCreated: DateTime.now()),
+        Diary(title: 'title', body: 'body', dateCreated: DateTime.now()),
+        Diary(
+            title: 'title',
+            body: 'food wdateCreated:as okay. Sleep got disturbed',
+            dateCreated: DateTime.now()),
+        Diary(title: 'title', body: 'body', dateCreated: DateTime.now()),
+        Diary(title: 'title', body: 'body', dateCreated: DateTime.now()),
+        Diary(title: 'title', body: 'body', dateCreated: DateTime.now()),
+        Diary(title: 'title', body: 'body', dateCreated: DateTime.now()),
+        Diary(title: 'title', body: 'body', dateCreated: DateTime.now()),
+        Diary(title: 'title', body: 'body', dateCreated: DateTime.now()),
+        Diary(title: 'title', body: 'body', dateCreated: DateTime.now()),
+        Diary(title: 'title', body: 'body', dateCreated: DateTime.now()),
+        Diary(title: 'title', body: 'body', dateCreated: DateTime.now()),
+        Diary(title: 'title', body: 'body', dateCreated: DateTime.now()),
+        Diary(title: 'title', body: 'body', dateCreated: DateTime.now()),
+        Diary(title: 'title', body: 'body', dateCreated: DateTime.now()),
+        Diary(title: 'title', body: 'body', dateCreated: DateTime.now()),
+        Diary(title: 'title', body: 'body', dateCreated: DateTime.now()),
       ];
       double calculateHeight(int length) {
         if (length % 2 == 0) {
@@ -82,21 +82,20 @@ class _DiaryListState extends State<DiaryList> {
       }
 
       return SizedBox(
-        height: calculateHeight(vajbkhvjhv.length),
+        height: calculateHeight(diaryList.length),
         child: MasonryGridView.builder(
           physics: const NeverScrollableScrollPhysics(),
           // physics: const PageScrollPhysics(),
           gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
           ),
-          itemCount: vajbkhvjhv.length,
+          itemCount: diaryList.length,
           padding: const EdgeInsets.all(12),
           itemBuilder: (context, index) {
-            final diary = vajbkhvjhv[index];
+            final diary = diaryList[index];
             return GestureDetector(
               onDoubleTap: () {
                 showPopUpDelete(diary);
-                debugPrint(widgetNotifier.diaryList.toString());
               },
               onTap: () {
                 Navigator.of(context).push(
@@ -104,6 +103,7 @@ class _DiaryListState extends State<DiaryList> {
                     builder: (context) => Center(
                       child: DiaryPopCard(
                         index: index,
+                        diaryList: diaryList,
                       ),
                     ),
                   ),
@@ -167,25 +167,16 @@ class _DiaryListState extends State<DiaryList> {
 }
 
 class DiaryPopCard extends StatelessWidget {
+  final List<Diary> diaryList;
   final int index;
-  DiaryPopCard({super.key, required this.index});
+  DiaryPopCard({super.key, required this.index, required this.diaryList});
   final _diaryController = TextEditingController();
   final _titleController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    WidgetNotifier widgetNotifier =
-        Provider.of<WidgetNotifier>(context, listen: false);
-    _diaryController.text = widgetNotifier.diaryList![index].body != ''
-        ? widgetNotifier.diaryList![index].body
-        : _diaryController.text;
-    _titleController.text = widgetNotifier.diaryList![index].title != ''
-        ? widgetNotifier.diaryList![index].title
-        : _titleController.text;
-
     return Hero(
-      tag: widgetNotifier.diaryList![index].title +
-          widgetNotifier.diaryList![index].dateCreated.toString(),
+      tag: diaryList[index].title + diaryList[index].dateCreated.toString(),
       createRectTween: (begin, end) {
         return CustomRectTween(begin: begin as Rect, end: end as Rect);
       },
@@ -210,9 +201,8 @@ class DiaryPopCard extends StatelessWidget {
                         hintText: 'Title',
                         border: InputBorder.none),
                   ),
-                  Text(widgetNotifier.diaryList![index].dateCreated
-                      .toString()
-                      .substring(0, 10)),
+                  Text(
+                      diaryList[index].dateCreated.toString().substring(0, 10)),
                   Container(
                     constraints: const BoxConstraints(
                         maxHeight: 500,
@@ -237,17 +227,7 @@ class DiaryPopCard extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 0.0),
                     child: TextButton(
-                      onPressed: () {
-                        debugPrint(widgetNotifier.diaryList![index].toString());
-
-                        Diary newDiary = Diary(_titleController.text,
-                            _diaryController.text, DateTime.now());
-
-                        widgetNotifier.updateDiary(newDiary, index);
-
-                        debugPrint(newDiary.toString());
-                        Navigator.pop(context);
-                      },
+                      onPressed: () {},
                       child: Container(
                         height: 35,
                         width: 70,
