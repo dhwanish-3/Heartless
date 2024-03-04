@@ -1,10 +1,12 @@
+import 'package:intl/intl.dart';
+
 class DateService {
   static const Duration _timeLimit = Duration(seconds: 10);
 
   static Duration get timeLimit => _timeLimit;
 
   // to get start of the week of a given date
-  static DateTime getStartOfWeekOfDate(DateTime date) {
+  static DateTime getStartOfWeek(DateTime date) {
     DateTime startOfWeek = date;
     startOfWeek = startOfWeek.subtract(Duration(days: startOfWeek.weekday - 1));
     startOfWeek = DateTime(
@@ -17,8 +19,9 @@ class DateService {
     return DateTime(date.year, date.month, date.day, 0, 0, 0, 0, 0);
   }
 
-  // to get formatted date
-  static String getFormattedDate(DateTime date) {
-    return "${date.day}/${date.month}/${date.year}";
+  // formatting the time with 10:00 AM/PM format
+  static String getFormattedTimeWithAMPM(DateTime time) {
+    DateFormat formatter = DateFormat('hh:mm a');
+    return formatter.format(time);
   }
 }

@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:heartless/backend/services/activity/date_service.dart';
+import 'package:heartless/services/date/date_service.dart';
 import 'package:heartless/services/exceptions/app_exceptions.dart';
 import 'package:heartless/shared/models/reading.dart';
 
@@ -10,7 +10,7 @@ class ReadingService {
   // add a new reading
   static Future<void> addReading(Reading reading) async {
     try {
-      DateTime startOfWeek = DateService.getStartOfWeekOfDate(reading.time);
+      DateTime startOfWeek = DateService.getStartOfWeek(reading.time);
       // getting the id of the new document
       DocumentReference docRef = FirebaseFirestore.instance
           .collection('Patients')
@@ -37,7 +37,7 @@ class ReadingService {
       if (reading.id.isEmpty) {
         return;
       }
-      DateTime startOfWeek = DateService.getStartOfWeekOfDate(reading.time);
+      DateTime startOfWeek = DateService.getStartOfWeek(reading.time);
 
       await FirebaseFirestore.instance
           .collection('Patients')
@@ -63,7 +63,7 @@ class ReadingService {
       if (reading.id.isEmpty) {
         return;
       }
-      DateTime startOfWeek = DateService.getStartOfWeekOfDate(reading.time);
+      DateTime startOfWeek = DateService.getStartOfWeek(reading.time);
 
       await FirebaseFirestore.instance
           .collection('Patients')
@@ -86,7 +86,7 @@ class ReadingService {
   // get all readings of a day
   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllReadingsOfTheDate(
       DateTime date, String patientId) {
-    DateTime startOfWeek = DateService.getStartOfWeekOfDate(date);
+    DateTime startOfWeek = DateService.getStartOfWeek(date);
     DateTime startOfDay = DateService.getStartOfDay(date);
     DateTime endOfDay = startOfDay.add(const Duration(days: 1));
     return FirebaseFirestore.instance
@@ -103,7 +103,7 @@ class ReadingService {
   // get all the readings for a given week
   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllReadingsOfTheWeek(
       DateTime date, String patientId) {
-    DateTime startOfWeek = DateService.getStartOfWeekOfDate(date);
+    DateTime startOfWeek = DateService.getStartOfWeek(date);
     return FirebaseFirestore.instance
         .collection('Patients')
         .doc(patientId)

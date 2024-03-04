@@ -2,10 +2,12 @@ import 'package:calendar_slider/calendar_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:heartless/backend/controllers/activity_controller.dart';
 import 'package:heartless/main.dart';
+import 'package:heartless/pages/schedule/create_task_page.dart';
 import 'package:heartless/services/enums/schedule_toggle_type.dart';
 import 'package:heartless/shared/constants.dart';
 import 'package:heartless/shared/models/activity.dart';
 import 'package:heartless/shared/models/app_user.dart';
+import 'package:heartless/shared/provider/auth_notifier.dart';
 import 'package:heartless/shared/provider/widget_provider.dart';
 import 'package:heartless/widgets/schedule/multi_toggle_panel.dart';
 import 'package:heartless/widgets/schedule/reminder_card.dart';
@@ -16,7 +18,10 @@ class SchedulePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    WidgetNotifier widgetNotifier = Provider.of<WidgetNotifier>(context);
+    WidgetNotifier widgetNotifier =
+        Provider.of<WidgetNotifier>(context, listen: false);
+    AuthNotifier authNotifier =
+        Provider.of<AuthNotifier>(context, listen: false);
     Widget buildScheduleWidget(Activity activity) {
       // if the toggle is not in all tab, then show the reminders of the selected type
       if (widgetNotifier.scheduleToggleType != ScheduleToggleType.all) {
@@ -94,6 +99,14 @@ class SchedulePage extends StatelessWidget {
           ],
         ),
       )),
+      floatingActionButton: authNotifier.userType != UserType.patient
+          ? FloatingActionButton(onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => TaskFormPage(patient: patient)));
+            })
+          : null,
     );
   }
 }
