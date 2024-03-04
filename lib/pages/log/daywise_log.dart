@@ -206,27 +206,6 @@ class DayWiseLog extends StatelessWidget {
                   }
                 })
           ],
-        )
-        //  ListView.builder(
-        //   itemCount: readings.length,
-        //   itemBuilder: (context, index) {
-        //     return Column(
-        //       children: [
-        //         Container(
-        //           padding: const EdgeInsets.symmetric(
-        //             horizontal: 20,
-        //             vertical: 5,
-        //           ),
-        //           child: ReadingTile(
-        //             reading: readings[index]['reading'] as String,
-        //             comment: readings[index]['comment'] as String,
-        //             time: readings[index]['time'] as String,
-        //           ),
-        //         ),
-        //       ],
-        //     );
-        //   },
-        // )
-        );
+        ));
   }
 }
