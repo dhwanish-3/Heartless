@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:heartless/backend/controllers/diary_controller.dart';
+import 'package:heartless/shared/models/app_user.dart';
+import 'package:heartless/shared/models/diary.dart';
 import 'package:heartless/widgets/log/cutom_rect.dart';
 import 'package:heartless/widgets/log/hero_dialog.dart';
 
 class AddDiaryButton extends StatefulWidget {
-  const AddDiaryButton({
-    super.key,
-  });
+  final AppUser patient;
+  const AddDiaryButton({super.key, required this.patient});
 
   @override
   State<AddDiaryButton> createState() => _AddDiaryButtonState();
@@ -18,10 +20,12 @@ class _AddDiaryButtonState extends State<AddDiaryButton> {
       padding: const EdgeInsets.all(32.0),
       child: GestureDetector(
         onTap: () {
-//todo
+          // todo
 
           Navigator.of(context).push(HeroDialogRoute(builder: (context) {
-            return AddDiaryPopCard();
+            return AddDiaryPopUpCard(
+              patient: widget.patient,
+            );
           }));
         },
         child: Hero(
@@ -75,10 +79,24 @@ const String _heroAddTodo = 'add-todo-hero';
 ///
 /// Uses a [Hero] with tag [_heroAddTodo].
 /// {@endtemplate}
-class AddDiaryPopCard extends StatelessWidget {
-  AddDiaryPopCard({super.key});
-  final _titleController = TextEditingController();
-  final _bodyController = TextEditingController();
+class AddDiaryPopUpCard extends StatelessWidget {
+  final AppUser patient;
+  AddDiaryPopUpCard({super.key, required this.patient});
+
+  final DiaryController _diaryController = DiaryController();
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _bodyController = TextEditingController();
+
+  void _submitForm() async {
+    // creating a new diary
+    Diary diary = Diary(
+        title: _titleController.text,
+        body: _bodyController.text,
+        patientId: patient.uid,
+        time: DateTime.now());
+    await _diaryController.addDiary(diary);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -143,7 +161,8 @@ class AddDiaryPopCard extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 0.0),
                         child: TextButton(
-                          onPressed: () {
+                          onPressed: () async {
+                            _submitForm();
                             Navigator.pop(context);
                           },
                           child: Container(

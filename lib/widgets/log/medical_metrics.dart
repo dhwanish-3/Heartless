@@ -10,7 +10,6 @@ class MedicalMetrics extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
     return Container(
         // height: height * 0.3,
         width: width * 0.85,
@@ -50,30 +49,22 @@ class MedicalMetrics extends StatelessWidget {
                                       patient: patient,
                                     )));
                       },
-                      child: Expanded(
-                        child: Image.asset(
-                          'assets/Icons/heartRateCard.png',
-                          height: 150,
-                        ),
-                      ),
-                    ),
-                    Expanded(
                       child: Image.asset(
-                        'assets/Icons/bpCard.png',
+                        'assets/Icons/heartRateCard.png',
                         height: 150,
                       ),
                     ),
-                    Expanded(
-                      child: Image.asset(
-                        'assets/Icons/weightCard.png',
-                        height: 150,
-                      ),
+                    Image.asset(
+                      'assets/Icons/bpCard.png',
+                      height: 150,
                     ),
-                    Expanded(
-                      child: Image.asset(
-                        'assets/Icons/glucoseCard.png',
-                        height: 150,
-                      ),
+                    Image.asset(
+                      'assets/Icons/weightCard.png',
+                      height: 150,
+                    ),
+                    Image.asset(
+                      'assets/Icons/glucoseCard.png',
+                      height: 150,
                     ),
                   ]),
             ),

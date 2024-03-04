@@ -4,28 +4,28 @@ import 'package:heartless/backend/services/activity/diary_services.dart';
 import 'package:heartless/shared/models/diary.dart';
 
 class DiaryController with BaseController {
-  // add a new reading
-  Future<void> addDiary(Diary reading) async {
-    DiaryService.addDiary(reading)
+  // add a new diary
+  Future<void> addDiary(Diary diary) async {
+    DiaryService.addDiary(diary)
         .then((value) => handleSuccess(true, "Diary added"))
         .catchError(handleError);
   }
 
-  // edit a reading
-  Future<void> editDiary(Diary reading) async {
-    DiaryService.editDiary(reading)
+  // edit a diary
+  Future<void> editDiary(Diary diary) async {
+    DiaryService.editDiary(diary)
         .then((value) => handleSuccess(true, "Diary updated"))
         .catchError(handleError);
   }
 
-  // delete a reading
-  Future<void> deleteDiary(Diary reading) async {
-    DiaryService.deleteDiary(reading)
+  // delete a diary
+  Future<void> deleteDiary(Diary diary) async {
+    DiaryService.deleteDiary(diary)
         .then((value) => handleSuccess(true, "Diary deleted"))
         .catchError(handleError);
   }
 
-  // get all readings of the date
+  // get all diarys of the date
   static Stream<QuerySnapshot> getAllDiarysOfTheDate(
       DateTime date, String patientId) {
     return DiaryService.getAllDiariesOfTheDate(date, patientId);
