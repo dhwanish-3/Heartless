@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:heartless/main.dart';
 import 'package:heartless/widgets/log/cutom_rect.dart';
-import 'package:heartless/widgets/log/diary_model.dart';
 import 'package:heartless/widgets/log/hero_dialog.dart';
-import 'package:heartless/shared/provider/widget_provider.dart';
 
 class AddDiaryButton extends StatefulWidget {
-  // List<Diary> list;
   const AddDiaryButton({
     super.key,
-    //  required this.list,
   });
 
   @override
@@ -86,9 +81,6 @@ class AddDiaryPopCard extends StatelessWidget {
   final _bodyController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    // UserShared userShared = Provider.of<UserShared>(context, listen: false);
-    WidgetNotifier widgetNotifier =
-        Provider.of<WidgetNotifier>(context, listen: false);
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32.0),
@@ -152,12 +144,6 @@ class AddDiaryPopCard extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 0.0),
                         child: TextButton(
                           onPressed: () {
-                            Diary newDiary = Diary(_titleController.text,
-                                _bodyController.text, DateTime.now());
-
-                            widgetNotifier.addtoDiary(newDiary);
-
-                            debugPrint(widgetNotifier.diaryList.toString());
                             Navigator.pop(context);
                           },
                           child: Container(

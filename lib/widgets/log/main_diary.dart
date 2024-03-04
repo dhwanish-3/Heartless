@@ -3,7 +3,7 @@ import 'package:heartless/main.dart';
 import 'package:heartless/widgets/log/add_button.dart';
 import 'package:heartless/widgets/log/cutom_rect.dart';
 import 'package:heartless/widgets/log/diary_list.dart';
-import 'package:heartless/widgets/log/diary_model.dart';
+import 'package:heartless/shared/models/diary_model.dart';
 import 'package:heartless/widgets/log/hero_dialog.dart';
 import 'package:heartless/shared/provider/widget_provider.dart';
 
@@ -17,32 +17,11 @@ class DiaryMain extends StatefulWidget {
 }
 
 class _DiaryMainState extends State<DiaryMain> {
-  List<Diary> ListDiary = [];
-  List<String> ListStringDiary = [];
-  // Future<Structure> getDiary() => UserShared().getDaiary();
-  @override
-  void initState() {
-    Future.delayed(Duration.zero).then((value) async {
-      // Structure structure = await getDiary();
-      // ListDiary = structure.DiaryStructureList ?? [];
-      // ListStringDiary = structure.DiaryStructureStringList ?? [];
-      // UserShared userShared = Provider.of<UserShared>(context, listen: false);
-      // userShared.SetDiaryList(ListDiary, ListStringDiary);
-
-      // debugPrint('this is in initstate user${userShared.diaryList}');
-      // debugPrint('this is in initstate user${userShared.diaryJsonList}');
-    });
-    super.initState();
-  }
+  List<Diary> diaryList = [];
 
   @override
   Widget build(BuildContext context) {
-    WidgetNotifier widgetNotifier =
-        Provider.of<WidgetNotifier>(context, listen: false);
-    return
-        // Scaffold(
-        //     body:
-        Stack(
+    return Stack(
       children: [
         // Container(
         //   decoration: const BoxDecoration(
@@ -86,9 +65,6 @@ class _DiaryMainState extends State<DiaryMain> {
             padding: const EdgeInsets.all(32.0),
             child: GestureDetector(
               onTap: () async {
-                // debugPrint('ontap to diarylist${userShared.diaryList}');
-
-                // debugPrint('ontap to json get string diury${userShared.diaryJsonList}');
                 await Navigator.of(context)
                     .push(HeroDialogRoute(builder: (context) {
                   return AddDiaryPopCard();
