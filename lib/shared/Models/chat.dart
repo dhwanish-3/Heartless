@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:heartless/shared/Models/app_user.dart';
+import 'package:heartless/shared/models/app_user.dart';
 
 class ChatRoom {
   String id = '';
