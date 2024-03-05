@@ -10,7 +10,7 @@ import 'package:heartless/shared/provider/widget_provider.dart';
 import 'package:heartless/widgets/reading_tile.dart';
 
 //! maybe this class needs to statefull widget
-class DayWiseLog extends StatelessWidget {
+class DayWiseLog extends StatefulWidget {
   final AppUser patient;
   final String unit; //mg/dL for glucose, kg for weight, bpm for heart rate
   final String label1;
@@ -20,7 +20,7 @@ class DayWiseLog extends StatelessWidget {
   final String label2;
   final String hintText2;
 
-  DayWiseLog({
+  const DayWiseLog({
     super.key,
     required this.patient,
     required this.unit,
@@ -31,9 +31,17 @@ class DayWiseLog extends StatelessWidget {
     this.hintText2 = '72',
   });
 
+  @override
+  State<DayWiseLog> createState() => _DayWiseLogState();
+}
+
+class _DayWiseLogState extends State<DayWiseLog> {
   final formKey = GlobalKey<FormState>();
+
   final TextEditingController _entryController = TextEditingController();
+
   final TextEditingController _commentController = TextEditingController();
+
   bool clicked = false;
 
   // function called when submitting the form to add new reading/log
@@ -57,10 +65,10 @@ class DayWiseLog extends StatelessWidget {
     Reading reading = Reading(
       time: DateTime.now(),
       value: double.parse(_entryController.text),
-      unit: unit,
+      unit: widget.unit,
       comments: _commentController.text,
       type: ReadingType.heartRate,
-      patientId: patient.uid,
+      patientId: widget.patient.uid,
     );
     await ReadingController().addReading(reading);
     clicked = false;
@@ -81,8 +89,8 @@ class DayWiseLog extends StatelessWidget {
                 TextFormField(
                   controller: _entryController,
                   decoration: InputDecoration(
-                    labelText: '$label1 ($unit)',
-                    hintText: hintText1,
+                    labelText: '${widget.label1} (${widget.unit})',
+                    hintText: widget.hintText1,
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -91,11 +99,11 @@ class DayWiseLog extends StatelessWidget {
                     return null;
                   },
                 ),
-                if (readingCount > 1)
+                if (widget.readingCount > 1)
                   TextFormField(
                     decoration: InputDecoration(
-                      labelText: '$label2 ($unit)',
-                      hintText: hintText2,
+                      labelText: '${widget.label2} (${widget.unit})',
+                      hintText: widget.hintText2,
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -167,7 +175,7 @@ class DayWiseLog extends StatelessWidget {
           children: [
             StreamBuilder(
                 stream: ReadingController.getAllReadingsOfTheDate(
-                    widgetNotifier.selectedDate, patient.uid),
+                    widgetNotifier.selectedDate, widget.patient.uid),
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                   if (snapshot.hasData && snapshot.data.docs.isNotEmpty) {
                     return ListView.builder(

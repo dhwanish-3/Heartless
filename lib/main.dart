@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heartless/backend/services/notifications/notification_services.dart';
 import 'package:heartless/services/routes/routes.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
 import 'package:heartless/shared/provider/theme_provider.dart';
@@ -10,7 +11,7 @@ import "package:firebase_core/firebase_core.dart";
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-
+  await NotificationServices.initPushNotifications();
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => AuthNotifier()),

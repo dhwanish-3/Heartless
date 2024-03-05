@@ -40,6 +40,7 @@ class AppUser {
   String? phone;
   String password = '';
   bool isOnline = false;
+  String pushToken = '';
   DateTime lastSeen = DateTime.now();
   UserType userType = UserType.patient;
 
@@ -54,6 +55,7 @@ class AppUser {
     password = map['password'];
     userType = UserType.values[map['userType']];
     isOnline = map['isOnline'] ?? false;
+    pushToken = map['pushToken'] ?? '';
     lastSeen = DateTime.parse(map['lastSeen'] ?? DateTime.now());
   }
 
@@ -67,6 +69,7 @@ class AppUser {
       'password': password,
       'userType': userType.index,
       'isOnline': isOnline,
+      'pushToken': pushToken,
       'lastSeen': lastSeen.toString(),
     };
   }

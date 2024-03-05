@@ -3,6 +3,7 @@ import "package:flutter/material.dart";
 import "package:flutter_svg/svg.dart";
 import "package:heartless/backend/controllers/auth_controller.dart";
 import "package:heartless/backend/services/auth/auth.dart";
+import "package:heartless/backend/services/notifications/notification_services.dart";
 import "package:heartless/main.dart";
 import "package:heartless/pages/auth/verification_page.dart";
 import "package:heartless/services/local_storage/local_storage.dart";
@@ -73,6 +74,7 @@ class _SignUpPageState extends State<SignUpPage> {
       bool success = await _authController.signUp(authNotifier);
       if (success && context.mounted) {
         await LocalStorage.saveUser(authNotifier);
+        NotificationServices.getFirebaseMessagingToken(authNotifier);
         goHome();
       }
     }
@@ -111,6 +113,7 @@ class _SignUpPageState extends State<SignUpPage> {
               await LocalStorage.saveUser(authNotifier);
               ToastMessage().showSuccess("Logged in successfully");
               widgetNotifier.setLoading(false);
+              NotificationServices.getFirebaseMessagingToken(authNotifier);
               goHome();
             } else {
               await _auth.signOut();
@@ -157,6 +160,7 @@ class _SignUpPageState extends State<SignUpPage> {
       bool success = await _authController.googleSignIn(authNotifier);
       if (success && context.mounted) {
         await LocalStorage.saveUser(authNotifier);
+        NotificationServices.getFirebaseMessagingToken(authNotifier);
         goHome();
       }
     }

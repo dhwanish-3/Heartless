@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter_svg/svg.dart";
+import "package:heartless/backend/services/notifications/notification_services.dart";
 import "package:heartless/main.dart";
 import "package:heartless/services/splash/splash_services.dart";
 import "package:heartless/shared/provider/auth_notifier.dart";
@@ -25,6 +26,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Future.delayed(const Duration(seconds: 3), () {
       SplashServices().hasLoggedIn(authNotifier).then((value) {
         if (value) {
+          NotificationServices.getFirebaseMessagingToken(authNotifier);
           Navigator.pushNamed(context, '/home');
         } else {
           Navigator.pushNamed(context, '/chooseUserType');
