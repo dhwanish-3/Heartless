@@ -2,6 +2,7 @@ import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:flutter_svg/svg.dart";
 import "package:heartless/backend/services/auth/auth.dart";
+import "package:heartless/backend/services/notifications/notification_services.dart";
 import "package:heartless/main.dart";
 import "package:heartless/services/local_storage/local_storage.dart";
 import "package:heartless/services/utils/toast_message.dart";
@@ -77,6 +78,7 @@ class _VerificationPageState extends State<VerificationPage> {
               ToastMessage().showError("User does not exist");
             }
           }
+          NotificationServices.getFirebaseMessagingToken(authNotifier);
         } catch (e) {
           ToastMessage().showError(e.toString());
         }
