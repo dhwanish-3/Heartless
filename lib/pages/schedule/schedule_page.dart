@@ -46,7 +46,7 @@ class SchedulePage extends StatelessWidget {
 
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(180),
+        preferredSize: const Size.fromHeight(200),
         child: Column(
           children: [
             CalendarSlider(
@@ -66,6 +66,9 @@ class SchedulePage extends StatelessWidget {
               onDateSelected: (date) async {
                 widgetNotifier.setSelectedDate(date);
               },
+            ),
+            const SizedBox(
+              height: 10,
             ),
             const MutltiToggle(),
           ],
