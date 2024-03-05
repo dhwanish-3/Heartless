@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/backend/controllers/activity_controller.dart';
+import 'package:heartless/pages/date_picker.dart';
 import 'package:heartless/services/enums/activity_status.dart';
 import 'package:heartless/services/enums/activity_type.dart';
 import 'package:heartless/services/utils/toast_message.dart';
@@ -129,7 +130,6 @@ class _TaskFormPageState extends State<TaskFormPage> {
                             'Medicine',
                             'Exercise',
                             'Food',
-                            'Miscellaneous'
                           ],
                           dropdownValue: typeDropDownValue,
                           onChanged: (newValue) {
@@ -212,8 +212,9 @@ class _TaskFormPageState extends State<TaskFormPage> {
                         onEndDateChanged: (newDate) {
                           endDate = newDate;
                         })
-                    : Container(
-                        width: 10,
+                    : const SizedBox(
+                        height: 300,
+                        child: DatePicker(),
                       ),
               ],
             ),
