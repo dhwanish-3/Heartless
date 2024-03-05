@@ -19,6 +19,7 @@ class Patient extends AppUser {
     password = map['password'];
     userType = UserType.values[map['userType']];
     isOnline = map['isOnline'];
+    pushToken = map['pushToken'] ?? '';
     lastSeen = DateTime.parse(map['lastSeen'] ?? DateTime.now());
     nurses = map['nurses'] is Iterable ? List.from(map['nurses']) : [];
     doctors = map['doctors'] is Iterable ? List.from(map['doctors']) : [];
@@ -35,6 +36,7 @@ class Patient extends AppUser {
       'password': password,
       'userType': userType.index,
       'isOnline': isOnline,
+      'pushToken': pushToken,
       'lastSeen': lastSeen.toString(),
       'nurses': nurses,
       'doctors': doctors,
