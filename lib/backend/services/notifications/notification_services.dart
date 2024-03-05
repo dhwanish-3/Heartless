@@ -1,11 +1,15 @@
+import 'dart:convert';
 import 'dart:developer';
-
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:heartless/backend/services/auth/auth.dart';
 import 'package:heartless/pages/chat/contacts_page.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
+import 'package:http/http.dart' as http;
+import 'dart:io';
 
+// top level function for handling background messages
 Future<void> handleBackgroundMessage(RemoteMessage message) async {
   log('Titile: ${message.notification!.title}');
   log('Body: ${message.notification!.body}');
@@ -17,7 +21,17 @@ class NotificationServices {
   static final FirebaseMessaging _firebaseMessaging =
       FirebaseMessaging.instance;
 
-  static handleNotification(RemoteMessage? message) {
+  // for handling notification when the app is in foreground
+  static const AndroidNotificationChannel _androidChannel =
+      AndroidNotificationChannel(
+          'high_importance_channel', 'Important notifications',
+          description: 'This channel is used for important notifications.',
+          importance: Importance.high);
+
+  static final FlutterLocalNotificationsPlugin _localNotifications =
+      FlutterLocalNotificationsPlugin();
+
+  static void handleNotification(RemoteMessage? message) {
     if (message == null) {
       return;
     }
@@ -37,6 +51,41 @@ class NotificationServices {
     _firebaseMessaging.getInitialMessage().then(handleNotification);
     FirebaseMessaging.onMessageOpenedApp.listen(handleNotification);
     FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
+    FirebaseMessaging.onMessage.listen((message) {
+      final RemoteNotification? notification = message.notification;
+      if (notification == null) {
+        return;
+      }
+      _localNotifications.show(
+          notification.hashCode,
+          notification.title,
+          notification.body,
+          NotificationDetails(
+              android: AndroidNotificationDetails(
+            _androidChannel.id,
+            _androidChannel.name,
+            channelDescription: _androidChannel.description,
+            icon: '@drawable/logo',
+          )),
+          payload: jsonEncode(message.toMap()));
+    });
+  }
+
+  static Future<void> initLocalNotifications() async {
+    const iOS = DarwinInitializationSettings();
+    const android = AndroidInitializationSettings('@drawable/logo');
+    const initializationSettings =
+        InitializationSettings(android: android, iOS: iOS);
+
+    await _localNotifications.initialize(initializationSettings,
+        onDidReceiveNotificationResponse: (notification) {
+      final message = RemoteMessage.fromMap(jsonDecode(notification.payload!));
+      handleNotification(message);
+    });
+
+    final platform = _localNotifications.resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>();
+    await platform?.createNotificationChannel(_androidChannel);
   }
 
   static Future<String?> getFirebaseMessagingToken(
@@ -56,15 +105,36 @@ class NotificationServices {
       }
     });
     return null;
+  }
 
-    // for handling foreground messages
-    // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    //   log('Got a message whilst in the foreground!');
-    //   log('Message data: ${message.data}');
+  // for sending push notification
+  static Future<void> sendPushNotification(
+      String pushToken, String name, String msg) async {
+    try {
+      final body = {
+        "to": pushToken,
+        "notification": {
+          "title": name, // our name should be send
+          "body": msg,
+          "android_channel_id": "chats"
+        },
+        // "data": {
+        //   "some_data": "User ID: ${me.id}",
+        // },
+      };
 
-    //   if (message.notification != null) {
-    //     log('Message also contained a notification: ${message.notification}');
-    //   }
-    // });
+      var res =
+          await http.post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
+              headers: {
+                HttpHeaders.contentTypeHeader: 'application/json',
+                HttpHeaders.authorizationHeader:
+                    'key=AAAA99vPjLI:APA91bEDV71H7ganL2VnDFH3Q-ayUcthoYlncoyBOOIYqtxz45BocGGL_sSk1SZlq_UIdAYQesmL-VRBcTfFAk58xpSqmUWOG6f9sMK_sy7X_gFNMIzKr3_FJjq_Nyr0IygpiGHOTzGG'
+              },
+              body: jsonEncode(body));
+      log('Response status: ${res.statusCode}');
+      log('Response body: ${res.body}');
+    } catch (e) {
+      log('\nsendPushNotificationE: $e');
+    }
   }
 }

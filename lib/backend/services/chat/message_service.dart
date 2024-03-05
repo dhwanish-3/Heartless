@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:heartless/backend/services/notifications/notification_services.dart';
 import 'package:heartless/services/exceptions/app_exceptions.dart';
 import 'package:heartless/shared/models/chat.dart';
 import 'package:heartless/shared/models/message.dart';
@@ -29,14 +30,19 @@ class MessageService {
           _chatRoomRef.doc(chatRoom.id).collection('Messages').doc();
       message.id = messageRef.id;
       await messageRef.set(message.toMap()).timeout(_timeLimit);
-
       // increment the count of unread messages for the receiver
+      const pushToken =
+          'cCjBLsalSLapp-Cksbvsu3:APA91bHAvgoaUCs19OMx87bMYO2_WkFz68cUPfnSMGGdoS7tJ5Fxh8rXorE2TdysvA5czP7wsWvfPMC5-Mgnr0OCD8VyNC1SIB_7K47nJs3BEUfi0DDW2ORLnjR_J9g78aswTCzCxSBQ';
       if (message.receiverId == chatRoom.user1Ref!.id) {
+        NotificationServices.sendPushNotification(
+            pushToken, chatRoom.user1Ref!.id, message.message);
         chatRoom.user1UnreadMessages++;
         _chatRoomRef.doc(chatRoom.id).update({
           'user1UnreadMessages': FieldValue.increment(1),
         });
       } else if (message.receiverId == chatRoom.user2Ref!.id) {
+        NotificationServices.sendPushNotification(
+            pushToken, chatRoom.user2Ref!.id, message.message);
         chatRoom.user2UnreadMessages++;
         _chatRoomRef.doc(chatRoom.id).update({
           'user2UnreadMessages': FieldValue.increment(1),

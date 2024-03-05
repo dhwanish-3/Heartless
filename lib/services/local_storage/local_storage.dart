@@ -30,7 +30,8 @@ class LocalStorage {
       }
       // set user details
       authNotifier.setUserType(stringToUserType(userType));
-      authNotifier.setAppUser(AppUser.fromMap(jsonDecode(jsonUser)));
+      authNotifier.setAppUser(AppUser.getInstanceFromMap(
+          authNotifier.userType, jsonDecode(jsonUser)));
       return true;
     }
     return false;
