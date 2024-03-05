@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heartless/shared/constants.dart';
 
 class DatePicker extends StatefulWidget {
   const DatePicker({Key? key}) : super(key: key);
@@ -13,50 +14,40 @@ class _DatePickerState extends State<DatePicker> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Date Picker'),
-      ),
-      body: Padding(
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.black), // Example border styling
+          borderRadius: BorderRadius.circular(10.0),
+        ),
         padding: const EdgeInsets.all(16.0),
-        child: Container(
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.black), // Example border styling
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              ElevatedButton(
-                onPressed: () {
-                  _selectDate(context);
-                },
-                child: const Text('Pick A Date'),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'Chosen Dates:',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 10),
-              Expanded(
-                child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 8.0,
-                    mainAxisSpacing: 8.0,
-                    childAspectRatio:
-                        3.0, // Adjust this value for the desired height
-                  ),
-                  itemCount: chosenDates.length,
-                  itemBuilder: (context, index) {
-                    return _buildDateCard(chosenDates[index], index);
-                  },
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            ElevatedButton(
+              onPressed: () {
+                _selectDate(context);
+              },
+              child: const Text('Pick A Date'),
+            ),
+            const SizedBox(height: 10),
+            Expanded(
+              child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 8.0,
+                  mainAxisSpacing: 8.0,
+                  childAspectRatio:
+                      3.0, // Adjust this value for the desired height
                 ),
+                itemCount: chosenDates.length,
+                itemBuilder: (context, index) {
+                  return _buildDateCard(chosenDates[index], index);
+                },
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -65,15 +56,16 @@ class _DatePickerState extends State<DatePicker> {
   Widget _buildDateCard(String date, int index) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.blue,
+        color: Constants.primaryColor,
         borderRadius: BorderRadius.circular(10.0),
       ),
       padding: const EdgeInsets.all(8.0),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             date,
+            textAlign: TextAlign.center,
             style: const TextStyle(color: Colors.white),
           ),
           IconButton(
