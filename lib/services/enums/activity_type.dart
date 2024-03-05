@@ -27,3 +27,17 @@ extension TypeExtension on ActivityType {
     }
   }
 }
+
+ActivityType fromString(String value) {
+  switch (value) {
+    case 'Medicine':
+      return ActivityType.medicine;
+    case 'Excercise':
+      return ActivityType.excercise;
+    case 'Diet':
+      return ActivityType.diet;
+
+    default:
+      return ActivityType.medicine;
+  }
+}
