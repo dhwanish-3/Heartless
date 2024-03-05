@@ -29,7 +29,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
 
   TimeOfDay _selectedTime = TimeOfDay.now();
   String dateDropDownValue = 'Specify a Period';
-  String typeDropDownValue = 'Exercise';
+  ActivityType typeDropDownValue = ActivityType.medicine;
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now();
 
@@ -48,7 +48,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
     Activity activity = Activity();
     activity.name = _titleController.text;
     activity.description = _descriptionController.text;
-    activity.type = ActivityType.medicine;
+    activity.type = typeDropDownValue;
     activity.status = ActivityStatus.upcoming;
     activity.patientId = widget.patient.uid;
 
@@ -127,14 +127,14 @@ class _TaskFormPageState extends State<TaskFormPage> {
                         ),
                         child: DropDownWidget(
                           dropdownItems: const [
-                            'Medicine',
+                            '',
                             'Exercise',
                             'Food',
                           ],
-                          dropdownValue: typeDropDownValue,
+                          dropdownValue: typeDropDownValue.dropDownValue,
                           onChanged: (newValue) {
                             setState(() {
-                              typeDropDownValue = newValue;
+                              typeDropDownValue = activityFromString(newValue);
                               print("New Value at parent: $newValue");
                             });
                           },
