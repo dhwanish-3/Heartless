@@ -9,30 +9,7 @@ import 'package:heartless/shared/models/reading.dart';
 import 'package:heartless/shared/provider/widget_provider.dart';
 import 'package:heartless/widgets/reading_tile.dart';
 
-List<Map<String, String>> readings = [
-  {
-    'reading': '100 bpm',
-    'comment': 'This is a comment',
-    'time': '12:00 AM',
-  },
-  {
-    'reading': '72 bpm',
-    'comment': '',
-    'time': '9:00 PM',
-  },
-  {
-    'reading': '68 bpm',
-    'comment': 'This is a comment',
-    'time': '7:00 PM',
-  },
-  {
-    'reading': '81 bpm',
-    'comment':
-        'This is a long comment that should be going beyond one line and I wanted to test whether the widget is capable of handling overflow cases',
-    'time': '12:00 PM',
-  },
-];
-
+//! maybe this class needs to statefull widget
 class DayWiseLog extends StatelessWidget {
   final AppUser patient;
   final String unit; //mg/dL for glucose, kg for weight, bpm for heart rate
@@ -65,6 +42,11 @@ class DayWiseLog extends StatelessWidget {
     if (!formKey.currentState!.validate()) {
       return;
     }
+    double? value = double.tryParse(_entryController.text);
+    if (value == null) {
+      ToastMessage().showError('Enter valid value for the reading');
+      return;
+    }
     // handling multiple clicks
     if (clicked) {
       ToastMessage().showError('Please wait for the previous task to complete');
@@ -74,7 +56,7 @@ class DayWiseLog extends StatelessWidget {
     // creating a new reading object
     Reading reading = Reading(
       time: DateTime.now(),
-      value: _entryController.text,
+      value: double.parse(_entryController.text),
       unit: unit,
       comments: _commentController.text,
       type: ReadingType.heartRate,
@@ -125,7 +107,7 @@ class DayWiseLog extends StatelessWidget {
                 TextFormField(
                   style: Theme.of(context)
                       .textTheme
-                      .bodySmall, //!should see how it looks in actual mobile
+                      .bodySmall, //! should see how it looks in actual mobile
                   controller: _commentController,
                   decoration: const InputDecoration(
                     labelText: 'Comment',
@@ -196,7 +178,7 @@ class DayWiseLog extends StatelessWidget {
                           Reading reading =
                               Reading.fromMap(snapshot.data.docs[index].data());
                           return ReadingTile(
-                            reading: reading.value,
+                            reading: reading.value.toString(),
                             comment: reading.comments,
                             time: reading.time.toString(),
                           );

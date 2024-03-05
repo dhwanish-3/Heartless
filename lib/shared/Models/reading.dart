@@ -13,7 +13,7 @@ enum ReadingType {
 class Reading {
   String id = '';
   DateTime time = DateTime.now();
-  String value = '';
+  double value = 0;
   String unit = '';
   String comments = '';
   ReadingType type = ReadingType.heartRate;
