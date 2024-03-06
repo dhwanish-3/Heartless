@@ -3,7 +3,7 @@ import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:flutter_svg/svg.dart";
 import "package:heartless/backend/controllers/auth_controller.dart";
-import "package:heartless/backend/services/auth/auth.dart";
+import 'package:heartless/backend/services/auth/auth_service.dart';
 import "package:heartless/backend/services/notifications/notification_services.dart";
 import "package:heartless/main.dart";
 import "package:heartless/pages/auth/verification_page.dart";

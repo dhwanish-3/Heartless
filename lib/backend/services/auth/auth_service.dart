@@ -9,33 +9,24 @@ import 'package:heartless/shared/provider/auth_notifier.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final _patientRef = FirebaseFirestore.instance.collection('Patients');
-  final _doctorRef = FirebaseFirestore.instance.collection('Doctors');
-  final _nurseRef = FirebaseFirestore.instance.collection('Nurses');
+  final _userRef = FirebaseFirestore.instance.collection('Users');
 
   static const Duration _timeLimit = Duration(seconds: 10);
-
-  // get collection reference
-  CollectionReference<Map<String, dynamic>> _getCollection(UserType userType) {
-    if (userType == UserType.patient) {
-      return _patientRef;
-    } else if (userType == UserType.doctor) {
-      return _doctorRef;
-    } else if (userType == UserType.nurse) {
-      return _nurseRef;
-    }
-    throw UnimplementedError();
-  }
 
   // get user using email
   Future<bool> getUserDetailswithEmail(
       AuthNotifier authNotifier, String email) async {
     try {
-      return await _getCollection(authNotifier.userType)
+      return await _userRef
           .where('email', isEqualTo: email)
           .get()
           .then((value) {
         if (value.docs.isNotEmpty) {
+          // * check if the user is of the same type
+          if (value.docs.first.data()['userType'] !=
+              authNotifier.userType.index) {
+            throw UnAutherizedException('User Type Mismatch');
+          }
           authNotifier.setAppUser(AppUser.getInstanceFromMap(
               authNotifier.userType, value.docs.first.data()));
           return true;
@@ -44,7 +35,7 @@ class AuthService {
         }
       }).timeout(_timeLimit);
     } on FirebaseAuthException {
-      throw UnAutherizedException();
+      throw UnAutherizedException('User not found');
     } on SocketException {
       throw FetchDataException('No Internet Connection');
     } on TimeoutException {
@@ -56,11 +47,16 @@ class AuthService {
   Future<bool> getUserDetailswithPhone(
       AuthNotifier authNotifier, String phone) async {
     try {
-      return await _getCollection(authNotifier.userType)
+      return await _userRef
           .where('phone', isEqualTo: phone)
           .get()
           .then((value) {
         if (value.docs.isNotEmpty) {
+          // * check if the user is of the same type
+          if (value.docs.first.data()['userType'] !=
+              authNotifier.userType.index) {
+            throw UnAutherizedException('User Type Mismatch');
+          }
           authNotifier.setAppUser(AppUser.getInstanceFromMap(
               authNotifier.userType, value.docs.first.data()));
           return true;
@@ -69,7 +65,7 @@ class AuthService {
         }
       }).timeout(_timeLimit);
     } on FirebaseAuthException {
-      throw UnAutherizedException();
+      throw UnAutherizedException("Firebase Exception");
     } on SocketException {
       throw FetchDataException('No Internet Connection');
     } on TimeoutException {
@@ -80,11 +76,12 @@ class AuthService {
   // get patient details from firebase
   Future<bool> getUserDetails(AuthNotifier authNotifier) async {
     try {
-      return await _getCollection(authNotifier.userType)
-          .doc(authNotifier.appUser!.uid)
-          .get()
-          .then((value) {
+      return await _userRef.doc(authNotifier.appUser!.uid).get().then((value) {
         if (value.exists && value.data() != null) {
+          // * check if the user is of the same type
+          if (value.data()!['userType'] != authNotifier.userType.index) {
+            throw UnAutherizedException('User Type Mismatch');
+          }
           authNotifier.setAppUser(
               AppUser.getInstanceFromMap(authNotifier.userType, value.data()!));
           return true;
@@ -93,7 +90,7 @@ class AuthService {
         }
       }).timeout(_timeLimit);
     } on FirebaseAuthException {
-      throw UnAutherizedException();
+      throw UnAutherizedException("Firebase Exception");
     } on SocketException {
       throw FetchDataException('No Internet Connection');
     } on TimeoutException {
@@ -101,16 +98,16 @@ class AuthService {
     }
   }
 
-  // set user details to firebase !requires that appUser to be assigned the instance of the user according to userType
+  // set user details to firebase // !requires that appUser to be assigned the instance of the user according to userType
   Future<bool> setUserDetails(AuthNotifier authNotifier) async {
     try {
-      await _getCollection(authNotifier.userType)
+      await _userRef
           .doc(authNotifier.appUser!.uid)
           .set(authNotifier.appUser!.toMap())
           .timeout(_timeLimit);
       return true;
     } on FirebaseAuthException {
-      throw UnAutherizedException();
+      throw UnAutherizedException("Firebase Exception");
     } on SocketException {
       throw FetchDataException('No Internet Connection');
     } on TimeoutException {
@@ -118,7 +115,8 @@ class AuthService {
     }
   }
 
-  // initialize user !required to have authNotifier.userType set!
+  //? note: this is not user anywhere
+  // initialize user // !required to have authNotifier.userType set!
   Future<bool> initializeUser(AuthNotifier authNotifier) async {
     try {
       User? user = _auth.currentUser;
@@ -137,7 +135,7 @@ class AuthService {
         return false;
       }
     } on FirebaseAuthException {
-      throw UnAutherizedException();
+      throw UnAutherizedException("Firebase Exception");
     } on SocketException {
       throw FetchDataException('No Internet Connection');
     } on TimeoutException {
@@ -153,7 +151,7 @@ class AuthService {
     try {
       final googleUser = await googleSignIn.signIn();
       if (googleUser == null) {
-        throw UnAutherizedException;
+        throw UnAutherizedException("googleUser is null");
       }
       final googleAuth = await googleUser.authentication;
       final credential = GoogleAuthProvider.credential(
@@ -186,7 +184,7 @@ class AuthService {
         throw SocketException;
       }
     } on FirebaseAuthException {
-      throw UnAutherizedException();
+      throw UnAutherizedException("Firebase Exception");
     } on SocketException {
       throw FetchDataException('No Internet Connection');
     } on TimeoutException {
@@ -218,7 +216,7 @@ class AuthService {
         throw SocketException;
       }
     } on FirebaseAuthException {
-      throw UnAutherizedException();
+      throw UnAutherizedException("Firebase Exception");
     } on SocketException {
       throw FetchDataException('No Internet Connection');
     } on TimeoutException {
@@ -250,7 +248,7 @@ class AuthService {
         throw SocketException;
       }
     } on FirebaseAuthException {
-      throw UnAutherizedException();
+      throw UnAutherizedException("Firebase Exception");
     } on SocketException {
       throw FetchDataException('No Internet Connection');
     } on TimeoutException {
@@ -266,7 +264,7 @@ class AuthService {
       authNotifier.setAppUser(AppUser());
       return true;
     } on FirebaseAuthException {
-      throw UnAutherizedException();
+      throw UnAutherizedException("Firebase Exception");
     } on SocketException {
       throw FetchDataException('No Internet Connection');
     } on TimeoutException {
@@ -283,7 +281,7 @@ class AuthService {
           .timeout(_timeLimit);
       return true;
     } on FirebaseAuthException {
-      throw UnAutherizedException();
+      throw UnAutherizedException("Firebase Exception");
     } on SocketException {
       throw FetchDataException('No Internet Connection');
     } on TimeoutException {

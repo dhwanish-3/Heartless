@@ -2,29 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:heartless/shared/models/app_user.dart';
 
 class ConnectUsers {
-  static final _patientRef = FirebaseFirestore.instance.collection('Patients');
-  static final _doctorRef = FirebaseFirestore.instance.collection('Doctors');
-  static final _nurseRef = FirebaseFirestore.instance.collection('Nurses');
+  static final _userRef = FirebaseFirestore.instance.collection('Users');
 
   // get user details from uid
   static Future<AppUser?> getUserDetails(String uid) {
-    return _patientRef.doc(uid).get().then((value) {
+    return _userRef.doc(uid).get().then((value) {
       if (value.exists && value.data() != null) {
         return AppUser.fromMap(value.data()!);
       } else {
-        return _doctorRef.doc(uid).get().then((value) {
-          if (value.exists && value.data() != null) {
-            return AppUser.fromMap(value.data()!);
-          } else {
-            return _nurseRef.doc(uid).get().then((value) {
-              if (value.exists) {
-                return AppUser.fromMap(value.data()!);
-              } else {
-                return null;
-              }
-            });
-          }
-        });
+        return null;
       }
     });
   }
@@ -32,13 +18,14 @@ class ConnectUsers {
   // get all the nurses related to a doctor
   static Future<List<AppUser>> getDoctorNurses(String doctorId) async {
     List<AppUser> nurses = [];
-    await _doctorRef.doc(doctorId).get().then((value) async {
+    await _userRef.doc(doctorId).get().then((value) async {
       if (value.exists && value.data() != null) {
         List<String> nurseIds = List<String>.from(value.data()!['nurses']);
         for (var nurseId in nurseIds) {
-          await _nurseRef.doc(nurseId).get().then((value) {
+          await _userRef.doc(nurseId).get().then((value) {
             if (value.exists && value.data() != null) {
-              nurses.add(AppUser.fromMap(value.data()!));
+              nurses.add(
+                  AppUser.getInstanceFromMap(UserType.nurse, value.data()!));
             }
           });
         }
@@ -50,13 +37,14 @@ class ConnectUsers {
   // get all the patients related to a doctor
   static Future<List<AppUser>> getDoctorPatients(String doctorId) async {
     List<AppUser> patients = [];
-    await _doctorRef.doc(doctorId).get().then((value) async {
+    await _userRef.doc(doctorId).get().then((value) async {
       if (value.exists && value.data() != null) {
         List<String> patientIds = List<String>.from(value.data()!['patients']);
         for (var patientId in patientIds) {
-          await _patientRef.doc(patientId).get().then((value) {
+          await _userRef.doc(patientId).get().then((value) {
             if (value.exists && value.data() != null) {
-              patients.add(AppUser.fromMap(value.data()!));
+              patients.add(
+                  AppUser.getInstanceFromMap(UserType.patient, value.data()!));
             }
           });
         }
@@ -68,13 +56,14 @@ class ConnectUsers {
   // get all the patients related to a nurse
   static Future<List<AppUser>> getNursePatients(String nurseId) async {
     List<AppUser> patients = [];
-    await _nurseRef.doc(nurseId).get().then((value) async {
+    await _userRef.doc(nurseId).get().then((value) async {
       if (value.exists && value.data() != null) {
         List<String> patientIds = List<String>.from(value.data()!['patients']);
         for (var patientId in patientIds) {
-          await _patientRef.doc(patientId).get().then((value) {
+          await _userRef.doc(patientId).get().then((value) {
             if (value.exists && value.data() != null) {
-              patients.add(AppUser.fromMap(value.data()!));
+              patients.add(
+                  AppUser.getInstanceFromMap(UserType.patient, value.data()!));
             }
           });
         }
@@ -86,13 +75,14 @@ class ConnectUsers {
   // get all the doctors related to a nurse
   static Future<List<AppUser>> getNurseDoctors(String nurseId) async {
     List<AppUser> doctors = [];
-    await _nurseRef.doc(nurseId).get().then((value) async {
+    await _userRef.doc(nurseId).get().then((value) async {
       if (value.exists && value.data() != null) {
         List<String> doctorIds = List<String>.from(value.data()!['doctors']);
         for (var doctorId in doctorIds) {
-          await _doctorRef.doc(doctorId).get().then((value) {
+          await _userRef.doc(doctorId).get().then((value) {
             if (value.exists && value.data() != null) {
-              doctors.add(AppUser.fromMap(value.data()!));
+              doctors.add(
+                  AppUser.getInstanceFromMap(UserType.doctor, value.data()!));
             }
           });
         }
@@ -104,13 +94,14 @@ class ConnectUsers {
   // get all the doctors related to a patient
   static Future<List<AppUser>> getPatientDoctors(String patientId) async {
     List<AppUser> doctors = [];
-    await _patientRef.doc(patientId).get().then((value) async {
+    await _userRef.doc(patientId).get().then((value) async {
       if (value.exists && value.data() != null) {
         List<String> doctorIds = List<String>.from(value.data()!['doctors']);
         for (var doctorId in doctorIds) {
-          await _doctorRef.doc(doctorId).get().then((value) {
+          await _userRef.doc(doctorId).get().then((value) {
             if (value.exists && value.data() != null) {
-              doctors.add(AppUser.fromMap(value.data()!));
+              doctors.add(
+                  AppUser.getInstanceFromMap(UserType.doctor, value.data()!));
             }
           });
         }
@@ -122,13 +113,14 @@ class ConnectUsers {
   // get all the nurses related to a patient
   static Future<List<AppUser>> getPatientNurses(String patientId) async {
     List<AppUser> nurses = [];
-    await _patientRef.doc(patientId).get().then((value) async {
+    await _userRef.doc(patientId).get().then((value) async {
       if (value.exists && value.data() != null) {
         List<String> nurseIds = List<String>.from(value.data()!['nurses']);
         for (var nurseId in nurseIds) {
-          await _nurseRef.doc(nurseId).get().then((value) {
+          await _userRef.doc(nurseId).get().then((value) {
             if (value.exists && value.data() != null) {
-              nurses.add(AppUser.fromMap(value.data()!));
+              nurses.add(
+                  AppUser.getInstanceFromMap(UserType.nurse, value.data()!));
             }
           });
         }
@@ -141,10 +133,10 @@ class ConnectUsers {
   static Future<bool> connectPatientAndDoctor(
       {required String patientId, required String doctorId}) async {
     try {
-      await _patientRef.doc(patientId).update({
+      await _userRef.doc(patientId).update({
         'doctors': FieldValue.arrayUnion([doctorId])
       });
-      await _doctorRef.doc(doctorId).update({
+      await _userRef.doc(doctorId).update({
         'patients': FieldValue.arrayUnion([patientId])
       });
       return true;
@@ -157,10 +149,10 @@ class ConnectUsers {
   static Future<bool> connectNurseAndPatient(
       {required String patientId, required String nurseId}) async {
     try {
-      await _patientRef.doc(patientId).update({
+      await _userRef.doc(patientId).update({
         'nurses': FieldValue.arrayUnion([nurseId])
       });
-      await _nurseRef.doc(nurseId).update({
+      await _userRef.doc(nurseId).update({
         'patients': FieldValue.arrayUnion([patientId])
       });
       return true;
@@ -175,10 +167,10 @@ class ConnectUsers {
     required String nurseId,
   }) async {
     try {
-      await _doctorRef.doc(doctorId).update({
+      await _userRef.doc(doctorId).update({
         'nurses': FieldValue.arrayUnion([nurseId])
       });
-      await _nurseRef.doc(nurseId).update({
+      await _userRef.doc(nurseId).update({
         'doctors': FieldValue.arrayUnion([doctorId])
       });
       return true;

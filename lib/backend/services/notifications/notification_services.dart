@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:heartless/backend/services/auth/auth.dart';
+import 'package:heartless/backend/services/auth/auth_service.dart';
 import 'package:heartless/pages/chat/contacts_page.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
 import 'package:http/http.dart' as http;
