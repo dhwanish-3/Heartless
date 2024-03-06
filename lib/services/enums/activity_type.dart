@@ -28,7 +28,7 @@ extension TypeExtension on ActivityType {
   }
 }
 
-ActivityType fromString(String value) {
+ActivityType activityFromString(String value) {
   switch (value) {
     case 'Medicine':
       return ActivityType.medicine;
