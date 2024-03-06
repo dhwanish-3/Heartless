@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:heartless/backend/services/notifications/notification_services.dart';
 import 'package:heartless/services/routes/routes.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
 import 'package:heartless/shared/provider/theme_provider.dart';
@@ -16,7 +17,7 @@ void main() async {
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
   await Firebase.initializeApp();
-
+  await NotificationServices.initPushNotifications();
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => AuthNotifier()),
