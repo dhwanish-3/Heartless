@@ -41,7 +41,8 @@ class _VerificationPageState extends State<VerificationPage> {
     }
 
     void goHome() {
-      Navigator.pushNamed(context, '/home'); // todo : add correct name
+      Navigator.pushNamedAndRemoveUntil(
+          context, '/home', (route) => false); // todo : add correct name
     }
 
     Future<void> submitForm() async {
