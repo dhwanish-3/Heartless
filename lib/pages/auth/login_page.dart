@@ -59,7 +59,7 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     void goHome() {
-      Navigator.pushNamed(context, '/home');
+      Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
     }
 
     // patient login

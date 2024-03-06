@@ -26,6 +26,7 @@ class _MessageFieldState extends State<MessageField> {
         ),
         child: TextFormField(
           maxLines: null,
+          keyboardType: TextInputType.multiline,
           controller: widget.messageController,
           style: Theme.of(context).textTheme.bodyMedium,
           decoration: InputDecoration(

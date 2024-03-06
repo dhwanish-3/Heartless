@@ -61,7 +61,7 @@ class _SignUpPageState extends State<SignUpPage> {
     }
 
     void goHome() {
-      Navigator.pushNamed(context, '/home');
+      Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
     }
 
     // patient signup
@@ -295,7 +295,6 @@ class _SignUpPageState extends State<SignUpPage> {
                                                         Radius.circular(15))),
                                           ),
                                           onChanged: (phone) {
-                                            print(phone.completeNumber);
                                             _phoneNumber = phone.completeNumber;
                                           },
                                         ),
