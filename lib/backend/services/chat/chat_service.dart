@@ -40,22 +40,10 @@ class ChatService {
   static Future<void> updateOnlineStatus(
       String uid, bool isOnline, UserType userType) async {
     try {
-      if (userType == UserType.patient) {
-        await FirebaseFirestore.instance
-            .collection("Patients")
-            .doc(uid)
-            .update({'isOnline': isOnline}).timeout(_timeLimit);
-      } else if (userType == UserType.doctor) {
-        await FirebaseFirestore.instance
-            .collection("Doctors")
-            .doc(uid)
-            .update({'isOnline': isOnline}).timeout(_timeLimit);
-      } else if (userType == UserType.nurse) {
-        await FirebaseFirestore.instance
-            .collection("Nurses")
-            .doc(uid)
-            .update({'isOnline': isOnline}).timeout(_timeLimit);
-      }
+      await FirebaseFirestore.instance
+          .collection("Users")
+          .doc(uid)
+          .update({'isOnline': isOnline}).timeout(_timeLimit);
     } on FirebaseAuthException {
       throw UnAutherizedException();
     } on SocketException {
@@ -69,22 +57,10 @@ class ChatService {
   static Future<void> updateLastSeen(
       String uid, DateTime lastSeen, UserType userType) async {
     try {
-      if (userType == UserType.patient) {
-        await FirebaseFirestore.instance
-            .collection("Patients")
-            .doc(uid)
-            .update({'lastSeen': lastSeen.toString()}).timeout(_timeLimit);
-      } else if (userType == UserType.doctor) {
-        await FirebaseFirestore.instance
-            .collection("Doctors")
-            .doc(uid)
-            .update({'lastSeen': lastSeen.toString()}).timeout(_timeLimit);
-      } else if (userType == UserType.nurse) {
-        await FirebaseFirestore.instance
-            .collection("Nurses")
-            .doc(uid)
-            .update({'lastSeen': lastSeen.toString()}).timeout(_timeLimit);
-      }
+      await FirebaseFirestore.instance
+          .collection("Users")
+          .doc(uid)
+          .update({'lastSeen': lastSeen.toString()}).timeout(_timeLimit);
     } on FirebaseAuthException {
       throw UnAutherizedException();
     } on SocketException {

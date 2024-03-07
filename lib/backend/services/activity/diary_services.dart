@@ -12,7 +12,7 @@ class DiaryService {
       DateTime startOfWeek = DateService.getStartOfWeek(diary.time);
       // getting the id of the new document
       DocumentReference docRef = FirebaseFirestore.instance
-          .collection('Patients')
+          .collection('Users')
           .doc(diary.patientId)
           .collection("WeeklyData")
           .doc(startOfWeek.toString())
@@ -39,7 +39,7 @@ class DiaryService {
       DateTime startOfWeek = DateService.getStartOfWeek(diary.time);
 
       await FirebaseFirestore.instance
-          .collection('Patients')
+          .collection('Users')
           .doc(diary.patientId)
           .collection("WeeklyData")
           .doc(startOfWeek.toString())
@@ -65,7 +65,7 @@ class DiaryService {
       DateTime startOfWeek = DateService.getStartOfWeek(diary.time);
 
       await FirebaseFirestore.instance
-          .collection('Patients')
+          .collection('Users')
           .doc(diary.patientId)
           .collection("WeeklyData")
           .doc(startOfWeek.toString())
@@ -89,7 +89,7 @@ class DiaryService {
     DateTime startOfDay = DateService.getStartOfDay(date);
     DateTime endOfDay = startOfDay.add(const Duration(days: 1));
     return FirebaseFirestore.instance
-        .collection('Patients')
+        .collection('Users')
         .doc(patientId)
         .collection('WeeklyData')
         .doc(startOfWeek.toString())

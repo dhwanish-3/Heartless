@@ -14,7 +14,7 @@ class ActivityService {
     DateTime startOfWeek = DateService.getStartOfWeek(DateTime.now());
     try {
       await FirebaseFirestore.instance
-          .collection('Patients')
+          .collection('Users')
           .doc(patientId)
           .collection("WeeklyData")
           .doc(startOfWeek.toString())
@@ -37,7 +37,7 @@ class ActivityService {
     try {
       DateTime startOfWeek = DateService.getStartOfWeek(activity.time);
       DocumentReference documentReference = FirebaseFirestore.instance
-          .collection('Patients')
+          .collection('Users')
           .doc(activity.patientId)
           .collection("WeeklyData")
           .doc(startOfWeek.toString())
@@ -66,7 +66,7 @@ class ActivityService {
       }
       DateTime startOfWeek = DateService.getStartOfWeek(activity.time);
       await FirebaseFirestore.instance
-          .collection('Patients')
+          .collection('Users')
           .doc(activity.patientId)
           .collection("WeeklyData")
           .doc(startOfWeek.toString())
@@ -92,7 +92,7 @@ class ActivityService {
       }
       DateTime startOfWeek = DateService.getStartOfWeek(activity.time);
       await FirebaseFirestore.instance
-          .collection('Patients')
+          .collection('Users')
           .doc(activity.patientId)
           .collection("WeeklyData")
           .doc(startOfWeek.toString())
@@ -116,7 +116,7 @@ class ActivityService {
     DateTime startOfWeek = DateService.getStartOfWeek(date);
     DateTime startOfDay = DateService.getStartOfDay(date);
     return FirebaseFirestore.instance
-        .collection('Patients')
+        .collection('Users')
         .doc(patientId)
         .collection("WeeklyData")
         .doc(startOfWeek.toString())
@@ -136,7 +136,7 @@ class ActivityService {
     try {
       // get all the activities with status upcoming
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-          .collection('Patients')
+          .collection('Users')
           .doc(patientId)
           .collection("WeeklyData")
           .doc(startOfWeek.toString())
@@ -154,7 +154,7 @@ class ActivityService {
             Activity.fromMap(element.data() as Map<String, dynamic>);
         if (activity.time.isBefore(DateTime.now())) {
           await FirebaseFirestore.instance
-              .collection('Patients')
+              .collection('Users')
               .doc(patientId)
               .collection("WeeklyData")
               .doc(element.id)
@@ -178,7 +178,7 @@ class ActivityService {
     DateTime startOfWeek = DateService.getStartOfWeek(dateTime);
     DateTime startOfDay = DateService.getStartOfDay(dateTime);
     return FirebaseFirestore.instance
-        .collection('Patients')
+        .collection('Users')
         .doc(patientId)
         .collection("WeeklyData")
         .doc(startOfWeek.toString())
@@ -197,7 +197,7 @@ class ActivityService {
     DateTime startOfWeek = DateService.getStartOfWeek(dateTime);
     DateTime startOfDay = DateService.getStartOfDay(dateTime);
     return FirebaseFirestore.instance
-        .collection('Patients')
+        .collection('Users')
         .doc(patientId)
         .collection("WeeklyData")
         .doc(startOfWeek.toString())
@@ -216,7 +216,7 @@ class ActivityService {
     DateTime startOfWeek = DateService.getStartOfWeek(dateTime);
     DateTime startOfDay = DateService.getStartOfDay(dateTime);
     return FirebaseFirestore.instance
-        .collection('Patients')
+        .collection('Users')
         .doc(patientId)
         .collection("WeeklyData")
         .doc(startOfWeek.toString())
@@ -234,7 +234,7 @@ class ActivityService {
       DateTime date, String patientId) {
     DateTime startOfWeek = DateService.getStartOfWeek(date);
     return FirebaseFirestore.instance
-        .collection('Patients')
+        .collection('Users')
         .doc(patientId)
         .collection("WeeklyData")
         .doc(startOfWeek.toString())

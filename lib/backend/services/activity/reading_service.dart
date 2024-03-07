@@ -13,7 +13,7 @@ class ReadingService {
       DateTime startOfWeek = DateService.getStartOfWeek(reading.time);
       // getting the id of the new document
       DocumentReference docRef = FirebaseFirestore.instance
-          .collection('Patients')
+          .collection('Users')
           .doc(reading.patientId)
           .collection("WeeklyData")
           .doc(startOfWeek.toString())
@@ -40,7 +40,7 @@ class ReadingService {
       DateTime startOfWeek = DateService.getStartOfWeek(reading.time);
 
       await FirebaseFirestore.instance
-          .collection('Patients')
+          .collection('Users')
           .doc(reading.patientId)
           .collection("WeeklyData")
           .doc(startOfWeek.toString())
@@ -66,7 +66,7 @@ class ReadingService {
       DateTime startOfWeek = DateService.getStartOfWeek(reading.time);
 
       await FirebaseFirestore.instance
-          .collection('Patients')
+          .collection('Users')
           .doc(reading.patientId)
           .collection("WeeklyData")
           .doc(startOfWeek.toString())
@@ -90,7 +90,7 @@ class ReadingService {
     DateTime startOfDay = DateService.getStartOfDay(date);
     DateTime endOfDay = startOfDay.add(const Duration(days: 1));
     return FirebaseFirestore.instance
-        .collection('Patients')
+        .collection('Users')
         .doc(patientId)
         .collection('WeeklyData')
         .doc(startOfWeek.toString())
@@ -105,7 +105,7 @@ class ReadingService {
       DateTime date, String patientId) {
     DateTime startOfWeek = DateService.getStartOfWeek(date);
     return FirebaseFirestore.instance
-        .collection('Patients')
+        .collection('Users')
         .doc(patientId)
         .collection('WeeklyData')
         .doc(startOfWeek.toString())
