@@ -1,14 +1,11 @@
 import "dart:developer";
-import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:flutter_svg/svg.dart";
 import "package:heartless/backend/controllers/auth_controller.dart";
-import 'package:heartless/backend/services/auth/auth_service.dart';
 import "package:heartless/backend/services/notifications/notification_services.dart";
 import "package:heartless/main.dart";
-import "package:heartless/pages/auth/verification_page.dart";
 import "package:heartless/services/local_storage/local_storage.dart";
-import "package:heartless/services/utils/toast_message.dart";
+import "package:heartless/services/phone_auth/phone_auth.dart";
 import 'package:heartless/shared/models/app_user.dart';
 import "package:heartless/shared/provider/auth_notifier.dart";
 import "package:heartless/shared/constants.dart";
@@ -35,8 +32,6 @@ class _LoginPageState extends State<LoginPage> {
   String _phoneNumber = '';
 
   final AuthController _authController = AuthController();
-
-  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   void dispose() {
@@ -89,65 +84,15 @@ class _LoginPageState extends State<LoginPage> {
       }
     }
 
-    // patient login with phone
-    Future<void> loginWithPhone() async {
-      AppUser appUser = AppUser.getInstance(authNotifier.userType);
-      appUser.phone = _phoneNumber;
-      authNotifier.setAppUser(appUser);
-      bool alreadyExists = await AuthService()
-          .getUserDetailswithPhone(authNotifier, _phoneNumber);
-      if (!alreadyExists) {
-        ToastMessage().showError("User does not exist");
-        widgetNotifier.setLoading(false);
-        return;
-      }
-      _auth.verifyPhoneNumber(
-        phoneNumber: _phoneNumber,
-        verificationCompleted: (PhoneAuthCredential credential) async {
-          try {
-            User? user = (await _auth.signInWithCredential(credential)).user;
-            if (user != null) {
-              await LocalStorage.saveUser(authNotifier);
-              ToastMessage().showSuccess("Logged in successfully");
-              widgetNotifier.setLoading(false);
-              NotificationServices.getFirebaseMessagingToken(authNotifier);
-              goHome();
-            } else {
-              await _auth.signOut();
-              ToastMessage().showError("User does not exist");
-            }
-          } catch (e) {
-            ToastMessage().showError(e.toString());
-          }
-          widgetNotifier.setLoading(false);
-        },
-        verificationFailed: (FirebaseAuthException e) {
-          ToastMessage().showError("Verification failed");
-          widgetNotifier.setLoading(false);
-        },
-        codeSent: (String verificationId, int? resendToken) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => VerificationPage(
-                verificationId: verificationId,
-              ),
-            ),
-          );
-          widgetNotifier.setLoading(false);
-        },
-        codeAutoRetrievalTimeout: (String verificationId) {
-          ToastMessage().showError("Code auto retrieval timeout");
-          widgetNotifier.setLoading(false);
-        },
-      );
-    }
-
     void phoneLoginSubmitForm() async {
       if (_phoneFormKey.currentState!.validate()) {
         widgetNotifier.setLoading(true);
         _phoneFormKey.currentState!.save();
-        await loginWithPhone();
+        AppUser appUser = AppUser.getInstance(authNotifier.userType);
+        appUser.phone = _phoneNumber;
+        authNotifier.setAppUser(appUser);
+        await PhoneAuth.loginWithPhone(
+            authNotifier, widgetNotifier, _phoneNumber, context);
       }
     }
 
