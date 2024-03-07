@@ -1,11 +1,7 @@
-import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:flutter_svg/svg.dart";
-import 'package:heartless/backend/services/auth/auth_service.dart';
-import "package:heartless/backend/services/notifications/notification_services.dart";
 import "package:heartless/main.dart";
-import "package:heartless/services/local_storage/local_storage.dart";
-import "package:heartless/services/utils/toast_message.dart";
+import "package:heartless/services/phone_auth/phone_auth.dart";
 import "package:heartless/shared/provider/auth_notifier.dart";
 import "package:heartless/shared/provider/widget_provider.dart";
 import 'package:heartless/widgets/auth/otp_input_field.dart';
@@ -25,7 +21,6 @@ class _VerificationPageState extends State<VerificationPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _otpController = TextEditingController();
 
-  final FirebaseAuth _auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
@@ -49,41 +44,12 @@ class _VerificationPageState extends State<VerificationPage> {
       if (_formKey.currentState!.validate() && widget.verificationId != null) {
         _formKey.currentState!.save();
         widgetNotifier.setLoading(true);
-        try {
-          bool alreadyExists = await AuthService().getUserDetailswithPhone(
-              authNotifier, authNotifier.appUser!.phone!);
-          PhoneAuthCredential credential = PhoneAuthProvider.credential(
-              verificationId: widget.verificationId ?? "ERROR",
-              smsCode: _otpController.text);
-          User? user = (await _auth.signInWithCredential(credential)).user;
-          if (alreadyExists) {
-            if (user != null) {
-              await LocalStorage.saveUser(authNotifier);
-              ToastMessage().showSuccess("Logged in successfully");
-              widgetNotifier.setLoading(false);
-              goHome();
-            } else {
-              await _auth.signOut();
-              ToastMessage().showError("User does not exist");
-            }
-          } else {
-            if (user != null) {
-              authNotifier.appUser!.uid = user.uid;
-              await AuthService().setUserDetails(authNotifier);
-              await LocalStorage.saveUser(authNotifier);
-              ToastMessage().showSuccess("Logged in successfully");
-              widgetNotifier.setLoading(false);
-              goHome();
-            } else {
-              await _auth.signOut();
-              ToastMessage().showError("User does not exist");
-            }
-          }
-          NotificationServices.getFirebaseMessagingToken(authNotifier);
-        } catch (e) {
-          ToastMessage().showError(e.toString());
-        }
+        bool success = await PhoneAuth.verifyOTP(
+            authNotifier, widget.verificationId!, _otpController.text);
         widgetNotifier.setLoading(false);
+        if (success) {
+          goHome();
+        }
       }
     }
 

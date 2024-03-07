@@ -27,9 +27,9 @@ class _SplashScreenState extends State<SplashScreen> {
       SplashServices().hasLoggedIn(authNotifier).then((value) {
         if (value) {
           NotificationServices.getFirebaseMessagingToken(authNotifier);
-          Navigator.pushNamed(context, '/home');
+          Navigator.pushReplacementNamed(context, '/home');
         } else {
-          Navigator.pushNamed(context, '/chooseUserType');
+          Navigator.pushReplacementNamed(context, '/chooseUserType');
         }
       });
     });
