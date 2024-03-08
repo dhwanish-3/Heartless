@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:flutter/scheduler.dart';
 import 'package:heartless/backend/controllers/chat_controller.dart';
 import 'package:heartless/services/date/date_service.dart';
@@ -48,7 +47,6 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    _scrollToBottom();
     AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
     // function to send message
@@ -66,7 +64,6 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
       ChatController().deleteMessage(widget.chatRoom, message);
     }
 
-    final double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
           title: Column(
@@ -100,16 +97,15 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
                     );
                   } else if (snapshot.hasData &&
                       snapshot.data.docs.isNotEmpty) {
+                    SchedulerBinding.instance.addPostFrameCallback((_) {
+                      _scrollToBottom();
+                    });
                     int newNumberOfMessages = snapshot.data.docs.length;
                     // mark all messages as read
                     if (numberOfMessages != newNumberOfMessages) {
                       ChatController.markMessagesAsRead(widget.chatRoom);
                       numberOfMessages = newNumberOfMessages;
-                      SchedulerBinding.instance.addPostFrameCallback((_) {
-                        _scrollToBottom();
-                      });
                     }
-                    log("Data: ${snapshot.data.docs.length}");
 
                     return ListView.builder(
                       controller: _scrollController,

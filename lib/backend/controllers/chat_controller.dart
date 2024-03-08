@@ -19,29 +19,32 @@ class ChatController with BaseController {
     return ChatService.chatExists(chatId);
   }
 
+  String getChatRoomId(AppUser user1, AppUser user2) {
+    if (user1.uid.hashCode <= user2.uid.hashCode) {
+      return '${user1.uid}_${user2.uid}';
+    } else {
+      return '${user2.uid}_${user1.uid}';
+    }
+  }
+
   // to create a new chat room or return the existing chat room
   Future<ChatRoom?> createChatRoom(
       AuthNotifier authNotifier, AppUser user) async {
     // check if the chat room already exists
-    ChatRoom? chatRoom = await ChatController.chatExists(
-        '${authNotifier.appUser!.uid}_${user.uid}');
+    String chatId = getChatRoomId(authNotifier.appUser!, user);
+    ChatRoom? chatRoom = await chatExists(chatId);
     if (chatRoom != null) {
       return chatRoom;
     }
-    chatRoom = await ChatController.chatExists(
-        '${user.uid}_${authNotifier.appUser!.uid}');
-    if (chatRoom != null) {
-      return chatRoom;
-    }
+
     // create a new chat since it does not exist
     DocumentReference<Map<String, dynamic>> me = FirebaseFirestore.instance
-        .collection('${userTypeToString(authNotifier.userType)}s')
+        .collection('Users')
         .doc(authNotifier.appUser!.uid);
-    DocumentReference<Map<String, dynamic>> other = FirebaseFirestore.instance
-        .collection('${userTypeToString(user.userType)}s')
-        .doc(user.uid);
+    DocumentReference<Map<String, dynamic>> other =
+        FirebaseFirestore.instance.collection('Users').doc(user.uid);
     chatRoom = ChatRoom(me, other);
-    chatRoom.id = '${me.id}_${other.id}';
+    chatRoom.id = chatId;
     // creating the chat room
     bool success = await ChatService.createChatRoom(chatRoom).then((value) {
       return handleSuccess(true, "Chat Room Created Successfully");
@@ -97,21 +100,21 @@ class ChatController with BaseController {
         ? chatRoom.user2Ref!.id
         : chatRoom.user1Ref!.id;
     return MessageService.sendMessage(chatRoom, message)
-        .then((value) => handleSuccess(true, "Message Sent Successfully"))
+        .then((value) => handleSuccess(true, "Message Sent"))
         .catchError((error) => handleError(error));
   }
 
   // to delete a message
   Future<bool> deleteMessage(ChatRoom chatRoom, Message message) {
     return MessageService.deleteMessage(chatRoom, message)
-        .then((value) => handleSuccess(true, "Message Deleted Successfully"))
+        .then((value) => handleSuccess(true, "Message Deleted"))
         .catchError((error) => handleError(error));
   }
 
   // to edit a message
   Future<bool> editMessage(String chatId, Message message) {
     return MessageService.editMessage(chatId, message)
-        .then((value) => handleSuccess(true, "Message Edited Successfully"))
+        .then((value) => handleSuccess(true, "Message Edited"))
         .catchError((error) => handleError(error));
   }
 

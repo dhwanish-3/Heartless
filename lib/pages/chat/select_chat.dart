@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:heartless/backend/controllers/chat_controller.dart';
 import 'package:heartless/backend/controllers/connect_users_controller.dart';
@@ -25,7 +24,6 @@ class _MyWidgetState extends State<SelectChatPage> {
       ConnectUsersController.getAllUsersConnectedToPatient(
               authNotifier.appUser!.uid)
           .then((value) {
-        log(value.toString());
         setState(() {
           users = value;
         });
@@ -34,7 +32,6 @@ class _MyWidgetState extends State<SelectChatPage> {
       ConnectUsersController.getAllUsersConnectedToDoctor(
               authNotifier.appUser!.uid)
           .then((value) {
-        log(value.toString());
         setState(() {
           users = value;
         });
@@ -43,7 +40,6 @@ class _MyWidgetState extends State<SelectChatPage> {
       ConnectUsersController.getAllUsersConnectedToNurse(
               authNotifier.appUser!.uid)
           .then((value) {
-        log(value.toString());
         setState(() {
           users = value;
         });

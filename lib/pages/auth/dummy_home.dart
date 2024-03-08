@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -61,7 +59,6 @@ class _DummyHomeState extends State<DummyHome> {
         body: Text("APP user is null"),
       );
     } else {
-      log((authNotifier.appUser!.imageUrl));
       return WillPopScope(
         onWillPop: () async {
           final val = await showDialog<bool>(
@@ -153,35 +150,39 @@ class _DummyHomeState extends State<DummyHome> {
                             MaterialPageRoute(builder: (_) => const ScanQR()));
                       },
                       child: const Text('Scan QR')),
-                  Column(
-                    children: [
-                      const Text('List of patients (tap to view profile)'),
-                      SizedBox(
-                        height: 200,
-                        child: ListView.builder(
-                          itemCount: users.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            AppUser user = users[index];
-                            return ListTile(
-                              title: Text(user.name),
-                              leading: CircleAvatar(
-                                backgroundImage: NetworkImage(user.imageUrl),
+                  authNotifier.appUser!.userType != UserType.patient
+                      ? Column(
+                          children: [
+                            const Text(
+                                'List of patients (tap to view profile)'),
+                            SizedBox(
+                              height: 200,
+                              child: ListView.builder(
+                                itemCount: users.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  AppUser user = users[index];
+                                  return ListTile(
+                                    title: Text(user.name),
+                                    leading: CircleAvatar(
+                                      backgroundImage:
+                                          NetworkImage(user.imageUrl),
+                                    ),
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  PatientProfilePage(
+                                                    patient: user,
+                                                  )));
+                                    },
+                                  );
+                                },
                               ),
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            PatientProfilePage(
-                                              patient: user,
-                                            )));
-                              },
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
+                            ),
+                          ],
+                        )
+                      : Container(),
                   ElevatedButton(
                       onPressed: () {
                         Navigator.push(

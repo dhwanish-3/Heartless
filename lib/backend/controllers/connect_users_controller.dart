@@ -56,4 +56,36 @@ class ConnectUsersController {
     });
     return users;
   }
+
+  static Future<void> connectUsers(AppUser user1, AppUser user2) async {
+    if ((user1.userType == UserType.doctor &&
+        user2.userType == UserType.patient)) {
+      await ConnectUsers.connectPatientAndDoctor(
+          patientId: user2.uid, doctorId: user1.uid);
+    } else if (user1.userType == UserType.patient &&
+        user2.userType == UserType.doctor) {
+      await ConnectUsers.connectPatientAndDoctor(
+          patientId: user1.uid, doctorId: user2.uid);
+    }
+    // connect nurse and patient
+    else if (user1.userType == UserType.nurse &&
+        user2.userType == UserType.patient) {
+      await ConnectUsers.connectNurseAndPatient(
+          patientId: user2.uid, nurseId: user1.uid);
+    } else if (user1.userType == UserType.patient &&
+        user2.userType == UserType.nurse) {
+      await ConnectUsers.connectNurseAndPatient(
+          patientId: user1.uid, nurseId: user2.uid);
+    }
+    // connect doctor and nurse
+    else if (user1.userType == UserType.doctor &&
+        user2.userType == UserType.nurse) {
+      await ConnectUsers.connectDoctorAndNurse(
+          doctorId: user1.uid, nurseId: user2.uid);
+    } else if (user1.userType == UserType.nurse &&
+        user2.userType == UserType.doctor) {
+      await ConnectUsers.connectDoctorAndNurse(
+          doctorId: user2.uid, nurseId: user1.uid);
+    }
+  }
 }

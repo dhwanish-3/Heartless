@@ -1,5 +1,3 @@
-import "dart:developer";
-
 import "package:connectivity_plus/connectivity_plus.dart";
 import "package:flutter/material.dart";
 import "package:flutter_svg/svg.dart";
@@ -37,7 +35,6 @@ class _SplashScreenState extends State<SplashScreen> {
   void getConnectivity() async {
     connectivity.onConnectivityChanged
         .listen((ConnectivityResult result) async {
-      log(result.toString());
       if (result == ConnectivityResult.none && !isAlertSet) {
         showFormDialog();
         isAlertSet = true;
@@ -79,7 +76,6 @@ class _SplashScreenState extends State<SplashScreen> {
                     if (context.mounted) {
                       Navigator.pop(context);
                       isAlertSet = false;
-                      log("alert set $isAlertSet");
                       if (inSplashScreen) {
                         moveForward();
                       }
