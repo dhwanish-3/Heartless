@@ -22,6 +22,7 @@ class SchedulePage extends StatelessWidget {
         Provider.of<WidgetNotifier>(context, listen: false);
     AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
+
     Widget buildScheduleWidget(Activity activity) {
       // if the toggle is not in all tab, then show the reminders of the selected type
       if (widgetNotifier.scheduleToggleType != ScheduleToggleType.all) {
@@ -44,6 +45,9 @@ class SchedulePage extends StatelessWidget {
       }
     }
 
+    //* setting the selected date to today without notifying the listeners (if notified, it will rebuild the whole widget tree & lead to error, which is not needed here)
+    widgetNotifier.setSelectedDateWithoutNotifying(DateTime.now());
+
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(200),
@@ -63,7 +67,7 @@ class SchedulePage extends StatelessWidget {
               initialDate: widgetNotifier.selectedDate,
               firstDate: DateTime.now().subtract(const Duration(days: 180)),
               lastDate: DateTime.now().add(const Duration(days: 100)),
-              onDateSelected: (date) async {
+              onDateSelected: (date) {
                 widgetNotifier.setSelectedDate(date);
               },
             ),
@@ -78,27 +82,29 @@ class SchedulePage extends StatelessWidget {
           child: SingleChildScrollView(
         child: Column(
           children: [
-            StreamBuilder(
-                stream: ActivityController.getAllActivitiesOfTheDate(
-                    widgetNotifier.selectedDate, patient.uid),
-                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  if (snapshot.hasData && snapshot.data.docs.isNotEmpty) {
-                    return ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: snapshot.data.docs.length,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          Activity activity = Activity.fromMap(
-                              snapshot.data.docs[index].data()
-                                  as Map<String, dynamic>);
-                          return buildScheduleWidget(activity);
-                        });
-                  } else {
-                    return const Center(
-                      child: Text("No reminders yet"),
-                    );
-                  }
-                }),
+            Consumer<WidgetNotifier>(builder: (context, value, child) {
+              return StreamBuilder(
+                  stream: ActivityController.getAllActivitiesOfTheDate(
+                      widgetNotifier.selectedDate, patient.uid),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.hasData && snapshot.data.docs.isNotEmpty) {
+                      return ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: snapshot.data.docs.length,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            Activity activity = Activity.fromMap(
+                                snapshot.data.docs[index].data()
+                                    as Map<String, dynamic>);
+                            return buildScheduleWidget(activity);
+                          });
+                    } else {
+                      return const Center(
+                        child: Text("No reminders yet"),
+                      );
+                    }
+                  });
+            }),
           ],
         ),
       )),

@@ -35,7 +35,8 @@ class _CreatePasswordPageState extends State<CreatePasswordPage> {
     double screenWidth = MediaQuery.of(context).size.width;
     WidgetNotifier widgetNotifier =
         Provider.of<WidgetNotifier>(context, listen: false);
-    final themeProvider = Provider.of<ThemeNotifier>(context);
+    ThemeNotifier themeProvider =
+        Provider.of<ThemeNotifier>(context, listen: false);
 
     void goBack() {
       Navigator.pop(
