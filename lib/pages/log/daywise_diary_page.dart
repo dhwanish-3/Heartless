@@ -19,7 +19,12 @@ class DayWiseDiary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    WidgetNotifier widgetNotifier = Provider.of<WidgetNotifier>(context);
+    WidgetNotifier widgetNotifier =
+        Provider.of<WidgetNotifier>(context, listen: false);
+
+    //* setting the selected date to today without notifying the listeners (if notified, it will rebuild the whole widget tree & lead to error, which is not needed here)
+    widgetNotifier.setSelectedDateWithoutNotifying(DateTime.now());
+
     return Scaffold(
         appBar: CalendarSlider(
           // controller: calendarSliderController,

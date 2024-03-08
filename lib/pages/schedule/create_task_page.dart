@@ -69,6 +69,10 @@ class _TaskFormPageState extends State<TaskFormPage> {
 
   @override
   Widget build(BuildContext context) {
+    final List<String> listOfDropdownItems = [];
+    for (ActivityType type in ActivityType.values) {
+      listOfDropdownItems.add(type.dropDownValue);
+    }
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -126,16 +130,12 @@ class _TaskFormPageState extends State<TaskFormPage> {
                           ],
                         ),
                         child: DropDownWidget(
-                          dropdownItems: const [
-                            '',
-                            'Exercise',
-                            'Food',
-                          ],
+                          dropdownItems: listOfDropdownItems,
                           dropdownValue: typeDropDownValue.dropDownValue,
                           onChanged: (newValue) {
                             setState(() {
+                              // todo: dont use setstate, user widgetNotifier
                               typeDropDownValue = activityFromString(newValue);
-                              print("New Value at parent: $newValue");
                             });
                           },
                         ))),
@@ -197,7 +197,6 @@ class _TaskFormPageState extends State<TaskFormPage> {
                           onChanged: (newValue) {
                             setState(() {
                               dateDropDownValue = newValue;
-                              print("New Value at parent: $newValue");
                             });
                           },
                         ))),

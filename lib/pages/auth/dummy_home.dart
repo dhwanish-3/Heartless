@@ -152,7 +152,7 @@ class _DummyHomeState extends State<DummyHome> {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (_) => const ScanQR()));
                       },
-                      child: const Text('Scan QR 23')),
+                      child: const Text('Scan QR')),
                   Column(
                     children: [
                       const Text('List of patients (tap to view profile)'),

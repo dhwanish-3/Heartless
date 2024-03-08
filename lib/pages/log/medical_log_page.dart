@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:heartless/main.dart';
 import 'package:heartless/pages/log/daywise_diary_page.dart';
 import 'package:heartless/shared/constants.dart';
 import 'package:heartless/shared/models/app_user.dart';
+import 'package:heartless/shared/provider/widget_provider.dart';
 import 'package:heartless/widgets/log/diary_list.dart';
 import 'package:heartless/widgets/log/medical_metrics.dart';
 
@@ -11,6 +13,12 @@ class MedicalLogPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    WidgetNotifier widgetNotifier =
+        Provider.of<WidgetNotifier>(context, listen: false);
+
+    //* setting the selected date to today without notifying the listeners (if notified, it will rebuild the whole widget tree & lead to error, which is not needed here)
+    widgetNotifier.setSelectedDateWithoutNotifying(DateTime.now());
+
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       body: SafeArea(

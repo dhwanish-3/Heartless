@@ -143,8 +143,12 @@ class _DayWiseLogState extends State<DayWiseLog> {
 
   @override
   Widget build(BuildContext context) {
-    WidgetNotifier widgetNotifier = Provider.of<WidgetNotifier>(context);
-    widgetNotifier.setSelectedDate(DateTime.now());
+    WidgetNotifier widgetNotifier =
+        Provider.of<WidgetNotifier>(context, listen: false);
+
+    //* setting the selected date to today without notifying the listeners (if notified, it will rebuild the whole widget tree & lead to error, which is not needed here)
+    widgetNotifier.setSelectedDateWithoutNotifying(DateTime.now());
+
     return Scaffold(
         floatingActionButton: FloatingActionButton(
           onPressed: () {
@@ -173,28 +177,30 @@ class _DayWiseLogState extends State<DayWiseLog> {
         ),
         body: Column(
           children: [
-            StreamBuilder(
-                stream: ReadingController.getAllReadingsOfTheDate(
-                    widgetNotifier.selectedDate, widget.patient.uid),
-                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  if (snapshot.hasData && snapshot.data.docs.isNotEmpty) {
-                    return ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: snapshot.data.docs.length,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          Reading reading =
-                              Reading.fromMap(snapshot.data.docs[index].data());
-                          return ReadingTile(
-                            reading: reading.value.toString(),
-                            comment: reading.comments,
-                            time: reading.time.toString(),
-                          );
-                        });
-                  } else {
-                    return const Text("No reading available");
-                  }
-                })
+            Consumer<WidgetNotifier>(builder: (context, widgetNotifier, child) {
+              return StreamBuilder(
+                  stream: ReadingController.getAllReadingsOfTheDate(
+                      widgetNotifier.selectedDate, widget.patient.uid),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.hasData && snapshot.data.docs.isNotEmpty) {
+                      return ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: snapshot.data.docs.length,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            Reading reading = Reading.fromMap(
+                                snapshot.data.docs[index].data());
+                            return ReadingTile(
+                              reading: reading.value.toString(),
+                              comment: reading.comments,
+                              time: reading.time.toString(),
+                            );
+                          });
+                    } else {
+                      return const Text("No reading available");
+                    }
+                  });
+            })
           ],
         ));
   }

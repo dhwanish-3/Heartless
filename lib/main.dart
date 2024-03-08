@@ -33,7 +33,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ThemeNotifier themeNotifier = Provider.of<ThemeNotifier>(context);
+    ThemeNotifier themeNotifier =
+        Provider.of<ThemeNotifier>(context, listen: false);
     return MaterialApp(
       title: 'Heart Recovery',
       debugShowCheckedModeBanner: false,

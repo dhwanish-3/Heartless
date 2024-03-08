@@ -21,6 +21,14 @@ class DiaryListBuilder extends StatefulWidget {
 class _DiaryListState extends State<DiaryListBuilder> {
   final DiaryController _diaryController = DiaryController();
 
+  double calculateHeight(int length) {
+    if (length % 2 == 0) {
+      return (length / 2) * 200;
+    } else {
+      return ((length + 1) / 2) * 200;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     WidgetNotifier widgetNotifier =
@@ -64,14 +72,6 @@ class _DiaryListState extends State<DiaryListBuilder> {
     }
 
     return Consumer<WidgetNotifier>(builder: (context, value, child) {
-      double calculateHeight(int length) {
-        if (length % 2 == 0) {
-          return (length / 2) * 200;
-        } else {
-          return ((length + 1) / 2) * 200;
-        }
-      }
-
       return StreamBuilder(
           stream: DiaryController.getAllDiarysOfTheDate(
               widgetNotifier.selectedDate, widget.patient.uid),
