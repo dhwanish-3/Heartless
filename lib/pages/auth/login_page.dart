@@ -66,7 +66,6 @@ class _LoginPageState extends State<LoginPage> {
       appUser.password = _passwordController.text;
       authNotifier.setAppUser(appUser);
       log("During login: ");
-      log(appUser.toMap().toString());
       log(authNotifier.appUser!.toMap().toString());
       bool success = await _authController.login(authNotifier);
       if (success && context.mounted) {
