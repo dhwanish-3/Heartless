@@ -1,10 +1,12 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:heartless/backend/controllers/connect_users_controller.dart';
 import 'package:heartless/backend/services/misc/connect_users.dart';
 import 'package:heartless/main.dart';
 import 'package:heartless/services/utils/qr_scanner.dart';
 import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
+import 'package:heartless/shared/provider/widget_provider.dart';
+import 'package:heartless/widgets/miscellaneous/right_trailing_button.dart';
 
 class ScanQR extends StatefulWidget {
   const ScanQR({super.key});
@@ -21,7 +23,7 @@ class _ScanQRState extends State<ScanQR> {
   // Function to scan the QR code
   Future<void> scanQRCode() async {
     QRScanner.scanQRCode().then((value) async {
-      log(value);
+      value = "zYDOehue0sdbf5uKRUnHllCKqn83";
       AppUser? user = await ConnectUsers.getUserDetails(value);
       setState(() {
         qrCodeResult = value;
@@ -34,42 +36,17 @@ class _ScanQRState extends State<ScanQR> {
   Widget build(BuildContext context) {
     AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
+    WidgetNotifier widgetNotifier =
+        Provider.of<WidgetNotifier>(context, listen: false);
 
     // * addUser function
     Future<void> addUser() async {
-      if (user != null) {
-        // connent doctor and patient
-        log(user!.userType.toString());
-        log(authNotifier.userType.toString());
-        if ((authNotifier.userType == UserType.doctor &&
-            user!.userType == UserType.patient)) {
-          await ConnectUsers.connectPatientAndDoctor(
-              patientId: user!.uid, doctorId: authNotifier.appUser!.uid);
-        } else if (authNotifier.userType == UserType.patient &&
-            user!.userType == UserType.doctor) {
-          await ConnectUsers.connectPatientAndDoctor(
-              patientId: authNotifier.appUser!.uid, doctorId: user!.uid);
-        }
-        // connect nurse and patient
-        else if (authNotifier.userType == UserType.nurse &&
-            user!.userType == UserType.patient) {
-          await ConnectUsers.connectNurseAndPatient(
-              patientId: user!.uid, nurseId: authNotifier.appUser!.uid);
-        } else if (authNotifier.userType == UserType.patient &&
-            user!.userType == UserType.nurse) {
-          await ConnectUsers.connectNurseAndPatient(
-              patientId: authNotifier.appUser!.uid, nurseId: user!.uid);
-        }
-        // connect doctor and nurse
-        else if (authNotifier.userType == UserType.doctor &&
-            user!.userType == UserType.nurse) {
-          await ConnectUsers.connectDoctorAndNurse(
-              doctorId: authNotifier.appUser!.uid, nurseId: user!.uid);
-        } else if (authNotifier.userType == UserType.nurse &&
-            user!.userType == UserType.doctor) {
-          await ConnectUsers.connectDoctorAndNurse(
-              doctorId: user!.uid, nurseId: authNotifier.appUser!.uid);
-        }
+      if (user != null &&
+          authNotifier.appUser!.uid != user!.uid &&
+          authNotifier.appUser!.userType != user!.userType) {
+        widgetNotifier.setLoading(true);
+        await ConnectUsersController.connectUsers(authNotifier.appUser!, user!);
+        widgetNotifier.setLoading(false);
       }
     }
 
@@ -113,7 +90,12 @@ class _ScanQRState extends State<ScanQR> {
                   ),
                 ],
               ),
-              ElevatedButton(onPressed: addUser, child: const Text('Add User'))
+              // Add user button if the user is not the same type
+              user!.userType != authNotifier.appUser!.userType
+                  ? GestureDetector(
+                      onTap: addUser,
+                      child: const RightButton(text: 'Add User'))
+                  : Container()
             ],
             const SizedBox(
               height: 20.0,

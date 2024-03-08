@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:heartless/backend/controllers/chat_controller.dart';
 import 'package:heartless/main.dart';
@@ -88,14 +86,11 @@ class _ContactsPageState extends State<ContactsPage> {
                 child: Text('No chats yet'),
               );
             } else if (snapshot.hasData && snapshot.data.docs.isNotEmpty) {
-              log(snapshot.data.docs.length.toString());
               return ListView.builder(
                 itemCount: snapshot.data.docs.length,
                 itemBuilder: (BuildContext context, int index) {
-                  log(snapshot.data.docs[index].data().toString());
                   ChatRoom chatRoom =
                       ChatRoom.fromMap(snapshot.data.docs[index].data());
-                  log(chatRoom.toMap().toString());
                   return StreamBuilder(
                     stream: chatRoom.getUser1Stream(),
                     builder: (BuildContext context, AsyncSnapshot snapshot1) {
@@ -147,7 +142,6 @@ class _ContactsPageState extends State<ContactsPage> {
                                         snapshot.data.docs.isNotEmpty) {
                                       Message message = Message.fromMap(
                                           snapshot.data.docs[0].data());
-                                      log(message.toMap().toString());
                                       return GestureDetector(
                                         onTap: () {
                                           Navigator.push(
