@@ -236,7 +236,9 @@ class ControlPanel extends StatelessWidget {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const AnalyticsPage()));
+                                builder: (context) => AnalyticsPage(
+                                      patientId: patient.uid,
+                                    )));
                       },
                     ),
                     PanelCard(

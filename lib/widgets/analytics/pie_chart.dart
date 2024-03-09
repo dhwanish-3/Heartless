@@ -19,12 +19,12 @@ class _PieChartState extends State<PieChart> {
       Colors.redAccent,
     ];
 
-    var i = 0;
-    final List<ChartData> chartData = [
-      ChartData('David', 25, colors[i++]),
-      ChartData('Steve', 38, colors[i++]),
-      ChartData('Jack', 34, colors[i++]),
-      ChartData('Others', 52, colors[i++])
+    int i = 0;
+    final List<PieChartData> chartData = [
+      PieChartData('David', 25, colors[i++]),
+      PieChartData('Steve', 38, colors[i++]),
+      PieChartData('Jack', 34, colors[i++]),
+      PieChartData('Others', 52, colors[i++])
     ];
 
     return Scaffold(
@@ -32,14 +32,14 @@ class _PieChartState extends State<PieChart> {
             child: Container(
                 child: SfCircularChart(series: <CircularSeries>[
       // Render pie chart
-      PieSeries<ChartData, String>(
+      PieSeries<PieChartData, String>(
           dataSource: chartData,
-          pointColorMapper: (ChartData data, _) => data.color,
-          xValueMapper: (ChartData data, _) => data.x,
-          yValueMapper: (ChartData data, _) => data.y,
+          pointColorMapper: (PieChartData data, _) => data.color,
+          xValueMapper: (PieChartData data, _) => data.x,
+          yValueMapper: (PieChartData data, _) => data.y,
           explode: true,
           explodeGesture: ActivationMode.singleTap,
-          dataLabelMapper: (ChartData data, _) => "${data.x}\n${data.y}",
+          dataLabelMapper: (PieChartData data, _) => "${data.x}\n${data.y}",
           dataLabelSettings: const DataLabelSettings(
               // Renders the data label
               isVisible: true,
@@ -48,9 +48,8 @@ class _PieChartState extends State<PieChart> {
   }
 }
 
-class ChartData {
-  // ChartData(this.x, this.y);
-  ChartData(this.x, this.y, [this.color]);
+class PieChartData {
+  PieChartData(this.x, this.y, [this.color]);
   final String x;
   final double y;
   final Color? color;

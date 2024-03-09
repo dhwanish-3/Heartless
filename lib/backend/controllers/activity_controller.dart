@@ -72,6 +72,12 @@ class ActivityController with BaseController {
     return ActivityService.getAllActivitiesOfTheDate(date, patientId);
   }
 
+  static Stream<QuerySnapshot> getAllActivitiesForAWeek(
+      DateTime date, String patientId) {
+    // Update activity status
+    return ActivityService.getAllActivitiesForAWeek(date, patientId);
+  }
+
   static Stream<QuerySnapshot> getUpcomingActivitiesOftheDay(
       DateTime date, String patientId) {
     // Update activity status

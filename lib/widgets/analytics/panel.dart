@@ -1,20 +1,19 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:heartless/shared/constants.dart';
-import 'package:heartless/widgets/analytics/graphs.dart';
+import 'package:heartless/widgets/analytics/graphs_widget.dart';
 import 'package:intl/intl.dart';
 
-class Panel extends StatefulWidget {
+class PanelWidget extends StatefulWidget {
+  final String patientId;
   final String title;
 
-  const Panel({super.key, required this.title});
+  const PanelWidget({super.key, required this.title, required this.patientId});
 
   @override
-  State<Panel> createState() => _PanelState();
+  State<PanelWidget> createState() => _PanelState();
 }
 
-class _PanelState extends State<Panel> {
+class _PanelState extends State<PanelWidget> {
   final String month = DateFormat('MMMM').format(DateTime.now());
   final int year = DateTime.now().year;
   @override
@@ -34,7 +33,9 @@ class _PanelState extends State<Panel> {
         ),
         centerTitle: true,
       ),
-      body: const GraphsWidget(),
+      body: GraphsWidget(
+        patientId: widget.patientId,
+      ),
     );
   }
 }

@@ -30,4 +30,10 @@ class DateService {
     DateFormat formatter = DateFormat('d MMM y');
     return formatter.format(date);
   }
+
+  // day of the week
+  static String getDayOfTheWeek(DateTime date) {
+    DateFormat formatter = DateFormat('EEEE');
+    return formatter.format(date);
+  }
 }
