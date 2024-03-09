@@ -32,6 +32,7 @@ class SchedulePage extends StatelessWidget {
                     const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
                 child: ReminderCard(
                   activity: activity,
+                  patient: patient,
                 ),
               )
             : Container();
@@ -40,6 +41,7 @@ class SchedulePage extends StatelessWidget {
           margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
           child: ReminderCard(
             activity: activity,
+            patient: patient,
           ),
         );
       }
@@ -109,12 +111,15 @@ class SchedulePage extends StatelessWidget {
         ),
       )),
       floatingActionButton: authNotifier.userType != UserType.patient
-          ? FloatingActionButton(onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (_) => TaskFormPage(patient: patient)));
-            })
+          ? FloatingActionButton(
+              child: const Icon(Icons.add, size: 30),
+              backgroundColor: Constants.primaryColor,
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => TaskFormPage(patient: patient)));
+              })
           : null,
     );
   }

@@ -1,14 +1,29 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:heartless/backend/controllers/base_controller.dart';
 import 'package:heartless/backend/services/activity/activity_service.dart';
+import 'package:heartless/services/enums/activity_status.dart';
 import 'package:heartless/shared/models/activity.dart';
 
 class ActivityController with BaseController {
   final ActivityService _activityService = ActivityService();
 
-  Future<bool> markAsCompleted(String activityId, String patientId) async {
+  Future<bool> markAsCompleted(Activity activity, String patientId) async {
+    if (activity.status == ActivityStatus.completed) {
+      return true;
+    }
+    // activity can be marked as completed only before 30 minutes of its time
+    if (activity.time.isAfter(DateTime.now().add(Duration(minutes: 30)))) {
+      handleError("Activity can't be marked as completed now");
+      return false;
+    }
+    // activity can not be marked as completed after half an hour of its time
+    if (activity.time
+        .isBefore(DateTime.now().subtract(Duration(minutes: 30)))) {
+      handleError("Activity can't be marked as completed now");
+      return false;
+    }
     if (await _activityService
-        .markAsCompleted(activityId, patientId)
+        .markAsCompleted(activity.id, patientId)
         .then((value) => handleSuccess(value, "Activity marked as completed"))
         .catchError(handleError)) {
       return true;
@@ -53,14 +68,14 @@ class ActivityController with BaseController {
   static Stream<QuerySnapshot> getAllActivitiesOfTheDate(
       DateTime date, String patientId) {
     // Update activity status
-    ActivityService.updateActivityStatus(patientId);
+    ActivityService.updateActivityStatus(date, patientId);
     return ActivityService.getAllActivitiesOfTheDate(date, patientId);
   }
 
   static Stream<QuerySnapshot> getUpcomingActivitiesOftheDay(
       DateTime date, String patientId) {
     // Update activity status
-    ActivityService.updateActivityStatus(patientId);
+    ActivityService.updateActivityStatus(date, patientId);
     return ActivityService.getUpcomingActivitiesOftheDay(date, patientId);
   }
 
