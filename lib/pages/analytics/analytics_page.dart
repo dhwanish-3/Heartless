@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:heartless/shared/constants.dart';
-import 'package:heartless/widgets/analytics/graphs.dart';
-import 'package:heartless/widgets/analytics/hero.dart';
+import 'package:heartless/widgets/analytics/graphs_widget.dart';
+import 'package:heartless/widgets/analytics/hero_widget.dart';
 import 'package:heartless/widgets/analytics/panel.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class AnalyticsPage extends StatefulWidget {
   final String title;
   final String imageUrl;
+  final String patientId;
   const AnalyticsPage({
     super.key,
     this.title = "EXERCISE",
     this.imageUrl = "assets/Icons/Hero/exerciseHero.png",
+    required this.patientId,
   });
 
   @override
@@ -53,11 +54,13 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                       indent: MediaQuery.of(context).size.width / 2 - 20,
                       endIndent: MediaQuery.of(context).size.width / 2 - 20,
                     ),
-                    const Expanded(
+                    Expanded(
                       child: Scaffold(
                         body: FittedBox(
                           fit: BoxFit.fill,
-                          child: GraphsWidget(),
+                          child: GraphsWidget(
+                            patientId: widget.patientId,
+                          ),
                         ),
                       ),
                     ),
@@ -65,8 +68,9 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                 ),
               ),
             ),
-            panel: Panel(
+            panel: PanelWidget(
               title: widget.title,
+              patientId: widget.patientId,
             ),
             // If the panel is closed, render an empty widget
             // body: Container(),

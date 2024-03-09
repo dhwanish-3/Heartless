@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 enum ActivityType { medicine, diet, excercise }
 
 extension TypeExtension on ActivityType {
@@ -11,6 +13,19 @@ extension TypeExtension on ActivityType {
         return 'Diet';
       default:
         return 'Unknown';
+    }
+  }
+
+  Color get color {
+    switch (this) {
+      case ActivityType.medicine:
+        return Colors.blue;
+      case ActivityType.excercise:
+        return Colors.green;
+      case ActivityType.diet:
+        return Colors.red;
+      default:
+        return Colors.black;
     }
   }
 
