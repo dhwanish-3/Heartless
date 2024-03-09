@@ -34,6 +34,7 @@ class WidgetNotifier with ChangeNotifier {
     notifyListeners();
   }
 
+  // toggle for the schedule page
   ScheduleToggleType _scheduleToggleType = ScheduleToggleType.all;
   ScheduleToggleType get scheduleToggleType => _scheduleToggleType;
   void changeToggleSelection(ScheduleToggleType scheduleToggleType) {
@@ -52,5 +53,18 @@ class WidgetNotifier with ChangeNotifier {
   // set the date to today without notifying the listeners
   void setSelectedDateWithoutNotifying(DateTime date) {
     _selectedDate = date;
+  }
+
+  // list of dates selected in the create schedule page
+  List<DateTime> _chosenDates = [];
+  List<DateTime> get chosenDates => _chosenDates;
+  void addChosenDate(DateTime date) {
+    _chosenDates.add(date);
+    notifyListeners();
+  }
+
+  void removeChosenDate(DateTime date) {
+    _chosenDates.remove(date);
+    notifyListeners();
   }
 }

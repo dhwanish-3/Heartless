@@ -24,4 +24,10 @@ class DateService {
     DateFormat formatter = DateFormat('hh:mm a');
     return formatter.format(time);
   }
+
+  // formatting the date with 10th Jan 2021 format
+  static String getFormattedDate(DateTime date) {
+    DateFormat formatter = DateFormat('d MMM y');
+    return formatter.format(date);
+  }
 }
