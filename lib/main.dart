@@ -9,6 +9,8 @@ export 'package:provider/provider.dart'; //* Exporting provider package to all o
 import 'package:heartless/shared/provider/widget_provider.dart';
 import "package:firebase_core/firebase_core.dart";
 
+final navigatorKey = GlobalKey<NavigatorState>();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -16,8 +18,15 @@ void main() async {
   await SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
+  // initializing firebase
   await Firebase.initializeApp();
-  await NotificationServices.initPushNotifications();
+
+  // initializing push notifications
+  await NotificationService.initPushNotifications();
+
+  // initializing local notifications
+  await NotificationService.initLocalNotifications();
+
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => AuthNotifier()),
@@ -43,6 +52,7 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeNotifier.themeMode,
       initialRoute: '/',
       onGenerateRoute: Routes.generateRoutes,
+      navigatorKey: navigatorKey,
     );
   }
 }

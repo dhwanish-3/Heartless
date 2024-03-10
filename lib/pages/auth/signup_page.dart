@@ -70,7 +70,7 @@ class _SignUpPageState extends State<SignUpPage> {
       bool success = await _authController.signUp(authNotifier);
       if (success && context.mounted) {
         await LocalStorage.saveUser(authNotifier);
-        NotificationServices.getFirebaseMessagingToken(authNotifier);
+        NotificationService.getFirebaseMessagingToken(authNotifier);
         goHome();
       }
     }
@@ -103,7 +103,7 @@ class _SignUpPageState extends State<SignUpPage> {
       bool success = await _authController.googleSignIn(authNotifier);
       if (success && context.mounted) {
         await LocalStorage.saveUser(authNotifier);
-        NotificationServices.getFirebaseMessagingToken(authNotifier);
+        NotificationService.getFirebaseMessagingToken(authNotifier);
         goHome();
       }
     }

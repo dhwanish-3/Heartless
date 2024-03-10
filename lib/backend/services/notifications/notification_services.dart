@@ -4,24 +4,28 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:heartless/backend/services/auth/auth_service.dart';
-import 'package:heartless/pages/chat/contacts_page.dart';
+import 'package:heartless/main.dart';
+import 'package:heartless/pages/chat/select_chat.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
 import 'package:http/http.dart' as http;
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 import 'dart:io';
 
 // top level function for handling background messages
 Future<void> handleBackgroundMessage(RemoteMessage message) async {
+  // todo: if message from chats, then have to navigate to chat page
   log('Titile: ${message.notification!.title}');
   log('Body: ${message.notification!.body}');
   log('Payload: ${message.data}');
 }
 
-class NotificationServices {
+class NotificationService {
   // for accessing firebase messaging (Push Notification)
   static final FirebaseMessaging _firebaseMessaging =
       FirebaseMessaging.instance;
 
-  // for handling notification when the app is in foreground
+  // creating a channel for local notifications
   static const AndroidNotificationChannel _androidChannel =
       AndroidNotificationChannel(
           'high_importance_channel', 'Important notifications',
@@ -31,15 +35,20 @@ class NotificationServices {
   static final FlutterLocalNotificationsPlugin _localNotifications =
       FlutterLocalNotificationsPlugin();
 
+  // for handling notification both for foreground and background
   static void handleNotification(RemoteMessage? message) {
     if (message == null) {
       return;
     }
-    GlobalKey<NavigatorState>().currentState!.push(
-          MaterialPageRoute(
-            builder: (context) => const ContactsPage(),
-          ),
-        );
+    log("These are the message details");
+    log(message.toString());
+    log(message.notification.toString());
+    log(message.data.toString());
+    log(message.notification!.body.toString());
+
+    log("handleNotification: ${message.notification!.title}");
+    navigatorKey.currentState!
+        .push(MaterialPageRoute(builder: (context) => SelectChatPage()));
   }
 
   static Future<void> initPushNotifications() async {
@@ -48,10 +57,18 @@ class NotificationServices {
       badge: true,
       sound: true,
     );
+    // handling notification when the app is in terminated state
     _firebaseMessaging.getInitialMessage().then(handleNotification);
+
+    // handling click on notification when the app is in background
     FirebaseMessaging.onMessageOpenedApp.listen(handleNotification);
+
+    // handling background messages
     FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
+
+    // handling notification when the app is in foreground
     FirebaseMessaging.onMessage.listen((message) {
+      log("onMessage: this is foreground message");
       final RemoteNotification? notification = message.notification;
       if (notification == null) {
         return;
@@ -71,6 +88,7 @@ class NotificationServices {
     });
   }
 
+  // initializing local notifications
   static Future<void> initLocalNotifications() async {
     const iOS = DarwinInitializationSettings();
     const android = AndroidInitializationSettings('@drawable/logo');
@@ -79,7 +97,9 @@ class NotificationServices {
 
     await _localNotifications.initialize(initializationSettings,
         onDidReceiveNotificationResponse: (notification) {
+      log("local notification received");
       final message = RemoteMessage.fromMap(jsonDecode(notification.payload!));
+      log("lets handle the notification");
       handleNotification(message);
     });
 
@@ -88,6 +108,7 @@ class NotificationServices {
     await platform?.createNotificationChannel(_androidChannel);
   }
 
+  // getting firebase push token
   static Future<String?> getFirebaseMessagingToken(
       AuthNotifier authNotifier) async {
     await _firebaseMessaging.requestPermission();
@@ -109,21 +130,21 @@ class NotificationServices {
 
   // for sending push notification
   static Future<void> sendPushNotification(
-      String pushToken, String name, String msg) async {
+      String pushToken, String name, String chatId, String msg) async {
     try {
       final body = {
         "to": pushToken,
         "notification": {
-          "title": name, // our name should be send
+          "title": name,
           "body": msg,
           "android_channel_id": "chats"
         },
-        // "data": {
-        //   "some_data": "User ID: ${me.id}",
-        // },
+        "data": {
+          "chatId": chatId,
+        },
       };
 
-      var res =
+      final res =
           await http.post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
               headers: {
                 HttpHeaders.contentTypeHeader: 'application/json',
@@ -136,5 +157,32 @@ class NotificationServices {
     } catch (e) {
       log('\nsendPushNotificationE: $e');
     }
+  }
+
+  // to schedule a local notification
+  static Future showScheduleNotification({
+    required String title,
+    required String body,
+    required String payload,
+    required DateTime scheduledTime,
+  }) async {
+    tz.initializeTimeZones();
+    await _localNotifications.zonedSchedule(
+        2,
+        title,
+        body,
+        // tz.TZDateTime.now(tz.local).add(const Duration(seconds: 5)),
+        tz.TZDateTime.from(scheduledTime, tz.local),
+        NotificationDetails(
+            android: AndroidNotificationDetails(
+                _androidChannel.id, _androidChannel.name,
+                channelDescription: _androidChannel.description,
+                importance: Importance.max,
+                priority: Priority.high,
+                ticker: 'ticker')),
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+        payload: payload);
   }
 }

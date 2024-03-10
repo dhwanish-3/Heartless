@@ -48,7 +48,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Future.delayed(const Duration(seconds: 3), () {
       SplashServices().hasLoggedIn(authNotifier).then((value) {
         if (value) {
-          NotificationServices.getFirebaseMessagingToken(authNotifier);
+          NotificationService.getFirebaseMessagingToken(authNotifier);
           Navigator.pushNamed(context, '/home');
           inSplashScreen = false;
         } else {

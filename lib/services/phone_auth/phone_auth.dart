@@ -41,7 +41,7 @@ class PhoneAuth {
                   await LocalStorage.saveUser(authNotifier);
                   ToastMessage().showSuccess("Logged in successfully");
                   widgetNotifier.setLoading(false);
-                  NotificationServices.getFirebaseMessagingToken(authNotifier);
+                  NotificationService.getFirebaseMessagingToken(authNotifier);
                   if (context.mounted) {
                     goHome(context);
                   }
@@ -109,7 +109,7 @@ class PhoneAuth {
                   await LocalStorage.saveUser(authNotifier);
                   ToastMessage().showSuccess("Logged in successfully");
                   widgetNotifier.setLoading(false);
-                  NotificationServices.getFirebaseMessagingToken(authNotifier);
+                  NotificationService.getFirebaseMessagingToken(authNotifier);
                   if (context.mounted) {
                     goHome(context);
                   }
@@ -161,7 +161,7 @@ class PhoneAuth {
         if (user != null) {
           await LocalStorage.saveUser(authNotifier);
           ToastMessage().showSuccess("Logged in successfully");
-          NotificationServices.getFirebaseMessagingToken(authNotifier);
+          NotificationService.getFirebaseMessagingToken(authNotifier);
           return true;
         } else {
           await _auth.signOut();
@@ -174,7 +174,7 @@ class PhoneAuth {
           await AuthService().setUserDetails(authNotifier);
           await LocalStorage.saveUser(authNotifier);
           ToastMessage().showSuccess("Logged in successfully");
-          NotificationServices.getFirebaseMessagingToken(authNotifier);
+          NotificationService.getFirebaseMessagingToken(authNotifier);
           return true;
         } else {
           await _auth.signOut();
