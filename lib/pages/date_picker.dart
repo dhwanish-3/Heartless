@@ -66,7 +66,7 @@ class _DatePickerState extends State<DatePicker> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Text(
-            DateService.getFormattedDate(date),
+            DateService.getFormattedTime(date),
             textAlign: TextAlign.center,
             style: const TextStyle(color: Colors.white),
           ),

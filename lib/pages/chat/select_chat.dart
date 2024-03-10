@@ -71,24 +71,23 @@ class _MyWidgetState extends State<SelectChatPage> {
       }
     }
 
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text('Select Chat'),
-        ),
-        body: ListView.builder(
-          itemCount: users.length,
-          itemBuilder: (BuildContext context, int index) {
-            AppUser user = users[index];
-            return ListTile(
-              title: Text(user.name),
-              leading: CircleAvatar(
-                backgroundImage: NetworkImage(user.imageUrl),
-              ),
-              onTap: () {
-                createNewChat(user);
-              },
-            );
-          },
-        ));
+    return SizedBox(
+      height: 200,
+      child: ListView.builder(
+        itemCount: users.length,
+        itemBuilder: (BuildContext context, int index) {
+          AppUser user = users[index];
+          return ListTile(
+            title: Text(user.name),
+            leading: CircleAvatar(
+              backgroundImage: NetworkImage(user.imageUrl),
+            ),
+            onTap: () {
+              createNewChat(user);
+            },
+          );
+        },
+      ),
+    );
   }
 }
