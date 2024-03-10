@@ -95,13 +95,23 @@ class NotificationService {
     const initializationSettings =
         InitializationSettings(android: android, iOS: iOS);
 
-    await _localNotifications.initialize(initializationSettings,
-        onDidReceiveNotificationResponse: (notification) {
-      log("local notification received");
-      final message = RemoteMessage.fromMap(jsonDecode(notification.payload!));
-      log("lets handle the notification");
-      handleNotification(message);
-    });
+    await _localNotifications.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: (notification) {
+        log("local notification received");
+        final message =
+            RemoteMessage.fromMap(jsonDecode(notification.payload!));
+        log("lets handle the notification");
+        handleNotification(message);
+      },
+      // onDidReceiveBackgroundNotificationResponse: (notification) {
+      //   log("local notification received tapped");
+      //   final message =
+      //       RemoteMessage.fromMap(jsonDecode(notification.payload!));
+      //   log("lets handle the notification tapped");
+      //   handleNotification(message);
+      // },
+    );
 
     final platform = _localNotifications.resolvePlatformSpecificImplementation<
         AndroidFlutterLocalNotificationsPlugin>();
@@ -160,29 +170,62 @@ class NotificationService {
   }
 
   // to schedule a local notification
-  static Future showScheduleNotification({
+  static Future<void> scheduleNotification({
     required String title,
     required String body,
     required String payload,
     required DateTime scheduledTime,
   }) async {
-    tz.initializeTimeZones();
-    await _localNotifications.zonedSchedule(
-        2,
-        title,
-        body,
-        // tz.TZDateTime.now(tz.local).add(const Duration(seconds: 5)),
-        tz.TZDateTime.from(scheduledTime, tz.local),
-        NotificationDetails(
-            android: AndroidNotificationDetails(
-                _androidChannel.id, _androidChannel.name,
-                channelDescription: _androidChannel.description,
-                importance: Importance.max,
-                priority: Priority.high,
-                ticker: 'ticker')),
-        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime,
+    try {
+      initLocalNotifications();
+      _localNotifications.getActiveNotifications().then((value) {
+        log("Active Notifications: $value");
+        for (var i = 0; i < value.length; i++) {
+          log("Active Notification: ${value[i].id}");
+        }
+      });
+      log("scheduling notification on");
+      log(scheduledTime.toString());
+      log("local time: " +
+          tz.TZDateTime.from(scheduledTime, tz.local).toString());
+      tz.initializeTimeZones();
+      await _localNotifications.zonedSchedule(
+          scheduledTime.hashCode,
+          title,
+          body,
+          tz.TZDateTime.now(tz.local).add(const Duration(seconds: 10)),
+          // tz.TZDateTime.from(scheduledTime, tz.local),
+          NotificationDetails(
+              android: AndroidNotificationDetails(
+                  "_androidChannel.id", "_androidChannel.name",
+                  channelDescription: "_androidChannel.description",
+                  importance: Importance.max,
+                  priority: Priority.high,
+                  ticker: 'ticker')),
+          androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+          uiLocalNotificationDateInterpretation:
+              UILocalNotificationDateInterpretation.absoluteTime,
+          payload: payload);
+    } catch (e) {
+      log("Error in scheduling notification: $e");
+    }
+  }
+
+  // show a simple notification
+  static Future showSimpleNotification({
+    required String title,
+    required String body,
+    required String payload,
+  }) async {
+    const AndroidNotificationDetails androidNotificationDetails =
+        AndroidNotificationDetails('your channel id', 'your channel name',
+            channelDescription: 'your channel description',
+            importance: Importance.max,
+            priority: Priority.high,
+            ticker: 'ticker');
+    const NotificationDetails notificationDetails =
+        NotificationDetails(android: androidNotificationDetails);
+    await _localNotifications.show(0, title, body, notificationDetails,
         payload: payload);
   }
 }
