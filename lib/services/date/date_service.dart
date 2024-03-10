@@ -20,8 +20,24 @@ class DateService {
   }
 
   // formatting the time with 10:00 AM/PM format
-  static String getFormattedTimeWithAMPM(DateTime time) {
+  static String getFormattedTime(DateTime time) {
     DateFormat formatter = DateFormat('hh:mm a');
     return formatter.format(time);
+  }
+
+  // formatting the time with Yesterday/Today/24 Feb 2024 10:00 AM/PM format
+  static String getRelativeDateWithTime(DateTime time) {
+    DateTime now = DateTime.now();
+    DateTime startOfToday = getStartOfDay(now);
+    DateTime startOfYesterday = startOfToday.subtract(const Duration(days: 1));
+
+    if (time.isAfter(startOfToday)) {
+      return 'Today ${getFormattedTime(time)}';
+    } else if (time.isAfter(startOfYesterday)) {
+      return 'Yesterday ${getFormattedTime(time)}';
+    } else {
+      DateFormat formatter = DateFormat('dd MMM yyyy hh:mm a');
+      return formatter.format(time);
+    }
   }
 }

@@ -1,7 +1,9 @@
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:heartless/backend/controllers/base_controller.dart';
 import 'package:heartless/backend/services/chat/chat_service.dart';
 import 'package:heartless/backend/services/chat/message_service.dart';
+import 'package:heartless/backend/services/storage/storage_service.dart';
 import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/shared/models/chat.dart';
 import 'package:heartless/shared/models/message.dart';
@@ -19,7 +21,7 @@ class ChatController with BaseController {
     return ChatService.chatExists(chatId);
   }
 
-  String getChatRoomId(AppUser user1, AppUser user2) {
+  static String getChatRoomId(AppUser user1, AppUser user2) {
     if (user1.uid.hashCode <= user2.uid.hashCode) {
       return '${user1.uid}_${user2.uid}';
     } else {
@@ -91,21 +93,45 @@ class ChatController with BaseController {
 
   // to send a message
   Future<bool> sendMessage(
-      ChatRoom chatRoom, AuthNotifier authNotifier, String description) {
+      ChatRoom chatRoom, String senderId, String description,
+      {File? file}) {
     Message message = Message();
     message.message = description;
-    message.senderId = authNotifier.appUser!.uid;
+    message.senderId = senderId;
     message.time = DateTime.now();
-    message.receiverId = chatRoom.user1Ref!.id == authNotifier.appUser!.uid
+    message.receiverId = chatRoom.user1Ref!.id == senderId
         ? chatRoom.user2Ref!.id
         : chatRoom.user1Ref!.id;
-    return MessageService.sendMessage(chatRoom, message)
-        .then((value) => handleSuccess(true, "Message Sent"))
-        .catchError((error) => handleError(error));
+    // if file is not null then it is an image
+    if (file != null) {
+      message.type = MessageType.image;
+      return StorageService.uploadImage(chatRoom.id, file).then((value) {
+        message.imageUrl = value;
+        return MessageService.sendMessage(chatRoom, message)
+            .then((value) => handleSuccess(true, "Message Sent"))
+            .catchError((error) => handleError(error));
+      }).catchError((error) => handleError(error));
+    } else {
+      message.type = MessageType.text;
+      return MessageService.sendMessage(chatRoom, message)
+          .then((value) => handleSuccess(true, "Message Sent"))
+          .catchError((error) => handleError(error));
+    }
   }
 
   // to delete a message
-  Future<bool> deleteMessage(ChatRoom chatRoom, Message message) {
+  Future<bool> deleteMessage(
+      ChatRoom chatRoom, Message message, String userId) {
+    // future implementation: delete only possible if message is unread
+    // message only can be deleted by the sender
+    if (message.senderId != userId) {
+      return Future.value(false);
+    }
+    if (message.imageUrl != null) {
+      // delete the image from storage
+      StorageService.deleteImage(message.imageUrl!);
+    }
+
     return MessageService.deleteMessage(chatRoom, message)
         .then((value) => handleSuccess(true, "Message Deleted"))
         .catchError((error) => handleError(error));

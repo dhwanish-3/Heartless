@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/scheduler.dart';
 import 'package:heartless/backend/controllers/chat_controller.dart';
 import 'package:heartless/services/date/date_service.dart';
@@ -20,7 +21,8 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
-  final messageController = TextEditingController();
+  final ChatController _chatController = ChatController();
+  final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   int numberOfMessages = 0;
 
@@ -34,6 +36,7 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _scrollController.dispose();
+    _messageController.dispose();
     super.dispose();
   }
 
@@ -50,18 +53,26 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
     AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
     // function to send message
-    void sendMessage() {
-      String trimmedMessage = messageController.text.trim();
-      if (trimmedMessage.isNotEmpty) {
-        ChatController()
-            .sendMessage(widget.chatRoom, authNotifier, trimmedMessage);
-        messageController.clear();
+    void sendMessage({File? file}) {
+      String trimmedMessage = _messageController.text.trim();
+      if (file != null) {
+        _chatController.sendMessage(
+            widget.chatRoom, authNotifier.appUser!.uid, trimmedMessage,
+            file: file);
+      } else {
+        if (trimmedMessage.isNotEmpty) {
+          _chatController.sendMessage(
+              widget.chatRoom, authNotifier.appUser!.uid, trimmedMessage,
+              file: file);
+        }
       }
+      _messageController.clear();
     }
 
     // function to delete message
     void deleteMessage(Message message) {
-      ChatController().deleteMessage(widget.chatRoom, message);
+      _chatController.deleteMessage(
+          widget.chatRoom, message, authNotifier.appUser!.uid);
     }
 
     return Scaffold(
@@ -72,7 +83,7 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
           Text(
             widget.chatUser.isOnline
                 ? "Online"
-                : "Last seen ${DateService.getFormattedTimeWithAMPM(widget.chatUser.lastSeen)}",
+                : "Last seen ${DateService.getRelativeDateWithTime(widget.chatUser.lastSeen)}",
             style: const TextStyle(fontSize: 12),
           ),
         ],
@@ -117,17 +128,17 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
                         return Padding(
                             padding: const EdgeInsets.symmetric(vertical: 2),
                             child: GestureDetector(
-                              onDoubleTap: () {
-                                deleteMessage(message);
-                              },
-                              child: MessageTile(
-                                message: message.message,
-                                isSender: message.senderId ==
-                                    authNotifier.appUser!.uid,
-                                time: DateService.getFormattedTimeWithAMPM(
-                                    message.time),
-                              ),
-                            ));
+                                onDoubleTap: () {
+                                  deleteMessage(message);
+                                },
+                                child: MessageTile(
+                                  imageUrl: message.imageUrl,
+                                  message: message.message,
+                                  isSender: message.senderId ==
+                                      authNotifier.appUser!.uid,
+                                  time: DateService.getFormattedTime(
+                                      message.time),
+                                )));
                       },
                     );
                   } else {
@@ -140,7 +151,7 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
             ),
           ),
           MessageField(
-            messageController: messageController,
+            messageController: _messageController,
             sendMessage: sendMessage,
           ),
         ],

@@ -1,9 +1,11 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:heartless/shared/constants.dart';
+import 'package:image_picker/image_picker.dart';
 
 class MessageField extends StatefulWidget {
   final TextEditingController messageController;
-  final void Function() sendMessage;
+  final void Function({File? file}) sendMessage;
   const MessageField(
       {super.key, required this.messageController, required this.sendMessage});
 
@@ -12,6 +14,7 @@ class MessageField extends StatefulWidget {
 }
 
 class _MessageFieldState extends State<MessageField> {
+  final ImagePicker _picker = ImagePicker();
   @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
@@ -33,6 +36,19 @@ class _MessageFieldState extends State<MessageField> {
             hintText: "Send a message...",
             hintStyle: const TextStyle(color: Colors.white, fontSize: 16),
             border: InputBorder.none,
+            prefixIcon: GestureDetector(
+              onTap: () async {
+                XFile? image = await _picker.pickImage(
+                    source: ImageSource.gallery, imageQuality: 50);
+                if (image != null) {
+                  widget.sendMessage(file: File(image.path));
+                }
+              },
+              child: const Icon(
+                Icons.image_outlined,
+                color: Colors.white,
+              ),
+            ),
             suffixIcon: GestureDetector(
               onTap: widget.sendMessage,
               child: const Icon(
