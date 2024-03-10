@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:heartless/main.dart';
+import 'package:heartless/services/date/date_service.dart';
 import 'package:heartless/shared/constants.dart';
+import 'package:heartless/shared/provider/widget_provider.dart';
 
 class DatePicker extends StatefulWidget {
   const DatePicker({Key? key}) : super(key: key);
@@ -9,31 +12,29 @@ class DatePicker extends StatefulWidget {
 }
 
 class _DatePickerState extends State<DatePicker> {
-  DateTime? selectedDate;
-  List<String> chosenDates = [];
-
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    WidgetNotifier widgetNotifier =
+        Provider.of<WidgetNotifier>(context, listen: false);
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.black), // Example border styling
+        borderRadius: BorderRadius.circular(10.0),
+      ),
       padding: const EdgeInsets.all(16.0),
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.black), // Example border styling
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            ElevatedButton(
-              onPressed: () {
-                _selectDate(context);
-              },
-              child: const Text('Pick A Date'),
-            ),
-            const SizedBox(height: 10),
-            Expanded(
-              child: GridView.builder(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          ElevatedButton(
+            onPressed: () {
+              _selectDate(context);
+            },
+            child: const Text('Pick A Date'),
+          ),
+          const SizedBox(height: 10),
+          Expanded(
+            child: Consumer<WidgetNotifier>(
+              builder: (context, value, child) => GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   crossAxisSpacing: 8.0,
@@ -41,19 +42,20 @@ class _DatePickerState extends State<DatePicker> {
                   childAspectRatio:
                       3.0, // Adjust this value for the desired height
                 ),
-                itemCount: chosenDates.length,
+                itemCount: widgetNotifier.chosenDates.length,
                 itemBuilder: (context, index) {
-                  return _buildDateCard(chosenDates[index], index);
+                  return _buildDateCard(
+                      widgetNotifier.chosenDates[index], widgetNotifier);
                 },
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildDateCard(String date, int index) {
+  Widget _buildDateCard(DateTime date, WidgetNotifier widgetNotifier) {
     return Container(
       decoration: BoxDecoration(
         color: Constants.primaryColor,
@@ -61,17 +63,17 @@ class _DatePickerState extends State<DatePicker> {
       ),
       padding: const EdgeInsets.all(8.0),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Text(
-            date,
+            DateService.getFormattedDate(date),
             textAlign: TextAlign.center,
             style: const TextStyle(color: Colors.white),
           ),
           IconButton(
-            icon: const Icon(Icons.delete, color: Colors.white),
+            icon: const Icon(Icons.delete_outline, color: Colors.white),
             onPressed: () {
-              _removeDate(index);
+              widgetNotifier.removeChosenDate(date);
             },
           ),
         ],
@@ -80,6 +82,8 @@ class _DatePickerState extends State<DatePicker> {
   }
 
   Future<void> _selectDate(BuildContext context) async {
+    WidgetNotifier widgetNotifier =
+        Provider.of<WidgetNotifier>(context, listen: false);
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -87,22 +91,10 @@ class _DatePickerState extends State<DatePicker> {
       lastDate: DateTime(2101),
     );
 
-    if (picked != null && !chosenDates.contains(picked.toString())) {
-      setState(() {
-        chosenDates.add(picked.toString().substring(0, 10));
-      });
+    if (picked != null && !widgetNotifier.chosenDates.contains(picked)) {
+      // setState(() {
+      widgetNotifier.addChosenDate(picked);
+      // });
     }
   }
-
-  void _removeDate(int index) {
-    setState(() {
-      chosenDates.removeAt(index);
-    });
-  }
-}
-
-void main() {
-  runApp(const MaterialApp(
-    home: DatePicker(),
-  ));
 }

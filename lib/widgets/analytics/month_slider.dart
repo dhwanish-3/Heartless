@@ -1,7 +1,4 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:heartless/shared/constants.dart';
 import 'package:intl/intl.dart';
 
 class MonthYearSelector extends StatefulWidget {
@@ -47,6 +44,7 @@ class _MonthYearSelectorState extends State<MonthYearSelector> {
         DropdownButton<String>(
           value: selectedMonth,
           onChanged: (newMonth) {
+            // todo: make use of widgetNotifier
             setState(() {
               selectedMonth = newMonth!;
               widget.onMonthYearChanged(selectedMonth, selectedYear);

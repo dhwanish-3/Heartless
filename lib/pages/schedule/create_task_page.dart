@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/backend/controllers/activity_controller.dart';
+import 'package:heartless/main.dart';
 import 'package:heartless/pages/date_picker.dart';
 import 'package:heartless/services/enums/activity_status.dart';
 import 'package:heartless/services/enums/activity_type.dart';
@@ -7,6 +8,7 @@ import 'package:heartless/services/utils/toast_message.dart';
 import 'package:heartless/shared/constants.dart';
 import 'package:heartless/shared/models/activity.dart';
 import 'package:heartless/shared/models/app_user.dart';
+import 'package:heartless/shared/provider/widget_provider.dart';
 import 'package:heartless/widgets/auth/text_input.dart';
 import 'package:heartless/widgets/schedule/date_picker_button.dart';
 import 'package:heartless/widgets/schedule/time_picker_button.dart';
@@ -30,55 +32,84 @@ class _TaskFormPageState extends State<TaskFormPage> {
   TimeOfDay _selectedTime = TimeOfDay.now();
   String dateDropDownValue = 'Specify a Period';
   ActivityType typeDropDownValue = ActivityType.medicine;
+  // for date selector (date range selector)
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now();
-
-  void _submitForm() async {
-    if (!_formKey.currentState!.validate()) {
-      return;
-    }
-    // handling multiple clicks
-    if (clicked) {
-      ToastMessage().showError('Please wait for the previous task to complete');
-      return;
-    }
-    clicked = true;
-
-    // create activity
-    Activity activity = Activity();
-    activity.name = _titleController.text;
-    activity.description = _descriptionController.text;
-    activity.type = typeDropDownValue;
-    activity.status = ActivityStatus.upcoming;
-    activity.patientId = widget.patient.uid;
-
-    // add activity from start date to end date
-    while (startDate.isBefore(endDate) || startDate.isAtSameMomentAs(endDate)) {
-      activity.time = DateTime(
-        startDate.year,
-        startDate.month,
-        startDate.day,
-        _selectedTime.hour,
-        _selectedTime.minute,
-      );
-      await _activityController.addActivity(activity);
-      startDate = startDate.add(const Duration(days: 1));
-    }
-    clicked = false;
-  }
+  // for date selector (date picker)
 
   @override
   Widget build(BuildContext context) {
+    WidgetNotifier widgetNotifier =
+        Provider.of<WidgetNotifier>(context, listen: false);
     final List<String> listOfDropdownItems = [];
     for (ActivityType type in ActivityType.values) {
       listOfDropdownItems.add(type.dropDownValue);
     }
+    Future<void> _addActivityStartToEnd(Activity activity) async {
+      // add activity from start date to end date
+      while (
+          startDate.isBefore(endDate) || startDate.isAtSameMomentAs(endDate)) {
+        activity.time = DateTime(
+          startDate.year,
+          startDate.month,
+          startDate.day,
+          _selectedTime.hour,
+          _selectedTime.minute,
+        );
+        await _activityController.addActivity(activity);
+        startDate = startDate.add(const Duration(days: 1));
+      }
+    }
+
+    Future<void> _addActivityForSelectedDates(Activity activity) async {
+      // add activity for selected dates
+      for (DateTime date in widgetNotifier.chosenDates) {
+        activity.time = DateTime(
+          date.year,
+          date.month,
+          date.day,
+          _selectedTime.hour,
+          _selectedTime.minute,
+        );
+        await _activityController.addActivity(activity);
+      }
+    }
+
+    void _submitForm() async {
+      if (!_formKey.currentState!.validate()) {
+        return;
+      }
+      // handling multiple clicks
+      if (clicked) {
+        ToastMessage()
+            .showError('Please wait for the previous task to complete');
+        return;
+      }
+      clicked = true;
+
+      // create activity
+      Activity activity = Activity();
+      activity.name = _titleController.text;
+      activity.description = _descriptionController.text;
+      activity.type = typeDropDownValue;
+      activity.status = ActivityStatus.upcoming;
+      activity.patientId = widget.patient.uid;
+
+      if (dateDropDownValue == 'Specify a Period') {
+        await _addActivityStartToEnd(activity);
+      } else {
+        await _addActivityForSelectedDates(activity);
+      }
+
+      clicked = false;
+    }
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
             onPressed: () {
-              // widgetNotifier.setWidget(WidgetType.schedule);
+              Navigator.pop(context);
             },
             icon: const Icon(Icons.arrow_back),
           ),
@@ -344,6 +375,7 @@ class _DateRangeSelectorState extends State<DateRangeSelector> {
               selectedDate: _startDate,
               onChanged: (newDate) {
                 setState(() {
+                  // todo: implement using widgetNotifier
                   _startDate = newDate;
                 });
                 widget.onStartDateChanged(newDate);
@@ -360,6 +392,7 @@ class _DateRangeSelectorState extends State<DateRangeSelector> {
               selectedDate: _endDate,
               onChanged: (newDate) {
                 setState(() {
+                  // todo: implement using widgetNotifier
                   _endDate = newDate;
                 });
                 widget.onEndDateChanged(newDate);

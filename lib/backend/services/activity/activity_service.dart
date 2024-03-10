@@ -129,34 +129,35 @@ class ActivityService {
   }
 
   // to get update the activity status according to the time
-  static Future<bool> updateActivityStatus(String patientId) async {
+  static Future<bool> updateActivityStatus(
+      DateTime date, String patientId) async {
     // get the Datetime with for the start of the week
-    DateTime startOfWeek = DateService.getStartOfWeek(DateTime.now());
-
+    DateTime startOfWeek = DateService.getStartOfWeek(date);
     try {
       // get all the activities with status upcoming
-      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+      QuerySnapshot upcomingActivities = await FirebaseFirestore.instance
           .collection('Users')
           .doc(patientId)
           .collection("WeeklyData")
           .doc(startOfWeek.toString())
           .collection('Activities')
           .where('status', isEqualTo: ActivityStatus.upcoming.index)
-          .where('time',
-              isLessThan: Timestamp.fromDate(DateTime.now().add(const Duration(
-                  minutes: -10)))) //! giving a buffer time of 10 minutes
           .get()
           .timeout(DateService.timeLimit);
 
-      // check if the time of the activity is before the current time
-      for (var element in querySnapshot.docs) {
+      // filter the activities with time before the current time and update the status to missed
+      for (var element in upcomingActivities.docs) {
         Activity activity =
             Activity.fromMap(element.data() as Map<String, dynamic>);
-        if (activity.time.isBefore(DateTime.now())) {
+        // if the time of the activity is before half an hour of the current time
+        if (activity.time
+            .isBefore(DateTime.now().subtract(Duration(minutes: 30)))) {
           await FirebaseFirestore.instance
               .collection('Users')
               .doc(patientId)
               .collection("WeeklyData")
+              .doc(startOfWeek.toString())
+              .collection('Activities')
               .doc(element.id)
               .update({'status': ActivityStatus.missed.index}).timeout(
                   DateService.timeLimit);

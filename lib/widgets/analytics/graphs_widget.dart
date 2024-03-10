@@ -1,13 +1,12 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:heartless/widgets/analytics/month_slider.dart';
-import 'package:heartless/widgets/analytics/radial.dart';
-import 'package:heartless/widgets/analytics/spline_area.dart';
-import 'package:heartless/widgets/analytics/stacked_col.dart';
+import 'package:heartless/widgets/analytics/radial_bar_chart.dart';
+import 'package:heartless/widgets/analytics/spline_area_chart.dart';
+import 'package:heartless/widgets/analytics/stacked_column_chart.dart';
 
 class GraphsWidget extends StatefulWidget {
-  const GraphsWidget({super.key});
+  final String patientId;
+  const GraphsWidget({super.key, required this.patientId});
 
   @override
   State<GraphsWidget> createState() => _GraphsWidgetState();
@@ -22,25 +21,31 @@ class _GraphsWidgetState extends State<GraphsWidget> {
       children: [
         MonthYearSelector(
           onMonthYearChanged: (month, year) {
-            // make the api call to fetch data of corresponding month and year here
+            // todo: make the api call to fetch data of corresponding month and year here
           },
         ),
-        const SizedBox(
+        SizedBox(
           height: 180,
           width: 400,
-          child: SplineAreaChart(),
+          child: SplineAreaChart(
+            patientId: widget.patientId,
+          ),
         ),
         const SizedBox(height: 20),
-        const SizedBox(
+        SizedBox(
           height: 180,
           width: 400,
-          child: StackedColumnChart(),
+          child: StackedColumnChart(
+            patientId: widget.patientId,
+          ),
         ),
         const SizedBox(height: 20),
-        const SizedBox(
+        SizedBox(
           height: 180,
           width: 400,
-          child: RadialBarChart(),
+          child: RadialBarChart(
+            patientId: widget.patientId,
+          ),
         ),
         const SizedBox(height: 20),
       ],
