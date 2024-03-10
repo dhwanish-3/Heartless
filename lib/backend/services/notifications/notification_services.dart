@@ -109,13 +109,14 @@ class NotificationServices {
 
   // for sending push notification
   static Future<void> sendPushNotification(
-      String pushToken, String name, String msg) async {
+      String pushToken, String name, String message,
+      {String? imageUrl}) async {
     try {
       final body = {
         "to": pushToken,
         "notification": {
           "title": name, // our name should be send
-          "body": msg,
+          "body": imageUrl != null ? "Image $message" : message,
           "android_channel_id": "chats"
         },
         // "data": {

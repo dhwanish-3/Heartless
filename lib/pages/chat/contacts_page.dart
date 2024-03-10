@@ -3,6 +3,7 @@ import 'package:heartless/backend/controllers/chat_controller.dart';
 import 'package:heartless/main.dart';
 import 'package:heartless/pages/chat/chat_page.dart';
 import 'package:heartless/pages/chat/select_chat.dart';
+import 'package:heartless/services/date/date_service.dart';
 import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/shared/models/chat.dart';
 import 'package:heartless/shared/models/message.dart';
@@ -108,6 +109,7 @@ class _ContactsPageState extends State<ContactsPage> {
                                       chatRoom.id),
                                   builder: (BuildContext context,
                                       AsyncSnapshot snapshot) {
+                                    //* if the chat room has no messages
                                     if (snapshot.hasData &&
                                         snapshot.data.docs.isEmpty) {
                                       return GestureDetector(
@@ -131,14 +133,13 @@ class _ContactsPageState extends State<ContactsPage> {
                                           name: getChatUserName(user1,
                                               user2), // chatRoom.other.name,
                                           time: "",
-                                          latestMessage: "",
+                                          latestMessage: "Say Hii! 👋",
                                           unreadMessages:
                                               calculateUnreadMessagesCount(
                                                   chatRoom),
                                         ),
                                       );
-                                    }
-                                    if (snapshot.hasData &&
+                                    } else if (snapshot.hasData &&
                                         snapshot.data.docs.isNotEmpty) {
                                       Message message = Message.fromMap(
                                           snapshot.data.docs[0].data());
@@ -162,8 +163,13 @@ class _ContactsPageState extends State<ContactsPage> {
                                           name: getChatUserName(user1,
                                               user2), // chatRoom.other.name,
                                           imageUrl: getImageUrl(user1, user2),
-                                          time: message.time.toString(),
-                                          latestMessage: message.message,
+                                          time: DateService
+                                              .getRelativeDateWithTime(
+                                                  message.time),
+                                          latestMessage:
+                                              message.type == MessageType.image
+                                                  ? "Image"
+                                                  : message.message,
                                           unreadMessages:
                                               calculateUnreadMessagesCount(
                                                   chatRoom),

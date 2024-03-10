@@ -37,7 +37,8 @@ class MessageService {
       if (message.receiverId == chatRoom.user1Ref!.id) {
         // send push notification
         NotificationServices.sendPushNotification(
-            user1.pushToken, user2.name, message.message);
+            user1.pushToken, user2.name, message.message,
+            imageUrl: message.imageUrl);
         chatRoom.user1UnreadMessages++;
         _chatRoomRef.doc(chatRoom.id).update({
           'user1UnreadMessages': FieldValue.increment(1),
@@ -45,7 +46,8 @@ class MessageService {
       } else if (message.receiverId == chatRoom.user2Ref!.id) {
         // send push notification
         NotificationServices.sendPushNotification(
-            user2.pushToken, user1.name, message.message);
+            user2.pushToken, user1.name, message.message,
+            imageUrl: message.imageUrl);
         chatRoom.user2UnreadMessages++;
         _chatRoomRef.doc(chatRoom.id).update({
           'user2UnreadMessages': FieldValue.increment(1),
