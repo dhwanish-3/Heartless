@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:heartless/backend/services/auth/auth_service.dart';
 import 'package:heartless/backend/services/notifications/notification_services.dart';
 import 'package:heartless/pages/auth/verification_page.dart';
-import 'package:heartless/services/local_storage/local_storage.dart';
+import 'package:heartless/services/storage/local_storage.dart';
 import 'package:heartless/services/utils/toast_message.dart';
 import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';

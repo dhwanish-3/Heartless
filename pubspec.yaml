@@ -60,6 +60,10 @@ dependencies:
   flutter_slidable: ^3.0.1
   firebase_storage: ^11.6.0
   image_picker: ^1.0.7
+  dio: ^5.4.1
+  permission_handler: ^11.0.1
+  image_gallery_saver: ^2.0.3
+  path_provider: ^2.1.2
 
 dev_dependencies:
   flutter_test:

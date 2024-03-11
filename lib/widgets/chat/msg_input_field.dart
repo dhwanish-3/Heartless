@@ -36,18 +36,31 @@ class _MessageFieldState extends State<MessageField> {
             hintText: "Send a message...",
             hintStyle: const TextStyle(color: Colors.white, fontSize: 16),
             border: InputBorder.none,
-            prefixIcon: GestureDetector(
-              onTap: () async {
-                XFile? image = await _picker.pickImage(
-                    source: ImageSource.gallery, imageQuality: 50);
-                if (image != null) {
-                  widget.sendMessage(file: File(image.path));
-                }
-              },
-              child: const Icon(
-                Icons.image_outlined,
-                color: Colors.white,
-              ),
+            prefixIcon: Row(
+              children: [
+                GestureDetector(
+                  onTap: () async {
+                    XFile? image = await _picker.pickImage(
+                        source: ImageSource.gallery, imageQuality: 50);
+                    if (image != null) {
+                      widget.sendMessage(file: File(image.path));
+                    }
+                  },
+                  child: const Icon(
+                    Icons.image_outlined,
+                    color: Colors.white,
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () async {
+                    FilePock
+                  },
+                  child: const Icon(
+                    Icons.edit_document,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
             ),
             suffixIcon: GestureDetector(
               onTap: widget.sendMessage,

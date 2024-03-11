@@ -4,7 +4,7 @@ import "package:flutter_svg/svg.dart";
 import "package:heartless/backend/controllers/auth_controller.dart";
 import "package:heartless/backend/services/notifications/notification_services.dart";
 import "package:heartless/main.dart";
-import "package:heartless/services/local_storage/local_storage.dart";
+import 'package:heartless/services/storage/local_storage.dart';
 import "package:heartless/services/phone_auth/phone_auth.dart";
 import 'package:heartless/shared/models/app_user.dart';
 import "package:heartless/shared/provider/auth_notifier.dart";

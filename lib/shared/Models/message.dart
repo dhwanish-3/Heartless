@@ -1,4 +1,4 @@
-enum MessageType { text, image, audio }
+import 'package:heartless/services/enums/message_type.dart';
 
 enum MessageStatus { sending, delivered, read }
 

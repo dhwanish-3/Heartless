@@ -62,8 +62,7 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
       } else {
         if (trimmedMessage.isNotEmpty) {
           _chatController.sendMessage(
-              widget.chatRoom, authNotifier.appUser!.uid, trimmedMessage,
-              file: file);
+              widget.chatRoom, authNotifier.appUser!.uid, trimmedMessage);
         }
       }
       _messageController.clear();
