@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:heartless/services/enums/file_type.dart';
 
-class StorageService {
+class FirebaseStorageService {
   static FirebaseStorage storage = FirebaseStorage.instance;
 
   // function to upload image to firebase storage
@@ -16,11 +16,12 @@ class StorageService {
 
       // storage file ref with path
       final Reference ref = storage.ref().child(
-          '${fileType}s/$chatId/${DateTime.now().millisecondsSinceEpoch}.$ext');
+          '${fileType.value}s/$chatId/${DateTime.now().millisecondsSinceEpoch}.$ext');
 
       // uploading image
       await ref
-          .putFile(file, SettableMetadata(contentType: '${fileType}/$ext'))
+          .putFile(
+              file, SettableMetadata(contentType: '${fileType.value}/$ext'))
           .then((p0) {
         log('Data Transferred: ${p0.bytesTransferred / 1000} kb');
       });

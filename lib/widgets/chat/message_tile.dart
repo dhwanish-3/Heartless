@@ -1,16 +1,20 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:heartless/services/storage/file_storage.dart';
 import 'package:heartless/shared/constants.dart';
 
+// ! if message is a document, then the message will be the file name
 class MessageTile extends StatelessWidget {
   final String? imageUrl;
   final String message;
   final bool isSender;
+  final String? documentUrl;
   final String time;
 
   const MessageTile(
       {super.key,
       this.imageUrl,
+      this.documentUrl,
       required this.message,
       this.isSender = true,
       required this.time});
@@ -45,48 +49,83 @@ class MessageTile extends StatelessWidget {
         child: Stack(
           children: [
             Container(
-              padding: const EdgeInsets.only(top: 2, bottom: 10, right: 10),
-              child: Column(
-                children: [
-                  imageUrl != null
-                      ? ClipRRect(
-                          borderRadius: BorderRadius.circular(6),
-                          child: CachedNetworkImage(
-                            imageUrl: Uri.parse(imageUrl!).isAbsolute
-                                ? imageUrl!
-                                : 'https://via.placeholder.com/150',
-                            height: 200,
-                            width: 200,
-                            placeholder: (context, url) =>
-                                const CircularProgressIndicator(),
-                            // todo: modify the error widget
-                            errorWidget: (context, url, error) => Container(
-                                height: 52,
-                                width: 52,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(30),
-                                  color: Theme.of(context).shadowColor,
-                                ),
-                                child: const Icon(
-                                  Icons.person_2_outlined,
-                                  color: Colors.black,
-                                  size: 30,
-                                )),
+                padding: const EdgeInsets.only(top: 2, bottom: 10, right: 10),
+                child: documentUrl == null
+                    ? Column(
+                        children: [
+                          imageUrl != null
+                              ? ClipRRect(
+                                  borderRadius: BorderRadius.circular(6),
+                                  child: CachedNetworkImage(
+                                    imageUrl: Uri.parse(imageUrl!).isAbsolute
+                                        ? imageUrl!
+                                        : 'https://via.placeholder.com/150',
+                                    height: 200,
+                                    width: 200,
+                                    placeholder: (context, url) =>
+                                        const CircularProgressIndicator(),
+                                    // todo: modify the error widget
+                                    errorWidget: (context, url, error) =>
+                                        Container(
+                                            height: 52,
+                                            width: 52,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(30),
+                                              color:
+                                                  Theme.of(context).shadowColor,
+                                            ),
+                                            child: const Icon(
+                                              Icons.person_2_outlined,
+                                              color: Colors.black,
+                                              size: 30,
+                                            )),
+                                  ),
+                                )
+                              : const SizedBox(),
+                          Text(
+                            message,
+                            textAlign: TextAlign.start,
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                height: 1.2,
+                                fontWeight: FontWeight.w500),
                           ),
-                        )
-                      : const SizedBox(),
-                  Text(
-                    message,
-                    textAlign: TextAlign.start,
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        height: 1.2,
-                        fontWeight: FontWeight.w500),
-                  ),
-                ],
-              ),
-            ),
+                        ],
+                      )
+                    : GestureDetector(
+                        onTap: () async {
+                          if (imageUrl != null) {
+                            String? path = await FileStorageService.saveFile(
+                                imageUrl!, message);
+                            if (path != null) FileStorageService.openFile(path);
+                          }
+                        },
+                        child: Row(
+                          children: [
+                            Image.asset(
+                              'assets/Icons/chat/pdf_icon.png',
+                              height: 40,
+                              width: 40,
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            Flexible(
+                              child: Text(
+                                message,
+                                textAlign: TextAlign.start,
+                                style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    height: 1.2,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            )
+                          ],
+                        ),
+                      )),
             Positioned(
               right: 0,
               bottom: 0,

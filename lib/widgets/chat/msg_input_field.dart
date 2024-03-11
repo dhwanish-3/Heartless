@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:heartless/shared/constants.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:file_picker/file_picker.dart';
 
 class MessageField extends StatefulWidget {
   final TextEditingController messageController;
@@ -53,7 +54,16 @@ class _MessageFieldState extends State<MessageField> {
                 ),
                 GestureDetector(
                   onTap: () async {
-                    FilePock
+                    FilePickerResult? result =
+                        await FilePicker.platform.pickFiles(
+                      type: FileType.custom,
+                      allowedExtensions: ['pdf'],
+                    );
+                    if (result != null &&
+                        result.files.isNotEmpty &&
+                        result.files.single.path != null) {
+                      widget.sendMessage(file: File(result.files.single.path!));
+                    }
                   },
                   child: const Icon(
                     Icons.edit_document,
