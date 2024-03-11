@@ -7,7 +7,7 @@ import 'package:heartless/main.dart';
 import 'package:heartless/pages/auth/scan_qr_page.dart';
 import 'package:heartless/pages/chat/contacts_page.dart';
 import 'package:heartless/pages/patient_management/patient_profile_page.dart';
-import 'package:heartless/services/local_storage/local_storage.dart';
+import 'package:heartless/services/storage/local_storage.dart';
 import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
 import 'package:qr_flutter/qr_flutter.dart';

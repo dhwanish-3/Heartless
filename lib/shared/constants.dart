@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Constants {
+  static const appName = "Heart++";
   static const primaryColor = Color.fromARGB(255, 52, 190, 171);
   static const darkPrimaryColor = Color.fromARGB(255, 212, 64, 64);
   static const cardColor = Color.fromARGB(255, 240, 240, 240);

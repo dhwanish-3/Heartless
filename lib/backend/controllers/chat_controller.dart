@@ -4,6 +4,7 @@ import 'package:heartless/backend/controllers/base_controller.dart';
 import 'package:heartless/backend/services/chat/chat_service.dart';
 import 'package:heartless/backend/services/chat/message_service.dart';
 import 'package:heartless/backend/services/storage/storage_service.dart';
+import 'package:heartless/services/enums/message_type.dart';
 import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/shared/models/chat.dart';
 import 'package:heartless/shared/models/message.dart';
@@ -104,8 +105,8 @@ class ChatController with BaseController {
         : chatRoom.user1Ref!.id;
     // if file is not null then it is an image
     if (file != null) {
-      message.type = MessageType.image;
-      return StorageService.uploadImage(chatRoom.id, file).then((value) {
+      message.type = messageTypeFromExtension(file.path.split('.').last);
+      return StorageService.uploadFile(chatRoom.id, file).then((value) {
         message.imageUrl = value;
         return MessageService.sendMessage(chatRoom, message)
             .then((value) => handleSuccess(true, "Message Sent"))
