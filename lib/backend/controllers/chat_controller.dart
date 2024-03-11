@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:heartless/backend/controllers/base_controller.dart';
 import 'package:heartless/backend/services/chat/chat_service.dart';
 import 'package:heartless/backend/services/chat/message_service.dart';
-import 'package:heartless/backend/services/storage/storage_service.dart';
+import 'package:heartless/backend/services/firebase_storage/firebase_storage_service.dart';
 import 'package:heartless/services/enums/message_type.dart';
 import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/shared/models/chat.dart';
@@ -106,7 +106,10 @@ class ChatController with BaseController {
     // if file is not null then it is an image
     if (file != null) {
       message.type = messageTypeFromExtension(file.path.split('.').last);
-      return StorageService.uploadFile(chatRoom.id, file).then((value) {
+      if (message.type == MessageType.document) {
+        message.message = file.path.split("/").last;
+      }
+      return FirebaseStorageService.uploadFile(chatRoom.id, file).then((value) {
         message.imageUrl = value;
         return MessageService.sendMessage(chatRoom, message)
             .then((value) => handleSuccess(true, "Message Sent"))
@@ -130,7 +133,7 @@ class ChatController with BaseController {
     }
     if (message.imageUrl != null) {
       // delete the image from storage
-      StorageService.deleteImage(message.imageUrl!);
+      FirebaseStorageService.deleteImage(message.imageUrl!);
     }
 
     return MessageService.deleteMessage(chatRoom, message)

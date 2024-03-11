@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/scheduler.dart';
 import 'package:heartless/backend/controllers/chat_controller.dart';
 import 'package:heartless/services/date/date_service.dart';
+import 'package:heartless/services/enums/message_type.dart';
 import 'package:heartless/shared/models/app_user.dart';
 import 'package:flutter/material.dart';
 import 'package:heartless/main.dart';
@@ -132,6 +133,10 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
                                 },
                                 child: MessageTile(
                                   imageUrl: message.imageUrl,
+                                  documentUrl:
+                                      message.type == MessageType.document
+                                          ? message.imageUrl
+                                          : null,
                                   message: message.message,
                                   isSender: message.senderId ==
                                       authNotifier.appUser!.uid,
