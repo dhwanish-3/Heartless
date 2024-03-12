@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:heartless/services/storage/file_storage.dart';
@@ -99,6 +101,7 @@ class MessageTile extends StatelessWidget {
                           if (imageUrl != null) {
                             String? path = await FileStorageService.saveFile(
                                 imageUrl!, message);
+                            log("fodf" + path.toString());
                             if (path != null) FileStorageService.openFile(path);
                           }
                         },
