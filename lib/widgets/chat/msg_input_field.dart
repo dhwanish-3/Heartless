@@ -37,40 +37,44 @@ class _MessageFieldState extends State<MessageField> {
             hintText: "Send a message...",
             hintStyle: const TextStyle(color: Colors.white, fontSize: 16),
             border: InputBorder.none,
-            prefixIcon: Row(
-              children: [
-                GestureDetector(
-                  onTap: () async {
-                    XFile? image = await _picker.pickImage(
-                        source: ImageSource.gallery, imageQuality: 50);
-                    if (image != null) {
-                      widget.sendMessage(file: File(image.path));
-                    }
-                  },
-                  child: const Icon(
-                    Icons.image_outlined,
-                    color: Colors.white,
+            prefixIcon: SizedBox(
+              width: 60,
+              child: Row(
+                children: [
+                  GestureDetector(
+                    onTap: () async {
+                      XFile? image = await _picker.pickImage(
+                          source: ImageSource.gallery, imageQuality: 50);
+                      if (image != null) {
+                        widget.sendMessage(file: File(image.path));
+                      }
+                    },
+                    child: const Icon(
+                      Icons.image_outlined,
+                      color: Colors.white,
+                    ),
                   ),
-                ),
-                GestureDetector(
-                  onTap: () async {
-                    FilePickerResult? result =
-                        await FilePicker.platform.pickFiles(
-                      type: FileType.custom,
-                      allowedExtensions: ['pdf'],
-                    );
-                    if (result != null &&
-                        result.files.isNotEmpty &&
-                        result.files.single.path != null) {
-                      widget.sendMessage(file: File(result.files.single.path!));
-                    }
-                  },
-                  child: const Icon(
-                    Icons.edit_document,
-                    color: Colors.white,
+                  GestureDetector(
+                    onTap: () async {
+                      FilePickerResult? result =
+                          await FilePicker.platform.pickFiles(
+                        type: FileType.custom,
+                        allowedExtensions: ['pdf'],
+                      );
+                      if (result != null &&
+                          result.files.isNotEmpty &&
+                          result.files.single.path != null) {
+                        widget.sendMessage(
+                            file: File(result.files.single.path!));
+                      }
+                    },
+                    child: const Icon(
+                      Icons.edit_document,
+                      color: Colors.white,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             suffixIcon: GestureDetector(
               onTap: widget.sendMessage,
