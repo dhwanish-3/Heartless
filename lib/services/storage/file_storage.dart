@@ -40,9 +40,11 @@ class FileStorageService {
       } else if (Platform.isIOS) {
         //? then we can use the temporary directory then save it to photos
         if (await requestPermission(Permission.photos)) {
+          log('Permission Granted');
           // get the path of the temporary directory
           directory = await getTemporaryDirectory();
         } else {
+          log('Permission Denied');
           return null;
         }
       }
