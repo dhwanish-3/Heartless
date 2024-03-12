@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:heartless/backend/controllers/chat_controller.dart';
 import 'package:heartless/services/date/date_service.dart';
@@ -77,17 +78,52 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
 
     return Scaffold(
       appBar: AppBar(
-          title: Column(
-        children: [
-          Text(widget.chatUser.name, style: const TextStyle(fontSize: 18)),
-          Text(
-            widget.chatUser.isOnline
-                ? "Online"
-                : "Last seen ${DateService.getRelativeDateWithTime(widget.chatUser.lastSeen)}",
-            style: const TextStyle(fontSize: 12),
-          ),
-        ],
-      )),
+          leadingWidth: 25,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(30),
+                child: CachedNetworkImage(
+                  imageUrl: Uri.parse(widget.chatUser.imageUrl).isAbsolute
+                      ? widget.chatUser.imageUrl
+                      : "https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png",
+                  height: 40,
+                  width: 40,
+                  placeholder: (context, url) =>
+                      const CircularProgressIndicator(),
+                  // todo: modify the error widget
+                  errorWidget: (context, url, error) => Container(
+                      height: 40,
+                      width: 40,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        color: Theme.of(context).shadowColor,
+                      ),
+                      child: const Icon(
+                        Icons.person_2_outlined,
+                        color: Colors.black,
+                        size: 30,
+                      )),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(widget.chatUser.name,
+                      style: const TextStyle(fontSize: 18)),
+                  Text(
+                    widget.chatUser.isOnline
+                        ? "Online"
+                        : "Last seen ${DateService.getRelativeDateWithTime(widget.chatUser.lastSeen)}",
+                    textAlign: TextAlign.start,
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                ],
+              ),
+            ],
+          )),
 
       //* the textInput widget does not move up in ios
       resizeToAvoidBottomInset: true,
