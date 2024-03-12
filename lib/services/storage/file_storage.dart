@@ -11,12 +11,12 @@ import 'package:permission_handler/permission_handler.dart';
 
 class FileStorageService {
   // request permission
-  static Future<bool> _requestPermission(Permission permission) async {
+  static Future<bool> requestPermission(Permission permission) async {
     if (await permission.isGranted) {
       return true;
     } else {
-      await permission.request();
-      if (permission == PermissionStatus.granted) {
+      PermissionStatus status = await permission.request();
+      if (status.isGranted) {
         return true;
       } else {
         return false;
@@ -29,33 +29,17 @@ class FileStorageService {
     Directory? directory;
     try {
       if (Platform.isAndroid) {
-        if (await _requestPermission(Permission.storage)) {
+        if (await requestPermission(Permission.manageExternalStorage)) {
           directory = await getExternalStorageDirectory();
-          if (directory != null) {
-            log("External : " + directory.path);
-          } else {
+          if (directory == null) {
             return null;
           }
-          // get the path of the external storage directory
-          // List<String> folders = directory.path.split('/');
-          // String newPath = "";
-          // for (int x = 1; x < folders.length; x++) {
-          //   String folder = folders[x];
-          //   if (folder != "Android") {
-          //     newPath += "/" + folder;
-          //   } else {
-          //     break;
-          //   }
-          // }
-          // newPath = newPath + "/" + Constants.appName;
-          // directory = Directory(d);
-          // log("New Path : " + newPath);
         } else {
           return null;
         }
       } else if (Platform.isIOS) {
         //? then we can use the temporary directory then save it to photos
-        if (await _requestPermission(Permission.photos)) {
+        if (await requestPermission(Permission.photos)) {
           // get the path of the temporary directory
           directory = await getTemporaryDirectory();
         } else {
@@ -94,6 +78,7 @@ class FileStorageService {
   // open file from storage
   static Future<bool> openFile(String path) async {
     try {
+      log("Path : " + path);
       File file = File(path);
       if (await file.exists()) {
         await OpenFile.open(path);
