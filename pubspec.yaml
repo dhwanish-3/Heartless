@@ -64,7 +64,7 @@ dependencies:
   permission_handler: ^11.0.1
   image_gallery_saver:
     git:
-      url: 'https://github.com/knottx/image_gallery_saver.git'
+      url: "https://github.com/knottx/image_gallery_saver.git"
   path_provider: ^2.1.2
   file_picker: ^6.2.0
   open_file: ^3.3.2
@@ -103,6 +103,7 @@ flutter:
     - assets/Icons/
     - assets/Icons/Hero/
     - assets/Icons/chat/
+    - assets/Icons/fileFormat/
 
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg

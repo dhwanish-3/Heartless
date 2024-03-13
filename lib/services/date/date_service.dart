@@ -25,6 +25,10 @@ class DateService {
     return formatter.format(time);
   }
 
+  static String dayDateTimeFormat(DateTime timestamp) {
+    return DateFormat('EEEE, d MMMM yyyy h:mm a').format(timestamp);
+  }
+
   // formatting the time with Yesterday/Today/24 Feb 2024 10:00 AM/PM format
   static String getRelativeDateWithTime(DateTime time) {
     DateTime now = DateTime.now();
