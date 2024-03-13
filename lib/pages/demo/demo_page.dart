@@ -1,47 +1,39 @@
 import 'package:appinio_video_player/appinio_video_player.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+class DemoPage extends StatefulWidget {
+  final String videoUrl;
+  final String title;
 
+  const DemoPage({
+    Key? key,
+    required this.title,
+    required this.videoUrl,
+  });
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<DemoPage> createState() => _DemoPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _DemoPageState extends State<DemoPage> {
   late CachedVideoPlayerController _videoPlayerController;
   late CustomVideoPlayerController _customVideoPlayerController;
-  late CustomVideoPlayerWebController _customVideoPlayerWebController;
+  // late CustomVideoPlayerWebController _customVideoPlayerWebController;
 
   final CustomVideoPlayerSettings _customVideoPlayerSettings =
       const CustomVideoPlayerSettings(showSeekButtons: true);
-
-  final CustomVideoPlayerWebSettings _customVideoPlayerWebSettings =
-      CustomVideoPlayerWebSettings(
-    src: longVideo,
-  );
 
   @override
   void initState() {
     super.initState();
 
     _videoPlayerController = CachedVideoPlayerController.network(
-      longVideo,
+      widget.videoUrl,
     )..initialize().then((value) => setState(() {}));
-    // _videoPlayerController2 = CachedVideoPlayerController.network(video240);
-    // _videoPlayerController3 = CachedVideoPlayerController.network(video480);
+
     _customVideoPlayerController = CustomVideoPlayerController(
       context: context,
       videoPlayerController: _videoPlayerController,
       customVideoPlayerSettings: _customVideoPlayerSettings,
-      additionalVideoSources: {
-        "720p": _videoPlayerController,
-      },
-    );
-
-    _customVideoPlayerWebController = CustomVideoPlayerWebController(
-      webVideoPlayerSettings: _customVideoPlayerWebSettings,
     );
   }
 
@@ -53,52 +45,62 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-      child: SafeArea(
-        child: ListView(
-          physics: const NeverScrollableScrollPhysics(),
-          children: [
-            kIsWeb
-                ? Expanded(
-                    child: CustomVideoPlayerWeb(
-                      customVideoPlayerWebController:
-                          _customVideoPlayerWebController,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          widget.title,
+        ),
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              CustomVideoPlayer(
+                customVideoPlayerController: _customVideoPlayerController,
+              ),
+              const SizedBox(height: 10),
+              Container(
+                margin: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Steps',
+                      style: Theme.of(context).textTheme.bodyLarge,
                     ),
-                  )
-                : CustomVideoPlayer(
-                    customVideoPlayerController: _customVideoPlayerController,
-                  ),
-            CupertinoButton(
-              child: const Text("Play Fullscreen"),
-              onPressed: () {
-                if (kIsWeb) {
-                  _customVideoPlayerWebController.setFullscreen(true);
-                  _customVideoPlayerWebController.play();
-                } else {
-                  _customVideoPlayerController.setFullscreen(true);
-                  _customVideoPlayerController.videoPlayerController.play();
-                }
-              },
-            ),
-          ],
+                    Text('''
+- place arms at shoulder width
+- straighten out your back
+- feel the weight on your toes, shoulders and forearms
+- focus on some point right infront of you 
+- in one fluid motion move your arms downward
+- stand still
+- do not move until your muscles endure fatigue
+                  '''),
+                    Divider(),
+                    Text(
+                      'Advantages',
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                    Text('''
+- place arms at shoulder width
+- straighten out your back
+- feel the weight on your toes, shoulders and forearms
+- focus on some point right infront of you 
+- in one fluid motion move your arms downward
+- stand still
+- do not move until your muscles endure fatigue
+                  '''),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
-
-String videoUrlLandscape =
-    "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4";
-String videoUrlPortrait =
-    'https://assets.mixkit.co/videos/preview/mixkit-a-girl-blowing-a-bubble-gum-at-an-amusement-park-1226-large.mp4';
-String longVideo =
-    "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
-
-String video720 =
-    "https://www.sample-videos.com/video123/mp4/720/big_buck_bunny_720p_10mb.mp4";
-
-String video480 =
-    "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4";
-
-String video240 =
-    "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4";
