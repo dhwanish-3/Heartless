@@ -1,4 +1,4 @@
-enum FileType { image, document, pdf, txt }
+enum FileType { image, document, pdf }
 
 extension FileTypeExtension on FileType {
   String get value {
@@ -9,8 +9,6 @@ extension FileTypeExtension on FileType {
         return 'document';
       case FileType.pdf:
         return 'pdf';
-      case FileType.txt:
-        return 'txt';
       default:
         return 'image';
     }
@@ -24,8 +22,6 @@ extension FileTypeExtension on FileType {
         return 'assets/Icons/fileFormat/doc.png';
       case FileType.pdf:
         return 'assets/Icons/fileFormat/pdf.png';
-      case FileType.txt:
-        return 'assets/Icons/fileFormat/txt.png';
       default:
         return 'assets/Icons/fileFormat/pdf.png';
     }
@@ -48,10 +44,6 @@ FileType fileTypeFromExtension(String extension) {
     case 'docm':
     case 'docb':
       return FileType.document;
-    case 'txt':
-    case 'csv':
-    case 'md':
-      return FileType.txt;
     default:
       return FileType.document;
   }
