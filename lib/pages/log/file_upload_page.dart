@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/services/date/date_service.dart';
+import 'package:heartless/services/enums/file_type.dart';
 import 'package:heartless/shared/constants.dart';
 import 'package:heartless/widgets/log/file_tile.dart';
 import 'package:heartless/widgets/miscellaneous/month_divider.dart';
@@ -17,7 +18,44 @@ class _FileUploadPageState extends State<FileUploadPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            builder: (BuildContext context) {
+              return Container(
+                height: 200,
+                child: Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      for (var fileFormat in FileType.values)
+                        Expanded(
+                          flex: 1,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  //! file upload mechanism here
+                                },
+                                child: CircleAvatar(
+                                  backgroundImage:
+                                      AssetImage(fileFormat.imageUrl),
+                                  radius: 20,
+                                ),
+                              ),
+                              Text(fileFormat.value),
+                            ],
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        },
         backgroundColor: Constants.primaryColor,
         child: const Icon(Icons.add),
       ),
@@ -40,7 +78,7 @@ class _FileUploadPageState extends State<FileUploadPage> {
           onChanged: (text) {
             setState(() {});
             {
-              // print(_searchController.text);
+              // ! search functionality
               print(text);
             }
           },
