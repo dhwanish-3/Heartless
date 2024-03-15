@@ -4,6 +4,7 @@ import 'package:heartless/services/enums/file_type.dart';
 import 'package:heartless/shared/constants.dart';
 import 'package:heartless/widgets/log/file_tile.dart';
 import 'package:heartless/widgets/miscellaneous/month_divider.dart';
+import 'package:heartless/widgets/patient_management/timeline_widget.dart';
 
 class FileUploadPage extends StatefulWidget {
   const FileUploadPage({super.key});
@@ -119,6 +120,7 @@ class _FileUploadPageState extends State<FileUploadPage> {
                 dateString: DateService.dayDateTimeFormat(DateTime.now()),
                 imageUrl: 'assets/Icons/fileFormat/doc.png',
               ),
+              const SizedBox(height: 60),
             ],
           ),
         ),

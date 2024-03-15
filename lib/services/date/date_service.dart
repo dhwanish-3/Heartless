@@ -44,4 +44,42 @@ class DateService {
       return formatter.format(time);
     }
   }
+
+  static String getRelativeTimeInWording(DateTime time) {
+    DateTime now = DateTime.now();
+    Duration difference = now.difference(time);
+    if (difference < _timeLimit) {
+      return 'Just Now';
+    } else if (difference.inMinutes < 60) {
+      if (difference.inMinutes == 1)
+        return 'One minute ago';
+      else
+        return '${difference.inMinutes} minutes ago';
+    } else if (difference.inHours < 24) {
+      if (difference.inHours == 1)
+        return 'One hour ago';
+      else
+        return '${difference.inHours} hours ago';
+    } else if (difference.inDays < 7) {
+      if (difference.inDays == 1)
+        return 'Yesterday';
+      else
+        return '${difference.inDays} days ago';
+    } else if (difference.inDays < 30) {
+      if ((difference.inDays / 7).floor() == 1)
+        return 'One week ago';
+      else
+        return '${(difference.inDays / 7).floor()} weeks ago';
+    } else if (difference.inDays < 365) {
+      if ((difference.inDays / 30).floor() == 1)
+        return 'One month ago';
+      else
+        return '${(difference.inDays / 30).floor()} months ago';
+    } else {
+      if ((difference.inDays / 365).floor() == 1)
+        return 'One year ago';
+      else
+        return '${(difference.inDays / 365).floor()} years ago';
+    }
+  }
 }
