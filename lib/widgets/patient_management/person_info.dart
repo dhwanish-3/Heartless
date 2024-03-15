@@ -48,18 +48,42 @@ class PersonalInfoWidget extends StatelessWidget {
             top: 30,
 
             //* default image icon
-            child: CircleAvatar(
-              radius: 70,
-              backgroundColor: Colors.white,
-              foregroundImage: NetworkImage(imageUrl),
-              //* default image icon
-              // child: Icon(
-              //   Icons.person,
-              //   size: 70,
-              //   color: Colors.black,
-              // ),
+            child: Stack(
+              children: [
+                CircleAvatar(
+                  radius: 70,
+                  backgroundColor: Colors.white,
+                  foregroundImage: NetworkImage(imageUrl),
+                  //* default image icon
+                  // child: Icon(
+                  //   Icons.person,
+                  //   size: 70,
+                  //   color: Colors.black,
+                  // ),
+                ),
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white,
+                    ),
+                    child: IconButton(
+                      onPressed: () {
+                        //go to qr_code page
+                      },
+                      iconSize: 24,
+                      icon: Icon(
+                        Icons.qr_code,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          )
+          ),
         ],
       ),
     );

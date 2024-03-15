@@ -76,7 +76,7 @@ class Constants {
     bodyLarge: TextStyle(
       color: Colors.black,
       fontWeight: FontWeight.w600,
-      fontSize: 25,
+      fontSize: 20,
     ),
     bodyMedium: TextStyle(
       color: Colors.white,

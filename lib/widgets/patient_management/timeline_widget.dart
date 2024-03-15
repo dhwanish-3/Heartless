@@ -1,109 +1,62 @@
 import 'package:flutter/material.dart';
-import 'package:heartless/services/date/date_service.dart';
-import 'package:heartless/widgets/miscellaneous/tag_tile.dart';
+import 'package:heartless/shared/constants.dart';
+import 'package:heartless/widgets/patient_management/timeline_entry_widget.dart';
 
-class TimeLinewidget extends StatelessWidget {
-  final String title;
-  final String description;
-  final DateTime time;
-  const TimeLinewidget({
-    super.key,
-    required this.title,
-    this.description = '',
-    required this.time,
-  });
+class TimelineWidget extends StatelessWidget {
+  const TimelineWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        margin: const EdgeInsets.symmetric(
-          horizontal: 20,
-        ),
-        child: IntrinsicHeight(
-          child: Row(
-            children: [
-              Container(
-                // height: 100,
-                margin: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                ),
-                child: Column(
+    return Stack(
+      children: [
+        Container(
+            // height: 200,
+            margin: const EdgeInsets.symmetric(horizontal: 20),
+            decoration: BoxDecoration(
+              color: Theme.of(context).brightness == Brightness.light
+                  ? Constants.cardColor
+                  : Constants.darkCardColor,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 30,
+              vertical: 20,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
                   children: [
-                    Container(
-                      width: 8.0,
-                      height: 8.0,
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor,
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: Colors.black,
-                          width: 1,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        width: 2,
-                        color: Theme.of(context).primaryColor,
+                    Text(
+                      'Timeline',
+                      textAlign: TextAlign.start,
+                      // style: Theme.of(context).textTheme.headlineMedium
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).shadowColor,
                       ),
                     ),
                   ],
                 ),
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      DateService.getRelativeTimeInWording(time),
-                      textAlign: TextAlign.start,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                          // color: Colors.black,
-                          fontSize: 12,
-                          height: 1.2,
-                          fontWeight: FontWeight.w400),
-                    ),
-                    const SizedBox(height: 5),
-                    Text(
-                      'blood pressure is one of the most sought out diseases in the wordl',
-                      textAlign: TextAlign.start,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        height: 1.2,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                    Wrap(
-                      clipBehavior: Clip.antiAliasWithSaveLayer,
-                      children: [
-                        TagWidget(
-                          tag: 'blood pressure',
-                          tagColor: Colors.red,
-                        ),
-                        TagWidget(
-                          tag: 'test report',
-                          tagColor: Colors.blue,
-                        ),
-                        TagWidget(
-                          tag: 'blood pressure',
-                          tagColor: Colors.red,
-                        ),
-                        TagWidget(
-                          tag: 'test report',
-                          tagColor: Colors.blue,
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 5),
-                  ],
-                ),
-              )
-            ],
+                const SizedBox(height: 10),
+                TimeLineEntryidget(title: 'Blood Report', time: DateTime.now()),
+                TimeLineEntryidget(title: 'Glucose Test', time: DateTime.now()),
+              ],
+            )),
+        Positioned(
+          top: 10,
+          right: 30,
+          child: IconButton(
+            color: Colors.black,
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(Icons.keyboard_arrow_right),
           ),
-        ));
+        ),
+      ],
+    );
   }
 }

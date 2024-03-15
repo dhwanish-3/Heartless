@@ -11,6 +11,7 @@ import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/shared/models/chat.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
 import 'package:heartless/widgets/patient_management/person_info.dart';
+import 'package:heartless/widgets/patient_management/timeline_widget.dart';
 
 class PatientProfilePage extends StatefulWidget {
   final AppUser patient;
@@ -56,6 +57,8 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
               const SizedBox(
                 height: 20,
               ),
+              TimelineWidget(),
+              const SizedBox(height: 20),
               supervisors.isNotEmpty
                   ? SupervisorListContainer(
                       supervisorList: supervisors,
@@ -75,23 +78,35 @@ class SupervisorListContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       // height: 100,
-      margin: const EdgeInsets.symmetric(horizontal: 20),
+      margin: const EdgeInsets.symmetric(
+        horizontal: 20,
+      ),
       decoration: BoxDecoration(
         color: Theme.of(context).brightness == Brightness.light
             ? Constants.cardColor
             : Constants.darkCardColor,
         borderRadius: BorderRadius.circular(20),
       ),
-      padding: const EdgeInsets.all(10.0),
+      // padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 30,
+        vertical: 20,
+      ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('  Attended to By',
-              textAlign: TextAlign.start,
-              style: Theme.of(context).textTheme.headlineMedium),
+          Text(
+            'Attended to By',
+            textAlign: TextAlign.start,
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).shadowColor,
+            ),
+          ),
           const SizedBox(
-            height: 4,
+            height: 10,
           ),
           Column(
             children: supervisorList.map((supervisor) {
@@ -124,11 +139,10 @@ class SupervisorTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 50,
+        height: 56,
         padding: const EdgeInsets.symmetric(
           horizontal: 10,
         ),
-        margin: const EdgeInsets.symmetric(horizontal: 10),
         decoration: BoxDecoration(
           color: Theme.of(context).scaffoldBackgroundColor,
           borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -187,82 +201,93 @@ class ControlPanel extends StatelessWidget {
     }
 
     return Container(
-        // height: height * 0.3,
-        margin: const EdgeInsets.symmetric(horizontal: 20),
-        decoration: BoxDecoration(
-          color: Theme.of(context).brightness == Brightness.light
-              ? Constants.cardColor
-              : Constants.darkCardColor,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('  Control Panel',
-                textAlign: TextAlign.start,
-                style: Theme.of(context).textTheme.headlineMedium),
-            const SizedBox(
-              height: 10,
+      margin: const EdgeInsets.symmetric(horizontal: 20),
+      decoration: BoxDecoration(
+        color: Theme.of(context).brightness == Brightness.light
+            ? Constants.cardColor
+            : Constants.darkCardColor,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 30,
+        vertical: 20,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Control Panel',
+            textAlign: TextAlign.start,
+            // style: Theme.of(context).textTheme.headlineMedium
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).shadowColor,
             ),
-            SizedBox(
-              height: 330,
-              child: GridView(
-                  physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                    childAspectRatio: 1,
+          ),
+          const SizedBox(height: 10),
+          Wrap(
+            children: [
+              GridView(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 20,
+                  mainAxisSpacing: 20,
+                  childAspectRatio: 1.4,
+                ),
+                children: [
+                  PanelCard(
+                    imageUrl: 'assets/Icons/schedule.png',
+                    text: 'Schedule',
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SchedulePage(
+                                    patient: patient,
+                                  )));
+                    },
                   ),
-                  children: [
-                    PanelCard(
-                      imageUrl: 'assets/Icons/schedule.png',
-                      text: 'Schedule',
+                  PanelCard(
+                    imageUrl: 'assets/Icons/charts.png',
+                    text: 'Analytics',
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => AnalyticsPage(
+                                    patientId: patient.uid,
+                                  )));
+                    },
+                  ),
+                  PanelCard(
+                      imageUrl: 'assets/Icons/chat.png',
+                      text: 'Chat',
                       onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => SchedulePage(
-                                      patient: patient,
-                                    )));
-                      },
-                    ),
-                    PanelCard(
-                      imageUrl: 'assets/Icons/charts.png',
-                      text: 'Analytics',
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => AnalyticsPage(
-                                      patientId: patient.uid,
-                                    )));
-                      },
-                    ),
-                    PanelCard(
-                        imageUrl: 'assets/Icons/chat.png',
-                        text: 'Chat',
-                        onTap: () {
-                          createNewChat(patient);
-                        }),
-                    PanelCard(
-                      imageUrl: 'assets/Icons/diary.png',
-                      text: 'Health Log',
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => MedicalLogPage(
-                                      patient: patient,
-                                    )));
-                      },
-                    ),
-                  ]),
-            )
-          ],
-        ));
+                        createNewChat(patient);
+                      }),
+                  PanelCard(
+                    imageUrl: 'assets/Icons/diary.png',
+                    text: 'Health Log',
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => MedicalLogPage(
+                                    patient: patient,
+                                  )));
+                    },
+                  ),
+                ],
+              ),
+            ],
+          )
+        ],
+      ),
+    );
   }
 }
 
@@ -286,6 +311,7 @@ class PanelCard extends StatelessWidget {
           width: 150,
           decoration: BoxDecoration(
             color: Constants.lightPrimaryColor,
+            // color: Theme.of(context).canvasColor,
             borderRadius: BorderRadius.circular(10),
             boxShadow: [
               BoxShadow(
@@ -294,7 +320,7 @@ class PanelCard extends StatelessWidget {
                     : Colors.black,
                 spreadRadius: 1,
                 blurRadius: 1,
-                offset: const Offset(0, 3),
+                offset: const Offset(0, 1),
               ),
             ],
           ),
@@ -302,22 +328,21 @@ class PanelCard extends StatelessWidget {
             children: [
               Align(
                 alignment: Alignment.center,
-                child: SizedBox(
-                  height: 60,
-                  child: Column(
-                    children: [
-                      Image.asset(
-                        imageUrl,
-                        height: 35,
-                      ),
-                      Text(text,
-                          style: const TextStyle(
-                            color: Colors.black,
-                          )
-                          // style: Theme.of(context).textTheme.bodySmall,
-                          )
-                    ],
-                  ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      imageUrl,
+                      height: 24,
+                    ),
+                    Text(text,
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 12,
+                        )
+                        // style: Theme.of(context).textTheme.bodySmall,
+                        )
+                  ],
                 ),
               )
             ],

@@ -30,7 +30,9 @@ class MedicalLogPage extends StatelessWidget {
               child: Text(
                 'Medical Log',
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.headlineLarge,
+                style: Theme.of(context)
+                    .textTheme
+                    .headlineLarge, //only occurance of headlineLage
               ),
             ),
             const SizedBox(height: 10),
