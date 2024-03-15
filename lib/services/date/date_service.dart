@@ -45,6 +45,22 @@ class DateService {
     }
   }
 
+  // formatting the date time with Yesterday/Today/24 Feb 2024 format
+  static String getRelativeDate(DateTime time) {
+    DateTime now = DateTime.now();
+    DateTime startOfToday = getStartOfDay(now);
+    DateTime startOfYesterday = startOfToday.subtract(const Duration(days: 1));
+
+    if (time.isAfter(startOfToday)) {
+      return 'Today';
+    } else if (time.isAfter(startOfYesterday)) {
+      return 'Yesterday';
+    } else {
+      DateFormat formatter = DateFormat('dd MMM yyyy');
+      return formatter.format(time);
+    }
+  }
+
   static String getRelativeTimeInWording(DateTime time) {
     DateTime now = DateTime.now();
     Duration difference = now.difference(time);

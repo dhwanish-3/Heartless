@@ -76,6 +76,8 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
           widget.chatRoom, message, authNotifier.appUser!.uid);
     }
 
+    Set<DateTime> chatDates = {};
+    Set<int> chatDatesIndex = {};
     return Scaffold(
       appBar: AppBar(
           leadingWidth: 25,
@@ -161,24 +163,74 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
                       itemBuilder: (BuildContext context, int index) {
                         Message message =
                             Message.fromMap(snapshot.data.docs[index].data());
-                        return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 2),
-                            child: GestureDetector(
-                                onDoubleTap: () {
-                                  deleteMessage(message);
-                                },
-                                child: MessageTile(
-                                  imageUrl: message.imageUrl,
-                                  documentUrl:
-                                      message.type == MessageType.document
-                                          ? message.imageUrl
-                                          : null,
-                                  message: message.message,
-                                  isSender: message.senderId ==
-                                      authNotifier.appUser!.uid,
-                                  time: DateService.getFormattedTime(
-                                      message.time),
-                                )));
+                        if (!chatDates.contains(
+                            DateService.getStartOfDay(message.time))) {
+                          chatDatesIndex.add(index);
+                          chatDates
+                              .add(DateService.getStartOfDay(message.time));
+                        }
+
+                        if (chatDatesIndex.contains(index)) {
+                          return Column(
+                            children: [
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 10),
+                                child: Center(
+                                  child: Container(
+                                    color: Colors.red,
+                                    child: Text(
+                                      DateService.getRelativeDate(message.time),
+                                      style: TextStyle(
+                                        color: Theme.of(context).shadowColor,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 2),
+                                  child: GestureDetector(
+                                      onDoubleTap: () {
+                                        // todo: this should not be allowed
+                                        deleteMessage(message);
+                                      },
+                                      child: MessageTile(
+                                        imageUrl: message.imageUrl,
+                                        documentUrl:
+                                            message.type == MessageType.document
+                                                ? message.imageUrl
+                                                : null,
+                                        message: message.message,
+                                        isSender: message.senderId ==
+                                            authNotifier.appUser!.uid,
+                                        time: DateService.getFormattedTime(
+                                            message.time),
+                                      )))
+                            ],
+                          );
+                        } else {
+                          return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 2),
+                              child: GestureDetector(
+                                  onDoubleTap: () {
+                                    deleteMessage(message);
+                                  },
+                                  child: MessageTile(
+                                    imageUrl: message.imageUrl,
+                                    documentUrl:
+                                        message.type == MessageType.document
+                                            ? message.imageUrl
+                                            : null,
+                                    message: message.message,
+                                    isSender: message.senderId ==
+                                        authNotifier.appUser!.uid,
+                                    time: DateService.getFormattedTime(
+                                        message.time),
+                                  )));
+                        }
                       },
                     );
                   } else {
