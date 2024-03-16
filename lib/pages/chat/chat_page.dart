@@ -11,8 +11,8 @@ import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/shared/models/chat.dart';
 import 'package:heartless/shared/models/message.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
+import 'package:heartless/widgets/chat/message_input_field.dart';
 import 'package:heartless/widgets/chat/message_tile.dart';
-import 'package:heartless/widgets/chat/msg_input_field.dart';
 
 class ChatPage extends StatefulWidget {
   final ChatRoom chatRoom;
