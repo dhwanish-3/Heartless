@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:heartless/services/enums/user_type.dart';
 import 'package:heartless/shared/models/app_user.dart';
 
 class ConnectUsers {
@@ -8,7 +9,8 @@ class ConnectUsers {
   static Future<AppUser?> getUserDetails(String uid) {
     return _userRef.doc(uid).get().then((value) {
       if (value.exists && value.data() != null) {
-        return AppUser.fromMap(value.data()!);
+        return AppUser.getInstanceFromMap(
+            UserType.values[value.data()!['userType']], value.data()!);
       } else {
         return null;
       }

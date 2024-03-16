@@ -4,6 +4,7 @@ import 'package:heartless/backend/controllers/activity_controller.dart';
 import 'package:heartless/main.dart';
 import 'package:heartless/pages/schedule/create_task_page.dart';
 import 'package:heartless/services/enums/schedule_toggle_type.dart';
+import 'package:heartless/services/enums/user_type.dart';
 import 'package:heartless/shared/constants.dart';
 import 'package:heartless/shared/models/activity.dart';
 import 'package:heartless/shared/models/app_user.dart';
