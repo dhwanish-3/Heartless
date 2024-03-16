@@ -7,7 +7,7 @@ class FirebaseStorageService {
   static FirebaseStorage storage = FirebaseStorage.instance;
 
   // function to upload image to firebase storage
-  static Future<String> uploadFile(String chatId, File file) async {
+  static Future<String> uploadFile(String location, File file) async {
     try {
       // getting image file extension
       final String ext = file.path.split('.').last;
@@ -16,7 +16,7 @@ class FirebaseStorageService {
 
       // storage file ref with path
       final Reference ref = storage.ref().child(
-          '${fileType.value}s/$chatId/${DateTime.now().millisecondsSinceEpoch}.$ext');
+          '${fileType.value}s/$location/${DateTime.now().millisecondsSinceEpoch}.$ext');
 
       // uploading image
       await ref
