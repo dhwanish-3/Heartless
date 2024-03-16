@@ -1,12 +1,13 @@
 import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:heartless/backend/controllers/chat_controller.dart';
+import 'package:heartless/main.dart';
 import 'package:heartless/services/date/date_service.dart';
 import 'package:heartless/services/enums/message_type.dart';
 import 'package:heartless/shared/models/app_user.dart';
-import 'package:flutter/material.dart';
-import 'package:heartless/main.dart';
 import 'package:heartless/shared/models/chat.dart';
 import 'package:heartless/shared/models/message.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
@@ -92,9 +93,14 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
                       : "https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png",
                   height: 40,
                   width: 40,
-                  placeholder: (context, url) =>
-                      const CircularProgressIndicator(),
-                  // todo: modify the error widget
+                  placeholder: (context, url) => Center(
+                    child: SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(
+                          color: Theme.of(context).canvasColor),
+                    ),
+                  ),
                   errorWidget: (context, url, error) => Container(
                       height: 40,
                       width: 40,

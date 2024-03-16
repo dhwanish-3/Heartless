@@ -41,9 +41,14 @@ class _ChatTileState extends State<ChatTile> {
                       : "https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png",
                   height: 52,
                   width: 52,
-                  placeholder: (context, url) =>
-                      const CircularProgressIndicator(),
-                  // todo: modify the error widget
+                  placeholder: (context, url) => Center(
+                    child: SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(
+                          color: Theme.of(context).canvasColor),
+                    ),
+                  ),
                   errorWidget: (context, url, error) => Container(
                       height: 52,
                       width: 52,

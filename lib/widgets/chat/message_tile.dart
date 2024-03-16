@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:heartless/services/storage/file_storage.dart';
@@ -32,7 +30,9 @@ class MessageTile extends StatelessWidget {
           minHeight: 30,
           minWidth: 115,
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        padding: imageUrl != null && documentUrl == null
+            ? const EdgeInsets.symmetric(horizontal: 5, vertical: 4)
+            : EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         decoration: BoxDecoration(
           color: isSender
               ? (Theme.of(context).brightness == Brightness.dark)
@@ -51,22 +51,31 @@ class MessageTile extends StatelessWidget {
         child: Stack(
           children: [
             Container(
-                padding: const EdgeInsets.only(top: 2, bottom: 10, right: 10),
+                padding: imageUrl != null && documentUrl == null
+                    ? const EdgeInsets.only(top: 0, bottom: 0, right: 0)
+                    : const EdgeInsets.only(top: 2, bottom: 10, right: 10),
                 child: documentUrl == null
                     ? Column(
                         children: [
                           imageUrl != null
                               ? ClipRRect(
-                                  borderRadius: BorderRadius.circular(6),
+                                  borderRadius: BorderRadius.circular(8),
                                   child: CachedNetworkImage(
+                                    fit: BoxFit.cover,
                                     imageUrl: Uri.parse(imageUrl!).isAbsolute
                                         ? imageUrl!
                                         : 'https://via.placeholder.com/150',
-                                    height: 200,
-                                    width: 200,
-                                    placeholder: (context, url) =>
-                                        const CircularProgressIndicator(),
-                                    // todo: modify the error widget
+                                    height: 250,
+                                    width: 250,
+                                    placeholder: (context, url) => Center(
+                                      child: SizedBox(
+                                        height: 20,
+                                        width: 20,
+                                        child: CircularProgressIndicator(
+                                            color:
+                                                Theme.of(context).canvasColor),
+                                      ),
+                                    ),
                                     errorWidget: (context, url, error) =>
                                         Container(
                                             height: 52,
@@ -85,14 +94,25 @@ class MessageTile extends StatelessWidget {
                                   ),
                                 )
                               : const SizedBox(),
-                          Text(
-                            message,
-                            textAlign: TextAlign.start,
-                            style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                height: 1.2,
-                                fontWeight: FontWeight.w500),
+                          Container(
+                            width: imageUrl != null ? 250 : null,
+                            padding: imageUrl != null && message.isNotEmpty
+                                ? const EdgeInsets.only(
+                                    top: 2,
+                                    bottom: 10,
+                                    right: 10,
+                                    left: 4,
+                                  )
+                                : const EdgeInsets.all(0),
+                            child: Text(
+                              message,
+                              textAlign: TextAlign.start,
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  height: 1.2,
+                                  fontWeight: FontWeight.w500),
+                            ),
                           ),
                         ],
                       )
@@ -101,7 +121,6 @@ class MessageTile extends StatelessWidget {
                           if (imageUrl != null) {
                             String? path = await FileStorageService.saveFile(
                                 imageUrl!, message);
-                            log("fodf" + path.toString());
                             if (path != null) FileStorageService.openFile(path);
                           }
                         },
