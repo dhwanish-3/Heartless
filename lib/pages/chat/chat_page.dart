@@ -182,15 +182,32 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
                               Padding(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 10),
-                                child: Center(
-                                  child: Container(
-                                    color: Colors.red,
-                                    child: Text(
-                                      DateService.getRelativeDate(message.time),
-                                      style: TextStyle(
-                                        color: Theme.of(context).shadowColor,
-                                        fontSize: 12,
+                                child: Container(
+                                  height: 22,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 2,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context).cardColor,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Theme.of(context).brightness ==
+                                                Brightness.light
+                                            ? Colors.grey
+                                            : Colors.white,
+                                        spreadRadius: 0,
+                                        blurRadius: 0.2,
+                                        offset: const Offset(0, 0.2),
                                       ),
+                                    ],
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  child: Text(
+                                    DateService.getRelativeDate(message.time),
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 12,
                                     ),
                                   ),
                                 ),

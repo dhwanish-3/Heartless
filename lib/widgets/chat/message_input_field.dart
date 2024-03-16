@@ -30,8 +30,11 @@ class _MessageFieldState extends State<MessageField> {
     //! dummy controller created for the sake of testing
     final TextEditingController messageController = widget.messageController;
     return Container(
+        constraints: BoxConstraints(
+          maxHeight: screenHeight * 0.2,
+        ),
         width: screenWidth,
-        height: screenHeight * 0.07,
+        // height: screenHeight * 0.07,
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         decoration: BoxDecoration(
           color: Constants.customGray,
