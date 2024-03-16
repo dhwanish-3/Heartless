@@ -60,37 +60,59 @@ class MessageTile extends StatelessWidget {
                           imageUrl != null
                               ? ClipRRect(
                                   borderRadius: BorderRadius.circular(8),
-                                  child: CachedNetworkImage(
-                                    fit: BoxFit.cover,
-                                    imageUrl: Uri.parse(imageUrl!).isAbsolute
-                                        ? imageUrl!
-                                        : 'https://via.placeholder.com/150',
-                                    height: 250,
-                                    width: 250,
-                                    placeholder: (context, url) => Center(
-                                      child: SizedBox(
-                                        height: 20,
-                                        width: 20,
-                                        child: CircularProgressIndicator(
-                                            color:
-                                                Theme.of(context).canvasColor),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => Scaffold(
+                                            backgroundColor: Colors.black,
+                                            body: Center(
+                                              child: Hero(
+                                                tag: 'imageHero',
+                                                child: Image.network(imageUrl!),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    child: Hero(
+                                      tag: 'imageHero',
+                                      child: CachedNetworkImage(
+                                        fit: BoxFit.cover,
+                                        imageUrl: Uri.parse(imageUrl!)
+                                                .isAbsolute
+                                            ? imageUrl!
+                                            : 'https://via.placeholder.com/150',
+                                        height: 250,
+                                        width: 250,
+                                        placeholder: (context, url) => Center(
+                                          child: SizedBox(
+                                            height: 20,
+                                            width: 20,
+                                            child: CircularProgressIndicator(
+                                                color: Theme.of(context)
+                                                    .canvasColor),
+                                          ),
+                                        ),
+                                        errorWidget: (context, url, error) =>
+                                            Container(
+                                                height: 52,
+                                                width: 52,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(30),
+                                                  color: Theme.of(context)
+                                                      .shadowColor,
+                                                ),
+                                                child: const Icon(
+                                                  Icons.person_2_outlined,
+                                                  color: Colors.black,
+                                                  size: 30,
+                                                )),
                                       ),
                                     ),
-                                    errorWidget: (context, url, error) =>
-                                        Container(
-                                            height: 52,
-                                            width: 52,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(30),
-                                              color:
-                                                  Theme.of(context).shadowColor,
-                                            ),
-                                            child: const Icon(
-                                              Icons.person_2_outlined,
-                                              color: Colors.black,
-                                              size: 30,
-                                            )),
                                   ),
                                 )
                               : const SizedBox(),
