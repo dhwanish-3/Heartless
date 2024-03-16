@@ -3,7 +3,6 @@ import "package:flutter_svg/svg.dart";
 import "package:heartless/backend/controllers/auth_controller.dart";
 import "package:heartless/backend/services/notifications/notification_services.dart";
 import "package:heartless/main.dart";
-import 'package:heartless/services/storage/local_storage.dart';
 import "package:heartless/services/phone_auth/phone_auth.dart";
 import 'package:heartless/shared/models/app_user.dart';
 import "package:heartless/shared/constants.dart";
@@ -69,7 +68,6 @@ class _SignUpPageState extends State<SignUpPage> {
       authNotifier.setAppUser(appUser);
       bool success = await _authController.signUp(authNotifier);
       if (success && context.mounted) {
-        await LocalStorage.saveUser(authNotifier);
         NotificationService.getFirebaseMessagingToken(authNotifier);
         goHome();
       }
@@ -102,7 +100,6 @@ class _SignUpPageState extends State<SignUpPage> {
     void googleSignIn() async {
       bool success = await _authController.googleSignIn(authNotifier);
       if (success && context.mounted) {
-        await LocalStorage.saveUser(authNotifier);
         NotificationService.getFirebaseMessagingToken(authNotifier);
         goHome();
       }
@@ -140,7 +137,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       height: 20,
                     ),
                     Text(
-                      '${userTypeToString(authNotifier.userType)} SignUp',
+                      '${authNotifier.userType.name} SignUp',
                       style: Theme.of(context).textTheme.headlineMedium,
                     ),
                     const SizedBox(

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:heartless/backend/services/auth/auth_service.dart';
 import 'package:heartless/backend/services/notifications/notification_services.dart';
 import 'package:heartless/pages/auth/verification_page.dart';
-import 'package:heartless/services/storage/local_storage.dart';
 import 'package:heartless/services/utils/toast_message.dart';
 import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
@@ -38,7 +37,6 @@ class PhoneAuth {
                 User? user =
                     (await _auth.signInWithCredential(credential)).user;
                 if (user != null) {
-                  await LocalStorage.saveUser(authNotifier);
                   ToastMessage().showSuccess("Logged in successfully");
                   widgetNotifier.setLoading(false);
                   NotificationService.getFirebaseMessagingToken(authNotifier);
@@ -106,7 +104,6 @@ class PhoneAuth {
                 if (user != null) {
                   authNotifier.appUser!.uid = user.uid;
                   await AuthService().setUserDetails(authNotifier);
-                  await LocalStorage.saveUser(authNotifier);
                   ToastMessage().showSuccess("Logged in successfully");
                   widgetNotifier.setLoading(false);
                   NotificationService.getFirebaseMessagingToken(authNotifier);
@@ -159,7 +156,6 @@ class PhoneAuth {
       User? user = (await _auth.signInWithCredential(credential)).user;
       if (alreadyExists) {
         if (user != null) {
-          await LocalStorage.saveUser(authNotifier);
           ToastMessage().showSuccess("Logged in successfully");
           NotificationService.getFirebaseMessagingToken(authNotifier);
           return true;
@@ -172,7 +168,6 @@ class PhoneAuth {
         if (user != null) {
           authNotifier.appUser!.uid = user.uid;
           await AuthService().setUserDetails(authNotifier);
-          await LocalStorage.saveUser(authNotifier);
           ToastMessage().showSuccess("Logged in successfully");
           NotificationService.getFirebaseMessagingToken(authNotifier);
           return true;

@@ -3,8 +3,8 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:heartless/services/enums/user_type.dart';
 import 'package:heartless/services/exceptions/app_exceptions.dart';
-import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/shared/models/chat.dart';
 
 class ChatService {

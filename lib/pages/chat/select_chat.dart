@@ -3,6 +3,7 @@ import 'package:heartless/backend/controllers/chat_controller.dart';
 import 'package:heartless/backend/controllers/connect_users_controller.dart';
 import 'package:heartless/main.dart';
 import 'package:heartless/pages/chat/chat_page.dart';
+import 'package:heartless/services/enums/user_type.dart';
 import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/shared/models/chat.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';

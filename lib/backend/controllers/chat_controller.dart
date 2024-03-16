@@ -5,6 +5,7 @@ import 'package:heartless/backend/services/chat/chat_service.dart';
 import 'package:heartless/backend/services/chat/message_service.dart';
 import 'package:heartless/backend/services/firebase_storage/firebase_storage_service.dart';
 import 'package:heartless/services/enums/message_type.dart';
+import 'package:heartless/services/enums/user_type.dart';
 import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/shared/models/chat.dart';
 import 'package:heartless/shared/models/message.dart';

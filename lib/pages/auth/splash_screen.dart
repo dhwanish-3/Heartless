@@ -46,7 +46,7 @@ class _SplashScreenState extends State<SplashScreen> {
     AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
     Future.delayed(const Duration(seconds: 3), () {
-      SplashServices().hasLoggedIn(authNotifier).then((value) {
+      SplashServices().getUserFromFirebase(authNotifier).then((value) {
         if (value) {
           NotificationService.getFirebaseMessagingToken(authNotifier);
           Navigator.pushNamed(context, '/home');
