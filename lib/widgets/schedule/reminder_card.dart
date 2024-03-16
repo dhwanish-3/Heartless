@@ -182,7 +182,7 @@ class ReminderCard extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            DateService.getFormattedTimeWithAMPM(activity.time),
+                            DateService.getFormattedTime(activity.time),
                             // style: Theme.of(context).textTheme.headlineSmall,
                             style: const TextStyle(
                               color: Colors.white,
