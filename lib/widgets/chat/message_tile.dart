@@ -59,7 +59,7 @@ class MessageTile extends StatelessWidget {
                         children: [
                           imageUrl != null
                               ? ClipRRect(
-                                  borderRadius: BorderRadius.circular(8),
+                                  borderRadius: BorderRadius.circular(10),
                                   child: GestureDetector(
                                     onTap: () {
                                       Navigator.push(
