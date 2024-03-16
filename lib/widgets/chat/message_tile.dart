@@ -69,7 +69,7 @@ class MessageTile extends StatelessWidget {
                                             backgroundColor: Colors.black,
                                             body: Center(
                                               child: Hero(
-                                                tag: 'imageHero',
+                                                tag: 'imageHero' + imageUrl!,
                                                 child: Image.network(imageUrl!),
                                               ),
                                             ),
@@ -78,7 +78,7 @@ class MessageTile extends StatelessWidget {
                                       );
                                     },
                                     child: Hero(
-                                      tag: 'imageHero',
+                                      tag: 'imageHero' + imageUrl!,
                                       child: CachedNetworkImage(
                                         fit: BoxFit.cover,
                                         imageUrl: Uri.parse(imageUrl!)
