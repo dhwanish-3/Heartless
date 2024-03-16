@@ -70,7 +70,7 @@ class _LoginPageState extends State<LoginPage> {
       bool success = await _authController.login(authNotifier);
       if (success && context.mounted) {
         await LocalStorage.saveUser(authNotifier);
-        NotificationServices.getFirebaseMessagingToken(authNotifier);
+        NotificationService.getFirebaseMessagingToken(authNotifier);
         goHome();
       }
     }
@@ -100,7 +100,7 @@ class _LoginPageState extends State<LoginPage> {
       bool success = await _authController.googleSignIn(authNotifier);
       if (success && context.mounted) {
         await LocalStorage.saveUser(authNotifier);
-        NotificationServices.getFirebaseMessagingToken(authNotifier);
+        NotificationService.getFirebaseMessagingToken(authNotifier);
         goHome();
       }
     }
