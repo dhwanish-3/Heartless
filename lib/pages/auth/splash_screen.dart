@@ -2,9 +2,9 @@ import "package:connectivity_plus/connectivity_plus.dart";
 import "package:flutter/material.dart";
 import "package:flutter_svg/svg.dart";
 import "package:heartless/backend/services/notifications/notification_services.dart";
-import "package:heartless/main.dart";
 import "package:heartless/services/splash/splash_services.dart";
 import "package:heartless/shared/provider/auth_notifier.dart";
+import "package:provider/provider.dart";
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

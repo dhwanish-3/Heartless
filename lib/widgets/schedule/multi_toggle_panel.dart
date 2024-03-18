@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:heartless/main.dart';
 import 'package:heartless/services/enums/schedule_toggle_type.dart';
 import 'package:heartless/shared/provider/widget_provider.dart';
 import 'package:heartless/widgets/auth/custom_text_button.dart';
+import 'package:provider/provider.dart';
 
 class MutltiToggle extends StatelessWidget {
   const MutltiToggle({super.key});

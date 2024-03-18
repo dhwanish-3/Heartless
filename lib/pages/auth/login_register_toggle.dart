@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:heartless/main.dart';
 import 'package:heartless/pages/auth/login_page.dart';
 import 'package:heartless/pages/auth/signup_page.dart';
 import 'package:heartless/shared/provider/widget_provider.dart';
+import 'package:provider/provider.dart';
 
 class LoginOrRegister extends StatefulWidget {
   const LoginOrRegister({super.key});

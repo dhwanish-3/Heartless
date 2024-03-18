@@ -2,7 +2,6 @@
 
 import 'package:calendar_slider/calendar_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:heartless/main.dart';
 import 'package:heartless/shared/constants.dart';
 import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/shared/provider/widget_provider.dart';
@@ -10,6 +9,7 @@ import 'package:heartless/widgets/log/add_button.dart';
 import 'package:heartless/widgets/log/cutom_rect.dart';
 import 'package:heartless/widgets/log/diary_list.dart';
 import 'package:heartless/widgets/log/hero_dialog.dart';
+import 'package:provider/provider.dart';
 
 const String _heroAddTodo = 'add-todo-hero';
 

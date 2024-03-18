@@ -1,7 +1,6 @@
 import 'package:calendar_slider/calendar_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:heartless/backend/controllers/activity_controller.dart';
-import 'package:heartless/main.dart';
 import 'package:heartless/pages/schedule/create_task_page.dart';
 import 'package:heartless/services/enums/schedule_toggle_type.dart';
 import 'package:heartless/services/enums/user_type.dart';
@@ -12,6 +11,7 @@ import 'package:heartless/shared/provider/auth_notifier.dart';
 import 'package:heartless/shared/provider/widget_provider.dart';
 import 'package:heartless/widgets/schedule/multi_toggle_panel.dart';
 import 'package:heartless/widgets/schedule/reminder_card.dart';
+import 'package:provider/provider.dart';
 
 class SchedulePage extends StatelessWidget {
   final AppUser patient;

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/backend/controllers/chat_controller.dart';
 import 'package:heartless/backend/controllers/connect_users_controller.dart';
-import 'package:heartless/main.dart';
 import 'package:heartless/pages/analytics/analytics_page.dart';
 import 'package:heartless/pages/chat/chat_page.dart';
 import 'package:heartless/pages/log/medical_log_page.dart';
@@ -12,6 +11,7 @@ import 'package:heartless/shared/models/chat.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
 import 'package:heartless/widgets/patient_management/person_info.dart';
 import 'package:heartless/widgets/patient_management/timeline_widget.dart';
+import 'package:provider/provider.dart';
 
 class PatientProfilePage extends StatefulWidget {
   final AppUser patient;

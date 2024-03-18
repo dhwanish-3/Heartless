@@ -3,7 +3,6 @@ import "package:flutter/material.dart";
 import "package:flutter_svg/svg.dart";
 import "package:heartless/backend/controllers/auth_controller.dart";
 import "package:heartless/backend/services/notifications/notification_services.dart";
-import "package:heartless/main.dart";
 import "package:heartless/services/phone_auth/phone_auth.dart";
 import 'package:heartless/shared/models/app_user.dart';
 import "package:heartless/shared/provider/auth_notifier.dart";
@@ -15,6 +14,7 @@ import 'package:heartless/widgets/miscellaneous/right_trailing_button.dart';
 import 'package:heartless/widgets/auth/text_input.dart';
 import "package:heartless/shared/provider/widget_provider.dart";
 import "package:intl_phone_field/intl_phone_field.dart";
+import "package:provider/provider.dart";
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/backend/controllers/chat_controller.dart';
-import 'package:heartless/main.dart';
 import 'package:heartless/pages/chat/chat_page.dart';
 import 'package:heartless/pages/chat/select_chat.dart';
 import 'package:heartless/services/date/date_service.dart';
@@ -10,6 +9,7 @@ import 'package:heartless/shared/models/chat.dart';
 import 'package:heartless/shared/models/message.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
 import 'package:heartless/widgets/chat/chat_tile.dart';
+import 'package:provider/provider.dart';
 
 class ContactsPage extends StatefulWidget {
   const ContactsPage({super.key});

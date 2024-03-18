@@ -1,12 +1,12 @@
 import "package:flutter/material.dart";
 import "package:flutter_svg/svg.dart";
-import "package:heartless/main.dart";
 import "package:heartless/services/phone_auth/phone_auth.dart";
 import "package:heartless/shared/provider/auth_notifier.dart";
 import "package:heartless/shared/provider/widget_provider.dart";
 import 'package:heartless/widgets/auth/otp_input_field.dart';
 import 'package:heartless/widgets/miscellaneous/left_trailing_button.dart';
 import 'package:heartless/widgets/miscellaneous/right_trailing_button.dart';
+import "package:provider/provider.dart";
 
 class VerificationPage extends StatefulWidget {
   //! email or phone number should be appropriately sent from page

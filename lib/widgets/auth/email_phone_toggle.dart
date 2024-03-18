@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:heartless/main.dart';
 import 'package:heartless/shared/constants.dart';
 import 'package:heartless/shared/provider/widget_provider.dart';
 import 'package:heartless/widgets/auth/custom_text_button.dart';
+import 'package:provider/provider.dart';
 
 // ! This widget is not beign used anywhere
 class ToggleButton extends StatelessWidget {
