@@ -1,7 +1,7 @@
 enum UserType { patient, nurse, doctor }
 
 extension UserTypeExtension on UserType {
-  String name() {
+  String get name {
     switch (this) {
       case UserType.patient:
         return 'Patient';
@@ -13,18 +13,18 @@ extension UserTypeExtension on UserType {
         return 'Patient';
     }
   }
-}
 
 // convert string to UserType
-UserType stringToUserType(String userType) {
-  switch (userType) {
-    case 'Patient':
-      return UserType.patient;
-    case 'Nurse':
-      return UserType.nurse;
-    case 'Doctor':
-      return UserType.doctor;
-    default:
-      return UserType.patient;
+  UserType stringToUserType(String userType) {
+    switch (userType) {
+      case 'Patient':
+        return UserType.patient;
+      case 'Nurse':
+        return UserType.nurse;
+      case 'Doctor':
+        return UserType.doctor;
+      default:
+        return UserType.patient;
+    }
   }
 }
