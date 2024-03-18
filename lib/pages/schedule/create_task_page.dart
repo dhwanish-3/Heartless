@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/backend/controllers/activity_controller.dart';
-import 'package:heartless/main.dart';
 import 'package:heartless/pages/date_picker.dart';
 import 'package:heartless/services/enums/activity_status.dart';
 import 'package:heartless/services/enums/activity_type.dart';
@@ -12,6 +11,7 @@ import 'package:heartless/shared/provider/widget_provider.dart';
 import 'package:heartless/widgets/auth/text_input.dart';
 import 'package:heartless/widgets/schedule/date_picker_button.dart';
 import 'package:heartless/widgets/schedule/time_picker_button.dart';
+import 'package:provider/provider.dart';
 
 class TaskFormPage extends StatefulWidget {
   final AppUser patient;

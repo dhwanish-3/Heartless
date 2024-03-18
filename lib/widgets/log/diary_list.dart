@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:heartless/backend/controllers/diary_controller.dart';
-import 'package:heartless/main.dart';
 import 'package:heartless/shared/constants.dart';
 import 'package:heartless/shared/models/app_user.dart';
-import 'package:heartless/widgets/log/cutom_rect.dart';
 import 'package:heartless/shared/models/diary.dart';
+import 'package:heartless/shared/provider/widget_provider.dart';
+import 'package:heartless/widgets/log/cutom_rect.dart';
 import 'package:heartless/widgets/log/diary_popup_card.dart';
 import 'package:heartless/widgets/log/hero_dialog.dart';
-import 'package:heartless/shared/provider/widget_provider.dart';
+import 'package:provider/provider.dart';
 
 class DiaryListBuilder extends StatefulWidget {
   final AppUser patient;

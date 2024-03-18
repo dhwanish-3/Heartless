@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:heartless/main.dart';
 import 'package:heartless/shared/constants.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
+import 'package:provider/provider.dart';
 
 class SingleUserType extends StatelessWidget {
   final int type;

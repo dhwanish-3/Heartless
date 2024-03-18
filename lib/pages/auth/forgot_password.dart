@@ -1,13 +1,13 @@
 import "package:flutter/material.dart";
 import "package:flutter_svg/svg.dart";
 import "package:heartless/backend/controllers/auth_controller.dart";
-import "package:heartless/main.dart";
 import 'package:heartless/shared/models/app_user.dart';
 import "package:heartless/shared/provider/auth_notifier.dart";
 import "package:heartless/shared/provider/widget_provider.dart";
 import 'package:heartless/widgets/miscellaneous/left_trailing_button.dart';
 import 'package:heartless/widgets/miscellaneous/right_trailing_button.dart';
 import 'package:heartless/widgets/auth/text_input.dart';
+import "package:provider/provider.dart";
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});

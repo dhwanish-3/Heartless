@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/backend/controllers/connect_users_controller.dart';
 import 'package:heartless/backend/services/misc/connect_users.dart';
-import 'package:heartless/main.dart';
 import 'package:heartless/services/utils/qr_scanner.dart';
 import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
 import 'package:heartless/shared/provider/widget_provider.dart';
 import 'package:heartless/widgets/miscellaneous/right_trailing_button.dart';
+import 'package:provider/provider.dart';
 
 class ScanQR extends StatefulWidget {
   const ScanQR({super.key});

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:heartless/main.dart';
 import 'package:heartless/pages/log/daywise_diary_page.dart';
 import 'package:heartless/shared/constants.dart';
 import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/shared/provider/widget_provider.dart';
 import 'package:heartless/widgets/log/diary_list.dart';
 import 'package:heartless/widgets/log/medical_metrics.dart';
+import 'package:provider/provider.dart';
 
 class MedicalLogPage extends StatelessWidget {
   final AppUser patient;

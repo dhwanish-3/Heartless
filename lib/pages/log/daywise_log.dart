@@ -1,13 +1,13 @@
 import 'package:calendar_slider/calendar_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:heartless/backend/controllers/reading_controller.dart';
-import 'package:heartless/main.dart';
 import 'package:heartless/services/utils/toast_message.dart';
 import 'package:heartless/shared/constants.dart';
 import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/shared/models/reading.dart';
 import 'package:heartless/shared/provider/widget_provider.dart';
 import 'package:heartless/widgets/reading_tile.dart';
+import 'package:provider/provider.dart';
 
 //! maybe this class needs to statefull widget
 class DayWiseLog extends StatefulWidget {

@@ -4,7 +4,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:heartless/backend/controllers/chat_controller.dart';
-import 'package:heartless/main.dart';
 import 'package:heartless/services/date/date_service.dart';
 import 'package:heartless/services/enums/message_type.dart';
 import 'package:heartless/shared/models/app_user.dart';
@@ -13,6 +12,7 @@ import 'package:heartless/shared/models/message.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
 import 'package:heartless/widgets/chat/message_input_field.dart';
 import 'package:heartless/widgets/chat/message_tile.dart';
+import 'package:provider/provider.dart';
 
 class ChatPage extends StatefulWidget {
   final ChatRoom chatRoom;

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:heartless/main.dart';
 import 'package:heartless/services/enums/user_type.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
 import 'package:heartless/widgets/auth/single_user_type.dart';
+import 'package:provider/provider.dart';
 
 class UserTypeWidget extends StatefulWidget {
   const UserTypeWidget({

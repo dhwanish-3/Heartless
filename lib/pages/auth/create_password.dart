@@ -1,11 +1,11 @@
 import "package:flutter/material.dart";
 import "package:flutter_svg/svg.dart";
-import "package:heartless/main.dart";
 import "package:heartless/shared/provider/theme_provider.dart";
 import 'package:heartless/widgets/miscellaneous/left_trailing_button.dart';
 import 'package:heartless/widgets/miscellaneous/right_trailing_button.dart';
 import 'package:heartless/widgets/auth/text_input.dart';
 import "package:heartless/shared/provider/widget_provider.dart";
+import "package:provider/provider.dart";
 
 // ! This page is not currently in use
 class CreatePasswordPage extends StatefulWidget {
