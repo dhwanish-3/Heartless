@@ -21,21 +21,16 @@ class MedicalLogPage extends StatelessWidget {
 
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
+      appBar: AppBar(
+          title: Text(
+        'Medical Log',
+        style: Theme.of(context).textTheme.headlineMedium,
+      )),
       body: SafeArea(
         child: Column(
           // mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(
-              child: Text(
-                'Medical Log',
-                textAlign: TextAlign.center,
-                style: Theme.of(context)
-                    .textTheme
-                    .headlineLarge, //only occurance of headlineLage
-              ),
-            ),
-            const SizedBox(height: 10),
             MedicalMetrics(
               patient: patient,
             ),
@@ -66,7 +61,11 @@ class MedicalLogPage extends StatelessWidget {
                       child: Text(
                         'My Diary',
                         textAlign: TextAlign.start,
-                        style: Theme.of(context).textTheme.headlineMedium,
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).shadowColor,
+                        ),
                       ),
                     ),
                     DiaryListBuilder(
