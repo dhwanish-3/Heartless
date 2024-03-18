@@ -16,6 +16,7 @@ class SplashServices {
       appUser = await ConnectUsers.getUserDetails(user.uid);
       if (appUser != null) {
         authNotifier.setAppUser(appUser);
+        authNotifier.setUserType(appUser.userType);
         log("User data fetched");
         return true;
       } else {

@@ -7,9 +7,9 @@ import 'package:heartless/shared/provider/theme_provider.dart';
 import 'package:provider/provider.dart';
 export 'package:provider/provider.dart'; //* Exporting provider package to all other files
 import 'package:heartless/shared/provider/widget_provider.dart';
-import "package:firebase_core/firebase_core.dart";
+import 'package:firebase_core/firebase_core.dart';
 
-final navigatorKey = GlobalKey<NavigatorState>();
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

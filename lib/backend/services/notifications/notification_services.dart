@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:heartless/backend/services/auth/auth_service.dart';
 import 'package:heartless/main.dart';
-import 'package:heartless/pages/chat/select_chat.dart';
+import 'package:heartless/pages/chat/contacts_page.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
 import 'package:http/http.dart' as http;
 import 'package:timezone/data/latest.dart' as tz;
@@ -42,13 +42,13 @@ class NotificationService {
     }
     log("These are the message details");
     log(message.toString());
-    log(message.notification.toString());
+    log(message.notification!.toMap().toString());
     log(message.data.toString());
     log(message.notification!.body.toString());
 
     log("handleNotification: ${message.notification!.title}");
     navigatorKey.currentState!
-        .push(MaterialPageRoute(builder: (context) => SelectChatPage()));
+        .push(MaterialPageRoute(builder: (context) => ContactsPage()));
   }
 
   static Future<void> initPushNotifications() async {
