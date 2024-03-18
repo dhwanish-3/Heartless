@@ -23,14 +23,17 @@ class TagWidget extends StatelessWidget {
           vertical: 2,
         ),
         decoration: BoxDecoration(
-          color: tagColor,
+          border: Border.all(
+            color: tagColor,
+            width: 0.6,
+          ),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(
           tag,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 8,
-            color: Colors.white,
+            color: tagColor,
             fontWeight: FontWeight.w400,
           ),
         ),

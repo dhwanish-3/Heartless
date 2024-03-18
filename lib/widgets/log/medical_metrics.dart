@@ -25,9 +25,16 @@ class MedicalMetrics extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('  Medical Metrics',
-                textAlign: TextAlign.start,
-                style: Theme.of(context).textTheme.headlineMedium),
+            Text(
+              '  Medical Metrics',
+              textAlign: TextAlign.start,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).shadowColor,
+              ),
+            ),
+            const SizedBox(height: 5),
             SizedBox(
               height: 320,
               child: GridView(

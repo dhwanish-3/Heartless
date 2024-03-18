@@ -22,6 +22,18 @@ class MessageField extends StatefulWidget {
 
 class _MessageFieldState extends State<MessageField> {
   final ImagePicker _picker = ImagePicker();
+
+  static String convertBytes(int bytes) {
+    double kilobytes = bytes / 1024;
+    double megabytes = kilobytes / 1024;
+
+    if (megabytes >= 1) {
+      return '${megabytes.toStringAsFixed(2)} MB';
+    } else {
+      return '${kilobytes.toStringAsFixed(2)} KB';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
@@ -118,9 +130,9 @@ class _MessageFieldState extends State<MessageField> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => Scaffold(
-                                    backgroundColor: Colors.black,
+                                    backgroundColor: Colors.grey,
                                     appBar: AppBar(
-                                      title: Text(result.files.single.name),
+                                      title: Text('Preview'),
                                       actions: [
                                         IconButton(
                                           icon: Icon(Icons.check),
@@ -132,8 +144,36 @@ class _MessageFieldState extends State<MessageField> {
                                     ),
                                     body: Center(
                                       //* for the time being only image is shown can display pdf preview later on
-                                      child: Image.asset(
-                                          'assets/Icons/fileFormat/documentPreview.png'),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Image.asset(
+                                            'assets/Icons/fileFormat/documentPreview.png',
+                                            height: 60,
+                                            width: 60,
+                                          ),
+                                          Text(result.files.single.name,
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 24,
+                                              )),
+                                          const SizedBox(height: 5),
+                                          Text(
+                                              convertBytes(
+                                                  result.files.single.size),
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 20,
+                                              )),
+                                          const SizedBox(
+                                            height: 100,
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
