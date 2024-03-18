@@ -1,36 +1,7 @@
+import 'package:heartless/services/enums/user_type.dart';
 import 'package:heartless/shared/models/doctor.dart';
 import 'package:heartless/shared/models/nurse.dart';
 import 'package:heartless/shared/models/patient.dart';
-
-enum UserType { patient, nurse, doctor }
-
-// convert enum to string
-String userTypeToString(UserType userType) {
-  switch (userType) {
-    case UserType.patient:
-      return 'Patient';
-    case UserType.nurse:
-      return 'Nurse';
-    case UserType.doctor:
-      return 'Doctor';
-    default:
-      return 'Patient';
-  }
-}
-
-// convert string to enum
-UserType stringToUserType(String userType) {
-  switch (userType) {
-    case 'Patient':
-      return UserType.patient;
-    case 'Nurse':
-      return UserType.nurse;
-    case 'Doctor':
-      return UserType.doctor;
-    default:
-      return UserType.patient;
-  }
-}
 
 class AppUser {
   String uid = '';

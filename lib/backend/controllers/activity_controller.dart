@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:heartless/backend/controllers/base_controller.dart';
 import 'package:heartless/backend/services/activity/activity_service.dart';
+import 'package:heartless/backend/services/notifications/notification_services.dart';
 import 'package:heartless/services/enums/activity_status.dart';
 import 'package:heartless/shared/models/activity.dart';
 
@@ -33,10 +34,20 @@ class ActivityController with BaseController {
   }
 
   Future<bool> addActivity(Activity activity) async {
-    if (await _activityService
-        .addActivity(activity)
-        .then((value) => handleSuccess(value, "Activity added"))
-        .catchError(handleError)) {
+    if (await _activityService.addActivity(activity).then((value) async {
+      await NotificationService.scheduleNotification(
+        title: activity.name,
+        body: activity.description,
+        payload: "Go to schedule page",
+        scheduledTime: activity.time,
+      );
+      // await NotificationService.showSimpleNotification(
+      //   title: activity.name,
+      //   body: activity.description,
+      //   payload: "Go to schedule page",
+      // );
+      return handleSuccess(value, "Activity added");
+    }).catchError(handleError)) {
       return true;
     } else {
       return false;

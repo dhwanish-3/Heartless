@@ -37,18 +37,16 @@ class MessageService {
       // increment the count of unread messages for the receiver
       if (message.receiverId == chatRoom.user1Ref!.id) {
         // send push notification
-        NotificationServices.sendPushNotification(
-            user1.pushToken, user2.name, message.message,
-            imageUrl: message.imageUrl);
+        NotificationService.sendPushNotification(
+            user1.pushToken, user2.name, chatRoom.id, message.message);
         chatRoom.user1UnreadMessages++;
         _chatRoomRef.doc(chatRoom.id).update({
           'user1UnreadMessages': FieldValue.increment(1),
         });
       } else if (message.receiverId == chatRoom.user2Ref!.id) {
         // send push notification
-        NotificationServices.sendPushNotification(
-            user2.pushToken, user1.name, message.message,
-            imageUrl: message.imageUrl);
+        NotificationService.sendPushNotification(
+            user2.pushToken, user1.name, chatRoom.id, message.message);
         chatRoom.user2UnreadMessages++;
         _chatRoomRef.doc(chatRoom.id).update({
           'user2UnreadMessages': FieldValue.increment(1),

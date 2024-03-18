@@ -1,4 +1,5 @@
 import 'package:heartless/backend/services/misc/connect_users.dart';
+import 'package:heartless/services/enums/user_type.dart';
 import 'package:heartless/shared/models/app_user.dart';
 
 class ConnectUsersController {

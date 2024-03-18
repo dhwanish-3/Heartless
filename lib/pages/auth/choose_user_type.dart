@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import "package:flutter_svg/svg.dart";
 import 'package:heartless/widgets/miscellaneous/right_trailing_button.dart';
-import 'package:heartless/widgets/auth/user_type.dart';
+import 'package:heartless/widgets/auth/user_type_widget.dart';
 
 class ChooseUserPage extends StatelessWidget {
   const ChooseUserPage({super.key});
