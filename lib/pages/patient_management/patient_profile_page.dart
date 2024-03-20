@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/backend/controllers/chat_controller.dart';
 import 'package:heartless/backend/controllers/connect_users_controller.dart';
-import 'package:heartless/pages/analytics/analytics_page.dart';
 import 'package:heartless/pages/chat/chat_page.dart';
 import 'package:heartless/pages/log/medical_log_page.dart';
 import 'package:heartless/pages/schedule/schedule_page.dart';
@@ -9,6 +8,7 @@ import 'package:heartless/shared/constants.dart';
 import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/shared/models/chat.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
+import 'package:heartless/widgets/analytics/graphs_widget.dart';
 import 'package:heartless/widgets/patient_management/person_info.dart';
 import 'package:heartless/widgets/patient_management/timeline_widget.dart';
 import 'package:provider/provider.dart';
@@ -258,7 +258,7 @@ class ControlPanel extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => AnalyticsPage(
+                              builder: (context) => GraphsWidget(
                                     patientId: patient.uid,
                                   )));
                     },
