@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:heartless/backend/controllers/base_controller.dart';
 import 'package:heartless/backend/services/chat/chat_service.dart';
@@ -9,7 +10,6 @@ import 'package:heartless/services/enums/user_type.dart';
 import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/shared/models/chat.dart';
 import 'package:heartless/shared/models/message.dart';
-import 'package:heartless/shared/provider/auth_notifier.dart';
 
 class ChatController with BaseController {
   // to get all chat rooms
@@ -32,22 +32,20 @@ class ChatController with BaseController {
   }
 
   // to create a new chat room or return the existing chat room
-  Future<ChatRoom?> createChatRoom(
-      AuthNotifier authNotifier, AppUser user) async {
+  Future<ChatRoom?> createChatRoom(AppUser me, AppUser user) async {
     // check if the chat room already exists
-    String chatId = getChatRoomId(authNotifier.appUser!, user);
+    String chatId = getChatRoomId(me, user);
     ChatRoom? chatRoom = await chatExists(chatId);
     if (chatRoom != null) {
       return chatRoom;
     }
 
     // create a new chat since it does not exist
-    DocumentReference<Map<String, dynamic>> me = FirebaseFirestore.instance
-        .collection('Users')
-        .doc(authNotifier.appUser!.uid);
+    DocumentReference<Map<String, dynamic>> meRef =
+        FirebaseFirestore.instance.collection('Users').doc(me.uid);
     DocumentReference<Map<String, dynamic>> other =
         FirebaseFirestore.instance.collection('Users').doc(user.uid);
-    chatRoom = ChatRoom(me, other);
+    chatRoom = ChatRoom(meRef, other);
     chatRoom.id = chatId;
     // creating the chat room
     bool success = await ChatService.createChatRoom(chatRoom).then((value) {

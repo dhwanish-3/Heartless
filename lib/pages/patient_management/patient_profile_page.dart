@@ -194,7 +194,7 @@ class ControlPanel extends StatelessWidget {
 
     void createNewChat(AppUser user) async {
       ChatRoom? chatRoom =
-          await ChatController().createChatRoom(authNotifier, user);
+          await ChatController().createChatRoom(authNotifier.appUser!, user);
       if (chatRoom != null) {
         goToChat(chatRoom, user);
       }

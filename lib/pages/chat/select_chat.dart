@@ -15,6 +15,7 @@ class SelectChatPage extends StatefulWidget {
   State<SelectChatPage> createState() => _MyWidgetState();
 }
 
+//! This page is not being used anymore
 class _MyWidgetState extends State<SelectChatPage> {
   List<AppUser> users = []; // list of users to chat with
   @override
@@ -66,7 +67,7 @@ class _MyWidgetState extends State<SelectChatPage> {
     // create a new chat
     void createNewChat(AppUser user) async {
       ChatRoom? chatRoom =
-          await ChatController().createChatRoom(authNotifier, user);
+          await ChatController().createChatRoom(authNotifier.appUser!, user);
       if (chatRoom != null) {
         goToChat(chatRoom, user);
       }
