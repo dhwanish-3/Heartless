@@ -29,7 +29,8 @@ class _RadialBarChartState extends State<RadialBarChart> {
       activitiesMap[ActivityType.excercise] = [];
       activitiesMap[ActivityType.diet] = [];
       activities.forEach((activity) {
-        activitiesMap[activity.type]!.add(activity);
+        if (activity.time.isBefore(DateTime.now()))
+          activitiesMap[activity.type]!.add(activity);
       });
 
       List<RadialChartData> newChartData = [];
@@ -51,40 +52,39 @@ class _RadialBarChartState extends State<RadialBarChart> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Center(
-            child: SizedBox(
-                height: 180,
-                child: StreamBuilder(
-                    stream: ActivityController.getAllActivitiesForAWeek(
-                        DateTime.now(), widget.patientId),
-                    builder: (context, AsyncSnapshot snapshot) {
-                      if (snapshot.hasData &&
-                          snapshot.data != null &&
-                          snapshot.data.docs.isNotEmpty) {
-                        getDataFromSnapshot(snapshot);
-                        return SfCircularChart(series: <CircularSeries>[
-                          // Renders radial bar chart
-                          RadialBarSeries<RadialChartData, String>(
-                              strokeColor: Colors.white,
-                              radius: "80",
-                              dataSource: radialChartData,
-                              pointColorMapper: (datum, index) => datum.color,
-                              xValueMapper: (RadialChartData data, _) =>
-                                  data.name,
-                              yValueMapper: (RadialChartData data, _) =>
-                                  data.value,
-                              cornerStyle: CornerStyle.bothCurve,
-                              maximumValue: 100,
-                              dataLabelSettings: const DataLabelSettings(
-                                  // Renders the data label
-                                  // isVisible: true,
-                                  textStyle: TextStyle(fontSize: 15)))
-                        ]);
-                      } else {
-                        return const CircularProgressIndicator();
-                      }
-                    }))));
+    return StreamBuilder(
+        stream: ActivityController.getAllActivitiesForAWeek(
+            DateTime.now(), widget.patientId),
+        builder: (context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData &&
+              snapshot.data != null &&
+              snapshot.data.docs.isNotEmpty) {
+            getDataFromSnapshot(snapshot);
+            // Renders radial bar chart
+            return SfCircularChart(
+                tooltipBehavior: TooltipBehavior(enable: true),
+                title: ChartTitle(text: 'Activity Completion'),
+                legend: Legend(
+                    isVisible: true, overflowMode: LegendItemOverflowMode.wrap),
+                series: <CircularSeries>[
+                  RadialBarSeries<RadialChartData, String>(
+                      strokeColor: Colors.white,
+                      radius: "80",
+                      dataSource: radialChartData,
+                      pointColorMapper: (datum, index) => datum.color,
+                      xValueMapper: (RadialChartData data, _) => data.name,
+                      yValueMapper: (RadialChartData data, _) => data.value,
+                      cornerStyle: CornerStyle.bothCurve,
+                      maximumValue: 100,
+                      dataLabelSettings: const DataLabelSettings(
+                          // Renders the data label
+                          // isVisible: true,
+                          textStyle: TextStyle(fontSize: 15)))
+                ]);
+          } else {
+            return Container();
+          }
+        });
   }
 }
 
