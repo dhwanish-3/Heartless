@@ -23,7 +23,6 @@ class _ScanQRState extends State<ScanQR> {
   // Function to scan the QR code
   Future<void> scanQRCode() async {
     QRScanner.scanQRCode().then((value) async {
-      value = "zYDOehue0sdbf5uKRUnHllCKqn83";
       AppUser? user = await ConnectUsers.getUserDetails(value);
       setState(() {
         qrCodeResult = value;

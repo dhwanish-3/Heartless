@@ -1,3 +1,4 @@
+import 'package:heartless/backend/controllers/chat_controller.dart';
 import 'package:heartless/backend/services/misc/connect_users.dart';
 import 'package:heartless/services/enums/user_type.dart';
 import 'package:heartless/shared/models/app_user.dart';
@@ -59,6 +60,7 @@ class ConnectUsersController {
   }
 
   static Future<void> connectUsers(AppUser user1, AppUser user2) async {
+    await ChatController().createChatRoom(user1, user2);
     if ((user1.userType == UserType.doctor &&
         user2.userType == UserType.patient)) {
       await ConnectUsers.connectPatientAndDoctor(
