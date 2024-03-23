@@ -11,7 +11,6 @@ import 'package:heartless/shared/provider/widget_provider.dart';
 import 'package:heartless/widgets/log/reading_tile.dart';
 import 'package:provider/provider.dart';
 
-//! maybe this class needs to statefull widget
 class DayWiseLogPage extends StatefulWidget {
   final AppUser patient;
   // final MedicalReadingType medicalReadingType;
@@ -56,7 +55,7 @@ class _DayWiseLogState extends State<DayWiseLogPage> {
       time: DateTime.now(),
       value: double.parse(_entryController.text),
       unit: MedicalReadingType.heartRate.unit,
-      comments: _commentController.text,
+      comment: _commentController.text,
       type: ReadingType.heartRate,
       patientId: widget.patient.uid,
     );
@@ -207,7 +206,7 @@ class _DayWiseLogState extends State<DayWiseLogPage> {
                                 snapshot.data.docs[index].data());
                             return GenericReadingTile(
                               reading: reading.value.toString(),
-                              comment: reading.comments,
+                              comment: reading.comment ?? "",
                               time: reading.time.toString(),
                               readingType: MedicalReadingType.heartRate,
                             );
