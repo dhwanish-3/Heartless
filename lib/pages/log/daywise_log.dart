@@ -257,34 +257,38 @@ class _DayWiseLogState extends State<DayWiseLogPage> {
             widgetNotifier.setSelectedDate(date);
           },
         ),
-        body: Column(
-          children: [
-            Consumer<WidgetNotifier>(builder: (context, widgetNotifier, child) {
-              return StreamBuilder(
-                  stream: ReadingController.getAllReadingsOfTheDate(
-                      widgetNotifier.selectedDate, widget.patient.uid),
-                  builder: (BuildContext context, AsyncSnapshot snapshot) {
-                    if (snapshot.hasData && snapshot.data.docs.isNotEmpty) {
-                      return ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: snapshot.data.docs.length,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            Reading reading = Reading.fromMap(
-                                snapshot.data.docs[index].data());
-                            return GenericReadingTile(
-                              reading: reading.value.toString(),
-                              comment: reading.comment ?? "",
-                              time: reading.time,
-                              readingType: reading.type,
-                            );
-                          });
-                    } else {
-                      return const Text("No reading available");
-                    }
-                  });
-            })
-          ],
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Consumer<WidgetNotifier>(
+                  builder: (context, widgetNotifier, child) {
+                return StreamBuilder(
+                    stream: ReadingController.getAllReadingsOfTheDate(
+                        widgetNotifier.selectedDate, widget.patient.uid),
+                    builder: (BuildContext context, AsyncSnapshot snapshot) {
+                      if (snapshot.hasData && snapshot.data.docs.isNotEmpty) {
+                        return ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: snapshot.data.docs.length,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              Reading reading = Reading.fromMap(
+                                  snapshot.data.docs[index].data());
+                              return GenericReadingTile(
+                                reading: reading.value.toString(),
+                                optionalValue: reading.optionalValue.toString(),
+                                comment: reading.comment ?? "",
+                                time: reading.time,
+                                readingType: reading.type,
+                              );
+                            });
+                      } else {
+                        return const Text("No reading available");
+                      }
+                    });
+              })
+            ],
+          ),
         ));
   }
 }

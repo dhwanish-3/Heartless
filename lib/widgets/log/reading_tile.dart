@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:heartless/services/date/date_service.dart';
 import 'package:heartless/services/enums/medical_reading_type.dart';
@@ -5,6 +7,7 @@ import 'package:heartless/shared/constants.dart';
 
 class GenericReadingTile extends StatelessWidget {
   final String reading;
+  final String optionalValue;
   final DateTime time;
   final String comment;
   final MedicalReadingType readingType;
@@ -13,12 +16,14 @@ class GenericReadingTile extends StatelessWidget {
     super.key,
     required this.reading,
     required this.time,
+    this.optionalValue = '',
     this.comment = '',
     required this.readingType,
   });
 
   @override
   Widget build(BuildContext context) {
+    log('Reading: $reading' + 'optionalReading' + optionalValue);
     return Container(
         // height: 70,
         margin: const EdgeInsets.symmetric(
@@ -35,8 +40,8 @@ class GenericReadingTile extends StatelessWidget {
           boxShadow: const [
             BoxShadow(
               color: Colors.grey,
-              offset: Offset(0, 2),
-              blurRadius: 2,
+              offset: Offset(0, 0.5),
+              blurRadius: 1,
               spreadRadius: 0,
             ),
           ],
@@ -50,7 +55,6 @@ class GenericReadingTile extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // const SizedBox(height: 4),
                   Container(
                     height: 25,
                     width: 25,
@@ -63,11 +67,9 @@ class GenericReadingTile extends StatelessWidget {
                       ),
                     ),
                   ),
-                  // const SizedBox(height: 5),
                 ],
               ),
             ),
-            // const SizedBox(width: 10),
             Expanded(
               flex: 3,
               child: IntrinsicHeight(
@@ -76,9 +78,12 @@ class GenericReadingTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      double.parse(reading).toStringAsFixed(0) +
-                          ' ' +
-                          readingType.unit,
+                      readingType.formatReading(
+                        // double.parse(reading).toInt().toString(),
+                        // double.parse(optionalValue).toInt().toString(),
+                        reading,
+                        optionalValue,
+                      ),
                       style: const TextStyle(
                         // overflow: TextOverflow.ellipsis,
                         fontSize: 20,
@@ -93,7 +98,7 @@ class GenericReadingTile extends StatelessWidget {
                               // overflow: TextOverflow.ellipsis,
                               maxLines: null,
                               style: TextStyle(
-                                fontSize: 12,
+                                fontSize: 14,
                                 fontWeight: FontWeight.w500,
                                 color: Colors.grey,
                               ),
@@ -104,50 +109,49 @@ class GenericReadingTile extends StatelessWidget {
                 ),
               ),
             ),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  FittedBox(
-                    fit: BoxFit.fitWidth,
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(
-                        horizontal: 2,
-                        vertical: 2,
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 6,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        // color: color,
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                          color: readingType.color,
-                          width: 2,
-                        ),
-                      ),
-                      child: Text(
-                        readingType.tag,
-                        style: TextStyle(
-                          fontSize: 8,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w400,
-                        ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                FittedBox(
+                  fit: BoxFit.fitWidth,
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 2,
+                      vertical: 2,
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      // color: color,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: readingType.color,
+                        width: 2,
                       ),
                     ),
-                  ),
-                  Container(
-                    // color: Colors.red,
-                    padding: EdgeInsets.all(5),
                     child: Text(
-                      DateService.getFormattedTime(time),
-                      style: TextStyle(color: Colors.grey, fontSize: 10),
-                      textAlign: TextAlign.end,
+                      readingType.tag,
+                      style: TextStyle(
+                        fontSize: 10,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
                   ),
-                ],
-              ),
+                ),
+                Container(
+                  // color: Colors.red,
+                  padding: EdgeInsets.all(5),
+                  child: Text(
+                    DateService.getFormattedTime(time),
+                    style: TextStyle(color: Colors.grey, fontSize: 10),
+                    textAlign: TextAlign.end,
+                  ),
+                ),
+              ],
             ),
           ],
         ));
