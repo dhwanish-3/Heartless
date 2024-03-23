@@ -2,7 +2,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:heartless/backend/services/notifications/notification_services.dart';
-import 'package:heartless/pages/testing_page.dart';
 import 'package:heartless/services/routes/routes.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
 import 'package:heartless/shared/provider/theme_provider.dart';
@@ -50,8 +49,7 @@ class MyApp extends StatelessWidget {
       theme: themeNotifier.lightTheme,
       darkTheme: themeNotifier.darkTheme,
       themeMode: ThemeNotifier.themeMode,
-      // initialRoute: '/',
-      home: TestingPage(),
+      initialRoute: '/',
       onGenerateRoute: Routes.generateRoutes,
       navigatorKey: navigatorKey,
     );

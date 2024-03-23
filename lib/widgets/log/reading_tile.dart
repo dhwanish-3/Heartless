@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:heartless/services/date/date_service.dart';
 import 'package:heartless/services/enums/medical_reading_type.dart';
 import 'package:heartless/shared/constants.dart';
 
 class GenericReadingTile extends StatelessWidget {
   final String reading;
-  final String time;
+  final DateTime time;
   final String comment;
   final MedicalReadingType readingType;
 
@@ -75,7 +76,9 @@ class GenericReadingTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      reading,
+                      double.parse(reading).toStringAsFixed(0) +
+                          ' ' +
+                          readingType.unit,
                       style: const TextStyle(
                         // overflow: TextOverflow.ellipsis,
                         fontSize: 20,
@@ -136,9 +139,9 @@ class GenericReadingTile extends StatelessWidget {
                   ),
                   Container(
                     // color: Colors.red,
-                    padding: const EdgeInsets.all(5),
+                    padding: EdgeInsets.all(5),
                     child: Text(
-                      time,
+                      DateService.getFormattedTime(time),
                       style: TextStyle(color: Colors.grey, fontSize: 10),
                       textAlign: TextAlign.end,
                     ),

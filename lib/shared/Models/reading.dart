@@ -1,14 +1,4 @@
-enum ReadingType {
-  heartRate,
-  bodyTemperature,
-  bloodPressure,
-  bloodOxygen,
-  weight,
-  height,
-  glucose,
-  cholesterol,
-  other
-}
+import 'package:heartless/services/enums/medical_reading_type.dart';
 
 class Reading {
   String id = '';
@@ -17,7 +7,7 @@ class Reading {
   String unit = '';
   String? comment;
   double? optionalValue;
-  ReadingType type = ReadingType.heartRate;
+  MedicalReadingType type = MedicalReadingType.heartRate;
   String patientId = '';
 
   Reading(
@@ -33,10 +23,10 @@ class Reading {
     id = map['id'];
     time = map['time'].toDate(); // Convert Timestamp to DateTime
     value = map['value'];
-    //todo optionalValue
+    optionalValue = map['optionalValue'];
     unit = map['unit'];
     comment = map['comment'];
-    type = ReadingType.values[map['type']];
+    type = MedicalReadingType.values[map['type']];
     patientId = map['patientId'];
   }
 
@@ -47,6 +37,7 @@ class Reading {
       'value': value,
       'unit': unit,
       'comment': comment,
+      'optionalValue': optionalValue,
       'type': type.index,
       'patientId': patientId,
     };
