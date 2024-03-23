@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:heartless/services/enums/event_tags.dart';
+import 'package:heartless/services/enums/event_tag.dart';
 import 'package:heartless/shared/constants.dart';
 
 class FileUploadPreviewPage extends StatelessWidget {
