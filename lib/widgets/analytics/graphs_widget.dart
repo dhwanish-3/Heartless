@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/services/enums/activity_type.dart';
+import 'package:heartless/widgets/analytics/blood_pressure_chart.dart';
 import 'package:heartless/widgets/analytics/line_default_chart.dart';
 import 'package:heartless/widgets/analytics/month_slider.dart';
 import 'package:heartless/widgets/analytics/radial_bar_chart.dart';
@@ -58,6 +59,14 @@ class _GraphsWidgetState extends State<GraphsWidget> {
               child: LineDefaultChart(
                 activityType: ActivityType.diet,
                 patientId: widget.patientId,
+              ),
+            ),
+            SizedBox(
+              height: 300,
+              width: 350,
+              child: BloodPressureChart(
+                patientId: widget.patientId,
+                date: DateTime.now(),
               ),
             ),
           ],
