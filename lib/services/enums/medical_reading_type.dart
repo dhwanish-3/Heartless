@@ -53,4 +53,34 @@ extension MedicalReadingTypeExtension on MedicalReadingType {
         return Colors.brown.shade200;
     }
   }
+
+  String get unit {
+    switch (this) {
+      case MedicalReadingType.heartRate:
+        return 'bpm';
+      case MedicalReadingType.bloodPressure:
+        return 'mmHg';
+      case MedicalReadingType.weight:
+        return 'kg';
+      case MedicalReadingType.glucose:
+        return 'mg/dL';
+      case MedicalReadingType.other:
+        return '';
+    }
+  }
+
+  String get hintText {
+    switch (this) {
+      case MedicalReadingType.heartRate:
+        return '72 bpm';
+      case MedicalReadingType.bloodPressure:
+        return '120/80 mmHg';
+      case MedicalReadingType.weight:
+        return '60 kg';
+      case MedicalReadingType.glucose:
+        return '110 mg/dL';
+      case MedicalReadingType.other:
+        return '';
+    }
+  }
 }

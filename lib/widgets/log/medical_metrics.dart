@@ -51,8 +51,7 @@ class MedicalMetrics extends StatelessWidget {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (_) => DayWiseLog(
-                                      unit: 'WPM',
+                                builder: (_) => DayWiseLogPage(
                                       patient: patient,
                                     )));
                       },
