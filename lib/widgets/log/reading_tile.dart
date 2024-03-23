@@ -25,7 +25,7 @@ class GenericReadingTile extends StatelessWidget {
           vertical: 10,
         ),
         padding: const EdgeInsets.symmetric(
-          vertical: 5,
+          vertical: 10,
           horizontal: 5,
         ),
         decoration: BoxDecoration(
@@ -74,15 +74,13 @@ class GenericReadingTile extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Flexible(
-                      child: Text(
-                        reading,
-                        style: const TextStyle(
-                          // overflow: TextOverflow.ellipsis,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w800,
-                          color: Constants.primaryColor,
-                        ),
+                    Text(
+                      reading,
+                      style: const TextStyle(
+                        // overflow: TextOverflow.ellipsis,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w800,
+                        color: Constants.primaryColor,
                       ),
                     ),
                     comment.isNotEmpty

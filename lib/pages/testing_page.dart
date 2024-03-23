@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/services/enums/medical_reading_type.dart';
-import 'package:heartless/widgets/log/reading_tile2.dart';
+import 'package:heartless/widgets/log/reading_tile.dart';
 
 class TestingPage extends StatefulWidget {
   const TestingPage({super.key});

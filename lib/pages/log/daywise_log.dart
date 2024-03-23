@@ -1,41 +1,31 @@
 import 'package:calendar_slider/calendar_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:heartless/backend/controllers/reading_controller.dart';
+import 'package:heartless/services/enums/medical_reading_type.dart';
 import 'package:heartless/services/utils/toast_message.dart';
 import 'package:heartless/shared/constants.dart';
 import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/shared/models/reading.dart';
 import 'package:heartless/shared/provider/widget_provider.dart';
-import 'package:heartless/widgets/reading_tile.dart';
+import 'package:heartless/widgets/log/reading_tile.dart';
 import 'package:provider/provider.dart';
 
 //! maybe this class needs to statefull widget
-class DayWiseLog extends StatefulWidget {
+class DayWiseLogPage extends StatefulWidget {
   final AppUser patient;
-  final String unit; //mg/dL for glucose, kg for weight, bpm for heart rate
-  final String label1;
-  final String hintText1;
-// for blood pressure two entries are needed, systolic and diastolic
-  final int readingCount;
-  final String label2;
-  final String hintText2;
+  // final MedicalReadingType medicalReadingType;
 
-  const DayWiseLog({
+  const DayWiseLogPage({
     super.key,
     required this.patient,
-    required this.unit,
-    this.readingCount = 1,
-    this.label1 = 'Reading',
-    this.label2 = '',
-    this.hintText1 = '72',
-    this.hintText2 = '72',
   });
 
   @override
-  State<DayWiseLog> createState() => _DayWiseLogState();
+  State<DayWiseLogPage> createState() => _DayWiseLogState();
 }
 
-class _DayWiseLogState extends State<DayWiseLog> {
+class _DayWiseLogState extends State<DayWiseLogPage> {
   final formKey = GlobalKey<FormState>();
 
   final TextEditingController _entryController = TextEditingController();
@@ -65,7 +55,7 @@ class _DayWiseLogState extends State<DayWiseLog> {
     Reading reading = Reading(
       time: DateTime.now(),
       value: double.parse(_entryController.text),
-      unit: widget.unit,
+      unit: MedicalReadingType.heartRate.unit,
       comments: _commentController.text,
       type: ReadingType.heartRate,
       patientId: widget.patient.uid,
@@ -75,7 +65,8 @@ class _DayWiseLogState extends State<DayWiseLog> {
     // todo: turn off the indicator
   }
 
-  void showFormDialog(BuildContext context) {
+  void showFormDialog(
+      BuildContext context, MedicalReadingType medicalReadingType) {
     showDialog(
       context: context,
       builder: (context) {
@@ -89,8 +80,12 @@ class _DayWiseLogState extends State<DayWiseLog> {
                 TextFormField(
                   controller: _entryController,
                   decoration: InputDecoration(
-                    labelText: '${widget.label1} (${widget.unit})',
-                    hintText: widget.hintText1,
+                    labelText:
+                        '${medicalReadingType.tag} (${medicalReadingType.unit})',
+                    hintText: medicalReadingType.hintText,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -99,26 +94,18 @@ class _DayWiseLogState extends State<DayWiseLog> {
                     return null;
                   },
                 ),
-                if (widget.readingCount > 1)
-                  TextFormField(
-                    decoration: InputDecoration(
-                      labelText: '${widget.label2} (${widget.unit})',
-                      hintText: widget.hintText2,
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter an entry';
-                      }
-                      return null;
-                    },
-                  ),
+                const SizedBox(height: 10),
                 TextFormField(
+                  maxLines: 2,
                   style: Theme.of(context)
                       .textTheme
                       .bodySmall, //! should see how it looks in actual mobile
                   controller: _commentController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Comment',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
                 ),
               ],
@@ -150,12 +137,40 @@ class _DayWiseLogState extends State<DayWiseLog> {
     widgetNotifier.setSelectedDateWithoutNotifying(DateTime.now());
 
     return Scaffold(
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            showFormDialog(context);
-          },
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: () {
+        //     showFormDialog(context);
+        //   },
+        //   backgroundColor: Constants.primaryColor,
+        //   child: const Icon(Icons.add),
+        // ),
+
+        floatingActionButton: SpeedDial(
+          animatedIcon: AnimatedIcons.menu_close,
+          animatedIconTheme: const IconThemeData(size: 22.0),
           backgroundColor: Constants.primaryColor,
-          child: const Icon(Icons.add),
+          children: MedicalReadingType.values.reversed.map((type) {
+            return SpeedDialChild(
+              child: Container(
+                height: 25,
+                width: 25,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(
+                      type.icon,
+                    ),
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
+              // backgroundColor: Constants.primaryColor,
+              label: type.tag,
+              labelStyle: const TextStyle(fontSize: 16.0),
+              onTap: () {
+                showFormDialog(context, type);
+              },
+            );
+          }).toList(),
         ),
         appBar: CalendarSlider(
           // controller: calendarSliderController,
@@ -190,10 +205,11 @@ class _DayWiseLogState extends State<DayWiseLog> {
                           itemBuilder: (context, index) {
                             Reading reading = Reading.fromMap(
                                 snapshot.data.docs[index].data());
-                            return ReadingTile(
+                            return GenericReadingTile(
                               reading: reading.value.toString(),
                               comment: reading.comments,
                               time: reading.time.toString(),
+                              readingType: MedicalReadingType.heartRate,
                             );
                           });
                     } else {

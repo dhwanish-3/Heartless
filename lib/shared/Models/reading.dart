@@ -15,7 +15,8 @@ class Reading {
   DateTime time = DateTime.now();
   double value = 0;
   String unit = '';
-  String comments = '';
+  String? comment;
+  double? optionalValue;
   ReadingType type = ReadingType.heartRate;
   String patientId = '';
 
@@ -23,16 +24,18 @@ class Reading {
       {required this.time,
       required this.value,
       required this.unit,
-      required this.comments,
+      this.comment = '',
       required this.type,
-      required this.patientId});
+      required this.patientId,
+      this.optionalValue = 0});
 
   Reading.fromMap(Map<String, dynamic> map) {
     id = map['id'];
     time = map['time'].toDate(); // Convert Timestamp to DateTime
     value = map['value'];
+    //todo optionalValue
     unit = map['unit'];
-    comments = map['comments'];
+    comment = map['comment'];
     type = ReadingType.values[map['type']];
     patientId = map['patientId'];
   }
@@ -43,7 +46,7 @@ class Reading {
       'time': time, // Convert DateTime to Timestamp done by Firestore
       'value': value,
       'unit': unit,
-      'comments': comments,
+      'comment': comment,
       'type': type.index,
       'patientId': patientId,
     };
