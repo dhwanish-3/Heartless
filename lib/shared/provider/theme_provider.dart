@@ -19,6 +19,7 @@ class ThemeNotifier extends ChangeNotifier {
     canvasColor: Colors.white,
     shadowColor: Colors.black,
     highlightColor: Colors.grey, //color used for boxshadow
+    secondaryHeaderColor: Constants.cardColor, //widget background color
   );
 //* for widgets that have to alternate between white and black colors give them canvasColor and shadowColor fot the converse
 
@@ -29,5 +30,6 @@ class ThemeNotifier extends ChangeNotifier {
     canvasColor: Colors.black,
     shadowColor: Colors.white,
     highlightColor: Colors.black,
+    secondaryHeaderColor: Constants.darkCardColor,
   );
 }

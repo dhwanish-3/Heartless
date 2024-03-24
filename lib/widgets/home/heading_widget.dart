@@ -71,7 +71,7 @@ class HomePageHeadingWidget extends StatelessWidget {
                               ],
                             ),
                           ),
-                          const CircleAvatar(
+                          CircleAvatar(
                             radius: 60,
                             backgroundColor: Colors.white,
                             child: Icon(
