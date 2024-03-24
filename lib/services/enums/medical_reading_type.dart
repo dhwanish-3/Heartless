@@ -158,4 +158,15 @@ extension MedicalReadingTypeExtension on MedicalReadingType {
         return '';
     }
   }
+
+  String formatReading(String value, String optionalValue) {
+    switch (this) {
+      case MedicalReadingType.bloodPressure:
+        int systolic = double.parse(value).toInt();
+        int diastolic = double.parse(optionalValue).toInt();
+        return '$systolic/${diastolic} mmHg';
+      default:
+        return value + ' ' + unit;
+    }
+  }
 }
