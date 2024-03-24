@@ -5,17 +5,14 @@ import 'package:heartless/services/enums/activity_type.dart';
 import 'package:heartless/shared/models/activity.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-class RadialBarChart extends StatefulWidget {
+class RadialBarChart extends StatelessWidget {
   final String patientId;
-  const RadialBarChart({super.key, required this.patientId});
+  final DateTime date;
+  const RadialBarChart(
+      {super.key, required this.patientId, required this.date});
 
-  @override
-  State<RadialBarChart> createState() => _RadialBarChartState();
-}
-
-class _RadialBarChartState extends State<RadialBarChart> {
-  List<RadialChartData> radialChartData = [];
-  void getDataFromSnapshot(AsyncSnapshot snapshot) {
+  List<RadialChartData> getDataFromSnapshot(AsyncSnapshot snapshot) {
+    List<RadialChartData> newChartData = [];
     if (snapshot.hasData &&
         snapshot.data != null &&
         snapshot.data.docs.isNotEmpty) {
@@ -29,11 +26,10 @@ class _RadialBarChartState extends State<RadialBarChart> {
       activitiesMap[ActivityType.excercise] = [];
       activitiesMap[ActivityType.diet] = [];
       activities.forEach((activity) {
-        if (activity.time.isBefore(DateTime.now()))
+        if (activity.time.isBefore(date))
           activitiesMap[activity.type]!.add(activity);
       });
 
-      List<RadialChartData> newChartData = [];
       for (var map in activitiesMap.entries) {
         int total = 0;
         int completed = 0;
@@ -46,45 +42,50 @@ class _RadialBarChartState extends State<RadialBarChart> {
         newChartData.add(RadialChartData(
             map.key.name, (completed / total) * 100, map.key.color));
       }
-      radialChartData = newChartData;
     }
+    return newChartData;
   }
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-        stream: ActivityController.getAllActivitiesForAWeek(
-            DateTime.now(), widget.patientId),
-        builder: (context, AsyncSnapshot snapshot) {
-          if (snapshot.hasData &&
-              snapshot.data != null &&
-              snapshot.data.docs.isNotEmpty) {
-            getDataFromSnapshot(snapshot);
-            // Renders radial bar chart
-            return SfCircularChart(
-                tooltipBehavior: TooltipBehavior(enable: true),
-                title: ChartTitle(text: 'Activity Completion'),
-                legend: Legend(
-                    isVisible: true, overflowMode: LegendItemOverflowMode.wrap),
-                series: <CircularSeries>[
-                  RadialBarSeries<RadialChartData, String>(
-                      strokeColor: Colors.white,
-                      radius: "80",
-                      dataSource: radialChartData,
-                      pointColorMapper: (datum, index) => datum.color,
-                      xValueMapper: (RadialChartData data, _) => data.name,
-                      yValueMapper: (RadialChartData data, _) => data.value,
-                      cornerStyle: CornerStyle.bothCurve,
-                      maximumValue: 100,
-                      dataLabelSettings: const DataLabelSettings(
-                          // Renders the data label
-                          // isVisible: true,
-                          textStyle: TextStyle(fontSize: 15)))
-                ]);
-          } else {
-            return Container();
-          }
-        });
+    return SizedBox(
+      height: 240,
+      child: StreamBuilder(
+          stream: ActivityController.getAllActivitiesForAWeek(date, patientId),
+          builder: (context, AsyncSnapshot snapshot) {
+            if (snapshot.hasData &&
+                snapshot.data != null &&
+                snapshot.data.docs.isNotEmpty) {
+              List<RadialChartData> radialChartData =
+                  getDataFromSnapshot(snapshot);
+              return SfCircularChart(
+                  tooltipBehavior: TooltipBehavior(enable: true),
+                  title: ChartTitle(text: 'Activity Completion'),
+                  legend: Legend(
+                      isVisible: true,
+                      overflowMode: LegendItemOverflowMode.wrap),
+                  series: <CircularSeries>[
+                    RadialBarSeries<RadialChartData, String>(
+                        strokeColor: Colors.white,
+                        radius: "80",
+                        innerRadius: "25",
+                        // trackBorderWidth: 0,
+                        dataSource: radialChartData,
+                        pointColorMapper: (datum, index) => datum.color,
+                        xValueMapper: (RadialChartData data, _) => data.name,
+                        yValueMapper: (RadialChartData data, _) => data.value,
+                        cornerStyle: CornerStyle.bothCurve,
+                        maximumValue: 100,
+                        dataLabelSettings: const DataLabelSettings(
+                            // Renders the data label
+                            // isVisible: true,
+                            textStyle: TextStyle(fontSize: 15)))
+                  ]);
+            } else {
+              return Container();
+            }
+          }),
+    );
   }
 }
 

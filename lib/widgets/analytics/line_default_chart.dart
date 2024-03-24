@@ -6,31 +6,30 @@ import 'package:heartless/services/enums/activity_type.dart';
 import 'package:heartless/shared/models/activity.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-class LineDefaultChart extends StatefulWidget {
+class LineDefaultChart extends StatelessWidget {
   final String patientId;
   final ActivityType activityType;
-  const LineDefaultChart(
-      {super.key, required this.patientId, required this.activityType});
+  final DateTime date;
+  LineDefaultChart(
+      {super.key,
+      required this.patientId,
+      required this.activityType,
+      required this.date});
 
-  @override
-  State<LineDefaultChart> createState() => _LineDefaultChartState();
-}
-
-class _LineDefaultChartState extends State<LineDefaultChart> {
-  List<LineDefaultChartData> chartData = [];
-  void getDataFromSnapshot(AsyncSnapshot snapshot) {
+  List<LineDefaultChartData> getDataFromSnapshot(AsyncSnapshot snapshot) {
+    List<LineDefaultChartData> newChartData = [];
     if (snapshot.hasData &&
         snapshot.data != null &&
         snapshot.data.docs.isNotEmpty) {
       List<Activity> activities = [];
       snapshot.data.docs.forEach((activity) {
-        if (activity.data()['type'] == widget.activityType.index) {
+        if (activity.data()['type'] == activityType.index) {
           activities.add(Activity.fromMap(activity.data()));
         }
       });
 
       Map<DateTime, List<Activity>> activitiesMap = {};
-      DateTime startOfTheWeek = DateService.getStartOfWeek(DateTime.now());
+      DateTime startOfTheWeek = DateService.getStartOfWeek(date);
       for (int i = 0; i < 7; i++) {
         activitiesMap[startOfTheWeek.add(Duration(days: i))] = [];
       }
@@ -43,7 +42,6 @@ class _LineDefaultChartState extends State<LineDefaultChart> {
           activitiesMap[DateService.getStartOfDay(activity.time)] = [activity];
         }
       });
-      List<LineDefaultChartData> newChartData = [];
 
       for (var map in activitiesMap.entries) {
         int total = 0;
@@ -56,25 +54,27 @@ class _LineDefaultChartState extends State<LineDefaultChart> {
         });
         newChartData.add(LineDefaultChartData(map.key, total, completed));
       }
-      chartData = newChartData;
     }
+    return newChartData;
   }
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-        stream: ActivityController.getAllActivitiesForAWeek(
-            DateTime.now(), widget.patientId),
+        stream: ActivityController.getAllActivitiesForAWeek(date, patientId),
         builder: (context, AsyncSnapshot snapshot) {
           if (snapshot.hasData &&
               snapshot.data != null &&
               snapshot.data.docs.isNotEmpty) {
-            getDataFromSnapshot(snapshot);
+            List<LineDefaultChartData> chartData =
+                getDataFromSnapshot(snapshot);
             return SfCartesianChart(
               plotAreaBorderWidth: 0,
-              title: ChartTitle(text: widget.activityType.name),
+              title: ChartTitle(text: activityType.name),
               legend: Legend(
-                  isVisible: true, overflowMode: LegendItemOverflowMode.wrap),
+                  isVisible: true,
+                  position: LegendPosition.bottom,
+                  overflowMode: LegendItemOverflowMode.wrap),
               primaryXAxis: NumericAxis(
                   edgeLabelPlacement: EdgeLabelPlacement.shift,
                   interval: 1,
@@ -88,7 +88,7 @@ class _LineDefaultChartState extends State<LineDefaultChart> {
               series: <CartesianSeries>[
                 LineSeries<LineDefaultChartData, int>(
                     dataSource: chartData,
-                    color: widget.activityType.color,
+                    color: activityType.color,
                     xValueMapper: (LineDefaultChartData data, _) =>
                         data.date.day,
                     yValueMapper: (LineDefaultChartData data, _) => data.total,

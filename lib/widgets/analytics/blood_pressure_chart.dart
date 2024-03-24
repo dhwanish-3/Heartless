@@ -12,31 +12,28 @@ class BloodPressureChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 300,
-      width: 350,
-      child: StreamBuilder(
-        stream: ReadingController.getAllReadingsOfTheWeek(date, patientId),
-        builder: (context, AsyncSnapshot snapshot) {
-          if (snapshot.hasData &&
-              snapshot.data != null &&
-              snapshot.data.docs.isNotEmpty) {
-            List<BloodPressureChartData> chartData = [];
-            snapshot.data.docs.forEach((readingSnapshot) {
-              Reading reading = Reading.fromMap(readingSnapshot.data());
-              if (reading.type == MedicalReadingType.bloodPressure) {
-                chartData.add(BloodPressureChartData(
-                    reading.time, reading.value, reading.optionalValue ?? 0));
-              }
-            });
+    return StreamBuilder(
+      stream: ReadingController.getAllReadingsOfTheWeek(date, patientId),
+      builder: (context, AsyncSnapshot snapshot) {
+        if (snapshot.hasData &&
+            snapshot.data != null &&
+            snapshot.data.docs.isNotEmpty) {
+          List<BloodPressureChartData> chartData = [];
+          snapshot.data.docs.forEach((readingSnapshot) {
+            Reading reading = Reading.fromMap(readingSnapshot.data());
+            if (reading.type == MedicalReadingType.bloodPressure) {
+              chartData.add(BloodPressureChartData(
+                  reading.time, reading.value, reading.optionalValue ?? 0));
+            }
+          });
+          // sort charData by dateTime
+          chartData.sort((a, b) => a.dateTime.compareTo(b.dateTime));
+          if (chartData.length > 1) {
             return SfCartesianChart(
               title: ChartTitle(text: 'Blood Pressure'),
               primaryXAxis: DateTimeAxis(), // todo: have to check how it looks
-              primaryYAxis: NumericAxis(
-                minimum: 0,
-                maximum: 200,
-                interval: 20,
-              ),
+              primaryYAxis: NumericAxis(),
+              tooltipBehavior: TooltipBehavior(enable: true),
               legend: Legend(isVisible: true, position: LegendPosition.bottom),
               series: <CartesianSeries>[
                 LineSeries<BloodPressureChartData, DateTime>(
@@ -48,24 +45,6 @@ class BloodPressureChart extends StatelessWidget {
                       data.dateTime,
                   yValueMapper: (BloodPressureChartData data, _) =>
                       data.systolic,
-                  // onCreateShader: (ShaderDetails details) {
-                  //   return ui.Gradient.linear(details.rect.topCenter,
-                  //       details.rect.bottomCenter, <Color>[
-                  //     const Color.fromRGBO(4, 8, 195, 1),
-                  //     const Color.fromRGBO(4, 8, 195, 1),
-                  //     const Color.fromRGBO(26, 112, 23, 1),
-                  //     const Color.fromRGBO(26, 112, 23, 1),
-                  //     const Color.fromRGBO(229, 11, 10, 1),
-                  //     const Color.fromRGBO(229, 11, 10, 1),
-                  //   ], <double>[
-                  //     0,
-                  //     0.333333,
-                  //     0.333333,
-                  //     0.666666,
-                  //     0.666666,
-                  //     0.999999,
-                  //   ]);
-                  // },
                 ),
                 LineSeries<BloodPressureChartData, DateTime>(
                   dataSource: chartData,
@@ -76,32 +55,16 @@ class BloodPressureChart extends StatelessWidget {
                       data.dateTime,
                   yValueMapper: (BloodPressureChartData data, _) =>
                       data.diastolic,
-                  // onCreateShader: (ShaderDetails details) {
-                  //   return ui.Gradient.linear(details.rect.topCenter,
-                  //       details.rect.bottomCenter, <Color>[
-                  //     const Color.fromRGBO(4, 8, 195, 1),
-                  //     const Color.fromRGBO(4, 8, 195, 1),
-                  //     const Color.fromRGBO(26, 112, 23, 1),
-                  //     const Color.fromRGBO(26, 112, 23, 1),
-                  //     const Color.fromRGBO(229, 11, 10, 1),
-                  //     const Color.fromRGBO(229, 11, 10, 1),
-                  //   ], <double>[
-                  //     0,
-                  //     0.333333,
-                  //     0.333333,
-                  //     0.666666,
-                  //     0.666666,
-                  //     0.999999,
-                  //   ]);
-                  // },
                 ),
               ],
             );
           } else {
             return Container();
           }
-        },
-      ),
+        } else {
+          return Container();
+        }
+      },
     );
   }
 }
