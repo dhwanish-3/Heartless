@@ -3,6 +3,7 @@ import 'package:heartless/backend/controllers/chat_controller.dart';
 import 'package:heartless/backend/controllers/connect_users_controller.dart';
 import 'package:heartless/pages/chat/chat_page.dart';
 import 'package:heartless/pages/log/daywise_log.dart';
+import 'package:heartless/pages/log/file_upload_page.dart';
 import 'package:heartless/pages/schedule/schedule_page.dart';
 import 'package:heartless/shared/constants.dart';
 import 'package:heartless/shared/models/app_user.dart';
@@ -48,6 +49,16 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
                 name: widget.patient.name,
                 imageUrl: widget.patient.imageUrl,
               ),
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => FileUploadPage(
+                                  patientId: widget.patient.uid,
+                                )));
+                  },
+                  child: const Text('Documents')),
               const SizedBox(
                 height: 20,
               ),
@@ -57,7 +68,9 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
               const SizedBox(
                 height: 20,
               ),
-              TimelineWidget(),
+              TimelineWidget(
+                patientId: widget.patient.uid,
+              ),
               const SizedBox(height: 20),
               supervisors.isNotEmpty
                   ? SupervisorListContainer(

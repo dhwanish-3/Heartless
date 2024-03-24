@@ -105,4 +105,11 @@ class ActivityController with BaseController {
       DateTime date, String patientId) {
     return ActivityService.getMissedActivitiesOftheDay(date, patientId);
   }
+
+  static Future<List<Activity>> getAllActivitiesOfTheWeekAsList(
+      DateTime date, String patientId,
+      {int? limit}) {
+    return ActivityService.getAllActivitiesOfTheWeekasList(date, patientId,
+        limit: limit);
+  }
 }

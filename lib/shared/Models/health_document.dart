@@ -1,53 +1,38 @@
-class HealthDocumentTag {
-  final String name;
-  final String colorHexCode;
-
-  HealthDocumentTag({required this.name, required this.colorHexCode});
-
-  factory HealthDocumentTag.fromMap(Map<String, dynamic> map) {
-    return HealthDocumentTag(
-      name: map['name'],
-      colorHexCode: map['colorHexCode'],
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'name': name,
-      'colorHexCode': colorHexCode,
-    };
-  }
-}
+import 'package:heartless/services/enums/custom_file_type.dart';
+import 'package:heartless/services/enums/event_tag.dart';
 
 class HealthDocument {
   String id = '';
   String name = '';
   String url = '';
-  List<HealthDocumentTag> tags = [];
+  List<EventTag> tags = [];
+  CustomFileType customFileType = CustomFileType.pdf;
   DateTime createdAt = DateTime.now();
 
   HealthDocument(
       {required this.name,
       required this.url,
       required this.tags,
-      required this.createdAt});
+      required this.createdAt,
+      required this.customFileType});
 
   HealthDocument.fromMap(Map<String, dynamic> map) {
     id = map['id'];
     name = map['name'];
     url = map['url'];
-    tags = map['tags']
-        .map<HealthDocumentTag>((tag) => HealthDocumentTag.fromMap(tag))
-        .toList();
-    createdAt = DateTime.parse(map['createdAt']);
+    tags = map['tags'].map<EventTag>((tag) => EventTag.values[tag]).toList();
+    createdAt = map['createdAt'].toDate();
+    customFileType = CustomFileType.values[map['customFileType']];
   }
 
   Map<String, dynamic> toMap() {
     return {
+      'id': id,
       'name': name,
       'url': url,
-      'tags': tags.map((tag) => tag.toMap()).toList(),
+      'tags': tags.map((tag) => tag.index).toList(),
       'createdAt': createdAt,
+      'customFileType': customFileType.index,
     };
   }
 }

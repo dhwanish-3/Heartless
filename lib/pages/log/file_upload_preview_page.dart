@@ -1,8 +1,22 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:heartless/backend/controllers/health_document_controller.dart';
+import 'package:heartless/services/enums/custom_file_type.dart';
 import 'package:heartless/services/enums/event_tag.dart';
 import 'package:heartless/shared/constants.dart';
 
 class FileUploadPreviewPage extends StatelessWidget {
+  final PlatformFile file;
+  final String patientId;
+  final CustomFileType fileType;
+  const FileUploadPreviewPage(
+      {super.key,
+      required this.file,
+      required this.patientId,
+      required this.fileType});
+
   static String convertBytes(int bytes) {
     double kilobytes = bytes / 1024;
     double megabytes = kilobytes / 1024;
@@ -14,8 +28,6 @@ class FileUploadPreviewPage extends StatelessWidget {
     }
   }
 
-  const FileUploadPreviewPage({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,7 +36,7 @@ class FileUploadPreviewPage extends StatelessWidget {
           iconSize: 30,
           icon: Icon(Icons.close),
           onPressed: () {
-            //! cancel
+            Navigator.pop(context);
           },
         ),
         title: Center(
@@ -37,8 +49,14 @@ class FileUploadPreviewPage extends StatelessWidget {
           IconButton(
             iconSize: 30,
             icon: Icon(Icons.check),
-            onPressed: () {
-              //! submit
+            onPressed: () async {
+              // todo: change the tags to the selected tags
+              await HealthDocumentController().addHealthDocument(
+                  patientId,
+                  file.name,
+                  fileType,
+                  [EventTag.admittance, EventTag.labReport],
+                  File(file.path!));
             },
           ),
         ],
@@ -67,7 +85,7 @@ class FileUploadPreviewPage extends StatelessWidget {
                         width: 60,
                       ),
                       Flexible(
-                        child: Text('FileName ',
+                        child: Text(file.name,
                             textAlign: TextAlign.center,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 3,
@@ -77,10 +95,7 @@ class FileUploadPreviewPage extends StatelessWidget {
                             )),
                       ),
                       const SizedBox(height: 5),
-                      Text(
-                          convertBytes(
-                            2047,
-                          ),
+                      Text(convertBytes(file.size),
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 20,

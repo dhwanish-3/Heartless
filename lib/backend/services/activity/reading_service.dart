@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:heartless/services/date/date_service.dart';
@@ -102,7 +103,9 @@ class ReadingService {
 
   // get all the readings for a given week
   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllReadingsOfTheWeek(
-      DateTime date, String patientId) {
+    DateTime date,
+    String patientId,
+  ) {
     DateTime startOfWeek = DateService.getStartOfWeek(date);
     return FirebaseFirestore.instance
         .collection('Users')
@@ -111,5 +114,27 @@ class ReadingService {
         .doc(startOfWeek.toString())
         .collection('Readings')
         .snapshots();
+  }
+
+  static Future<List<Reading>> getAllReadingsOfTheWeekasList(
+      DateTime date, String patientId,
+      {int? limit}) async {
+    DateTime startOfWeek = DateService.getStartOfWeek(date);
+    List<Reading> readings = [];
+    await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(patientId)
+        .collection('WeeklyData')
+        .doc(startOfWeek.toString())
+        .collection('Readings')
+        .orderBy('time', descending: true)
+        .limit(limit ?? 30)
+        .get()
+        .then((value) {
+      value.docs.forEach((element) {
+        readings.add(Reading.fromMap(element.data()));
+      });
+    });
+    return readings;
   }
 }
