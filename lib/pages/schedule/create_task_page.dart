@@ -43,7 +43,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
         Provider.of<WidgetNotifier>(context, listen: false);
     final List<String> listOfDropdownItems = [];
     for (ActivityType type in ActivityType.values) {
-      listOfDropdownItems.add(type.dropDownValue);
+      listOfDropdownItems.add(type.value);
     }
     Future<void> _addActivityStartToEnd(Activity activity) async {
       // add activity from start date to end date
@@ -162,7 +162,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
                         ),
                         child: DropDownWidget(
                           dropdownItems: listOfDropdownItems,
-                          dropdownValue: typeDropDownValue.dropDownValue,
+                          dropdownValue: typeDropDownValue.value,
                           onChanged: (newValue) {
                             setState(() {
                               // todo: dont use setstate, user widgetNotifier

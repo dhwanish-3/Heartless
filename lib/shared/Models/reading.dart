@@ -17,13 +17,15 @@ class Reading {
       this.comment = '',
       required this.type,
       required this.patientId,
-      this.optionalValue = 0});
+      this.optionalValue});
 
   Reading.fromMap(Map<String, dynamic> map) {
     id = map['id'];
     time = map['time'].toDate(); // Convert Timestamp to DateTime
-    value = map['value'];
-    optionalValue = map['optionalValue'];
+    // convert to double
+
+    value = map['value'].toDouble();
+    optionalValue = map['optionalValue']?.toDouble();
     unit = map['unit'];
     comment = map['comment'];
     type = MedicalReadingType.values[map['type']];
