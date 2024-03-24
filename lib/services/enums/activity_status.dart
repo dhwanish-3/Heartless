@@ -14,4 +14,28 @@ extension ActivityStatusExtension on ActivityStatus {
         return 'Unknown';
     }
   }
+
+  String get icon {
+    switch (this) {
+      case ActivityStatus.completed:
+        return 'assets/Icons/reminder/tick.png';
+      case ActivityStatus.upcoming:
+        return 'assets/Icons/reminder/bell.png';
+      case ActivityStatus.missed:
+        return 'assets/Icons/reminder/wrong.png';
+      default:
+        return 'assets/Icons/reminder/tick.png';
+    }
+  }
+
+  String? get completionStatusIcon {
+    switch (this) {
+      case ActivityStatus.completed:
+        return 'assets/Icons/reminder/tick.png';
+      case ActivityStatus.missed:
+        return 'assets/Icons/reminder/wrong.png';
+      default:
+        return null;
+    }
+  }
 }

@@ -25,7 +25,7 @@ extension ScheduleToggleTypeExtension on ScheduleToggleType {
       case ScheduleToggleType.diet:
         return ActivityType.diet;
       case ScheduleToggleType.drill:
-        return ActivityType.excercise;
+        return ActivityType.exercise;
       default:
         return ActivityType.medicine;
     }

@@ -28,11 +28,7 @@ class ReminderCard extends StatelessWidget {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double containerWidth = 0.9 * screenWidth;
-    String buttonUrl = (activity.status == ActivityStatus.upcoming)
-        ? 'assets/Icons/reminder/bell.png'
-        : (activity.status == ActivityStatus.completed)
-            ? 'assets/Icons/reminder/tick.png'
-            : 'assets/Icons/reminder/wrong.png';
+    String buttonUrl = activity.status.icon;
     String trailLabel = (activity.status == ActivityStatus.upcoming)
         ? 'Swipe right to mark as done >>'
         : '';
