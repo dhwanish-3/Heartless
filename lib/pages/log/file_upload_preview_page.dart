@@ -164,21 +164,22 @@ class _SearchWidgetState extends State<SearchWidget> {
             ),
           ),
         ),
-        Container(
-          padding: const EdgeInsets.all(8.0),
-          child: TextFormField(
-            controller: _searchController,
-            decoration: InputDecoration(
-              labelText: 'Search',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-            onChanged: (value) {
-              filterSearchResults(value);
-            },
-          ),
-        ),
+        //todo search bar
+        // Container(
+        //   padding: const EdgeInsets.all(8.0),
+        //   child: TextFormField(
+        //     controller: _searchController,
+        //     decoration: InputDecoration(
+        //       labelText: 'Search',
+        //       border: OutlineInputBorder(
+        //         borderRadius: BorderRadius.circular(10),
+        //       ),
+        //     ),
+        //     onChanged: (value) {
+        //       filterSearchResults(value);
+        //     },
+        //   ),
+        // ),
         Expanded(
           child: ListView.builder(
             itemCount: searchResults.length,

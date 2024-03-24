@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:heartless/services/date/date_service.dart';
@@ -241,5 +242,27 @@ class ActivityService {
         .doc(startOfWeek.toString())
         .collection('Activities')
         .snapshots();
+  }
+
+  static Future<List<Activity>> getAllActivitiesOfTheWeekasList(
+      DateTime date, String patientId,
+      {int? limit}) async {
+    DateTime startOfWeek = DateService.getStartOfWeek(date);
+    List<Activity> activities = [];
+    await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(patientId)
+        .collection('WeeklyData')
+        .doc(startOfWeek.toString())
+        .collection('Activities')
+        .orderBy('time', descending: true)
+        .limit(limit ?? 30)
+        .get()
+        .then((value) {
+      value.docs.forEach((element) {
+        activities.add(Activity.fromMap(element.data()));
+      });
+    });
+    return activities;
   }
 }

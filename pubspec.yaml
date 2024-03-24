@@ -105,7 +105,7 @@ flutter:
   assets:
     - assets/illustrations/
     - assets/Icons/
-    - assets/Icons/Hero/
+    - assets/Icons/reminder/
     - assets/Icons/chat/
     - assets/Icons/fileFormat/
     - assets/Icons/readingGenre/

@@ -33,7 +33,18 @@ class ReadingController with BaseController {
 
   // get all readings of the week
   static Stream<QuerySnapshot> getAllReadingsOfTheWeek(
-      DateTime date, String patientId) {
-    return ReadingService.getAllReadingsOfTheWeek(date, patientId);
+      DateTime date, String patientId,
+      {int? limit}) {
+    return ReadingService.getAllReadingsOfTheWeek(
+      date,
+      patientId,
+    );
+  }
+
+  static Future<List<Reading>> getAllReadingsOfTheWeekAsList(
+      DateTime date, String patientId,
+      {int? limit}) {
+    return ReadingService.getAllReadingsOfTheWeekasList(date, patientId,
+        limit: limit);
   }
 }

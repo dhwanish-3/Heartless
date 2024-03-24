@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:heartless/services/date/date_service.dart';
 import 'package:heartless/services/enums/medical_reading_type.dart';
@@ -23,7 +21,6 @@ class GenericReadingTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log('Reading: $reading' + 'optionalReading' + optionalValue);
     return Container(
         // height: 70,
         margin: const EdgeInsets.symmetric(
@@ -36,10 +33,10 @@ class GenericReadingTile extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: Colors.white,
-          boxShadow: const [
+          color: Theme.of(context).cardColor,
+          boxShadow: [
             BoxShadow(
-              color: Colors.grey,
+              color: Theme.of(context).highlightColor,
               offset: Offset(0, 0.5),
               blurRadius: 1,
               spreadRadius: 0,
@@ -49,8 +46,8 @@ class GenericReadingTile extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Expanded(
-              flex: 1,
+            SizedBox(
+              width: 60,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -136,7 +133,7 @@ class GenericReadingTile extends StatelessWidget {
                       readingType.tag,
                       style: TextStyle(
                         fontSize: 10,
-                        color: Colors.black,
+                        color: readingType.color,
                         fontWeight: FontWeight.w400,
                       ),
                     ),
