@@ -24,8 +24,9 @@ class CustomTextButton extends StatelessWidget {
         color: isHighlighted ? Theme.of(context).primaryColor : null,
         boxShadow: isHighlighted
             ? [
-                const BoxShadow(
-                  color: Colors.grey,
+                BoxShadow(
+                  // color: Colors.grey,
+                  color: Theme.of(context).highlightColor,
                   spreadRadius: 1,
                   blurRadius: 1,
                   offset: Offset(1, 1), // changes position of shadow

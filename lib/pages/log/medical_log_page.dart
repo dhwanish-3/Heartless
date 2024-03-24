@@ -1,3 +1,4 @@
+//* this file is obsolete, daywise_log page is the new file to be navigated to
 import 'package:flutter/material.dart';
 import 'package:heartless/pages/log/daywise_diary_page.dart';
 import 'package:heartless/shared/constants.dart';

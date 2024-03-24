@@ -29,27 +29,15 @@ class ReminderCard extends StatelessWidget {
     double screenWidth = MediaQuery.of(context).size.width;
     double containerWidth = 0.9 * screenWidth;
     String buttonUrl = (activity.status == ActivityStatus.upcoming)
-        ? 'assets/Icons/bell.png'
+        ? 'assets/Icons/reminder/bell.png'
         : (activity.status == ActivityStatus.completed)
-            ? 'assets/Icons/tick2.png'
-            : 'assets/Icons/wrong.png';
+            ? 'assets/Icons/reminder/tick.png'
+            : 'assets/Icons/reminder/wrong.png';
     String trailLabel = (activity.status == ActivityStatus.upcoming)
         ? 'Swipe right to mark as done >>'
         : '';
-    String imageUrl = (activity.type == ActivityType.medicine)
-        ? 'assets/Icons/med2.png'
-        : activity.type == ActivityType.diet
-            ? 'assets/Icons/food2.png'
-            : activity.type == ActivityType.excercise
-                ? 'assets/Icons/exercise.png'
-                : 'assets/Icons/exercise.png';
-    Color bgColor = activity.type == ActivityType.medicine
-        ? Constants.medColor
-        : activity.type == ActivityType.diet
-            ? Constants.foodColor
-            : activity.type == ActivityType.excercise
-                ? Constants.exerciseColor
-                : Constants.exerciseColor;
+    String imageUrl = activity.type.imageUrl;
+    Color bgColor = activity.type.color;
     // bgColor = Constants.primaryColor.withOpacity(0.1);
 
     return Slidable(
@@ -86,9 +74,9 @@ class ReminderCard extends StatelessWidget {
             decoration: BoxDecoration(
               // color: Theme.of(context).canvasColor,
               color: bgColor,
-              boxShadow: const [
+              boxShadow: [
                 BoxShadow(
-                  color: Colors.grey,
+                  color: Theme.of(context).highlightColor,
                   spreadRadius: 0,
                   blurRadius: 0.5,
                   offset: Offset(0, 1),

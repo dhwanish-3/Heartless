@@ -8,12 +8,13 @@ import 'package:heartless/shared/constants.dart';
 import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/shared/models/reading.dart';
 import 'package:heartless/shared/provider/widget_provider.dart';
+import 'package:heartless/widgets/log/add_button.dart';
+import 'package:heartless/widgets/log/hero_dialog.dart';
 import 'package:heartless/widgets/log/reading_tile.dart';
 import 'package:provider/provider.dart';
 
 class DayWiseLogPage extends StatefulWidget {
   final AppUser patient;
-  // final MedicalReadingType medicalReadingType;
 
   const DayWiseLogPage({
     super.key,
@@ -26,6 +27,7 @@ class DayWiseLogPage extends StatefulWidget {
 
 class _DayWiseLogState extends State<DayWiseLogPage> {
   final formKey = GlobalKey<FormState>();
+  final secondaryFormKey = GlobalKey<FormState>();
 
   final TextEditingController _entryController = TextEditingController();
 
@@ -39,10 +41,18 @@ class _DayWiseLogState extends State<DayWiseLogPage> {
   }
 
   // function called when submitting the form to add new reading/log
-  void _submitForm(MedicalReadingType medicalReadingType) async {
+  void _submitForm(MedicalReadingType medicalReadingType,
+      [bool secondaryMetric = false]) async {
     // todo: need for adding some kind of indicator that the form is being submitted
-    if (!formKey.currentState!.validate()) {
-      return;
+
+    if (!secondaryMetric) {
+      if (!formKey.currentState!.validate()) {
+        return;
+      }
+    } else {
+      if (!secondaryFormKey.currentState!.validate()) {
+        return;
+      }
     }
 
     double? value;
@@ -85,12 +95,86 @@ class _DayWiseLogState extends State<DayWiseLogPage> {
     // todo: turn off the indicator
   }
 
-  void showFormDialog(
+  void showFormDialogWithPopup(
       BuildContext context, MedicalReadingType medicalReadingType) {
     showDialog(
       context: context,
       builder: (context) {
         MedicalReadingType selectedType = MedicalReadingType.waterConsumption;
+        return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+          return AlertDialog(
+            title: Text('Choose from the list of metrics'),
+            content: Form(
+              key: secondaryFormKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  DropdownButton<MedicalReadingType>(
+                    value: selectedType,
+                    onChanged: (MedicalReadingType? newValue) {
+                      setState(() {
+                        selectedType = newValue!;
+                        medicalReadingType = newValue;
+                      });
+                    },
+                    items: <MedicalReadingType>[
+                      MedicalReadingType.waterConsumption,
+                      MedicalReadingType.sleep,
+                      MedicalReadingType.distanceWalked,
+                      MedicalReadingType.caloriesBurned,
+                      MedicalReadingType.steps,
+                      MedicalReadingType.exerciseDuration,
+                      MedicalReadingType.sodiumIntake,
+                      MedicalReadingType.transFatIntake,
+                      MedicalReadingType.sugarIntake,
+                    ].map<DropdownMenuItem<MedicalReadingType>>(
+                        (MedicalReadingType value) {
+                      return DropdownMenuItem<MedicalReadingType>(
+                          value: value,
+                          child: Text(
+                            value.tag,
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ));
+                    }).toList(),
+                  ),
+                  const SizedBox(height: 5),
+                  buildPopUpTextFormFields(
+                    entryController: _entryController,
+                    commentController: _commentController,
+                    medicalReadingType: medicalReadingType,
+                    context: context,
+                  ),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Cancel'),
+                onPressed: () {
+                  _entryController.clear();
+                  _commentController.clear();
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                onPressed: () {
+                  _submitForm(medicalReadingType, true);
+                },
+                child: const Text('Submit'),
+              ),
+            ],
+          );
+        });
+      },
+    );
+  }
+
+  void showFormDialog(
+      BuildContext context, MedicalReadingType medicalReadingType) {
+    showDialog(
+      context: context,
+      builder: (context) {
         return StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
           return AlertDialog(
@@ -100,72 +184,12 @@ class _DayWiseLogState extends State<DayWiseLogPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  medicalReadingType == MedicalReadingType.other
-                      ? DropdownButton<MedicalReadingType>(
-                          value: selectedType,
-                          onChanged: (MedicalReadingType? newValue) {
-                            setState(() {
-                              selectedType = newValue!;
-                              medicalReadingType = newValue;
-                            });
-                          },
-                          items: <MedicalReadingType>[
-                            MedicalReadingType.waterConsumption,
-                            MedicalReadingType.sleep,
-                            MedicalReadingType.distanceWalked,
-                            MedicalReadingType.caloriesBurned,
-                            MedicalReadingType.steps,
-                            MedicalReadingType.exerciseDuration,
-                            MedicalReadingType.sodiumIntake,
-                            MedicalReadingType.transFatIntake,
-                            MedicalReadingType.sugarIntake,
-                          ].map<DropdownMenuItem<MedicalReadingType>>(
-                              (MedicalReadingType value) {
-                            return DropdownMenuItem<MedicalReadingType>(
-                                value: value,
-                                child: Text(
-                                  value.tag,
-                                  style: Theme.of(context).textTheme.bodyMedium,
-                                ));
-                          }).toList(),
-                        )
-                      : const SizedBox(),
-                  const SizedBox(height: 5),
-                  medicalReadingType == MedicalReadingType.other
-                      ? const SizedBox()
-                      : TextFormField(
-                          controller: _entryController,
-                          decoration: InputDecoration(
-                            labelText:
-                                '${medicalReadingType.tag} (${medicalReadingType.unit})',
-                            hintText: medicalReadingType.hintText,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter an entry';
-                            }
-                            return null;
-                          },
-                        ),
-                  const SizedBox(height: 10),
-                  medicalReadingType == MedicalReadingType.other
-                      ? const SizedBox()
-                      : TextFormField(
-                          maxLines: 2,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodySmall, //! should see how it looks in actual mobile
-                          controller: _commentController,
-                          decoration: InputDecoration(
-                            labelText: 'Comment',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                        ),
+                  buildPopUpTextFormFields(
+                    entryController: _entryController,
+                    commentController: _commentController,
+                    medicalReadingType: medicalReadingType,
+                    context: context,
+                  ),
                 ],
               ),
             ),
@@ -198,19 +222,12 @@ class _DayWiseLogState extends State<DayWiseLogPage> {
     widgetNotifier.setSelectedDateWithoutNotifying(DateTime.now());
 
     return Scaffold(
-        // floatingActionButton: FloatingActionButton(
-        //   onPressed: () {
-        //     showFormDialog(context);
-        //   },
-        //   backgroundColor: Constants.primaryColor,
-        //   child: const Icon(Icons.add),
-        // ),
-
         floatingActionButton: SpeedDial(
           animatedIcon: AnimatedIcons.menu_close,
           animatedIconTheme: const IconThemeData(size: 22.0),
           backgroundColor: Constants.primaryColor,
           children: [
+            MedicalReadingType.diary,
             MedicalReadingType.heartRate,
             MedicalReadingType.bloodPressure,
             MedicalReadingType.weight,
@@ -233,8 +250,20 @@ class _DayWiseLogState extends State<DayWiseLogPage> {
               // backgroundColor: Constants.primaryColor,
               label: type.tag,
               labelStyle: const TextStyle(fontSize: 16.0),
-              onTap: () {
-                showFormDialog(context, type);
+              onTap: () async {
+                if (type == MedicalReadingType.diary) {
+                  await Navigator.of(context)
+                      .push(HeroDialogRoute(builder: (context) {
+                    return AddDiaryPopUpCard(
+                      patient: widget.patient,
+                    );
+                  }));
+                } else if (type == MedicalReadingType.other) {
+                  showFormDialogWithPopup(
+                      context, MedicalReadingType.waterConsumption);
+                } else {
+                  showFormDialog(context, type);
+                }
               },
             );
           }).toList(),
@@ -291,4 +320,44 @@ class _DayWiseLogState extends State<DayWiseLogPage> {
           ),
         ));
   }
+}
+
+Widget buildPopUpTextFormFields({
+  required TextEditingController entryController,
+  required TextEditingController commentController,
+  required MedicalReadingType medicalReadingType,
+  required BuildContext context,
+}) {
+  return Column(
+    children: [
+      TextFormField(
+        controller: entryController,
+        decoration: InputDecoration(
+          labelText: '${medicalReadingType.tag} (${medicalReadingType.unit})',
+          hintText: medicalReadingType.hintText,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Please enter an entry';
+          }
+          return null;
+        },
+      ),
+      const SizedBox(height: 10),
+      TextFormField(
+        maxLines: 2,
+        style: Theme.of(context).textTheme.bodyMedium,
+        controller: commentController,
+        decoration: InputDecoration(
+          labelText: 'Comment',
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+      ),
+    ],
+  );
 }
