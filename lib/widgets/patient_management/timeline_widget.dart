@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:heartless/services/utils/timeline_service.dart';
 import 'package:heartless/shared/constants.dart';
 import 'package:heartless/widgets/patient_management/timeline_entry_widget.dart';
 
 class TimelineWidget extends StatelessWidget {
-  const TimelineWidget({super.key});
+  final String patientId;
+  const TimelineWidget({super.key, required this.patientId});
 
   @override
   Widget build(BuildContext context) {
@@ -41,8 +43,25 @@ class TimelineWidget extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 10),
-                TimeLineEntryidget(title: 'Blood Report', time: DateTime.now()),
-                TimeLineEntryidget(title: 'Glucose Test', time: DateTime.now()),
+                FutureBuilder(
+                    future: TimeLineService.getTimeLine(patientId, 3),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else if (snapshot.connectionState ==
+                          ConnectionState.done) {
+                        return Column(
+                          children: snapshot.data!
+                              .map((e) => TimeLineEntryidget(
+                                  title: e.title, time: e.date))
+                              .toList(),
+                        );
+                      } else {
+                        return Text("Failed");
+                      }
+                    }),
               ],
             )),
         Positioned(
@@ -51,7 +70,7 @@ class TimelineWidget extends StatelessWidget {
           child: IconButton(
             color: Colors.black,
             onPressed: () {
-              Navigator.pop(context);
+              // todo: navigate to timeline page
             },
             icon: Icon(Icons.keyboard_arrow_right),
           ),
