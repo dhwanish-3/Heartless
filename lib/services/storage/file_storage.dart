@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:heartless/services/enums/file_type.dart';
+import 'package:heartless/services/enums/custom_file_type.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
@@ -65,7 +65,8 @@ class FileStorageService {
 
         // save the file to the gallery in case of ios
         if (Platform.isIOS &&
-            fileTypeFromExtension(fileName.split('.').last) == FileType.image) {
+            customFileTypeFromExtension(fileName.split('.').last) ==
+                CustomFileType.image) {
           await ImageGallerySaver.saveFile(file.path, isReturnPathOfIOS: true);
         }
         return file.path;
