@@ -18,6 +18,7 @@ class ThemeNotifier extends ChangeNotifier {
     textTheme: Constants().textThemeLight,
     canvasColor: Colors.white,
     shadowColor: Colors.black,
+    highlightColor: Colors.grey, //color used for boxshadow
   );
 //* for widgets that have to alternate between white and black colors give them canvasColor and shadowColor fot the converse
 
@@ -27,5 +28,6 @@ class ThemeNotifier extends ChangeNotifier {
     textTheme: Constants().textThemeDark,
     canvasColor: Colors.black,
     shadowColor: Colors.white,
+    highlightColor: Colors.black,
   );
 }

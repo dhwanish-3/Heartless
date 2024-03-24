@@ -1,3 +1,5 @@
+// This file is obsolete, graphsWidget page is the new file to be navigated to
+
 import 'package:flutter/material.dart';
 import 'package:heartless/widgets/analytics/graphs_widget.dart';
 import 'package:heartless/widgets/analytics/hero_widget.dart';
@@ -11,7 +13,7 @@ class AnalyticsPage extends StatefulWidget {
   const AnalyticsPage({
     super.key,
     this.title = "EXERCISE",
-    this.imageUrl = "assets/Icons/Hero/exerciseHero.png",
+    this.imageUrl = "assets/Icons/med2.png",
     required this.patientId,
   });
 

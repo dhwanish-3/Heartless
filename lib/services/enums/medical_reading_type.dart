@@ -15,6 +15,7 @@ enum MedicalReadingType {
   sodiumIntake,
   transFatIntake,
   sugarIntake,
+  diary,
 }
 
 extension MedicalReadingTypeExtension on MedicalReadingType {
@@ -48,6 +49,8 @@ extension MedicalReadingTypeExtension on MedicalReadingType {
         return 'Trans Fat Intake';
       case MedicalReadingType.sugarIntake:
         return 'Sugar Intake';
+      case MedicalReadingType.diary:
+        return 'Diary';
       default:
         return '';
     }
@@ -65,6 +68,8 @@ extension MedicalReadingTypeExtension on MedicalReadingType {
         return 'assets/Icons/readingGenre/diabetes.png';
       case MedicalReadingType.other:
         return 'assets/Icons/readingGenre/other.png';
+      case MedicalReadingType.diary:
+        return 'assets/Icons/readingGenre/diary.png';
       default:
         return 'assets/Icons/readingGenre/other.png';
     }
@@ -98,6 +103,10 @@ extension MedicalReadingTypeExtension on MedicalReadingType {
         return Colors.lightBlue.shade200;
       case MedicalReadingType.transFatIntake:
         return Colors.lime.shade200;
+      case MedicalReadingType.sugarIntake:
+        return Colors.deepOrange.shade200;
+      case MedicalReadingType.diary:
+        return Colors.deepOrangeAccent.shade200;
       default:
         return Colors.grey.shade200;
     }
@@ -114,7 +123,7 @@ extension MedicalReadingTypeExtension on MedicalReadingType {
       case MedicalReadingType.glucose:
         return 'mg/dL';
       case MedicalReadingType.other:
-        return '';
+        return 'L'; //the default value of other is waterConsumption
       case MedicalReadingType.waterConsumption:
         return 'L';
       case MedicalReadingType.sleep:
@@ -146,6 +155,8 @@ extension MedicalReadingTypeExtension on MedicalReadingType {
         return '200 kcal';
       case MedicalReadingType.steps:
         return '10000 steps';
+      case MedicalReadingType.waterConsumption:
+        return '2 L';
       case MedicalReadingType.exerciseDuration:
         return '30 minutes';
       case MedicalReadingType.sodiumIntake:
