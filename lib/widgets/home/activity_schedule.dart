@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/services/enums/activity_status.dart';
 import 'package:heartless/services/enums/activity_type.dart';
-import 'package:heartless/widgets/miscellaneous/tag_tile.dart';
 
 class ActivityScheduleEntry extends StatelessWidget {
   final String title;
@@ -23,9 +22,8 @@ class ActivityScheduleEntry extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         margin: const EdgeInsets.symmetric(
-            // horizontal: 20,
-
-            ),
+          horizontal: 20,
+        ),
         child: IntrinsicHeight(
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -90,26 +88,56 @@ class ActivityScheduleEntry extends StatelessWidget {
                         : const SizedBox(), //title
                     const SizedBox(height: 5),
                     comment.isNotEmpty
-                        ? Text(
-                            comment,
-                            textAlign: TextAlign.start,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontSize: 14,
-                              height: 1.2,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.grey,
+                        ? Flexible(
+                            child: Text(
+                              comment,
+                              textAlign: TextAlign.start,
+                              // overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                height: 1.2,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.grey,
+                              ),
                             ),
                           )
                         : const SizedBox(), //title
 //! optionally displayed if tags are present
 
                     const SizedBox(height: 5),
-
-                    TagWidget(
-                      tag: type.value,
-                      tagColor: type.color,
+                    FittedBox(
+                      fit: BoxFit.fitWidth,
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 2,
+                          vertical: 2,
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          // color: color,
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(
+                            color: type.color,
+                            width: 2,
+                          ),
+                        ),
+                        child: Text(
+                          type.value,
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: type.color,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
                     ),
+                    // TagWidget(
+                    //   tag: type.value,
+                    //   tagColor: type.color,
+                    // ),
                     const SizedBox(height: 5),
                   ],
                 ),

@@ -95,9 +95,7 @@ class SupervisorListContainer extends StatelessWidget {
         horizontal: 20,
       ),
       decoration: BoxDecoration(
-        color: Theme.of(context).brightness == Brightness.light
-            ? Constants.cardColor
-            : Constants.darkCardColor,
+        color: Theme.of(context).secondaryHeaderColor,
         borderRadius: BorderRadius.circular(20),
       ),
       // padding: const EdgeInsets.all(10.0),
@@ -216,9 +214,7 @@ class ControlPanel extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       decoration: BoxDecoration(
-        color: Theme.of(context).brightness == Brightness.light
-            ? Constants.cardColor
-            : Constants.darkCardColor,
+        color: Theme.of(context).secondaryHeaderColor,
         borderRadius: BorderRadius.circular(20),
       ),
       padding: const EdgeInsets.symmetric(
