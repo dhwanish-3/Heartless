@@ -76,8 +76,6 @@ class GenericReadingTile extends StatelessWidget {
                   children: [
                     Text(
                       readingType.formatReading(
-                        // double.parse(reading).toInt().toString(),
-                        // double.parse(optionalValue).toInt().toString(),
                         reading,
                         optionalValue,
                       ),

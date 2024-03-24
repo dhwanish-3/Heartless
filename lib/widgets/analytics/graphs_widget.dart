@@ -39,7 +39,7 @@ class _GraphsWidgetState extends State<GraphsWidget> {
                 date: DateTime.now(),
               ),
               LineDefaultChart(
-                activityType: ActivityType.excercise,
+                activityType: ActivityType.exercise,
                 patientId: widget.patientId,
                 date: DateTime.now(),
               ),

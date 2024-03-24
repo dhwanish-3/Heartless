@@ -23,7 +23,7 @@ class RadialBarChart extends StatelessWidget {
 
       Map<ActivityType, List<Activity>> activitiesMap = {};
       activitiesMap[ActivityType.medicine] = [];
-      activitiesMap[ActivityType.excercise] = [];
+      activitiesMap[ActivityType.exercise] = [];
       activitiesMap[ActivityType.diet] = [];
       activities.forEach((activity) {
         if (activity.time.isBefore(date))

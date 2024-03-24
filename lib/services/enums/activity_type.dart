@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-enum ActivityType { medicine, diet, excercise }
+enum ActivityType { medicine, diet, exercise }
 
 extension TypeExtension on ActivityType {
-  String get name {
+  String get value {
     switch (this) {
       case ActivityType.medicine:
         return 'Medicine';
-      case ActivityType.excercise:
+      case ActivityType.exercise:
         return 'Excercise';
       case ActivityType.diet:
         return 'Diet';
@@ -20,7 +20,7 @@ extension TypeExtension on ActivityType {
     switch (this) {
       case ActivityType.medicine:
         return Color.fromARGB(255, 125, 171, 247);
-      case ActivityType.excercise:
+      case ActivityType.exercise:
         return Color.fromARGB(191, 52, 168, 83);
       case ActivityType.diet:
         return Color.fromARGB(178, 255, 104, 56);
@@ -29,24 +29,11 @@ extension TypeExtension on ActivityType {
     }
   }
 
-  String get dropDownValue {
-    switch (this) {
-      case ActivityType.medicine:
-        return 'Medicine';
-      case ActivityType.excercise:
-        return 'Excercise';
-      case ActivityType.diet:
-        return 'Diet';
-      default:
-        return 'Unknown';
-    }
-  }
-
   String get icon {
     switch (this) {
       case ActivityType.medicine:
         return 'assets/Icons/readingGenre/heartRate.png';
-      case ActivityType.excercise:
+      case ActivityType.exercise:
         return 'assets/Icons/readingGenre/bloodPressure.png';
       case ActivityType.diet:
         return 'assets/Icons/readingGenre/weight.png';
@@ -59,7 +46,7 @@ extension TypeExtension on ActivityType {
     switch (this) {
       case ActivityType.medicine:
         return 'assets/Icons/reminder/medicine.png';
-      case ActivityType.excercise:
+      case ActivityType.exercise:
         return 'assets/Icons/reminder/exercise.png';
       case ActivityType.diet:
         return 'assets/Icons/reminder/food.png';
@@ -74,7 +61,7 @@ ActivityType activityFromString(String value) {
     case 'Medicine':
       return ActivityType.medicine;
     case 'Excercise':
-      return ActivityType.excercise;
+      return ActivityType.exercise;
     case 'Diet':
       return ActivityType.diet;
 
