@@ -4,7 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:heartless/shared/models/health_document.dart';
 
 class HealthDocumentService {
-  static _getHealthCollection(String patientId) {
+  static CollectionReference<Map<String, dynamic>> _getHealthCollection(
+      String patientId) {
     return FirebaseFirestore.instance
         .collection('Users')
         .doc(patientId)
@@ -20,7 +21,7 @@ class HealthDocumentService {
           await _getHealthCollection(patientId).doc();
       // set the document id
       healthDocument.id = documentReference.id;
-      await _getHealthCollection(patientId).set(healthDocument.toMap());
+      await documentReference.set(healthDocument.toMap());
     } catch (e) {
       log(e.toString());
       throw e;
@@ -61,5 +62,15 @@ class HealthDocumentService {
   static Stream<QuerySnapshot<Map<String, dynamic>>> getHealthDocuments(
       String patientId) {
     return _getHealthCollection(patientId).snapshots();
+  }
+
+  static Future<List<HealthDocument>> getHealthDocumentsList(String patientId,
+      {int? limit}) async {
+    return await _getHealthCollection(patientId)
+        .orderBy('createdAt', descending: true)
+        .limit(limit ?? 30)
+        .get()
+        .then((value) =>
+            value.docs.map((e) => HealthDocument.fromMap(e.data())).toList());
   }
 }

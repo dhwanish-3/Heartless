@@ -1,7 +1,8 @@
 import 'dart:developer';
 import 'dart:io';
+
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:heartless/services/enums/file_type.dart';
+import 'package:heartless/services/enums/custom_file_type.dart';
 
 class FirebaseStorageService {
   static FirebaseStorage storage = FirebaseStorage.instance;
@@ -12,7 +13,7 @@ class FirebaseStorageService {
       // getting image file extension
       final String ext = file.path.split('.').last;
 
-      final FileType fileType = fileTypeFromExtension(ext);
+      final CustomFileType fileType = customFileTypeFromExtension(ext);
 
       // storage file ref with path
       final Reference ref = storage.ref().child(

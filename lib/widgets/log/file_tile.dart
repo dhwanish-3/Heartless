@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:heartless/services/enums/custom_file_type.dart';
 import 'package:heartless/shared/constants.dart';
 import 'package:heartless/widgets/miscellaneous/tag_tile.dart';
 
 class FileTile extends StatelessWidget {
   final String title;
   final String dateString;
-  final String imageUrl;
+  final CustomFileType fileType;
   const FileTile({
     super.key,
     required this.title,
     required this.dateString,
-    required this.imageUrl,
+    required this.fileType,
   });
 
   @override
@@ -24,7 +25,7 @@ class FileTile extends StatelessWidget {
         child: Row(
           children: [
             Image.asset(
-              imageUrl,
+              fileType.imageUrl,
               height: 50,
               width: 50,
             ),

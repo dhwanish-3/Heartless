@@ -4,17 +4,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:heartless/backend/controllers/base_controller.dart';
 import 'package:heartless/backend/services/firebase_storage/firebase_storage_service.dart';
 import 'package:heartless/backend/services/misc/health_document_service.dart';
+import 'package:heartless/services/enums/custom_file_type.dart';
+import 'package:heartless/services/enums/event_tag.dart';
 import 'package:heartless/shared/models/health_document.dart';
 
 class HealthDocumentController with BaseController {
   // add a health document
   Future<void> addHealthDocument(String patientId, String name,
-      List<HealthDocumentTag> tags, File file) async {
+      CustomFileType fileType, List<EventTag> tags, File file) async {
     // uploading the file and getting its url
     String url = await FirebaseStorageService.uploadFile(patientId, file);
     // creating the health document
     HealthDocument healthDocument = HealthDocument(
       name: name,
+      customFileType: fileType,
       tags: tags,
       url: url,
       createdAt: DateTime.now(),
@@ -42,8 +45,8 @@ class HealthDocumentController with BaseController {
   }
 
   // change the tags of a health document
-  Future<void> changeHealthDocumentTags(String patientId,
-      HealthDocument healthDocument, List<HealthDocumentTag> tags) async {
+  Future<void> changeEventTags(String patientId, HealthDocument healthDocument,
+      List<EventTag> tags) async {
     // updating the health document
     healthDocument.tags = tags;
     healthDocument.createdAt = DateTime.now();
@@ -73,5 +76,11 @@ class HealthDocumentController with BaseController {
   static Stream<QuerySnapshot<Map<String, dynamic>>> getHealthDocuments(
       String patientId) {
     return HealthDocumentService.getHealthDocuments(patientId);
+  }
+
+  static Future<List<HealthDocument>> getHealthDocumentsList(String patientId,
+      {int? limit}) async {
+    return await HealthDocumentService.getHealthDocumentsList(patientId,
+        limit: limit);
   }
 }
