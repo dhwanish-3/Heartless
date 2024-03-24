@@ -19,13 +19,13 @@ extension TypeExtension on ActivityType {
   Color get color {
     switch (this) {
       case ActivityType.medicine:
-        return Colors.blue;
+        return Color.fromARGB(255, 125, 171, 247);
       case ActivityType.excercise:
-        return Colors.green;
+        return Color.fromARGB(191, 52, 168, 83);
       case ActivityType.diet:
-        return Colors.red;
+        return Color.fromARGB(178, 255, 104, 56);
       default:
-        return Colors.black;
+        return Color.fromARGB(255, 125, 171, 247);
     }
   }
 
@@ -39,6 +39,32 @@ extension TypeExtension on ActivityType {
         return 'Diet';
       default:
         return 'Unknown';
+    }
+  }
+
+  String get icon {
+    switch (this) {
+      case ActivityType.medicine:
+        return 'assets/Icons/readingGenre/heartRate.png';
+      case ActivityType.excercise:
+        return 'assets/Icons/readingGenre/bloodPressure.png';
+      case ActivityType.diet:
+        return 'assets/Icons/readingGenre/weight.png';
+      default:
+        return 'assets/Icons/readingGenre/other.png';
+    }
+  }
+
+  String get imageUrl {
+    switch (this) {
+      case ActivityType.medicine:
+        return 'assets/Icons/reminder/medicine.png';
+      case ActivityType.excercise:
+        return 'assets/Icons/reminder/exercise.png';
+      case ActivityType.diet:
+        return 'assets/Icons/reminder/food.png';
+      default:
+        return 'assets/Icons/readingGenre/other.png';
     }
   }
 }

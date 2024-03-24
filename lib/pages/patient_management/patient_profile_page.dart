@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:heartless/backend/controllers/chat_controller.dart';
 import 'package:heartless/backend/controllers/connect_users_controller.dart';
 import 'package:heartless/pages/chat/chat_page.dart';
-import 'package:heartless/pages/log/medical_log_page.dart';
+import 'package:heartless/pages/log/daywise_log.dart';
 import 'package:heartless/pages/schedule/schedule_page.dart';
 import 'package:heartless/shared/constants.dart';
 import 'package:heartless/shared/models/app_user.dart';
@@ -276,7 +276,7 @@ class ControlPanel extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (_) => MedicalLogPage(
+                              builder: (_) => DayWiseLogPage(
                                     patient: patient,
                                   )));
                     },
@@ -311,13 +311,10 @@ class PanelCard extends StatelessWidget {
           width: 150,
           decoration: BoxDecoration(
             color: Constants.lightPrimaryColor,
-            // color: Theme.of(context).canvasColor,
             borderRadius: BorderRadius.circular(10),
             boxShadow: [
               BoxShadow(
-                color: Theme.of(context).brightness == Brightness.light
-                    ? Colors.grey
-                    : Colors.black,
+                color: Theme.of(context).highlightColor,
                 spreadRadius: 1,
                 blurRadius: 1,
                 offset: const Offset(0, 1),
