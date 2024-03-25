@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/services/date/date_service.dart';
 import 'package:heartless/services/enums/timeline_event_type.dart';
+import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/widgets/miscellaneous/tag_tile.dart';
 
 class TimeLineEntryidget extends StatelessWidget {
+  final AppUser patient;
   final String title;
   final DateTime time;
   final TimeLineEventType tag;
   const TimeLineEntryidget({
     super.key,
+    required this.patient,
     this.title = '',
     required this.time,
     required this.tag,
@@ -16,10 +19,9 @@ class TimeLineEntryidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        margin: const EdgeInsets.symmetric(
-            // horizontal: 20,
-            ),
+    return GestureDetector(
+        onTap: () => Navigator.push(context,
+            MaterialPageRoute(builder: (context) => tag.route(patient))),
         child: IntrinsicHeight(
           child: Row(
             children: [

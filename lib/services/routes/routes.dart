@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/pages/auth/choose_user_type.dart';
 import 'package:heartless/pages/auth/create_password.dart';
-import 'package:heartless/pages/auth/dummy_home.dart';
 import 'package:heartless/pages/auth/forgot_password.dart';
-import 'package:heartless/pages/auth/splash_screen.dart';
 import 'package:heartless/pages/auth/login_page.dart';
-import 'package:heartless/pages/auth/signup_page.dart';
 import 'package:heartless/pages/auth/login_register_toggle.dart';
+import 'package:heartless/pages/auth/signup_page.dart';
+import 'package:heartless/pages/auth/splash_screen.dart';
 import 'package:heartless/pages/auth/verification_page.dart';
+import 'package:heartless/pages/home/home_page.dart';
 import 'package:heartless/services/routes/route_names.dart';
 
 class Routes {
@@ -36,7 +36,7 @@ class Routes {
 
       // * common routes * //
       case RouteNames.home:
-        return MaterialPageRoute(builder: (_) => const DummyHome());
+        return MaterialPageRoute(builder: (_) => const HomePage());
 
       // ! Patient routes ! //
 

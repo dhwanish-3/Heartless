@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/services/utils/timeline_service.dart';
 import 'package:heartless/shared/constants.dart';
+import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/widgets/patient_management/timeline_entry_widget.dart';
 
 class TimelineWidget extends StatelessWidget {
-  final String patientId;
-  const TimelineWidget({super.key, required this.patientId});
+  final AppUser patient;
+  const TimelineWidget({super.key, required this.patient});
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +45,7 @@ class TimelineWidget extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 FutureBuilder(
-                    future: TimeLineService.getTimeLine(patientId, 4),
+                    future: TimeLineService.getTimeLine(patient.uid, 4),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return CircularProgressIndicator();
@@ -55,7 +56,10 @@ class TimelineWidget extends StatelessWidget {
                         return Column(
                           children: snapshot.data!
                               .map((e) => TimeLineEntryidget(
-                                  title: e.title, time: e.date, tag: e.tag))
+                                  patient: patient,
+                                  title: e.title,
+                                  time: e.date,
+                                  tag: e.tag))
                               .toList(),
                         );
                       } else {

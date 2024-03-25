@@ -1,4 +1,8 @@
-import 'dart:ui';
+import 'package:flutter/material.dart';
+import 'package:heartless/pages/log/daywise_log.dart';
+import 'package:heartless/pages/log/file_upload_page.dart';
+import 'package:heartless/pages/schedule/schedule_page.dart';
+import 'package:heartless/shared/models/app_user.dart';
 
 enum TimeLineEventType { reading, activity, healthDocument }
 
@@ -33,6 +37,23 @@ extension TimeLineEventTypeExtension on TimeLineEventType {
         return Color(0xFF4CAF50);
       case TimeLineEventType.healthDocument:
         return Color.fromARGB(255, 152, 76, 175);
+    }
+  }
+
+  Widget route(AppUser user) {
+    switch (this) {
+      case TimeLineEventType.reading:
+        return DayWiseLogPage(
+          patient: user,
+        );
+      case TimeLineEventType.activity:
+        return SchedulePage(
+          patient: user,
+        );
+      case TimeLineEventType.healthDocument:
+        return FileUploadPage(
+          patientId: user.uid,
+        );
     }
   }
 }
