@@ -1,18 +1,19 @@
 import "dart:developer";
+
 import "package:flutter/material.dart";
 import "package:flutter_svg/svg.dart";
 import "package:heartless/backend/controllers/auth_controller.dart";
 import "package:heartless/backend/services/notifications/notification_services.dart";
 import "package:heartless/services/phone_auth/phone_auth.dart";
+import "package:heartless/shared/constants.dart";
 import 'package:heartless/shared/models/app_user.dart';
 import "package:heartless/shared/provider/auth_notifier.dart";
-import "package:heartless/shared/constants.dart";
-import "package:heartless/widgets/auth/email_phone_toggle.dart";
+import "package:heartless/shared/provider/widget_provider.dart";
+import 'package:heartless/widgets/auth/custom_two_button_toggle.dart';
 import 'package:heartless/widgets/auth/google_button.dart';
+import 'package:heartless/widgets/auth/text_input.dart';
 import 'package:heartless/widgets/miscellaneous/left_trailing_button.dart';
 import 'package:heartless/widgets/miscellaneous/right_trailing_button.dart';
-import 'package:heartless/widgets/auth/text_input.dart';
-import "package:heartless/shared/provider/widget_provider.dart";
 import "package:intl_phone_field/intl_phone_field.dart";
 import "package:provider/provider.dart";
 
@@ -145,7 +146,7 @@ class _LoginPageState extends State<LoginPage> {
                     const SizedBox(
                       height: 20,
                     ),
-                    const ToggleButton(emailPhoneToggle: true),
+                    const TwoButtonToggle(emailPhoneToggle: true),
                     const SizedBox(height: 10),
                     Consumer<WidgetNotifier>(builder: (context, value, child) {
                       return widgetNotifier.emailPhoneToggle == true

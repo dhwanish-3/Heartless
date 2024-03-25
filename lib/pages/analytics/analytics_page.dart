@@ -1,89 +1,98 @@
-// This file is obsolete, graphsWidget page is the new file to be navigated to
-
 import 'package:flutter/material.dart';
-import 'package:heartless/widgets/analytics/graphs_widget.dart';
-import 'package:heartless/widgets/analytics/hero_widget.dart';
-import 'package:heartless/widgets/analytics/panel.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:heartless/services/enums/activity_type.dart';
+import 'package:heartless/services/enums/medical_reading_type.dart';
+import 'package:heartless/widgets/analytics/blood_pressure_chart.dart';
+import 'package:heartless/widgets/analytics/display_mode_selector.dart';
+import 'package:heartless/widgets/analytics/general_reading_chart.dart';
+import 'package:heartless/widgets/analytics/line_default_chart.dart';
+import 'package:heartless/widgets/analytics/radial_bar_chart.dart';
+import 'package:heartless/widgets/auth/custom_two_button_toggle.dart';
 
 class AnalyticsPage extends StatefulWidget {
-  final String title;
-  final String imageUrl;
   final String patientId;
-  const AnalyticsPage({
-    super.key,
-    this.title = "EXERCISE",
-    this.imageUrl = "assets/Icons/med2.png",
-    required this.patientId,
-  });
+  const AnalyticsPage({super.key, required this.patientId});
 
   @override
-  _AnalyticsPageState createState() => _AnalyticsPageState();
+  State<AnalyticsPage> createState() => _AnalyticsPageState();
 }
 
 class _AnalyticsPageState extends State<AnalyticsPage> {
-  //! collapsed widget is rendered over panel widget. Should somehow use the controller to display the panel only when it is expanded
-  final PanelController _panelController = PanelController();
-
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
-
     return Scaffold(
-      body: LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-          return SlidingUpPanel(
-            controller: _panelController,
-            parallaxEnabled: true,
-            minHeight: height * 0.75,
-            maxHeight: height,
-            onPanelSlide: (position) {
-              setState(() {}); // Call setState to rebuild the widget
-            },
-            collapsed: Material(
-              elevation: 0, // This adds the shadow
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(30.0),
-                topRight: Radius.circular(30.0),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(100),
+        child: Column(
+          children: [
+            AppBar(
+              centerTitle: true,
+              title: const Text(
+                'Analytics',
+                textAlign: TextAlign.center,
               ),
-              child: SizedBox(
-                height: height * 0.75, // Set a fixed height for the container
-                child: Column(
-                  children: [
-                    Divider(
-                      height: 20,
-                      thickness: 2,
-                      indent: MediaQuery.of(context).size.width / 2 - 20,
-                      endIndent: MediaQuery.of(context).size.width / 2 - 20,
-                    ),
-                    Expanded(
-                      child: Scaffold(
-                        body: FittedBox(
-                          fit: BoxFit.fill,
-                          child: GraphsWidget(
-                            patientId: widget.patientId,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+              surfaceTintColor: Theme.of(context).scaffoldBackgroundColor,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20,
+              ),
+              child: DisplayModeSelector(
+                onMonthYearChanged: (month, year) {
+                  // todo: make the api call to fetch data of corresponding month and year here
+                },
               ),
             ),
-            panel: PanelWidget(
-              title: widget.title,
-              patientId: widget.patientId,
-            ),
-            // If the panel is closed, render an empty widget
-            // body: Container(),
-            body: HeroWidget(
-              title: widget.title,
-              imageUrl: widget.imageUrl,
-            ),
-            backdropEnabled: true,
-            backdropOpacity: 0.1,
-          );
-        },
+            // const SizedBox(height: 20),
+            // TwoButtonToggle(emailPhoneToggle: false),
+          ],
+        ),
+      ),
+      bottomSheet: Padding(
+        padding: const EdgeInsets.only(bottom: 0),
+        child: TwoButtonToggle(
+          emailPhoneToggle: false,
+          leftButtonText: 'Activites',
+          rightButtonText: 'Readings',
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 12),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              RadialBarChart(
+                patientId: widget.patientId,
+                date: DateTime.now(),
+              ),
+              LineDefaultChart(
+                activityType: ActivityType.exercise,
+                patientId: widget.patientId,
+                date: DateTime.now(),
+              ),
+              LineDefaultChart(
+                activityType: ActivityType.medicine,
+                patientId: widget.patientId,
+                date: DateTime.now(),
+              ),
+              LineDefaultChart(
+                activityType: ActivityType.diet,
+                patientId: widget.patientId,
+                date: DateTime.now(),
+              ),
+              BloodPressureChart(
+                patientId: widget.patientId,
+                date: DateTime.now(),
+              ),
+              GeneralReadingChart(
+                patientId: widget.patientId,
+                readingType: MedicalReadingType.weight,
+                date: DateTime.now(),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
