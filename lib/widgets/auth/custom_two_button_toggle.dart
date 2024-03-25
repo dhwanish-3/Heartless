@@ -5,11 +5,15 @@ import 'package:heartless/widgets/auth/custom_text_button.dart';
 import 'package:provider/provider.dart';
 
 // ! This widget is not beign used anywhere
-class ToggleButton extends StatelessWidget {
+class TwoButtonToggle extends StatelessWidget {
   final bool emailPhoneToggle;
-  const ToggleButton({
+  final String leftButtonText;
+  final String rightButtonText;
+  const TwoButtonToggle({
     super.key,
     required this.emailPhoneToggle,
+    this.leftButtonText = 'Email',
+    this.rightButtonText = 'Phone',
   });
 
   @override
@@ -48,7 +52,7 @@ class ToggleButton extends StatelessWidget {
                         },
                         child: CustomTextButton(
                           height: 40,
-                          text: 'Email',
+                          text: leftButtonText,
                           containerWidth: screenWidth * 0.38,
                         ),
                       ),
@@ -61,7 +65,7 @@ class ToggleButton extends StatelessWidget {
                         },
                         child: CustomTextButton(
                           height: 40,
-                          text: 'Phone',
+                          text: rightButtonText,
                           containerWidth: screenWidth * 0.38,
                         ),
                       ),
@@ -79,8 +83,9 @@ class ToggleButton extends StatelessWidget {
                     child: FractionallySizedBox(
                       widthFactor: 0.5,
                       child: CustomTextButton(
-                        text:
-                            widgetNotifier.emailPhoneToggle ? 'Email' : 'Phone',
+                        text: widgetNotifier.emailPhoneToggle
+                            ? leftButtonText
+                            : rightButtonText,
                         containerWidth: screenWidth * 0.38,
                         isHighlighted: true,
                       ),

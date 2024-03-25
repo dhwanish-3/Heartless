@@ -7,7 +7,7 @@ import "package:heartless/shared/constants.dart";
 import 'package:heartless/shared/models/app_user.dart';
 import "package:heartless/shared/provider/auth_notifier.dart";
 import "package:heartless/shared/provider/widget_provider.dart";
-import "package:heartless/widgets/auth/email_phone_toggle.dart";
+import 'package:heartless/widgets/auth/custom_two_button_toggle.dart';
 import 'package:heartless/widgets/auth/google_button.dart';
 import 'package:heartless/widgets/auth/text_input.dart';
 import 'package:heartless/widgets/miscellaneous/left_trailing_button.dart';
@@ -143,7 +143,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     const SizedBox(
                       height: 15,
                     ),
-                    const ToggleButton(emailPhoneToggle: true),
+                    const TwoButtonToggle(emailPhoneToggle: true),
                     const SizedBox(height: 10),
                     Consumer<WidgetNotifier>(builder: (context, value, child) {
                       return widgetNotifier.emailPhoneToggle == true

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:heartless/pages/analytics/analytics_page.dart';
 import 'package:heartless/shared/constants.dart';
-import 'package:heartless/widgets/analytics/graphs_widget.dart';
 import 'package:intl/intl.dart';
 
 class PanelWidget extends StatefulWidget {
@@ -33,7 +33,7 @@ class _PanelState extends State<PanelWidget> {
         ),
         centerTitle: true,
       ),
-      body: GraphsWidget(
+      body: AnalyticsPage(
         patientId: widget.patientId,
       ),
     );

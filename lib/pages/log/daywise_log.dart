@@ -312,7 +312,9 @@ class _DayWiseLogState extends State<DayWiseLogPage> {
                               );
                             });
                       } else {
-                        return const Text("No reading available");
+                        return Center(
+                          child: const Text("No reading available"),
+                        );
                       }
                     });
               })

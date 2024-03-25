@@ -60,7 +60,15 @@ class RadialBarChart extends StatelessWidget {
                   getDataFromSnapshot(snapshot);
               return SfCircularChart(
                   tooltipBehavior: TooltipBehavior(enable: true),
-                  title: ChartTitle(text: 'Activity Completion'),
+                  // title: ChartTitle(text: 'Activity Completion'),
+                  title: ChartTitle(
+                    text: 'Activity Completion',
+                    textStyle: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).shadowColor,
+                    ),
+                  ),
                   legend: Legend(
                       isVisible: true,
                       overflowMode: LegendItemOverflowMode.wrap),

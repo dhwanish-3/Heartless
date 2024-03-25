@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:heartless/pages/analytics/analytics_page.dart';
 import 'package:heartless/pages/auth/dummy_home.dart';
 import 'package:heartless/pages/home/patient_home_page.dart';
 import 'package:heartless/pages/log/daywise_log.dart';
 import 'package:heartless/pages/schedule/schedule_page.dart';
 import 'package:heartless/shared/constants.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
-import 'package:heartless/widgets/analytics/graphs_widget.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -39,7 +39,7 @@ class _HomePageState extends State<HomePage> {
         SchedulePage(
           patient: authNotifier.appUser!,
         ),
-        GraphsWidget(
+        AnalyticsPage(
           patientId: authNotifier.appUser!.uid,
         ),
         DummyHome(),
@@ -87,7 +87,7 @@ class _HomePageState extends State<HomePage> {
               text: 'Schedule',
             ),
             GButton(
-              icon: Icons.auto_graph_rounded,
+              icon: Icons.bar_chart_outlined,
               text: 'Analytics',
             ),
             GButton(

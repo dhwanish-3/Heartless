@@ -29,7 +29,7 @@ class CustomTextButton extends StatelessWidget {
                   color: Theme.of(context).highlightColor,
                   spreadRadius: 1,
                   blurRadius: 1,
-                  offset: Offset(1, 1), // changes position of shadow
+                  offset: Offset(0.5, 0.5), // changes position of shadow
                 ),
               ]
             : null,
@@ -40,7 +40,8 @@ class CustomTextButton extends StatelessWidget {
           Text(
             text,
             style: TextStyle(
-              color: isHighlighted ? Colors.white : Colors.black,
+              color:
+                  isHighlighted ? Colors.white : Theme.of(context).shadowColor,
               fontWeight: FontWeight.w600,
               fontSize: 15,
             ),

@@ -21,21 +21,24 @@ class QuickActionsWidget extends StatelessWidget {
         ],
       ),
       padding: const EdgeInsets.symmetric(
-        horizontal: 20,
+        horizontal: 10,
         vertical: 20,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Quick Actions',
-            textAlign: TextAlign.start,
-            // style: Theme.of(context).textTheme.headlineMedium
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Theme.of(context).shadowColor,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Text(
+              'Quick Actions',
+              textAlign: TextAlign.start,
+              // style: Theme.of(context).textTheme.headlineMedium
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).shadowColor,
+              ),
             ),
           ),
           const SizedBox(height: 10),
@@ -103,12 +106,15 @@ class QuickActionCard extends StatelessWidget {
             color: Theme.of(context).shadowColor,
           ),
           const SizedBox(height: 10),
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-              color: Theme.of(context).shadowColor,
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              title,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).shadowColor,
+              ),
             ),
           ),
         ],

@@ -98,4 +98,9 @@ class DateService {
         return '${(difference.inDays / 365).floor()} years ago';
     }
   }
+
+  //a function which takes as input DateTime and returns string of the format, 7 Sun, 1 Tue
+  static String weekSelectorFormat(DateTime date) {
+    return '${date.day} ${DateFormat('E').format(date)}';
+  }
 }

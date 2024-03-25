@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/services/enums/activity_status.dart';
 import 'package:heartless/services/enums/activity_type.dart';
+import 'package:heartless/shared/constants.dart';
 
 class ActivityScheduleEntry extends StatelessWidget {
   final String title;
@@ -21,8 +22,9 @@ class ActivityScheduleEntry extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: const EdgeInsets.symmetric(
-          horizontal: 20,
+        margin: const EdgeInsets.only(
+          left: 20,
+          right: 10,
         ),
         child: IntrinsicHeight(
           child: Row(
@@ -33,7 +35,11 @@ class ActivityScheduleEntry extends StatelessWidget {
                 textAlign: TextAlign.start,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
-                    fontSize: 14, height: 1.2, fontWeight: FontWeight.w500),
+                  fontSize: 14,
+                  color: Constants.primaryColor,
+                  height: 1.2,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
               Container(
                 // height: 100,
@@ -43,15 +49,15 @@ class ActivityScheduleEntry extends StatelessWidget {
                 child: Column(
                   children: [
                     Container(
-                      width: 12,
-                      height: 12,
+                      width: 10,
+                      height: 10,
                       decoration: BoxDecoration(
-                        image: status.completionStatusIcon == null
-                            ? null
-                            : DecorationImage(
-                                image: AssetImage(status.completionStatusIcon!),
-                                fit: BoxFit.cover,
-                              ),
+                        // image: status.completionStatusIcon == null
+                        //     ? null
+                        //     : DecorationImage(
+                        //         image: AssetImage(status.completionStatusIcon!),
+                        //         fit: BoxFit.contain,
+                        //       ),
                         color: Theme.of(context).primaryColor.withOpacity(0.2),
                         shape: BoxShape.circle,
                         border: Border.all(
@@ -80,8 +86,8 @@ class ActivityScheduleEntry extends StatelessWidget {
                             textAlign: TextAlign.start,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
-                              fontSize: 18,
-                              height: 1.2,
+                              fontSize: 16,
+                              height: 1,
                               fontWeight: FontWeight.w500,
                             ),
                           )
@@ -94,7 +100,7 @@ class ActivityScheduleEntry extends StatelessWidget {
                               textAlign: TextAlign.start,
                               // overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
-                                fontSize: 14,
+                                fontSize: 12,
                                 height: 1.2,
                                 fontWeight: FontWeight.w400,
                                 color: Colors.grey,
@@ -108,28 +114,29 @@ class ActivityScheduleEntry extends StatelessWidget {
                     FittedBox(
                       fit: BoxFit.fitWidth,
                       child: Container(
-                        margin: const EdgeInsets.symmetric(
-                          horizontal: 2,
-                          vertical: 2,
+                        // width: 80,
+                        margin: const EdgeInsets.only(
+                          bottom: 2,
                         ),
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 4,
+                          horizontal: 4,
+                          vertical: 0,
                         ),
                         decoration: BoxDecoration(
-                          // color: color,
+                          color: type.color.withOpacity(0.2),
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(
                             color: type.color,
-                            width: 2,
+                            width: 1,
                           ),
                         ),
                         child: Text(
                           type.value,
                           style: TextStyle(
                             fontSize: 10,
+                            overflow: TextOverflow.ellipsis,
                             color: type.color,
-                            fontWeight: FontWeight.w400,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       ),
