@@ -1,24 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/services/date/date_service.dart';
+import 'package:heartless/services/enums/timeline_event_type.dart';
+import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/widgets/miscellaneous/tag_tile.dart';
 
 class TimeLineEntryidget extends StatelessWidget {
+  final AppUser patient;
   final String title;
   final DateTime time;
-//! must include the list of tags
-
+  final TimeLineEventType tag;
   const TimeLineEntryidget({
     super.key,
+    required this.patient,
     this.title = '',
     required this.time,
+    required this.tag,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        margin: const EdgeInsets.symmetric(
-            // horizontal: 20,
-            ),
+    return GestureDetector(
+        onTap: () => Navigator.push(context,
+            MaterialPageRoute(builder: (context) => tag.route(patient))),
         child: IntrinsicHeight(
           child: Row(
             children: [
@@ -86,17 +89,17 @@ class TimeLineEntryidget extends StatelessWidget {
                       clipBehavior: Clip.antiAliasWithSaveLayer,
                       children: [
                         TagWidget(
-                          tag: 'blood pressure',
-                          tagColor: Colors.red,
+                          tag: tag.tag,
+                          tagColor: tag.color,
                         ),
-                        TagWidget(
-                          tag: 'test report',
-                          tagColor: Colors.blue,
-                        ),
-                        TagWidget(
-                          tag: 'blood pressure',
-                          tagColor: Colors.red,
-                        ),
+                        // TagWidget(
+                        //   tag: 'test report',
+                        //   tagColor: Colors.blue,
+                        // ),
+                        // TagWidget(
+                        //   tag: 'blood pressure',
+                        //   tagColor: Colors.red,
+                        // ),
                       ],
                     ),
                     const SizedBox(height: 5),
