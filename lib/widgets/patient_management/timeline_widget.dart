@@ -44,7 +44,7 @@ class TimelineWidget extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 FutureBuilder(
-                    future: TimeLineService.getTimeLine(patientId, 3),
+                    future: TimeLineService.getTimeLine(patientId, 4),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return CircularProgressIndicator();
@@ -55,7 +55,7 @@ class TimelineWidget extends StatelessWidget {
                         return Column(
                           children: snapshot.data!
                               .map((e) => TimeLineEntryidget(
-                                  title: e.title, time: e.date))
+                                  title: e.title, time: e.date, tag: e.tag))
                               .toList(),
                         );
                       } else {
