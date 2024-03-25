@@ -69,7 +69,7 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
                 height: 20,
               ),
               TimelineWidget(
-                patientId: widget.patient.uid,
+                patient: widget.patient,
               ),
               const SizedBox(height: 20),
               supervisors.isNotEmpty
