@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:heartless/backend/controllers/health_document_controller.dart';
@@ -8,6 +10,7 @@ import 'package:heartless/services/storage/file_storage.dart';
 import 'package:heartless/shared/constants.dart';
 import 'package:heartless/shared/models/health_document.dart';
 import 'package:heartless/widgets/log/file_tile.dart';
+import 'package:heartless/widgets/miscellaneous/month_divider.dart';
 
 class HealthDocumentsPage extends StatefulWidget {
   final String patientId;
@@ -35,6 +38,8 @@ class _HealthDocumentsPageState extends State<HealthDocumentsPage> {
 
   @override
   Widget build(BuildContext context) {
+    Set<DateTime> documentDates = {};
+    Set<int> documentDatesIndex = {};
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -142,17 +147,30 @@ class _HealthDocumentsPageState extends State<HealthDocumentsPage> {
                               HealthDocument healthDocument =
                                   HealthDocument.fromMap(
                                       snapshot.data.docs[index].data());
-                              return GestureDetector(
-                                onTap: () {
-                                  healthDocumentonTap(healthDocument);
-                                },
-                                child: FileTile(
-                                  title: healthDocument.name,
-                                  fileType: healthDocument.customFileType,
-                                  dateString: DateService.dayDateTimeFormat(
-                                      healthDocument.createdAt),
-                                ),
-                              );
+                              log(healthDocument.toMap().toString());
+
+                              // check if the document is the first document of the month
+                              if (!documentDates.contains(
+                                  DateService.getStartOfMonth(
+                                      healthDocument.createdAt))) {
+                                documentDates.add(DateService.getStartOfMonth(
+                                    healthDocument.createdAt));
+                                documentDatesIndex.add(index);
+                              }
+
+                              // if the document is the first document of the month show the month divider
+                              if (documentDatesIndex.contains(index)) {
+                                return Column(children: [
+                                  MonthDivider(
+                                      month: healthDocument.createdAt.month
+                                          .toString(),
+                                      year: healthDocument.createdAt.year
+                                          .toString()),
+                                  _buildDocumentTile(healthDocument)
+                                ]);
+                              } else {
+                                return _buildDocumentTile(healthDocument);
+                              }
                             });
                       } else {
                         return const Center(
@@ -161,13 +179,22 @@ class _HealthDocumentsPageState extends State<HealthDocumentsPage> {
                       }
                     }),
               ),
-              // MonthDivider(
-              //   month: 'February',
-              //   year: '2024',
-              // ),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildDocumentTile(HealthDocument healthDocument) {
+    return GestureDetector(
+      onTap: () {
+        healthDocumentonTap(healthDocument);
+      },
+      child: FileTile(
+        title: healthDocument.name,
+        fileType: healthDocument.customFileType,
+        dateString: DateService.dayDateTimeFormat(healthDocument.createdAt),
       ),
     );
   }
