@@ -51,6 +51,11 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
     );
   }
 
+  // function to delete message
+  void deleteMessage(Message message, String userId) {
+    _chatController.deleteMessage(widget.chatRoom, message, userId);
+  }
+
   @override
   Widget build(BuildContext context) {
     AuthNotifier authNotifier =
@@ -69,12 +74,6 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
         }
       }
       _messageController.clear();
-    }
-
-    // function to delete message
-    void deleteMessage(Message message) {
-      _chatController.deleteMessage(
-          widget.chatRoom, message, authNotifier.appUser!.uid);
     }
 
     Set<DateTime> chatDates = {};
@@ -169,6 +168,7 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
                       itemBuilder: (BuildContext context, int index) {
                         Message message =
                             Message.fromMap(snapshot.data.docs[index].data());
+                        // check if the message is the first message of the day
                         if (!chatDates.contains(
                             DateService.getStartOfDay(message.time))) {
                           chatDatesIndex.add(index);
@@ -176,6 +176,7 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
                               .add(DateService.getStartOfDay(message.time));
                         }
 
+                        // if first message of the day, show date then build message tile
                         if (chatDatesIndex.contains(index)) {
                           return Column(
                             children: [
@@ -219,47 +220,13 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
                                   ),
                                 ),
                               ),
-                              Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 2),
-                                  child: GestureDetector(
-                                      onDoubleTap: () {
-                                        // todo: this should not be allowed
-                                        deleteMessage(message);
-                                      },
-                                      child: MessageTile(
-                                        imageUrl: message.imageUrl,
-                                        documentUrl:
-                                            message.type == MessageType.document
-                                                ? message.imageUrl
-                                                : null,
-                                        message: message.message,
-                                        isSender: message.senderId ==
-                                            authNotifier.appUser!.uid,
-                                        time: DateService.getFormattedTime(
-                                            message.time),
-                                      )))
+                              _buildMessageTile(widget.chatRoom, message,
+                                  authNotifier.appUser!.uid),
                             ],
                           );
                         } else {
-                          return Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 2),
-                              child: GestureDetector(
-                                  onDoubleTap: () {
-                                    deleteMessage(message);
-                                  },
-                                  child: MessageTile(
-                                    imageUrl: message.imageUrl,
-                                    documentUrl:
-                                        message.type == MessageType.document
-                                            ? message.imageUrl
-                                            : null,
-                                    message: message.message,
-                                    isSender: message.senderId ==
-                                        authNotifier.appUser!.uid,
-                                    time: DateService.getFormattedTime(
-                                        message.time),
-                                  )));
+                          return _buildMessageTile(widget.chatRoom, message,
+                              authNotifier.appUser!.uid);
                         }
                       },
                     );
@@ -279,5 +246,25 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
         ],
       ),
     );
+  }
+
+  Widget _buildMessageTile(ChatRoom chatRoom, Message message, String userId) {
+    return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 2),
+        child: GestureDetector(
+            onDoubleTap: () {
+              // todo: this should not be allowed
+              deleteMessage(message, userId);
+            },
+            child: MessageTile(
+              chatId: widget.chatRoom.id,
+              imageUrl: message.imageUrl,
+              documentUrl: message.type == MessageType.document
+                  ? message.imageUrl
+                  : null,
+              message: message.message,
+              isSender: message.senderId == userId,
+              time: DateService.getFormattedTime(message.time),
+            )));
   }
 }

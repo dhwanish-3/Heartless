@@ -61,7 +61,9 @@ class HealthDocumentService {
   // get all health documents
   static Stream<QuerySnapshot<Map<String, dynamic>>> getHealthDocuments(
       String patientId) {
-    return _getHealthCollection(patientId).snapshots();
+    return _getHealthCollection(patientId)
+        .orderBy('createdAt', descending: true)
+        .snapshots();
   }
 
   static Future<List<HealthDocument>> getHealthDocumentsList(String patientId,

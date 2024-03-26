@@ -25,7 +25,8 @@ class FileStorageService {
   }
 
   // save file to storage
-  static Future<String?> saveFile(String url, String fileName) async {
+  static Future<String?> saveFile(
+      String url, String folderName, String fileName) async {
     Directory? directory;
     try {
       if (Platform.isAndroid) {
@@ -53,14 +54,14 @@ class FileStorageService {
         await directory.create(recursive: true);
       }
       if (directory != null && await directory.exists()) {
-        File file = File("${directory.path}/$fileName");
+        File file = File("${directory.path}/$folderName/$fileName");
         if (await file.exists()) {
           return file.path;
         }
         // download the file
         await Dio().download(url, file.path,
             onReceiveProgress: (downloaded, total) {
-          log("Downloaded : $downloaded, Total : $total");
+          log("Downloaded : $downloaded, Total : $total"); // *can be used to show progress
         });
 
         // save the file to the gallery in case of ios
