@@ -103,4 +103,33 @@ class DateService {
   static String weekSelectorFormat(DateTime date) {
     return '${date.day} ${DateFormat('E').format(date)}';
   }
+
+  // from year in the int 2023, month in the String JAN, FEB, and day in String 5 Mon, 7 Wed ..to type DateTime
+  static DateTime convertWeekSelectorFormatToDate(
+      int year, String month, String day) {
+    // Map of month abbreviations to month numbers
+    const monthNumbers = {
+      'JAN': 1,
+      'FEB': 2,
+      'MAR': 3,
+      'APR': 4,
+      'MAY': 5,
+      'JUN': 6,
+      'JUL': 7,
+      'AUG': 8,
+      'SEP': 9,
+      'OCT': 10,
+      'NOV': 11,
+      'DEC': 12,
+    };
+
+    // Extract the day number from the day string
+    int dayNumber = int.parse(day.split(' ')[0]);
+
+    // Convert the month string to a month number
+    int monthNumber = monthNumbers[month.toUpperCase()] ?? 1;
+
+    // Create a DateTime object
+    return DateTime(year, monthNumber, dayNumber);
+  }
 }

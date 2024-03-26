@@ -21,7 +21,7 @@ class _TestingPageState extends State<TestingPage> {
             width: double.infinity,
           ),
           DisplayModeSelector(
-            onMonthYearChanged: () {},
+            onDateChanged: () {},
           ),
         ],
       ),
