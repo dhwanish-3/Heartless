@@ -3,6 +3,35 @@ import 'package:intl/intl.dart';
 class DateService {
   static const Duration _timeLimit = Duration(seconds: 10);
 
+  static const monthNumbers = {
+    'JAN': 1,
+    'FEB': 2,
+    'MAR': 3,
+    'APR': 4,
+    'MAY': 5,
+    'JUN': 6,
+    'JUL': 7,
+    'AUG': 8,
+    'SEP': 9,
+    'OCT': 10,
+    'NOV': 11,
+    'DEC': 12,
+  };
+
+  static const List<String> monthsFormatMMM = [
+    'JAN',
+    'FEB',
+    'MAR',
+    'APR',
+    'MAY',
+    'JUN',
+    'JUL',
+    'AUG',
+    'SEP',
+    'OCT',
+    'NOV',
+    'DEC'
+  ];
   static Duration get timeLimit => _timeLimit;
 
   // to get start of the month of a given date
@@ -113,20 +142,6 @@ class DateService {
   static DateTime convertWeekSelectorFormatToDate(
       int year, String month, String day) {
     // Map of month abbreviations to month numbers
-    const monthNumbers = {
-      'JAN': 1,
-      'FEB': 2,
-      'MAR': 3,
-      'APR': 4,
-      'MAY': 5,
-      'JUN': 6,
-      'JUL': 7,
-      'AUG': 8,
-      'SEP': 9,
-      'OCT': 10,
-      'NOV': 11,
-      'DEC': 12,
-    };
 
     // Extract the day number from the day string
     int dayNumber = int.parse(day.split(' ')[0]);
@@ -136,5 +151,27 @@ class DateService {
 
     // Create a DateTime object
     return DateTime(year, monthNumber, dayNumber);
+  }
+
+  static int getMonthNumber(String month) {
+    return monthNumbers[month.toUpperCase()] ?? 0;
+  }
+
+  static List<String> getMonths(
+    int selectedYear,
+    int currentYear,
+    int startYear,
+    int startMonth,
+    int currentMonth,
+  ) {
+    if (selectedYear == startYear && selectedYear == currentYear) {
+      return monthsFormatMMM.sublist(startMonth - 1, currentMonth);
+    } else if (selectedYear == startYear) {
+      return monthsFormatMMM.sublist(startMonth - 1);
+    } else if (selectedYear == currentYear) {
+      return monthsFormatMMM.sublist(0, currentMonth);
+    } else {
+      return monthsFormatMMM;
+    }
   }
 }

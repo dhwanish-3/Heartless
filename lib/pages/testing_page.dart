@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:heartless/widgets/analytics/display_mode_selector.dart';
 
 class TestingPage extends StatefulWidget {
   const TestingPage({super.key});
@@ -19,9 +18,6 @@ class _TestingPageState extends State<TestingPage> {
           const SizedBox(
             height: 300,
             width: double.infinity,
-          ),
-          DisplayModeSelector(
-            onDateChanged: () {},
           ),
         ],
       ),

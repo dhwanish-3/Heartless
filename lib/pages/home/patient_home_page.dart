@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:heartless/quick_actions_widget.dart';
 import 'package:heartless/services/enums/activity_status.dart';
 import 'package:heartless/services/enums/activity_type.dart';
 import 'package:heartless/widgets/home/activity_schedule.dart';
 import 'package:heartless/widgets/home/heading_widget.dart';
+import 'package:heartless/widgets/home/quick_actions_widget.dart';
 
 class PatientHomePage extends StatelessWidget {
   const PatientHomePage({super.key});
