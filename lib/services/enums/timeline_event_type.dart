@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/pages/log/daywise_log.dart';
-import 'package:heartless/pages/log/file_upload_page.dart';
+import 'package:heartless/pages/log/health_documents_page.dart';
 import 'package:heartless/pages/schedule/schedule_page.dart';
 import 'package:heartless/shared/models/app_user.dart';
 
@@ -51,7 +51,7 @@ extension TimeLineEventTypeExtension on TimeLineEventType {
           patient: user,
         );
       case TimeLineEventType.healthDocument:
-        return FileUploadPage(
+        return HealthDocumentsPage(
           patientId: user.uid,
         );
     }

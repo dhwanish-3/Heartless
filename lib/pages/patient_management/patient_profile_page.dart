@@ -4,7 +4,7 @@ import 'package:heartless/backend/controllers/connect_users_controller.dart';
 import 'package:heartless/pages/analytics/analytics_page.dart';
 import 'package:heartless/pages/chat/chat_page.dart';
 import 'package:heartless/pages/log/daywise_log.dart';
-import 'package:heartless/pages/log/file_upload_page.dart';
+import 'package:heartless/pages/log/health_documents_page.dart';
 import 'package:heartless/pages/schedule/schedule_page.dart';
 import 'package:heartless/shared/constants.dart';
 import 'package:heartless/shared/models/app_user.dart';
@@ -54,7 +54,7 @@ class _PatientProfilePageState extends State<PatientProfilePage> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => FileUploadPage(
+                            builder: (context) => HealthDocumentsPage(
                                   patientId: widget.patient.uid,
                                 )));
                   },

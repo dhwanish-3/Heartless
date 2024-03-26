@@ -9,15 +9,15 @@ import 'package:heartless/shared/constants.dart';
 import 'package:heartless/shared/models/health_document.dart';
 import 'package:heartless/widgets/log/file_tile.dart';
 
-class FileUploadPage extends StatefulWidget {
+class HealthDocumentsPage extends StatefulWidget {
   final String patientId;
-  const FileUploadPage({super.key, required this.patientId});
+  const HealthDocumentsPage({super.key, required this.patientId});
 
   @override
-  State<FileUploadPage> createState() => _FileUploadPageState();
+  State<HealthDocumentsPage> createState() => _HealthDocumentsPageState();
 }
 
-class _FileUploadPageState extends State<FileUploadPage> {
+class _HealthDocumentsPageState extends State<HealthDocumentsPage> {
   final TextEditingController _searchController = TextEditingController();
   @override
   void dispose() {
