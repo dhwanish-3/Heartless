@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heartless/pages/home/search_page.dart';
 import 'package:heartless/shared/constants.dart';
 
 class HomePageHeadingWidget extends StatelessWidget {
@@ -104,34 +105,63 @@ class HomePageHeadingWidget extends StatelessWidget {
             ),
           ),
           Positioned(
-            bottom: 45, // 20 if searchBar overlapping
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              padding: const EdgeInsets.symmetric(horizontal: 40),
-              child: SearchBar(
-                hintText: 'Search...',
-                textStyle: MaterialStateTextStyle.resolveWith(
-                  (Set<MaterialState> states) {
-                    return TextStyle(
-                      color: Theme.of(context).shadowColor,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w400,
-                    );
-                  },
+            bottom: 50, // 20 if searchBar overlapping
+            child: InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  PageRouteBuilder(
+                    transitionDuration: const Duration(milliseconds: 500),
+                    pageBuilder: (_, __, ___) => SearchPage(),
+                    transitionsBuilder: (_, animation, __, child) {
+                      return FadeTransition(
+                        opacity: animation,
+                        child: child,
+                      );
+                    },
+                  ),
+                );
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                    borderRadius: BorderRadius.circular(40),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Theme.of(context).highlightColor,
+                        blurRadius: 3,
+                        spreadRadius: 1,
+                        offset: Offset(0, 2),
+                      ),
+                    ]),
+                height: 54,
+                width: MediaQuery.of(context).size.width - 80,
+                margin: const EdgeInsets.symmetric(
+                  horizontal: 40,
                 ),
-                shadowColor: MaterialStateColor.resolveWith(
-                    (states) => Theme.of(context).highlightColor),
-                surfaceTintColor: MaterialStateColor.resolveWith(
-                  (states) =>
-                      // Theme.of(context).scaffoldBackgroundColor,
-                      Colors.white,
+                child: Row(
+                  children: [
+                    const SizedBox(width: 20),
+                    const Icon(
+                      size: 30,
+                      Icons.search,
+                      color: Colors.grey,
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      'Search ...',
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(width: 20),
+                  ],
                 ),
-                leading: Padding(
-                    padding: const EdgeInsets.only(left: 10),
-                    child: const Icon(Icons.search)),
               ),
             ),
-          ),
+          )
         ],
       ),
     );
