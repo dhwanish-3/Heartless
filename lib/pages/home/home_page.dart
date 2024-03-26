@@ -53,7 +53,7 @@ class _HomePageState extends State<HomePage> {
     return Container(
       height: 80,
       decoration: BoxDecoration(
-          color: Colors.white,
+          // color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.all(Radius.circular(40 * fem))),
       child: GNav(
           rippleColor: Constants.primaryColor.withOpacity(0.3),
@@ -63,7 +63,7 @@ class _HomePageState extends State<HomePage> {
           curve: Curves.easeOutExpo,
           duration: const Duration(milliseconds: 300),
           gap: 0,
-          color: Colors.black,
+          color: Theme.of(context).shadowColor,
           activeColor: Constants.primaryColor,
           iconSize: 24,
           tabBackgroundColor: Constants.primaryColor.withOpacity(0.1),
