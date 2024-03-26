@@ -34,6 +34,11 @@ class DateService {
   ];
   static Duration get timeLimit => _timeLimit;
 
+  // to get start of the month of a given date
+  static DateTime getStartOfMonth(DateTime date) {
+    return DateTime(date.year, date.month, 1, 0, 0, 0, 0, 0);
+  }
+
   // to get start of the week of a given date
   static DateTime getStartOfWeek(DateTime date) {
     DateTime startOfWeek = date;

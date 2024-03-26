@@ -1,22 +1,26 @@
+import 'dart:developer';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:heartless/backend/controllers/health_document_controller.dart';
 import 'package:heartless/pages/log/file_upload_preview_page.dart';
 import 'package:heartless/services/date/date_service.dart';
 import 'package:heartless/services/enums/custom_file_type.dart';
+import 'package:heartless/services/storage/file_storage.dart';
 import 'package:heartless/shared/constants.dart';
 import 'package:heartless/shared/models/health_document.dart';
 import 'package:heartless/widgets/log/file_tile.dart';
+import 'package:heartless/widgets/miscellaneous/month_divider.dart';
 
-class FileUploadPage extends StatefulWidget {
+class HealthDocumentsPage extends StatefulWidget {
   final String patientId;
-  const FileUploadPage({super.key, required this.patientId});
+  const HealthDocumentsPage({super.key, required this.patientId});
 
   @override
-  State<FileUploadPage> createState() => _FileUploadPageState();
+  State<HealthDocumentsPage> createState() => _HealthDocumentsPageState();
 }
 
-class _FileUploadPageState extends State<FileUploadPage> {
+class _HealthDocumentsPageState extends State<HealthDocumentsPage> {
   final TextEditingController _searchController = TextEditingController();
   @override
   void dispose() {
@@ -24,8 +28,18 @@ class _FileUploadPageState extends State<FileUploadPage> {
     super.dispose();
   }
 
+  void healthDocumentonTap(HealthDocument healthDocument) async {
+    String? path = await FileStorageService.saveFile(healthDocument.url,
+        healthDocument.customFileType.name, healthDocument.name);
+    if (path != null) {
+      FileStorageService.openFile(path);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    Set<DateTime> documentDates = {};
+    Set<int> documentDatesIndex = {};
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -47,7 +61,6 @@ class _FileUploadPageState extends State<FileUploadPage> {
                             children: [
                               InkWell(
                                 onTap: () async {
-                                  //! file upload mechanism here
                                   FilePickerResult? result =
                                       await FilePicker.platform.pickFiles(
                                     type: FileType.custom,
@@ -59,7 +72,6 @@ class _FileUploadPageState extends State<FileUploadPage> {
                                   if (result != null &&
                                       result.files.isNotEmpty &&
                                       result.files.single.path != null) {
-                                    // ! upload file
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -135,12 +147,30 @@ class _FileUploadPageState extends State<FileUploadPage> {
                               HealthDocument healthDocument =
                                   HealthDocument.fromMap(
                                       snapshot.data.docs[index].data());
-                              return FileTile(
-                                title: healthDocument.name,
-                                fileType: healthDocument.customFileType,
-                                dateString: DateService.dayDateTimeFormat(
-                                    healthDocument.createdAt),
-                              );
+                              log(healthDocument.toMap().toString());
+
+                              // check if the document is the first document of the month
+                              if (!documentDates.contains(
+                                  DateService.getStartOfMonth(
+                                      healthDocument.createdAt))) {
+                                documentDates.add(DateService.getStartOfMonth(
+                                    healthDocument.createdAt));
+                                documentDatesIndex.add(index);
+                              }
+
+                              // if the document is the first document of the month show the month divider
+                              if (documentDatesIndex.contains(index)) {
+                                return Column(children: [
+                                  MonthDivider(
+                                      month: healthDocument.createdAt.month
+                                          .toString(),
+                                      year: healthDocument.createdAt.year
+                                          .toString()),
+                                  _buildDocumentTile(healthDocument)
+                                ]);
+                              } else {
+                                return _buildDocumentTile(healthDocument);
+                              }
                             });
                       } else {
                         return const Center(
@@ -149,13 +179,22 @@ class _FileUploadPageState extends State<FileUploadPage> {
                       }
                     }),
               ),
-              // MonthDivider(
-              //   month: 'February',
-              //   year: '2024',
-              // ),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildDocumentTile(HealthDocument healthDocument) {
+    return GestureDetector(
+      onTap: () {
+        healthDocumentonTap(healthDocument);
+      },
+      child: FileTile(
+        title: healthDocument.name,
+        fileType: healthDocument.customFileType,
+        dateString: DateService.dayDateTimeFormat(healthDocument.createdAt),
       ),
     );
   }
