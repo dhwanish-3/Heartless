@@ -3,10 +3,10 @@ import 'package:heartless/services/date/date_service.dart';
 import 'package:intl/intl.dart';
 
 class DisplayModeSelector extends StatefulWidget {
-  final Function onMonthYearChanged;
+  final Function onDateChanged;
   const DisplayModeSelector({
     super.key,
-    required this.onMonthYearChanged,
+    required this.onDateChanged,
   });
 
   @override
@@ -34,23 +34,43 @@ class _DisplayModeSelectorState extends State<DisplayModeSelector> {
 
   String selectedMonth = DateFormat('MMM').format(DateTime.now()).toUpperCase();
   int selectedYear = DateTime.now().year;
-  DateTime startDate = DateTime.now();
-  DateTime endDate = DateTime.now();
+
+  void updateDates(
+    String startDay,
+    String endDay,
+  ) {
+    DateTime tempStartDate = DateService.convertWeekSelectorFormatToDate(
+        selectedYear, selectedMonth, startDay);
+    DateTime tempEndDate = DateService.convertWeekSelectorFormatToDate(
+        selectedYear, selectedMonth, endDay);
+    //check if tempEndDate is smaller than tempStartDate
+
+    if (tempEndDate.isBefore(tempStartDate)) {
+      tempEndDate =
+          DateTime(tempEndDate.year, tempEndDate.month + 1, tempEndDate.day);
+    }
+    widget.onDateChanged(
+      tempStartDate,
+      tempEndDate,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        // const SizedBox(width: 30),
         Expanded(
           flex: 1,
           child:
               dropDownWidget(context, years, selectedYear.toString(), (value) {
             setState(() {
               selectedYear = value;
+              int monthIndex = months.indexOf(selectedMonth) + 1;
+
+              widget.onDateChanged(DateTime(selectedYear, monthIndex, 1),
+                  DateTime(selectedYear, monthIndex, 7));
             });
-            // widget.onMonthYearChanged(selectedMonth, selectedYear);
           }),
         ),
         const SizedBox(width: 5),
@@ -59,9 +79,11 @@ class _DisplayModeSelectorState extends State<DisplayModeSelector> {
           child: dropDownWidget(context, months, selectedMonth, (value) {
             setState(() {
               selectedMonth = value;
-            });
+              int monthIndex = months.indexOf(selectedMonth) + 1;
 
-            // widget.onMonthYearChanged(selectedMonth, selectedYear);
+              widget.onDateChanged(DateTime(selectedYear, monthIndex, 1),
+                  DateTime(selectedYear, monthIndex, 7));
+            });
           }),
         ),
         const SizedBox(width: 5),
@@ -70,9 +92,9 @@ class _DisplayModeSelectorState extends State<DisplayModeSelector> {
           child: WeekSelectorWidget(
             month: months.indexOf(selectedMonth) + 1,
             year: selectedYear,
+            updateDates: updateDates,
           ),
         ),
-        // const SizedBox(width: 30),
       ],
     );
   }
@@ -178,10 +200,15 @@ Widget menuActionsWidget(
 class WeekSelectorWidget extends StatefulWidget {
   final int month;
   final int year;
+  final Function(
+    String startDay,
+    String endDay,
+  ) updateDates;
   const WeekSelectorWidget({
     super.key,
     required this.month,
     required this.year,
+    required this.updateDates,
   });
 
   @override
@@ -227,10 +254,10 @@ class _WeekSelectorWidgetState extends State<WeekSelectorWidget> {
 
   @override
   Widget build(BuildContext context) {
-    // _pageController.jumpToPage(0);
     return WeekSliderWidget(
       weeks: widget.getWeeks(),
       pageController: _pageController,
+      onWeekChanged: widget.updateDates,
     );
   }
 }
@@ -238,16 +265,17 @@ class _WeekSelectorWidgetState extends State<WeekSelectorWidget> {
 class WeekSliderWidget extends StatelessWidget {
   final List<List<String>> weeks;
   final PageController pageController;
+  final Function onWeekChanged;
 
   WeekSliderWidget({
     super.key,
     required this.weeks,
     required this.pageController,
+    required this.onWeekChanged,
   });
 
   @override
   Widget build(BuildContext context) {
-    // pageController.jumpToPage(0);
     if (pageController.hasClients) {
       pageController.jumpToPage(0);
     }
@@ -271,6 +299,10 @@ class WeekSliderWidget extends StatelessWidget {
               icon: Icon(Icons.arrow_left),
               onPressed: () {
                 if (pageController.hasClients && pageController.page! > 0) {
+                  int index = pageController.page!.toInt() + 1;
+                  if (index < weeks.length && index >= 0) {
+                    onWeekChanged(weeks[index][0], weeks[index][1]);
+                  }
                   pageController.animateToPage(
                     (pageController.page! - 1).toInt(),
                     duration: Duration(milliseconds: 500),
@@ -310,6 +342,10 @@ class WeekSliderWidget extends StatelessWidget {
               onPressed: () {
                 if (pageController.hasClients &&
                     pageController.page! < weeks.length - 1) {
+                  int index = pageController.page!.toInt() + 1;
+                  if (index < weeks.length && index >= 0) {
+                    onWeekChanged(weeks[index][0], weeks[index][1]);
+                  }
                   pageController.animateToPage(
                     (pageController.page! + 1).toInt(),
                     duration: Duration(milliseconds: 500),

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:heartless/services/enums/activity_type.dart';
 import 'package:heartless/services/enums/medical_reading_type.dart';
@@ -37,7 +39,8 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                 horizontal: 20,
               ),
               child: DisplayModeSelector(
-                onMonthYearChanged: (month, year) {
+                onDateChanged: (DateTime startDate, DateTime endDate) {
+                  log('Start Date: $startDate, End Date: $endDate');
                   // todo: make the api call to fetch data of corresponding month and year here
                 },
               ),
