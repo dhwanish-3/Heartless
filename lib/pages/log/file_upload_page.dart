@@ -4,6 +4,7 @@ import 'package:heartless/backend/controllers/health_document_controller.dart';
 import 'package:heartless/pages/log/file_upload_preview_page.dart';
 import 'package:heartless/services/date/date_service.dart';
 import 'package:heartless/services/enums/custom_file_type.dart';
+import 'package:heartless/services/storage/file_storage.dart';
 import 'package:heartless/shared/constants.dart';
 import 'package:heartless/shared/models/health_document.dart';
 import 'package:heartless/widgets/log/file_tile.dart';
@@ -22,6 +23,14 @@ class _FileUploadPageState extends State<FileUploadPage> {
   void dispose() {
     _searchController.dispose();
     super.dispose();
+  }
+
+  void healthDocumentonTap(HealthDocument healthDocument) async {
+    String? path = await FileStorageService.saveFile(healthDocument.url,
+        healthDocument.customFileType.name, healthDocument.name);
+    if (path != null) {
+      FileStorageService.openFile(path);
+    }
   }
 
   @override
@@ -47,7 +56,6 @@ class _FileUploadPageState extends State<FileUploadPage> {
                             children: [
                               InkWell(
                                 onTap: () async {
-                                  //! file upload mechanism here
                                   FilePickerResult? result =
                                       await FilePicker.platform.pickFiles(
                                     type: FileType.custom,
@@ -59,7 +67,6 @@ class _FileUploadPageState extends State<FileUploadPage> {
                                   if (result != null &&
                                       result.files.isNotEmpty &&
                                       result.files.single.path != null) {
-                                    // ! upload file
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -135,11 +142,16 @@ class _FileUploadPageState extends State<FileUploadPage> {
                               HealthDocument healthDocument =
                                   HealthDocument.fromMap(
                                       snapshot.data.docs[index].data());
-                              return FileTile(
-                                title: healthDocument.name,
-                                fileType: healthDocument.customFileType,
-                                dateString: DateService.dayDateTimeFormat(
-                                    healthDocument.createdAt),
+                              return GestureDetector(
+                                onTap: () {
+                                  healthDocumentonTap(healthDocument);
+                                },
+                                child: FileTile(
+                                  title: healthDocument.name,
+                                  fileType: healthDocument.customFileType,
+                                  dateString: DateService.dayDateTimeFormat(
+                                      healthDocument.createdAt),
+                                ),
                               );
                             });
                       } else {

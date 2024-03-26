@@ -228,6 +228,7 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
                                         deleteMessage(message);
                                       },
                                       child: MessageTile(
+                                        chatId: widget.chatRoom.id,
                                         imageUrl: message.imageUrl,
                                         documentUrl:
                                             message.type == MessageType.document
@@ -249,6 +250,7 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
                                     deleteMessage(message);
                                   },
                                   child: MessageTile(
+                                    chatId: widget.chatRoom.id,
                                     imageUrl: message.imageUrl,
                                     documentUrl:
                                         message.type == MessageType.document

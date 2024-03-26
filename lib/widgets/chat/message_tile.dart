@@ -10,6 +10,7 @@ class MessageTile extends StatelessWidget {
   final bool isSender;
   final String? documentUrl;
   final String time;
+  final String chatId;
 
   const MessageTile(
       {super.key,
@@ -17,6 +18,7 @@ class MessageTile extends StatelessWidget {
       this.documentUrl,
       required this.message,
       this.isSender = true,
+      required this.chatId,
       required this.time});
 
   @override
@@ -138,11 +140,12 @@ class MessageTile extends StatelessWidget {
                           ),
                         ],
                       )
+                    //! if the message is a document
                     : GestureDetector(
                         onTap: () async {
                           if (imageUrl != null) {
                             String? path = await FileStorageService.saveFile(
-                                imageUrl!, message);
+                                imageUrl!, chatId, message);
                             if (path != null) FileStorageService.openFile(path);
                           }
                         },
