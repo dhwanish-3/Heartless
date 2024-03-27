@@ -5,13 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:heartless/backend/controllers/health_document_controller.dart';
 import 'package:heartless/services/enums/custom_file_type.dart';
 import 'package:heartless/services/enums/event_tag.dart';
-import 'package:heartless/shared/constants.dart';
+import 'package:heartless/widgets/miscellaneous/health_tag_selection.dart';
 
 class FileUploadPreviewPage extends StatelessWidget {
   final PlatformFile file;
   final String patientId;
   final CustomFileType fileType;
-  const FileUploadPreviewPage(
+
+  FileUploadPreviewPage(
       {super.key,
       required this.file,
       required this.patientId,
@@ -30,6 +31,7 @@ class FileUploadPreviewPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<EventTag> selectedList = [];
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -71,7 +73,7 @@ class FileUploadPreviewPage extends StatelessWidget {
                 ),
                 height: 250,
                 decoration: BoxDecoration(
-                  color: Colors.grey,
+                  color: Theme.of(context).secondaryHeaderColor,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Center(
@@ -90,19 +92,22 @@ class FileUploadPreviewPage extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                             maxLines: 3,
                             style: TextStyle(
-                              color: Colors.black,
+                              color: Colors.black54,
                               fontSize: 24,
                             )),
                       ),
                       const SizedBox(height: 5),
                       Text(convertBytes(file.size),
                           style: TextStyle(
-                            color: Colors.black,
+                            color: Colors.black54,
                             fontSize: 20,
                           )),
                     ],
                   ),
                 ),
+              ),
+              HealthTagSelctionWidget(
+                selectedList: selectedList,
               ),
               Container(
                 padding: const EdgeInsets.all(20),
@@ -114,6 +119,13 @@ class FileUploadPreviewPage extends StatelessWidget {
                     fontSize: 16,
                   ),
                   decoration: InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(
+                        color: Theme.of(context).primaryColor,
+                        width: 1,
+                      ),
+                    ),
                     labelText: 'Description',
                     labelStyle: TextStyle(
                       color: Colors.black,
@@ -128,158 +140,10 @@ class FileUploadPreviewPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              Container(
-                height: 600,
-                margin: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                ),
-                color: Constants.cardColor,
-                child: SearchWidget(),
-              ),
             ],
           ),
         ),
       ),
     );
-  }
-}
-
-class SearchWidget extends StatefulWidget {
-  @override
-  _SearchWidgetState createState() => _SearchWidgetState();
-}
-
-class _SearchWidgetState extends State<SearchWidget> {
-  TextEditingController _searchController = TextEditingController();
-  List<EventTag> dataList = EventTag.values.toList();
-  List<EventTag> searchResults = [];
-  List<EventTag> selectedItems = [];
-
-  @override
-  void initState() {
-    super.initState();
-    searchResults = dataList;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.fromLTRB(20, 10, 0, 0),
-          child: Text(
-            'Associated Tags',
-            textAlign: TextAlign.start,
-            // style: Theme.of(context).textTheme.headlineMedium
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Theme.of(context).shadowColor,
-            ),
-          ),
-        ),
-        //todo search bar
-        // Container(
-        //   padding: const EdgeInsets.all(8.0),
-        //   child: TextFormField(
-        //     controller: _searchController,
-        //     decoration: InputDecoration(
-        //       labelText: 'Search',
-        //       border: OutlineInputBorder(
-        //         borderRadius: BorderRadius.circular(10),
-        //       ),
-        //     ),
-        //     onChanged: (value) {
-        //       filterSearchResults(value);
-        //     },
-        //   ),
-        // ),
-        Expanded(
-          child: ListView.builder(
-            itemCount: searchResults.length,
-            itemBuilder: (context, index) {
-              bool isSelected = selectedItems.contains(searchResults[index]);
-              return ListTile(
-                leading: isSelected
-                    ? Icon(Icons.check)
-                    : const SizedBox(
-                        width: 20,
-                      ),
-                title: Container(
-                  height: 20,
-                  child: Row(
-                    children: [
-                      Container(
-                          height: 10,
-                          width: 10,
-                          decoration: BoxDecoration(
-                            color: (searchResults[index]
-                                .tagColor), // Use getColor function here
-                            shape: BoxShape.circle,
-                          )),
-                      const SizedBox(width: 10),
-                      Text(
-                        searchResults[index].value,
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 16,
-                        ),
-                      ), // Use .value to get the string representation of the enum
-                    ],
-                  ),
-                ),
-                trailing: isSelected
-                    ? IconButton(
-                        icon: Icon(Icons.close),
-                        onPressed: () {
-                          setState(() {
-                            selectedItems.remove(searchResults[index]);
-                          });
-                        },
-                      )
-                    : const SizedBox(width: 20),
-                onTap: () {
-                  setState(() {
-                    if (isSelected) {
-                      selectedItems.remove(searchResults[index]);
-                    } else {
-                      selectedItems.add(searchResults[index]);
-                    }
-                  });
-                },
-              );
-            },
-          ),
-        ),
-      ],
-    );
-  }
-
-//! doesn't work as expected
-  void filterSearchResults(String query) {
-    List<EventTag> dummyListData = [];
-    dummyListData.addAll(selectedItems); // Add selected items first
-
-    if (query.isNotEmpty) {
-      dataList.forEach((item) {
-        if (item.value.toLowerCase().contains(query.toLowerCase()) &&
-            !selectedItems.contains(item)) {
-          dummyListData.add(item);
-        }
-      });
-    } else {
-      dataList.forEach((item) {
-        if (!selectedItems.contains(item)) {
-          dummyListData.add(item);
-        }
-      });
-    }
-
-    setState(() {
-      searchResults.clear();
-      searchResults.addAll(dummyListData);
-    });
   }
 }

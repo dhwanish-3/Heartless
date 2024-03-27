@@ -3,35 +3,6 @@ import 'package:intl/intl.dart';
 class DateService {
   static const Duration _timeLimit = Duration(seconds: 10);
 
-  static const monthNumbers = {
-    'JAN': 1,
-    'FEB': 2,
-    'MAR': 3,
-    'APR': 4,
-    'MAY': 5,
-    'JUN': 6,
-    'JUL': 7,
-    'AUG': 8,
-    'SEP': 9,
-    'OCT': 10,
-    'NOV': 11,
-    'DEC': 12,
-  };
-
-  static const List<String> monthsFormatMMM = [
-    'JAN',
-    'FEB',
-    'MAR',
-    'APR',
-    'MAY',
-    'JUN',
-    'JUL',
-    'AUG',
-    'SEP',
-    'OCT',
-    'NOV',
-    'DEC'
-  ];
   static Duration get timeLimit => _timeLimit;
 
   // to get start of the month of a given date
@@ -138,6 +109,35 @@ class DateService {
     return '${date.day} ${DateFormat('E').format(date)}';
   }
 
+  static const monthNumbers = {
+    'JAN': 1,
+    'FEB': 2,
+    'MAR': 3,
+    'APR': 4,
+    'MAY': 5,
+    'JUN': 6,
+    'JUL': 7,
+    'AUG': 8,
+    'SEP': 9,
+    'OCT': 10,
+    'NOV': 11,
+    'DEC': 12,
+  };
+
+  static const List<String> monthsFormatMMM = [
+    'JAN',
+    'FEB',
+    'MAR',
+    'APR',
+    'MAY',
+    'JUN',
+    'JUL',
+    'AUG',
+    'SEP',
+    'OCT',
+    'NOV',
+    'DEC'
+  ];
   // from year in the int 2023, month in the String JAN, FEB, and day in String 5 Mon, 7 Wed ..to type DateTime
   static DateTime convertWeekSelectorFormatToDate(
       int year, String month, String day) {
@@ -155,6 +155,10 @@ class DateService {
 
   static int getMonthNumber(String month) {
     return monthNumbers[month.toUpperCase()] ?? 0;
+  }
+
+  static String getMonthFormatMMM(int month) {
+    return monthsFormatMMM[month - 1];
   }
 
   static List<String> getMonths(
