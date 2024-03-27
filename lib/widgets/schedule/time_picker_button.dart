@@ -19,6 +19,16 @@ class _TimePickerButtonState extends State<TimePickerButton> {
 
   @override
   Widget build(BuildContext context) {
+    String timeString = (widget.selectedTime.hour > 12
+                ? widget.selectedTime.hour - 12
+                : widget.selectedTime.hour)
+            .toString() +
+        ' : ' +
+        (widget.selectedTime.minute < 10
+            ? '0' + widget.selectedTime.minute.toString()
+            : widget.selectedTime.minute.toString()) +
+        ' ' +
+        (widget.selectedTime.period == DayPeriod.am ? ' AM' : ' PM');
     return GestureDetector(
         onTap: () async {
           final TimeOfDay? picked = await showTimePicker(
@@ -30,7 +40,7 @@ class _TimePickerButtonState extends State<TimePickerButton> {
           }
         },
         child: Container(
-            padding: const EdgeInsets.fromLTRB(20, 10, 10, 10),
+            padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               color: Theme.of(context).cardColor,
@@ -42,61 +52,26 @@ class _TimePickerButtonState extends State<TimePickerButton> {
                 BoxShadow(
                   color: Constants.customGray,
                   // color: Theme.of(context).shadowColor.withOpacity(0.5),
-                  blurRadius: 1,
-                  spreadRadius: 1,
-                  offset: Offset(2, 2),
+                  blurRadius: 0.5,
+                  spreadRadius: 0.5,
+                  offset: Offset(1, 1),
                 ),
               ],
             ),
-            width: 150,
+            // width: 150,
             height: 60,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Expanded(
-                  flex: 2,
-                  child: Text(
-                    widget.selectedTime.hour.toString(),
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Theme.of(context).shadowColor,
-                      fontWeight: FontWeight.bold,
-                    ),
+                Text(
+                  timeString,
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Theme.of(context).shadowColor,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                Expanded(
-                  flex: 1,
-                  child: Text(
-                    ':',
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Theme.of(context).shadowColor,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                Expanded(
-                  flex: 2,
-                  child: Text(
-                    widget.selectedTime.minute.toString(),
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Theme.of(context).shadowColor,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                Expanded(
-                  flex: 2,
-                  child: Text(
-                    widget.selectedTime.period == DayPeriod.am ? 'AM' : 'PM',
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: Theme.of(context).shadowColor,
-                    ),
-                  ),
-                ),
-                // Expanded(flex: 2, child: Image.asset('assets/Icons/clock.png'))
               ],
             )));
   }

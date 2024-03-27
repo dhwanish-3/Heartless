@@ -239,9 +239,11 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
               ),
             ),
           ),
-          MessageField(
-            messageController: _messageController,
-            sendMessage: sendMessage,
+          SafeArea(
+            child: MessageField(
+              messageController: _messageController,
+              sendMessage: sendMessage,
+            ),
           ),
         ],
       ),

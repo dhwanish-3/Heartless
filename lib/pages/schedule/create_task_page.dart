@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/backend/controllers/activity_controller.dart';
-import 'package:heartless/pages/date_picker.dart';
 import 'package:heartless/services/enums/activity_status.dart';
 import 'package:heartless/services/enums/activity_type.dart';
 import 'package:heartless/services/utils/toast_message.dart';
 import 'package:heartless/shared/constants.dart';
 import 'package:heartless/shared/models/activity.dart';
 import 'package:heartless/shared/models/app_user.dart';
-import 'package:heartless/shared/provider/widget_provider.dart';
 import 'package:heartless/widgets/auth/text_input.dart';
 import 'package:heartless/widgets/schedule/date_picker_button.dart';
+import 'package:heartless/widgets/schedule/discret_date_picker.dart';
 import 'package:heartless/widgets/schedule/time_picker_button.dart';
-import 'package:provider/provider.dart';
 
 class TaskFormPage extends StatefulWidget {
   final AppUser patient;
@@ -24,8 +22,9 @@ class TaskFormPage extends StatefulWidget {
 class _TaskFormPageState extends State<TaskFormPage> {
   final _formKey = GlobalKey<FormState>();
   final ActivityController _activityController = ActivityController();
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
+  late TextEditingController _titleController;
+  late TextEditingController _descriptionController;
+  final List<DateTime> _selectedDates = [];
 
   bool clicked = false;
 
@@ -38,9 +37,21 @@ class _TaskFormPageState extends State<TaskFormPage> {
   // for date selector (date picker)
 
   @override
+  void initState() {
+    super.initState();
+    _titleController = TextEditingController();
+    _descriptionController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _descriptionController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    WidgetNotifier widgetNotifier =
-        Provider.of<WidgetNotifier>(context, listen: false);
     final List<String> listOfDropdownItems = [];
     for (ActivityType type in ActivityType.values) {
       listOfDropdownItems.add(type.value);
@@ -63,7 +74,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
 
     Future<void> _addActivityForSelectedDates(Activity activity) async {
       // add activity for selected dates
-      for (DateTime date in widgetNotifier.chosenDates) {
+      for (DateTime date in _selectedDates) {
         activity.time = DateTime(
           date.year,
           date.month,
@@ -77,6 +88,16 @@ class _TaskFormPageState extends State<TaskFormPage> {
 
     void _submitForm() async {
       if (!_formKey.currentState!.validate()) {
+        return;
+      }
+
+      if (startDate.isAfter(endDate)) {
+        ToastMessage().showError('Start date cannot be after end date');
+        return;
+      }
+
+      if (dateDropDownValue == 'Selective Days' && _selectedDates.isEmpty) {
+        ToastMessage().showError('Please select at least one date');
         return;
       }
       // handling multiple clicks
@@ -102,6 +123,14 @@ class _TaskFormPageState extends State<TaskFormPage> {
       }
 
       clicked = false;
+
+      // clear form
+      _titleController.clear();
+      _descriptionController.clear();
+
+      ToastMessage().showSuccess('Task added successfully');
+      // go back to previous page
+      Navigator.pop(context);
     }
 
     return SafeArea(
@@ -121,8 +150,12 @@ class _TaskFormPageState extends State<TaskFormPage> {
           ),
           actions: [
             IconButton(
+              padding: EdgeInsets.zero,
               onPressed: _submitForm,
-              icon: const Icon(Icons.save),
+              icon: const Icon(
+                size: 30,
+                Icons.save,
+              ),
             ),
           ],
         ),
@@ -133,12 +166,6 @@ class _TaskFormPageState extends State<TaskFormPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // const SizedBox(height: 20),
-                // Text(
-                //   'Create Task',
-                //   style: Theme.of(context).textTheme.displayLarge,
-                // ),
-                const SizedBox(height: 20),
                 SelectorWidgetRow(
                     text: 'Category',
                     childWidget: Container(
@@ -150,13 +177,13 @@ class _TaskFormPageState extends State<TaskFormPage> {
                             color: Theme.of(context).shadowColor,
                             width: 0.6,
                           ),
-                          boxShadow: const [
+                          boxShadow: [
                             BoxShadow(
-                              color: Constants.customGray,
-                              // color: Theme.of(context).shadowColor.withOpacity(0.5),
-                              blurRadius: 1,
-                              spreadRadius: 1,
-                              offset: Offset(2, 2),
+                              // color: Constants.customGray,
+                              color: Theme.of(context).highlightColor,
+                              blurRadius: 0.5,
+                              spreadRadius: 0.5,
+                              offset: Offset(1, 1),
                             ),
                           ],
                         ),
@@ -213,9 +240,9 @@ class _TaskFormPageState extends State<TaskFormPage> {
                             BoxShadow(
                               color: Constants.customGray,
                               // color: Theme.of(context).shadowColor.withOpacity(0.5),
-                              blurRadius: 1,
-                              spreadRadius: 1,
-                              offset: Offset(2, 2),
+                              blurRadius: 0.5,
+                              spreadRadius: 0.5,
+                              offset: Offset(1, 1),
                             ),
                           ],
                         ),
@@ -242,10 +269,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
                         onEndDateChanged: (newDate) {
                           endDate = newDate;
                         })
-                    : const SizedBox(
-                        height: 300,
-                        child: DatePicker(),
-                      ),
+                    : DiscreteDateSelector(selectedDates: _selectedDates),
               ],
             ),
           ),
@@ -284,7 +308,10 @@ class DropDownWidget extends StatelessWidget {
               padding: const EdgeInsets.all(10),
               child: Text(
                 value,
-                style: Theme.of(context).textTheme.bodyLarge,
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Theme.of(context).shadowColor,
+                ),
               )),
         );
       }).toList(),
@@ -317,14 +344,15 @@ class SelectorWidgetRow extends StatelessWidget {
             height: 60,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
-              color: Theme.of(context).cardColor,
+              // color: Theme.of(context).cardColor,
             ),
             child: Center(
               child: Text(
                 text,
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: 22,
                   color: Theme.of(context).shadowColor,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             )),
@@ -373,6 +401,7 @@ class _DateRangeSelectorState extends State<DateRangeSelector> {
             // Wrap DatePickerButton in Flexible
             child: DatePickerButton(
               selectedDate: _startDate,
+              startDate: DateTime.now(),
               onChanged: (newDate) {
                 setState(() {
                   // todo: implement using widgetNotifier
@@ -390,6 +419,7 @@ class _DateRangeSelectorState extends State<DateRangeSelector> {
             // Wrap DatePickerButton in Flexible
             child: DatePickerButton(
               selectedDate: _endDate,
+              startDate: _startDate,
               onChanged: (newDate) {
                 setState(() {
                   // todo: implement using widgetNotifier

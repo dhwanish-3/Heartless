@@ -3,11 +3,13 @@ import 'package:heartless/shared/constants.dart';
 
 class DatePickerButton extends StatefulWidget {
   DateTime selectedDate;
+  DateTime startDate;
   final ValueChanged<DateTime> onChanged;
   DatePickerButton({
     super.key,
     required this.selectedDate,
     required this.onChanged,
+    required this.startDate,
   });
 
   @override
@@ -19,16 +21,16 @@ class _DatePickerButtonState extends State<DatePickerButton> {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: widget.selectedDate,
-      firstDate: DateTime(2015, 8),
+      firstDate: DateTime.now(),
       lastDate: DateTime(2025),
     );
     if (picked != null && picked != widget.selectedDate) {
-      if (picked.isBefore(DateTime.now())) {
+      if (picked.isBefore(widget.startDate)) {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
             title: const Text('Error'),
-            content: const Text('Please enter a date that is not in the past.'),
+            content: const Text('Please enter date range'),
             actions: <Widget>[
               TextButton(
                 child: const Text('OK'),
@@ -70,92 +72,43 @@ class _DatePickerButtonState extends State<DatePickerButton> {
                 BoxShadow(
                   color: Constants.customGray,
                   // color: Theme.of(context).shadowColor.withOpacity(0.5),
-                  blurRadius: 1,
-                  spreadRadius: 1,
-                  offset: Offset(2, 2),
+                  blurRadius: 0.5,
+                  spreadRadius: 0.5,
+                  offset: Offset(1, 1),
                 ),
               ],
             ),
-            width: 220,
+            width: 200,
             height: 60,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Expanded(
-                  flex: 2,
+                FittedBox(
+                  fit: BoxFit.fitWidth,
                   child: Text(
-                    widget.selectedDate.day.toString(),
+                    widget.selectedDate.day.toString() +
+                        '-' +
+                        widget.selectedDate.month.toString() +
+                        '-' +
+                        widget.selectedDate.year.toString() +
+                        ' ' +
+                        daysOfWeek[widget.selectedDate.weekday - 1].toString(),
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Theme.of(context).shadowColor,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: Text(
-                    '-',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Theme.of(context).shadowColor,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                Expanded(
-                  flex: 2,
-                  child: Text(
-                    widget.selectedDate.month.toString(),
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Theme.of(context).shadowColor,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: Text(
-                    // widget.selectedTime.period == DayPeriod.am ? 'AM' : 'PM',
-                    '-',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Theme.of(context).shadowColor,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                Expanded(
-                  flex: 4,
-                  child: Text(
-                    textAlign: TextAlign.center,
-                    widget.selectedDate.year.toString(),
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Theme.of(context).shadowColor,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                Expanded(
-                  flex: 4,
-                  child: Text(
-                    textAlign: TextAlign.center,
-                    daysOfWeek[widget.selectedDate.weekday - 1].toString(),
                     style: TextStyle(
                       fontSize: 18,
                       color: Theme.of(context).shadowColor,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ),
-                Expanded(
-                  flex: 2,
-                  child: Image.asset('assets/Icons/calendar.png'),
+                SizedBox(
+                  height: 20,
+                  width: 20,
+                  child: Icon(
+                    Icons.calendar_month,
+                    color: Theme.of(context).shadowColor,
+                    size: 20,
+                  ),
                 ),
               ],
             )));

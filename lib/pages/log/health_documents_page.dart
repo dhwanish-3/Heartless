@@ -152,7 +152,8 @@ class _HealthDocumentsPageState extends State<HealthDocumentsPage> {
           child: Column(
             children: [
               SizedBox(
-                height: 300,
+                //todo alternatives to specifying height
+                height: MediaQuery.of(context).size.height,
                 child: StreamBuilder(
                     stream: HealthDocumentController.getHealthDocuments(
                         widget.patientId),
