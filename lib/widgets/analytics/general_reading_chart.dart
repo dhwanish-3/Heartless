@@ -8,11 +8,14 @@ class GeneralReadingChart extends StatelessWidget {
   final String patientId;
   final MedicalReadingType readingType;
   final DateTime date;
-  const GeneralReadingChart(
-      {super.key,
-      required this.patientId,
-      required this.date,
-      required this.readingType});
+  static final emptyWidget = Container();
+
+  const GeneralReadingChart({
+    super.key,
+    required this.patientId,
+    required this.date,
+    required this.readingType,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -58,10 +61,10 @@ class GeneralReadingChart extends StatelessWidget {
                     ),
                   ]);
             } else {
-              return Container();
+              return emptyWidget;
             }
           } else {
-            return Container();
+            return emptyWidget;
           }
         },
       ),

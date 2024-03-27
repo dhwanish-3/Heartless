@@ -14,7 +14,7 @@ class YearMonthWeekSelector extends StatefulWidget {
 }
 
 class _YearMonthWeekSelectorState extends State<YearMonthWeekSelector> {
-  final int startYear = 2024;
+  final int startYear = 2022;
   final int currentYear = DateTime.now().year;
   final int startMonth = 3; // March
   final int currentMonth = DateTime.now().month;

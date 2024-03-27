@@ -30,11 +30,6 @@ class HomePageHeadingWidget extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          const Icon(
-                            Icons.notifications_active_outlined,
-                            color: Colors.white,
-                            size: 30,
-                          ),
                           const SizedBox(width: 15),
                           const Icon(
                             Icons.message_rounded,

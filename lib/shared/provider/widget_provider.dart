@@ -111,14 +111,14 @@ class WidgetNotifier with ChangeNotifier {
 
   int get analyticsSelectedYear => _analyticsSelectedYear;
 
-  bool _isGraphEmpty = false;
+  bool _isGraphEmpty = true;
   bool get isGraphEmpty => _isGraphEmpty;
-  void setGraphEmpty(bool isEmpty) {
-    _isGraphEmpty = isEmpty;
+  void setIsGraphEmpty(bool value) {
+    _isGraphEmpty = value;
     notifyListeners();
   }
 
-  void setGraphEmptyWithoutNotifying(bool isEmpty) {
-    _isGraphEmpty = isEmpty;
+  void setIsGraphEmptyWithoutNotifying(bool value) {
+    _isGraphEmpty = value;
   }
 }

@@ -29,11 +29,19 @@ class WeekSelectorWidget extends StatefulWidget {
     DateTime firstDay = DateTime.parse('${year}-${monthStr}-01');
     DateTime lastDay = DateTime.parse(
         '${year}-${monthStr}-${DateTime(year, month + 1, 0).day}');
+
+    // Find the most recent Monday
+    while (firstDay.weekday != DateTime.monday) {
+      firstDay = firstDay.add(Duration(days: 1));
+    }
+
     DateTime currentDay = firstDay;
     DateTime now = DateTime.now();
     while (currentDay.isBefore(lastDay)) {
       DateTime weekStart = currentDay;
       DateTime weekEnd = currentDay.add(Duration(days: 6));
+
+      //* should be uncommented after we are specifying the start date and enddate for graph widgets
       if (weekStart.isAfter(now)) {
         break;
       }
@@ -82,7 +90,7 @@ class WeekSliderWidget extends StatelessWidget {
     return Container(
       height: 30,
       width: 200,
-      padding: const EdgeInsets.all(4),
+      padding: const EdgeInsets.all(2),
       decoration: BoxDecoration(
         color: Theme.of(context).secondaryHeaderColor,
         borderRadius: BorderRadius.circular(10),
@@ -118,7 +126,7 @@ class WeekSliderWidget extends StatelessWidget {
               itemCount: weeks.length,
               itemBuilder: (context, index) {
                 return Container(
-                  padding: const EdgeInsets.all(5),
+                  padding: const EdgeInsets.all(0),
                   child: FittedBox(
                     fit: BoxFit.fitWidth,
                     child: Text('${weeks[index][0]} - ${weeks[index][1]}',
