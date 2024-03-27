@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:heartless/backend/controllers/diary_controller.dart';
-import 'package:heartless/shared/constants.dart';
 import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/shared/models/diary.dart';
 import 'package:heartless/shared/provider/widget_provider.dart';
@@ -87,7 +86,7 @@ class _DiaryListState extends State<DiaryListBuilder> {
                     crossAxisCount: 2,
                   ),
                   itemCount: snapshot.data.docs.length,
-                  padding: const EdgeInsets.all(12),
+                  // padding: const EdgeInsets.all(12),
                   itemBuilder: (context, index) {
                     Diary diary =
                         Diary.fromMap(snapshot.data.docs[index].data());
@@ -120,18 +119,18 @@ class _DiaryListState extends State<DiaryListBuilder> {
                                   left: 4.0, right: 4, bottom: 5, top: 5),
                               child: Material(
                                 elevation: 1,
-                                color: Constants.lightPrimaryColor,
+                                // color: Constants.lightPrimaryColor,
                                 borderRadius: BorderRadius.circular(24),
                                 child: Padding(
                                   padding: const EdgeInsets.only(
-                                      bottom: 20, top: 10, right: 20, left: 20),
+                                      bottom: 20, top: 10, right: 16, left: 16),
                                   child: Column(
                                     children: [
                                       Text(
                                         diary.title,
                                         textAlign: TextAlign.center,
                                         style: const TextStyle(
-                                          fontSize: 20,
+                                          fontSize: 18,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
@@ -139,13 +138,21 @@ class _DiaryListState extends State<DiaryListBuilder> {
                                       Text(
                                         diary.time.toString().substring(0, 10),
                                         style: TextStyle(
-                                          color: Theme.of(context).canvasColor,
+                                          fontSize: 14,
+                                          color:
+                                              Theme.of(context).highlightColor,
                                         ),
                                       ),
                                       const Divider(
                                         thickness: 0.5,
                                       ),
-                                      Text(diary.body)
+                                      Text(
+                                        diary.body,
+                                        style: TextStyle(
+                                          color: Theme.of(context).shadowColor,
+                                          fontSize: 14,
+                                        ),
+                                      )
                                     ],
                                   ),
                                 ),

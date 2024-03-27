@@ -9,6 +9,7 @@ import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/shared/models/reading.dart';
 import 'package:heartless/shared/provider/widget_provider.dart';
 import 'package:heartless/widgets/log/add_button.dart';
+import 'package:heartless/widgets/log/diary_list.dart';
 import 'package:heartless/widgets/log/hero_dialog.dart';
 import 'package:heartless/widgets/log/reading_tile.dart';
 import 'package:provider/provider.dart';
@@ -312,12 +313,62 @@ class _DayWiseLogState extends State<DayWiseLogPage> {
                               );
                             });
                       } else {
-                        return Center(
-                          child: const Text("No reading available"),
-                        );
+                        return Container();
                       }
                     });
-              })
+              }),
+              Row(
+                children: [
+                  const SizedBox(width: 20),
+                  Expanded(
+                    child: Divider(
+                      color: Theme.of(context).shadowColor,
+                      thickness: 1,
+                    ),
+                  ),
+                  Text(
+                    ' Diary Entries ',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).shadowColor,
+                    ),
+                  ),
+                  Expanded(
+                    child: Divider(
+                      color: Theme.of(context).shadowColor,
+                      thickness: 1,
+                    ),
+                  ),
+                  const SizedBox(width: 20),
+                ],
+              ),
+              IntrinsicHeight(
+                child: Container(
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 0,
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 10,
+                  ),
+                  // height: 200,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    // color: Theme.of(context).secondaryHeaderColor,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      DiaryListBuilder(
+                        patient: widget.patient,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
         ));

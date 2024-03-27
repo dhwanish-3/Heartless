@@ -61,45 +61,51 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 12),
           child: Consumer<WidgetNotifier>(builder: (context, value, child) {
+            widgetNotifier.setIsGraphEmptyWithoutNotifying(true);
+            var activityGraphs = [
+              RadialBarChart(
+                patientId: widget.patientId,
+                date: widgetNotifier.analyticsStartDate,
+              ),
+              LineDefaultChart(
+                activityType: ActivityType.exercise,
+                patientId: widget.patientId,
+                date: widgetNotifier.analyticsStartDate,
+              ),
+              LineDefaultChart(
+                activityType: ActivityType.medicine,
+                patientId: widget.patientId,
+                date: widgetNotifier.analyticsStartDate,
+              ),
+              LineDefaultChart(
+                activityType: ActivityType.diet,
+                patientId: widget.patientId,
+                date: widgetNotifier.analyticsStartDate,
+              ),
+            ];
+
+            List<Widget> readingGraphs = [
+              BloodPressureChart(
+                patientId: widget.patientId,
+                date: widgetNotifier.analyticsStartDate,
+              ),
+              for (var readingType in MedicalReadingType.values)
+                (GeneralReadingChart(
+                  patientId: widget.patientId,
+                  readingType: readingType,
+                  date: widgetNotifier.analyticsStartDate,
+                )),
+              SizedBox(
+                  height: 100,
+                  child: Center(child: Text('End of available data'))),
+            ];
+
             return Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                RadialBarChart(
-                  patientId: widget.patientId,
-                  date: widgetNotifier.analyticsStartDate,
-                ),
-                LineDefaultChart(
-                  activityType: ActivityType.exercise,
-                  patientId: widget.patientId,
-                  date: widgetNotifier.analyticsStartDate,
-                ),
-                LineDefaultChart(
-                  activityType: ActivityType.medicine,
-                  patientId: widget.patientId,
-                  date: widgetNotifier.analyticsStartDate,
-                ),
-                LineDefaultChart(
-                  activityType: ActivityType.diet,
-                  patientId: widget.patientId,
-                  date: widgetNotifier.analyticsStartDate,
-                ),
-                BloodPressureChart(
-                  patientId: widget.patientId,
-                  date: widgetNotifier.analyticsStartDate,
-                ),
-                GeneralReadingChart(
-                  patientId: widget.patientId,
-                  readingType: MedicalReadingType.weight,
-                  date: widgetNotifier.analyticsStartDate,
-                ),
-                widgetNotifier.isGraphEmpty
-                    ? Container(
-                        height: 200,
-                        color: Colors.red,
-                      )
-                    : const SizedBox(),
-              ],
+              children: widgetNotifier.emailPhoneToggle
+                  ? activityGraphs
+                  : readingGraphs,
             );
           }),
         ),

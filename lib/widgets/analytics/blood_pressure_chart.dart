@@ -7,8 +7,12 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 class BloodPressureChart extends StatelessWidget {
   final String patientId;
   final DateTime date;
-  const BloodPressureChart(
-      {super.key, required this.patientId, required this.date});
+
+  const BloodPressureChart({
+    super.key,
+    required this.patientId,
+    required this.date,
+  });
 
   @override
   Widget build(BuildContext context) {
