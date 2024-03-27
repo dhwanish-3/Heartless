@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/services/enums/custom_file_type.dart';
-import 'package:heartless/shared/constants.dart';
 import 'package:heartless/widgets/miscellaneous/tag_tile.dart';
 
 class FileTile extends StatelessWidget {
@@ -17,7 +16,7 @@ class FileTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: Constants.cardColor,
+        color: Theme.of(context).secondaryHeaderColor,
         padding: const EdgeInsets.symmetric(
           horizontal: 10,
           vertical: 6,

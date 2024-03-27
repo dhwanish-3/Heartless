@@ -67,7 +67,7 @@ class _HealthTagSelctionWidgetState extends State<HealthTagSelctionWidget> {
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: Colors.black,
+                color: Theme.of(context).shadowColor,
               ),
             ),
             const SizedBox(height: 5),
@@ -81,8 +81,13 @@ class _HealthTagSelctionWidgetState extends State<HealthTagSelctionWidget> {
                       vertical: 5,
                     ),
                     decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor,
+                      // color: Theme.of(context).primaryColor,
+                      color: item.tagColor.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: Theme.of(context).shadowColor,
+                        width: 1,
+                      ),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -90,7 +95,8 @@ class _HealthTagSelctionWidgetState extends State<HealthTagSelctionWidget> {
                         Text(
                           item.value,
                           style: TextStyle(
-                            color: Colors.white,
+                            // color: Theme.of(context).shadowColor,
+                            color: item.tagColor,
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                           ),
@@ -100,7 +106,8 @@ class _HealthTagSelctionWidgetState extends State<HealthTagSelctionWidget> {
                           child: Icon(
                             Icons.close,
                             size: 16,
-                            color: Colors.white,
+                            color: Theme.of(context).shadowColor,
+                            // color: item.tagColor,
                           ),
                           onTap: () {
                             setState(() {
@@ -183,7 +190,7 @@ class _HealthTagSelctionWidgetState extends State<HealthTagSelctionWidget> {
                                         color: widget.selectedList
                                                 .contains(dataList[index])
                                             ? Theme.of(context).primaryColor
-                                            : Colors.black,
+                                            : Theme.of(context).shadowColor,
                                       ),
                                     ),
                                   ],

@@ -81,7 +81,7 @@ extension EventTagExtension on EventTag {
       case EventTag.instruction:
         return Colors.indigo;
       case EventTag.operativeReport:
-        return Colors.brown;
+        return Colors.redAccent;
       case EventTag.pil:
         return Colors.cyan;
       case EventTag.prescription:
@@ -91,13 +91,13 @@ extension EventTagExtension on EventTag {
       case EventTag.radiology:
         return Colors.amber;
       case EventTag.surgery:
-        return Colors.lime;
+        return Colors.purple.shade900;
       case EventTag.treatment:
         return Colors.lightBlue;
       case EventTag.vaccination:
         return Colors.lightGreen;
       case EventTag.xRay:
-        return Colors.yellow;
+        return Colors.yellow.shade900;
       default:
         return Colors.grey;
     }

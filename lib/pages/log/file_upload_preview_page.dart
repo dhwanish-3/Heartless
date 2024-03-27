@@ -71,7 +71,7 @@ class FileUploadPreviewPage extends StatelessWidget {
                 margin: const EdgeInsets.symmetric(
                   horizontal: 20,
                 ),
-                height: 250,
+                height: 200,
                 decoration: BoxDecoration(
                   color: Theme.of(context).secondaryHeaderColor,
                   borderRadius: BorderRadius.circular(10),
@@ -81,10 +81,14 @@ class FileUploadPreviewPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Image.asset(
-                        'assets/Icons/fileFormat/documentPreview.png',
-                        height: 60,
-                        width: 60,
+                      // Image.asset(
+                      //   'assets/Icons/fileFormat/documentPreview.png',
+                      //   height: 60,
+                      //   width: 60,
+                      // ),
+                      Icon(
+                        Icons.insert_drive_file,
+                        size: 50,
                       ),
                       Flexible(
                         child: Text(file.name,
@@ -92,14 +96,17 @@ class FileUploadPreviewPage extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                             maxLines: 3,
                             style: TextStyle(
-                              color: Colors.black54,
+                              color: Theme.of(context)
+                                  .shadowColor
+                                  .withOpacity(0.6),
                               fontSize: 24,
                             )),
                       ),
                       const SizedBox(height: 5),
                       Text(convertBytes(file.size),
                           style: TextStyle(
-                            color: Colors.black54,
+                            color:
+                                Theme.of(context).shadowColor.withOpacity(0.6),
                             fontSize: 20,
                           )),
                     ],
@@ -110,33 +117,64 @@ class FileUploadPreviewPage extends StatelessWidget {
                 selectedList: selectedList,
               ),
               Container(
-                padding: const EdgeInsets.all(20),
-                child: TextFormField(
-                  maxLines: 3,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 16,
-                  ),
-                  decoration: InputDecoration(
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(
-                        color: Theme.of(context).primaryColor,
-                        width: 1,
+                // padding: const EdgeInsets.all(20),
+                margin: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 10,
+                ),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 10,
+                ),
+                // height: 200,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).secondaryHeaderColor,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Comment',
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).shadowColor,
                       ),
                     ),
-                    labelText: 'Description',
-                    labelStyle: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 16,
+                    const SizedBox(height: 10),
+                    TextFormField(
+                      maxLines: 3,
+                      style: TextStyle(
+                        color: Theme.of(context).shadowColor,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 16,
+                      ),
+                      decoration: InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(
+                            color: Theme.of(context).primaryColor,
+                            width: 1,
+                          ),
+                        ),
+                        labelText: 'Description',
+                        labelStyle: TextStyle(
+                          color: Theme.of(context).shadowColor.withOpacity(0.6),
+                          fontWeight: FontWeight.w400,
+                          fontSize: 16,
+                        ),
+                        hintText: 'Enter a description for the file',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(
+                            10,
+                          ),
+                        ),
+                      ),
                     ),
-                    hintText: 'Enter a description for the file',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
+                  ],
                 ),
               ),
               const SizedBox(height: 20),
