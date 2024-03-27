@@ -103,29 +103,48 @@ class _HealthDocumentsPageState extends State<HealthDocumentsPage> {
         backgroundColor: Constants.primaryColor,
         child: const Icon(Icons.add),
       ),
-      appBar: AppBar(
-        title: SearchBar(
-          controller: _searchController,
-          hintText: 'Search by tag or title',
-          hintStyle: MaterialStateProperty.all(
-            TextStyle(
-              color: Colors.grey,
-              fontSize: 16,
-            ),
-          ),
-          leading: Container(
-            height: 40,
-            width: 40,
-            margin: const EdgeInsets.fromLTRB(0, 5, 12, 0),
-            child: Image.asset('assets/Icons/magnifyingGlass.png', scale: 2),
-          ),
-          onChanged: (text) {
-            setState(() {});
-            {
-              // ! search functionality
-              print(text);
-            }
-          },
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(60),
+        child: SafeArea(
+          child: Container(
+              margin: const EdgeInsets.only(
+                  // top: 30,
+                  // left: 20,
+                  // right: 20,
+                  ),
+              height: 60,
+              child: SearchBar(
+                onChanged: (value) {
+                  setState(() {});
+                },
+                controller: _searchController,
+                hintText: 'Search with tag or title...',
+                textStyle: MaterialStateTextStyle.resolveWith(
+                  (Set<MaterialState> states) {
+                    return TextStyle(
+                      color: Theme.of(context).shadowColor,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w400,
+                    );
+                  },
+                ),
+                shadowColor: MaterialStateColor.resolveWith(
+                    (states) => Theme.of(context).highlightColor),
+                surfaceTintColor: MaterialStateColor.resolveWith(
+                  (states) =>
+                      // Theme.of(context).scaffoldBackgroundColor,
+                      Colors.white,
+                ),
+                leading: InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: const Icon(Icons.arrow_back_sharp),
+                  ),
+                ),
+              )),
         ),
       ),
       body: SafeArea(
@@ -162,8 +181,8 @@ class _HealthDocumentsPageState extends State<HealthDocumentsPage> {
                               if (documentDatesIndex.contains(index)) {
                                 return Column(children: [
                                   MonthDivider(
-                                      month: healthDocument.createdAt.month
-                                          .toString(),
+                                      month: DateService.getMonthFormatMMM(
+                                          healthDocument.createdAt.month),
                                       year: healthDocument.createdAt.year
                                           .toString()),
                                   _buildDocumentTile(healthDocument)

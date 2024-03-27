@@ -46,44 +46,49 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(90),
-          child: Container(
-              margin: const EdgeInsets.symmetric(
-                vertical: 30,
-                horizontal: 20,
-              ),
-              child: SearchBar(
-                onChanged: (value) {
-                  setState(() {});
-                },
-                controller: _searchController,
-                hintText: 'Search for shortcuts...',
-                textStyle: MaterialStateTextStyle.resolveWith(
-                  (Set<MaterialState> states) {
-                    return TextStyle(
-                      color: Theme.of(context).shadowColor,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w400,
-                    );
-                  },
+          preferredSize: const Size.fromHeight(80),
+          child: SafeArea(
+            child: Container(
+                margin: const EdgeInsets.only(
+                  // top: 30,
+                  left: 20,
+                  right: 20,
+                  bottom: 10,
                 ),
-                shadowColor: MaterialStateColor.resolveWith(
-                    (states) => Theme.of(context).highlightColor),
-                surfaceTintColor: MaterialStateColor.resolveWith(
-                  (states) =>
-                      // Theme.of(context).scaffoldBackgroundColor,
-                      Colors.white,
-                ),
-                leading: InkWell(
-                  onTap: () {
-                    Navigator.pop(context);
+                height: 60,
+                child: SearchBar(
+                  onChanged: (value) {
+                    setState(() {});
                   },
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 10),
-                    child: const Icon(Icons.arrow_back_sharp),
+                  controller: _searchController,
+                  hintText: 'Search for shortcuts...',
+                  textStyle: MaterialStateTextStyle.resolveWith(
+                    (Set<MaterialState> states) {
+                      return TextStyle(
+                        color: Theme.of(context).shadowColor,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w400,
+                      );
+                    },
                   ),
-                ),
-              )),
+                  shadowColor: MaterialStateColor.resolveWith(
+                      (states) => Theme.of(context).highlightColor),
+                  surfaceTintColor: MaterialStateColor.resolveWith(
+                    (states) =>
+                        // Theme.of(context).scaffoldBackgroundColor,
+                        Colors.white,
+                  ),
+                  leading: InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: const Icon(Icons.arrow_back_sharp),
+                    ),
+                  ),
+                )),
+          ),
         ),
         body: SafeArea(
             child: SingleChildScrollView(
