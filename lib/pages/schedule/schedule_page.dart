@@ -43,6 +43,7 @@ class SchedulePage extends StatelessWidget {
           child: ReminderCard(
             activity: activity,
             patient: patient,
+            isPatient: authNotifier.userType == UserType.patient,
           ),
         );
       }

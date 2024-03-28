@@ -30,7 +30,7 @@ class _ChatTileState extends State<ChatTile> {
         width: screenWidth,
         color: Theme.of(context).primaryColor.withOpacity(0.05),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
           child: Row(
             children: [
               ClipRRect(

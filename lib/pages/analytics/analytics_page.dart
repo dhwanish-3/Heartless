@@ -90,14 +90,16 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                 date: widgetNotifier.analyticsStartDate,
               ),
               for (var readingType in MedicalReadingType.values)
-                (GeneralReadingChart(
-                  patientId: widget.patientId,
-                  readingType: readingType,
-                  date: widgetNotifier.analyticsStartDate,
-                )),
+                if (readingType != MedicalReadingType.bloodPressure)
+                  GeneralReadingChart(
+                    patientId: widget.patientId,
+                    readingType: readingType,
+                    date: widgetNotifier.analyticsStartDate,
+                  ),
               SizedBox(
-                  height: 100,
-                  child: Center(child: Text('End of available data'))),
+                height: 100,
+                child: Center(child: Text('End of available data')),
+              ),
             ];
 
             return Column(

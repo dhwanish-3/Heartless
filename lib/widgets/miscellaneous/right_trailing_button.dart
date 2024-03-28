@@ -6,10 +6,13 @@ import 'package:provider/provider.dart';
 class RightButton extends StatelessWidget {
   final String text;
   final String imageUrl;
-  const RightButton(
-      {super.key,
-      required this.text,
-      this.imageUrl = 'assets/Icons/rightNav.svg'});
+  final bool showTrailingIcon;
+  const RightButton({
+    super.key,
+    required this.text,
+    this.imageUrl = 'assets/Icons/rightNav.svg',
+    this.showTrailingIcon = true,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -46,13 +49,15 @@ class RightButton extends StatelessWidget {
                     ),
                   ),
                 ),
-                Expanded(
-                  flex: 1,
-                  child: SvgPicture.asset(
-                    imageUrl,
-                    height: 20,
-                  ),
-                ),
+                showTrailingIcon
+                    ? Expanded(
+                        flex: 1,
+                        child: SvgPicture.asset(
+                          imageUrl,
+                          height: 20,
+                        ),
+                      )
+                    : const SizedBox(),
               ],
             );
           } else {
