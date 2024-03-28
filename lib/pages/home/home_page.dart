@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:heartless/pages/analytics/analytics_page.dart';
-import 'package:heartless/pages/auth/dummy_home.dart';
 import 'package:heartless/pages/chat/contacts_page.dart';
 import 'package:heartless/pages/home/doctor_nurse_home_page.dart';
 import 'package:heartless/pages/home/patient_home_page.dart';
@@ -34,7 +33,6 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     final AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
-    _selectedIndex = authNotifier.appUser!.userType == UserType.patient ? 0 : 1;
   }
 
   @override
@@ -47,7 +45,9 @@ class _HomePageState extends State<HomePage> {
     final AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
     List<Widget> _patientScreens = <Widget>[
-      PatientHomePage(),
+      PatientHomePage(
+        user: authNotifier.appUser!,
+      ),
       DayWiseLogPage(
         patient: authNotifier.appUser!,
       ),
@@ -61,9 +61,9 @@ class _HomePageState extends State<HomePage> {
     ];
 
     List<Widget> _doctorNurseScreens = <Widget>[
-      ContactsPage(),
       DoctorNurseHomePage(),
-      DummyHome(),
+      ContactsPage(),
+      ProfilePage(),
     ];
     const patientTabs = const [
       GButton(
@@ -90,18 +90,19 @@ class _HomePageState extends State<HomePage> {
 
     const doctorNurseTabs = const [
       GButton(
-        icon: Icons.chat,
-        text: 'Chat',
-      ),
-      GButton(
         icon: Icons.home,
         text: 'Home',
+      ),
+      GButton(
+        icon: Icons.chat,
+        text: 'Chat',
       ),
       GButton(
         icon: Icons.person,
         text: 'Profile',
       ),
     ];
+
     return Scaffold(
       body: authNotifier.appUser!.userType == UserType.patient
           ? _patientScreens[_selectedIndex]
@@ -129,6 +130,7 @@ class _HomePageState extends State<HomePage> {
         borderRadius: BorderRadius.all(Radius.circular(40 * fem)),
       ),
       child: GNav(
+        selectedIndex: _selectedIndex,
         rippleColor: Constants.primaryColor.withOpacity(0.3),
         hoverColor: Constants.primaryColor.withOpacity(0.5),
         haptic: true,

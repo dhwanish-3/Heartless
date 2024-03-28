@@ -6,6 +6,7 @@ import 'package:heartless/backend/controllers/health_document_controller.dart';
 import 'package:heartless/services/enums/custom_file_type.dart';
 import 'package:heartless/services/enums/event_tag.dart';
 import 'package:heartless/widgets/miscellaneous/health_tag_selection.dart';
+import 'package:heartless/widgets/miscellaneous/right_trailing_button.dart';
 
 class FileUploadPreviewPage extends StatelessWidget {
   final PlatformFile file;
@@ -48,19 +49,37 @@ class FileUploadPreviewPage extends StatelessWidget {
           ),
         ),
         actions: [
-          IconButton(
-            iconSize: 30,
-            icon: Icon(Icons.check),
-            onPressed: () async {
-              // todo: change the tags to the selected tags
-              await HealthDocumentController().addHealthDocument(
-                  patientId,
-                  file.name,
-                  fileType,
-                  [EventTag.admittance, EventTag.labReport],
-                  File(file.path!));
-            },
-          ),
+          // IconButton(
+          //   iconSize: 30,
+          //   icon: Icon(Icons.check),
+          // onPressed: () async {
+          //   // todo: change the tags to the selected tags
+          //   await HealthDocumentController().addHealthDocument(
+          //       patientId,
+          //       file.name,
+          //       fileType,
+          //       [EventTag.admittance, EventTag.labReport],
+          //       File(file.path!));
+          // },
+          // ),
+          Padding(
+            padding: const EdgeInsets.only(
+              right: 20,
+            ),
+            child: RightButton(
+              text: 'Upload',
+              showTrailingIcon: false,
+              onTap: () async {
+                // todo: change the tags to the selected tags
+                await HealthDocumentController().addHealthDocument(
+                    patientId,
+                    file.name,
+                    fileType,
+                    [EventTag.admittance, EventTag.labReport],
+                    File(file.path!));
+              },
+            ),
+          )
         ],
       ),
       body: SafeArea(

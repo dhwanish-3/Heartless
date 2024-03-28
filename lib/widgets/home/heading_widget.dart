@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/pages/home/search_page.dart';
 import 'package:heartless/shared/constants.dart';
+import 'package:heartless/shared/models/app_user.dart';
 
 class HomePageHeadingWidget extends StatelessWidget {
-  const HomePageHeadingWidget({super.key});
+  final AppUser user;
+  const HomePageHeadingWidget({
+    super.key,
+    required this.user,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +53,7 @@ class HomePageHeadingWidget extends StatelessWidget {
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: const [
+                              children: [
                                 Text(
                                   'Welcome,',
                                   style: TextStyle(
@@ -57,7 +62,7 @@ class HomePageHeadingWidget extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  'Dr. John Doe ',
+                                  user.name,
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 30,
@@ -70,11 +75,7 @@ class HomePageHeadingWidget extends StatelessWidget {
                           CircleAvatar(
                             radius: 60,
                             backgroundColor: Colors.white,
-                            child: Icon(
-                              Icons.person,
-                              color: Constants.primaryColor,
-                              size: 40,
-                            ),
+                            backgroundImage: NetworkImage(user.imageUrl),
                           ),
                           const SizedBox(width: 8),
                         ],

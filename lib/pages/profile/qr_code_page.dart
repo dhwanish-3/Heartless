@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heartless/pages/auth/scan_qr_page.dart';
 import 'package:heartless/shared/models/app_user.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -92,22 +93,28 @@ class QRPopupWidget extends StatelessWidget {
                       width: 1,
                       style: BorderStyle.solid,
                     )),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.qr_code_scanner_rounded,
-                      color: Theme.of(context).primaryColor,
-                    ),
-                    const SizedBox(width: 5),
-                    Text('Open Scanner',
-                        style: TextStyle(
-                          color: Theme.of(context).shadowColor,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        )),
-                  ],
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (_) => const ScanQR()));
+                  },
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.qr_code_scanner_rounded,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                      const SizedBox(width: 5),
+                      Text('Open Scanner',
+                          style: TextStyle(
+                            color: Theme.of(context).shadowColor,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          )),
+                    ],
+                  ),
                 ))
           ],
         ),
