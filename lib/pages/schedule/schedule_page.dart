@@ -112,7 +112,7 @@ class SchedulePage extends StatelessWidget {
           ],
         ),
       )),
-      floatingActionButton: authNotifier.userType != UserType.patient
+      floatingActionButton: authNotifier.userType == UserType.patient
           ? FloatingActionButton(
               child: const Icon(Icons.add, size: 30),
               backgroundColor: Constants.primaryColor,

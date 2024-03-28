@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:heartless/pages/analytics/analytics_page.dart';
@@ -10,6 +12,7 @@ import 'package:heartless/pages/schedule/schedule_page.dart';
 import 'package:heartless/services/enums/user_type.dart';
 import 'package:heartless/shared/constants.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
+import 'package:heartless/shared/provider/widget_provider.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -20,30 +23,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _selectedIndex = 0;
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    final AuthNotifier authNotifier =
-        Provider.of<AuthNotifier>(context, listen: false);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     final AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
+    final WidgetNotifier widgetNotifier =
+        Provider.of<WidgetNotifier>(context, listen: false);
     List<Widget> _patientScreens = <Widget>[
       PatientHomePage(
         user: authNotifier.appUser!,
@@ -103,22 +88,39 @@ class _HomePageState extends State<HomePage> {
       ),
     ];
 
-    return Scaffold(
-      body: authNotifier.appUser!.userType == UserType.patient
-          ? _patientScreens[_selectedIndex]
-          : _doctorNurseScreens[_selectedIndex],
-      bottomNavigationBar: _buildGnav(
-        context,
-        authNotifier.appUser!.userType == UserType.patient
-            ? patientTabs
-            : doctorNurseTabs,
-      ),
+    return Consumer<WidgetNotifier>(
+      builder: (context, WidgetNotifier widgetNotifier, child) {
+        log(widgetNotifier.selectedIndex.toString());
+        return Scaffold(
+          body: authNotifier.appUser!.userType == UserType.patient
+              ? _patientScreens[widgetNotifier.selectedIndex]
+              : _doctorNurseScreens[widgetNotifier.selectedIndex],
+          bottomNavigationBar: _buildGnav(
+            context,
+            authNotifier.appUser!.userType == UserType.patient
+                ? patientTabs
+                : doctorNurseTabs,
+          ),
+        );
+      },
     );
+    // return Scaffold(
+    //   body: authNotifier.appUser!.userType == UserType.patient
+    //       ? _patientScreens[widgetNotifier.selectedIndex]
+    //       : _doctorNurseScreens[widgetNotifier.selectedIndex],
+    //   bottomNavigationBar: _buildGnav(
+    //     context,
+    //     authNotifier.appUser!.userType == UserType.patient
+    //         ? patientTabs
+    //         : doctorNurseTabs,
+    //   ),
+    // );
   }
 
   Widget _buildGnav(BuildContext context, List<GButton> tabs) {
     double fem = MediaQuery.of(context).size.width / 500;
-
+    final WidgetNotifier widgetNotifier =
+        Provider.of<WidgetNotifier>(context, listen: false);
     return Container(
       height: 80,
       margin: EdgeInsets.symmetric(
@@ -130,7 +132,7 @@ class _HomePageState extends State<HomePage> {
         borderRadius: BorderRadius.all(Radius.circular(40 * fem)),
       ),
       child: GNav(
-        selectedIndex: _selectedIndex,
+        selectedIndex: widgetNotifier.selectedIndex,
         rippleColor: Constants.primaryColor.withOpacity(0.3),
         hoverColor: Constants.primaryColor.withOpacity(0.5),
         haptic: true,
@@ -144,9 +146,7 @@ class _HomePageState extends State<HomePage> {
         tabBackgroundColor: Constants.primaryColor.withOpacity(0.1),
         padding: const EdgeInsets.all(16),
         onTabChange: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
+          widgetNotifier.setSelectedIndex(index);
         },
         tabs: tabs,
       ),

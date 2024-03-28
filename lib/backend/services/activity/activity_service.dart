@@ -113,7 +113,8 @@ class ActivityService {
 
   // to get all activities of the day
   static Stream<QuerySnapshot> getAllActivitiesOfTheDate(
-      DateTime date, String patientId) {
+      DateTime date, String patientId,
+      {int? limit, bool? reverse}) {
     DateTime startOfWeek = DateService.getStartOfWeek(date);
     DateTime startOfDay = DateService.getStartOfDay(date);
     return FirebaseFirestore.instance
@@ -126,6 +127,8 @@ class ActivityService {
         .where('time',
             isLessThan:
                 Timestamp.fromDate(startOfDay.add(const Duration(days: 1))))
+        .orderBy('time', descending: reverse ?? false)
+        .limit(limit ?? 30)
         .snapshots();
   }
 
