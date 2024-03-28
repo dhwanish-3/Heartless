@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:heartless/shared/constants.dart';
 
 class PersonalInfoWidget extends StatelessWidget {
   final String name;
@@ -17,9 +16,7 @@ class PersonalInfoWidget extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 20),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
-        color: Theme.of(context).brightness == Brightness.light
-            ? Constants.cardColor
-            : Constants.darkCardColor,
+        color: Theme.of(context).secondaryHeaderColor,
       ),
       child: Stack(
         children: [
@@ -54,12 +51,6 @@ class PersonalInfoWidget extends StatelessWidget {
                   radius: 70,
                   backgroundColor: Colors.white,
                   foregroundImage: NetworkImage(imageUrl),
-                  //* default image icon
-                  // child: Icon(
-                  //   Icons.person,
-                  //   size: 70,
-                  //   color: Colors.black,
-                  // ),
                 ),
                 Positioned(
                   bottom: 0,

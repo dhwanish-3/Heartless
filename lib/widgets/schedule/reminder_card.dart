@@ -16,9 +16,13 @@ class ReminderCard extends StatelessWidget {
   final Activity activity;
 
   //! to be taken from provider
-  final bool isPatient = true;
-  const ReminderCard(
-      {super.key, required this.activity, required this.patient});
+  final bool isPatient;
+  const ReminderCard({
+    super.key,
+    required this.activity,
+    required this.patient,
+    this.isPatient = true,
+  });
 
   void _onDisimissed() {
     ActivityController().markAsCompleted(activity, patient.uid);
@@ -196,30 +200,41 @@ class ReminderCard extends StatelessWidget {
                     ? Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Container(
-                              height: 33,
-                              width: 33,
-                              margin: const EdgeInsets.fromLTRB(0, 5, 12, 0),
-                              decoration: const BoxDecoration(
-                                image: DecorationImage(
-                                  opacity: 0.8,
-                                  scale: 2,
-                                  image: AssetImage('assets/Icons/delete.png'),
-                                ),
-                              )),
-                          Container(
-                              height: 33,
-                              width: 33,
-                              margin: const EdgeInsets.fromLTRB(0, 0, 10, 5),
-                              decoration: const BoxDecoration(
-                                borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(17)),
-                                image: DecorationImage(
-                                  scale: 1.3,
-                                  opacity: 0.6,
-                                  image: AssetImage('assets/Icons/edit.png'),
-                                ),
-                              )),
+                          InkWell(
+                            onTap: () {
+                              ActivityController().deleteActivity(activity);
+                            },
+                            child: Container(
+                                height: 33,
+                                width: 33,
+                                margin: const EdgeInsets.fromLTRB(0, 5, 12, 0),
+                                decoration: const BoxDecoration(
+                                  image: DecorationImage(
+                                    opacity: 0.8,
+                                    scale: 2,
+                                    image:
+                                        AssetImage('assets/Icons/delete.png'),
+                                  ),
+                                )),
+                          ),
+                          InkWell(
+                            onTap: () {
+                              //todo edit activity
+                            },
+                            child: Container(
+                                height: 33,
+                                width: 33,
+                                margin: const EdgeInsets.fromLTRB(0, 0, 10, 5),
+                                decoration: const BoxDecoration(
+                                  borderRadius: BorderRadius.only(
+                                      topRight: Radius.circular(17)),
+                                  image: DecorationImage(
+                                    scale: 1.3,
+                                    opacity: 0.6,
+                                    image: AssetImage('assets/Icons/edit.png'),
+                                  ),
+                                )),
+                          ),
                         ],
                       )
                     : Container(),

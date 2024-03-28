@@ -5,7 +5,7 @@ import 'package:heartless/backend/controllers/auth_controller.dart';
 import 'package:heartless/backend/controllers/connect_users_controller.dart';
 import 'package:heartless/pages/auth/scan_qr_page.dart';
 import 'package:heartless/pages/chat/contacts_page.dart';
-import 'package:heartless/pages/patient_management/patient_profile_page.dart';
+import 'package:heartless/pages/patient_management/patient_management_profile_page.dart';
 import 'package:heartless/services/enums/user_type.dart';
 import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
@@ -171,7 +171,7 @@ class _DummyHomeState extends State<DummyHome> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  PatientProfilePage(
+                                                  DoctorNurseSidePatientProfile(
                                                     patient: user,
                                                   )));
                                     },

@@ -14,15 +14,17 @@ import 'package:heartless/widgets/patient_management/person_info.dart';
 import 'package:heartless/widgets/patient_management/timeline_widget.dart';
 import 'package:provider/provider.dart';
 
-class PatientProfilePage extends StatefulWidget {
+class DoctorNurseSidePatientProfile extends StatefulWidget {
   final AppUser patient;
-  const PatientProfilePage({super.key, required this.patient});
+  const DoctorNurseSidePatientProfile({super.key, required this.patient});
 
   @override
-  State<PatientProfilePage> createState() => _PatientProfilePageState();
+  State<DoctorNurseSidePatientProfile> createState() =>
+      _DoctorNurseSidePatientProfileState();
 }
 
-class _PatientProfilePageState extends State<PatientProfilePage> {
+class _DoctorNurseSidePatientProfileState
+    extends State<DoctorNurseSidePatientProfile> {
   List<AppUser> supervisors = [];
 
   @override

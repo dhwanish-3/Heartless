@@ -369,6 +369,7 @@ class _DayWiseLogState extends State<DayWiseLogPage> {
                   ),
                 ),
               ),
+              const SizedBox(height: 100),
             ],
           ),
         ));

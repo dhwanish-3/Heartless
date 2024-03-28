@@ -40,7 +40,7 @@ class GeneralReadingChart extends StatelessWidget {
 
             if (chartData.length > 1) {
               return SfCartesianChart(
-                  title: ChartTitle(text: readingType.name),
+                  title: ChartTitle(text: readingType.tag),
                   primaryXAxis:
                       DateTimeAxis(), // todo: have to check how it looks
                   primaryYAxis: NumericAxis(),
