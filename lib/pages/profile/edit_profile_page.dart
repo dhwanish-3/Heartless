@@ -42,6 +42,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
     return Scaffold(
         appBar: AppBar(
+          centerTitle: false,
           title: Text(
             'Edit Profile',
             style: Theme.of(context).textTheme.headlineMedium,
@@ -52,14 +53,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 right: 20,
                 top: 0,
               ),
-              child: InkWell(
+              child: RightButton(
                 onTap: () {
                   // validate and subit form
                 },
-                child: RightButton(
-                  text: 'Submit',
-                  showTrailingIcon: false,
-                ),
+                text: 'Submit',
+                showTrailingIcon: false,
               ),
             ),
           ],
@@ -172,21 +171,21 @@ class _ProfileImage extends StatelessWidget {
             width: 1,
           ),
         ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(80),
+        child: ClipOval(
           child: CachedNetworkImage(
             imageUrl: Uri.parse(user.imageUrl).isAbsolute
                 ? user.imageUrl
                 : 'https://via.placeholder.com/150',
-            height: 52,
-            width: 52,
+            height: 160,
+            width: 160,
+            fit: BoxFit.cover,
             placeholder: (context, url) => const CircularProgressIndicator(),
             // todo: modify the error widget
             errorWidget: (context, url, error) => Container(
-                height: 52,
-                width: 52,
+                height: 160,
+                width: 160,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30),
+                  shape: BoxShape.circle,
                   color: Theme.of(context).shadowColor,
                 ),
                 child: const Icon(
@@ -207,7 +206,7 @@ class _ProfileImage extends StatelessWidget {
           ),
           child: IconButton(
             onPressed: () {
-              //choose image
+//add image picker
             },
             iconSize: 24,
             icon: Icon(

@@ -7,7 +7,9 @@ import 'package:heartless/widgets/home/heading_widget.dart';
 import 'package:provider/provider.dart';
 
 class DoctorNurseHomePage extends StatefulWidget {
-  const DoctorNurseHomePage({super.key});
+  DoctorNurseHomePage({
+    super.key,
+  });
 
   @override
   State<DoctorNurseHomePage> createState() => _DoctorNurseHomePageState();
@@ -19,21 +21,25 @@ class _DoctorNurseHomePageState extends State<DoctorNurseHomePage> {
   @override
   void initState() {
     super.initState();
-    AuthNotifier authNotifier =
+    AuthNotifier _authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
     usersFuture = ConnectUsersController.getAllPatientsHandledByUser(
-        authNotifier.appUser!.uid, authNotifier.appUser!.userType);
+        _authNotifier.appUser!.uid, _authNotifier.appUser!.userType);
   }
 
   @override
   Widget build(BuildContext context) {
+    AuthNotifier authNotifier =
+        Provider.of<AuthNotifier>(context, listen: false);
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              HomePageHeadingWidget(),
+              HomePageHeadingWidget(
+                user: authNotifier.appUser!,
+              ),
               PatientList(usersFuture: usersFuture),
             ],
           ),
@@ -90,91 +96,103 @@ class PatientList extends StatelessWidget {
             height: 10,
           ),
           FutureBuilder<List<AppUser>>(
-            future: usersFuture,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
-                  child: CircularProgressIndicator(
-                    color: Theme.of(context).primaryColor,
-                  ),
-                );
-              } else if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              } else {
-                List<AppUser> users = snapshot.data!;
-
-                return Column(
-                  children: List.generate(
-                    users.length,
-                    (index) {
-                      AppUser user = users[index];
-                      return Container(
-                        height: 56,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                        ),
-                        margin: const EdgeInsets.only(
-                          bottom: 10,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).secondaryHeaderColor,
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(10)),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Theme.of(context).highlightColor,
-                              offset: const Offset(0, 0.5),
-                              blurRadius: 1,
-                              spreadRadius: 0,
+              future: usersFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  );
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  List<AppUser> users = snapshot.data!;
+                  if (users.isEmpty) {
+                    return Padding(
+                      padding: const EdgeInsets.only(
+                        left: 5,
+                      ),
+                      child: Text('No patients currently under your care',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Theme.of(context).shadowColor,
+                            fontWeight: FontWeight.w400,
+                          )),
+                    );
+                  } else {
+                    return Column(
+                      children: List.generate(
+                        users.length,
+                        (index) {
+                          AppUser user = users[index];
+                          return Container(
+                            height: 56,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
                             ),
-                          ],
-                        ),
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    DoctorNurseSidePatientProfile(
-                                  patient: user,
+                            margin: const EdgeInsets.only(
+                              bottom: 10,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).secondaryHeaderColor,
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(10)),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Theme.of(context).highlightColor,
+                                  offset: const Offset(0, 0.5),
+                                  blurRadius: 1,
+                                  spreadRadius: 0,
                                 ),
-                              ),
-                            );
-                          },
-                          child: Row(
-                            children: [
-                              CircleAvatar(
-                                radius: 20,
-                                backgroundImage: NetworkImage(
-                                  user.imageUrl,
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              Flexible(
-                                child: Text(
-                                  user.name,
-                                  style:
-                                      // Theme.of(context).textTheme.bodySmall,
-                                      TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: Theme.of(context).shadowColor,
+                              ],
+                            ),
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        DoctorNurseSidePatientProfile(
+                                      patient: user,
+                                    ),
                                   ),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                );
-              }
-            },
-          ),
+                                );
+                              },
+                              child: Row(
+                                children: [
+                                  CircleAvatar(
+                                    radius: 20,
+                                    backgroundImage: NetworkImage(
+                                      user.imageUrl,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Flexible(
+                                    child: Text(
+                                      user.name,
+                                      style:
+                                          // Theme.of(context).textTheme.bodySmall,
+                                          TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                        color: Theme.of(context).shadowColor,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  }
+                }
+              }),
         ],
       ),
     );

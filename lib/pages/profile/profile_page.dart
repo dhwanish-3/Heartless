@@ -1,21 +1,57 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:heartless/backend/controllers/auth_controller.dart';
+import 'package:heartless/backend/controllers/connect_users_controller.dart';
 import 'package:heartless/pages/log/health_documents_page.dart';
 import 'package:heartless/pages/profile/edit_profile_page.dart';
 import 'package:heartless/pages/profile/qr_code_page.dart';
+import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
 import 'package:heartless/widgets/miscellaneous/right_trailing_button.dart';
 import 'package:provider/provider.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   const ProfilePage({
     super.key,
   });
 
   @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  final AuthController _authController = AuthController();
+
+  List<AppUser> users = []; // list of patients
+
+  @override
+  void initState() {
+    AuthNotifier authNotifier =
+        Provider.of<AuthNotifier>(context, listen: false);
+    // to be used for nurse_doctor_profile page
+    ConnectUsersController.getAllPatientsHandledByUser(
+            authNotifier.appUser!.uid, authNotifier.appUser!.userType)
+        .then((value) {
+      setState(() {
+        users = value;
+      });
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
+
+    void logout() async {
+      await _authController.logout(authNotifier);
+      if (context.mounted) {
+        // ! ensure that the widget is mounted before navigating
+        Navigator.pushNamedAndRemoveUntil(
+            context, '/loginOrSignup', (route) => false);
+      }
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -29,7 +65,9 @@ class ProfilePage extends StatelessWidget {
         child: Column(
           children: [
             _HeaderSection(authNotifier: authNotifier),
-            _ProfileActions(),
+            _ProfileActions(
+              logout: logout,
+            ),
           ],
         ),
       ),
@@ -64,22 +102,22 @@ class _HeaderSection extends StatelessWidget {
                 width: 1,
               ),
             ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(80),
+            child: ClipOval(
               child: CachedNetworkImage(
                 imageUrl: Uri.parse(authNotifier.appUser!.imageUrl).isAbsolute
                     ? authNotifier.appUser!.imageUrl
                     : 'https://via.placeholder.com/150',
-                height: 52,
-                width: 52,
+                height: 160,
+                width: 160,
+                fit: BoxFit.cover,
                 placeholder: (context, url) =>
                     const CircularProgressIndicator(),
                 // todo: modify the error widget
                 errorWidget: (context, url, error) => Container(
-                    height: 52,
-                    width: 52,
+                    height: 160,
+                    width: 160,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30),
+                      shape: BoxShape.circle,
                       color: Theme.of(context).shadowColor,
                     ),
                     child: const Icon(
@@ -142,7 +180,9 @@ class _HeaderSection extends StatelessWidget {
             right: 0,
             top: 20,
           ),
-          child: InkWell(
+          child: RightButton(
+            text: 'Edit Profile',
+            showTrailingIcon: false,
             onTap: () {
               //navigate to edit profile page
               Navigator.push(
@@ -154,10 +194,6 @@ class _HeaderSection extends StatelessWidget {
                 ),
               );
             },
-            child: RightButton(
-              text: 'Edit Profile',
-              showTrailingIcon: false,
-            ),
           ),
         ),
         const SizedBox(height: 30),
@@ -167,8 +203,10 @@ class _HeaderSection extends StatelessWidget {
 }
 
 class _ProfileActions extends StatelessWidget {
+  final void Function() logout;
   const _ProfileActions({
     super.key,
+    required this.logout,
   });
 
   @override
@@ -182,7 +220,11 @@ class _ProfileActions extends StatelessWidget {
       'Documents',
       'Doctors & Nurses',
     ];
-
+    const alternateActions = [
+      'Logout',
+      'Settings',
+      'Patients',
+    ];
     const actionIcons = [
       Icons.logout,
       Icons.settings,
@@ -190,43 +232,73 @@ class _ProfileActions extends StatelessWidget {
       Icons.file_copy,
       Icons.medical_services,
     ];
+
+    const alternateActionIcons = [
+      Icons.logout,
+      Icons.settings,
+      Icons.people,
+    ];
     return Container(
         width: double.infinity,
         child: Column(
-          children: [
-            for (int i = 0; i < actions.length; i++)
-              _ProfileActionTile(
-                actionString: actions[i],
-                actionIcon: actionIcons[i],
-                onTap: () {
-                  switch (i) {
-                    case 0:
-                      //logout
-                      break;
-                    case 1:
-                      //navigate to settings
-                      break;
-                    case 2:
-                      //navigate to timeline
-                      break;
-                    case 3:
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              //* should be rechecked
-                              builder: (context) => HealthDocumentsPage(
-                                    patientId: authNotifier.appUser!.uid,
-                                  )));
-                      //documents
-                      break;
-                    case 4:
-                      //doctors and nurses
-                      break;
-                    default:
-                  }
-                },
-              )
-          ],
+          children: authNotifier.appUser!.userType == 'patient'
+              ? [
+                  for (int i = 0; i < actions.length; i++)
+                    _ProfileActionTile(
+                      actionString: actions[i],
+                      actionIcon: actionIcons[i],
+                      onTap: () {
+                        switch (i) {
+                          case 0:
+                            //logout
+                            logout();
+                            break;
+                          case 1:
+                            //navigate to settings
+                            break;
+                          case 2:
+                            //navigate to timeline
+                            break;
+                          case 3:
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    //* should be rechecked
+                                    builder: (context) => HealthDocumentsPage(
+                                          patientId: authNotifier.appUser!.uid,
+                                        )));
+                            //documents
+                            break;
+                          case 4:
+                            //doctors and nurses
+                            break;
+                          default:
+                        }
+                      },
+                    )
+                ]
+              : [
+                  for (int i = 0; i < alternateActions.length; i++)
+                    _ProfileActionTile(
+                      actionString: alternateActions[i],
+                      actionIcon: alternateActionIcons[i],
+                      onTap: () {
+                        switch (i) {
+                          case 0:
+                            //logout
+                            logout();
+                            break;
+                          case 1:
+                            //navigate to settings
+                            break;
+                          case 2:
+                            //navigate to patients
+                            break;
+                          default:
+                        }
+                      },
+                    )
+                ],
         ));
   }
 }

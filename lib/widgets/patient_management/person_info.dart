@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:heartless/pages/profile/qr_code_page.dart';
+import 'package:heartless/shared/models/app_user.dart';
 
 class PersonalInfoWidget extends StatelessWidget {
-  final String name;
-  final String imageUrl;
+  final AppUser user;
   const PersonalInfoWidget({
     super.key,
-    required this.name,
-    required this.imageUrl,
+    required this.user,
   });
 
   @override
@@ -32,7 +32,7 @@ class PersonalInfoWidget extends StatelessWidget {
                     ),
                     Flexible(
                       child: Text(
-                        name,
+                        user.name,
                         overflow: TextOverflow.ellipsis,
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
@@ -50,7 +50,7 @@ class PersonalInfoWidget extends StatelessWidget {
                 CircleAvatar(
                   radius: 70,
                   backgroundColor: Colors.white,
-                  foregroundImage: NetworkImage(imageUrl),
+                  foregroundImage: NetworkImage(user.imageUrl),
                 ),
                 Positioned(
                   bottom: 0,
@@ -63,6 +63,12 @@ class PersonalInfoWidget extends StatelessWidget {
                     child: IconButton(
                       onPressed: () {
                         //go to qr_code page
+                        showDialog(
+                          context: context,
+                          builder: (context) => QRPopupWidget(
+                            user: user,
+                          ),
+                        );
                       },
                       iconSize: 24,
                       icon: Icon(

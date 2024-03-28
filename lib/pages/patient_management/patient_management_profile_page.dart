@@ -41,47 +41,52 @@ class _DoctorNurseSidePatientProfileState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'Manage Patient',
+            style: Theme.of(context).textTheme.headlineMedium,
+          ),
+        ),
         body: SafeArea(
-      child: SingleChildScrollView(
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              PersonalInfoWidget(
-                name: widget.patient.name,
-                imageUrl: widget.patient.imageUrl,
-              ),
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => HealthDocumentsPage(
-                                  patientId: widget.patient.uid,
-                                )));
-                  },
-                  child: const Text('Documents')),
-              const SizedBox(
-                height: 20,
-              ),
-              ControlPanel(
-                patient: widget.patient,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              TimelineWidget(
-                patient: widget.patient,
-              ),
-              const SizedBox(height: 20),
-              supervisors.isNotEmpty
-                  ? SupervisorListContainer(
-                      supervisorList: supervisors,
-                    )
-                  : Container(),
-            ]),
-      ),
-    ));
+          child: SingleChildScrollView(
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  PersonalInfoWidget(
+                    user: widget.patient,
+                  ),
+                  ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => HealthDocumentsPage(
+                                      patientId: widget.patient.uid,
+                                    )));
+                      },
+                      child: const Text('Documents')),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  ControlPanel(
+                    patient: widget.patient,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  TimelineWidget(
+                    patient: widget.patient,
+                  ),
+                  const SizedBox(height: 20),
+                  supervisors.isNotEmpty
+                      ? SupervisorListContainer(
+                          supervisorList: supervisors,
+                        )
+                      : Container(),
+                ]),
+          ),
+        ));
   }
 }
 

@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/services/enums/activity_status.dart';
 import 'package:heartless/services/enums/activity_type.dart';
+import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/widgets/home/activity_schedule.dart';
 import 'package:heartless/widgets/home/heading_widget.dart';
 import 'package:heartless/widgets/home/quick_actions_widget.dart';
 
 class PatientHomePage extends StatelessWidget {
-  const PatientHomePage({super.key});
+  final AppUser user;
+  const PatientHomePage({
+    super.key,
+    required this.user,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +21,9 @@ class PatientHomePage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              HomePageHeadingWidget(),
+              HomePageHeadingWidget(
+                user: user,
+              ),
               QuickActionsWidget(),
               const SizedBox(height: 20),
               ActivitiesSchedule(context),
