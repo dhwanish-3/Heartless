@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:heartless/services/enums/schedule_toggle_type.dart';
 import 'package:intl/intl.dart';
@@ -16,6 +18,15 @@ class WidgetNotifier with ChangeNotifier {
   bool get passwordShown => _passwordShown;
   void setPasswordShown(bool passwordShown) {
     _passwordShown = passwordShown;
+    notifyListeners();
+  }
+
+  // for bottom navigation bar
+  int _selectedIndex = 0;
+  int get selectedIndex => _selectedIndex;
+  void setSelectedIndex(int index) {
+    _selectedIndex = index;
+    log("Selected Index: $_selectedIndex");
     notifyListeners();
   }
 
