@@ -4,12 +4,12 @@ import 'package:heartless/services/enums/timeline_event_type.dart';
 import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/widgets/miscellaneous/tag_tile.dart';
 
-class TimeLineEntryidget extends StatelessWidget {
+class TimeLineEntryWidget extends StatelessWidget {
   final AppUser patient;
   final String title;
   final DateTime time;
   final TimeLineEventType tag;
-  const TimeLineEntryidget({
+  const TimeLineEntryWidget({
     super.key,
     required this.patient,
     this.title = '',

@@ -45,4 +45,19 @@ extension ScheduleToggleTypeExtension on ScheduleToggleType {
         return 'Unknown';
     }
   }
+
+  String get alternateTimeLineTypeString {
+    switch (this) {
+      case ScheduleToggleType.all:
+        return 'ALL';
+      case ScheduleToggleType.medicine:
+        return 'TASK';
+      case ScheduleToggleType.diet:
+        return 'DATA';
+      case ScheduleToggleType.drill:
+        return 'DOC';
+      default:
+        return 'Unknown';
+    }
+  }
 }

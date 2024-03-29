@@ -7,7 +7,7 @@ import 'package:heartless/services/enums/timeline_event_type.dart';
 
 class TimeLineService {
   static Future<List<TimeLineData>> getTimeLine(
-      String patientId, int limit) async {
+      String patientId, int? limit) async {
     List<TimeLineData> timeLineList = [];
     // getting readings
     await ReadingController.getAllReadingsOfTheWeekAsList(
@@ -54,6 +54,8 @@ class TimeLineService {
 
     // sort the list by date
     timeLineList.sort((b, a) => a.date.compareTo(b.date));
+
+    if (limit == null) return [...timeLineList, ...timeLineList];
     // resize the list to the limit
     if (timeLineList.length > limit) {
       timeLineList = timeLineList.sublist(0, limit);
