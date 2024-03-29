@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:heartless/pages/profile/extended_timeline_page.dart';
 import 'package:heartless/services/utils/timeline_service.dart';
-import 'package:heartless/shared/constants.dart';
 import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/widgets/patient_management/timeline_entry_widget.dart';
 
@@ -16,9 +16,7 @@ class TimelineWidget extends StatelessWidget {
             // height: 200,
             margin: const EdgeInsets.symmetric(horizontal: 20),
             decoration: BoxDecoration(
-              color: Theme.of(context).brightness == Brightness.light
-                  ? Constants.cardColor
-                  : Constants.darkCardColor,
+              color: Theme.of(context).secondaryHeaderColor,
               borderRadius: BorderRadius.circular(20),
             ),
             padding: const EdgeInsets.symmetric(
@@ -55,7 +53,7 @@ class TimelineWidget extends StatelessWidget {
                           ConnectionState.done) {
                         return Column(
                           children: snapshot.data!
-                              .map((e) => TimeLineEntryidget(
+                              .map((e) => TimeLineEntryWidget(
                                   patient: patient,
                                   title: e.title,
                                   time: e.date,
@@ -75,6 +73,12 @@ class TimelineWidget extends StatelessWidget {
             color: Colors.black,
             onPressed: () {
               // todo: navigate to timeline page
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ExtendedTimelinePage(patient: patient),
+                ),
+              );
             },
             icon: Icon(Icons.keyboard_arrow_right),
           ),

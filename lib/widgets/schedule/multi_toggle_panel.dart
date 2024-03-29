@@ -5,7 +5,11 @@ import 'package:heartless/widgets/auth/custom_text_button.dart';
 import 'package:provider/provider.dart';
 
 class MutltiToggle extends StatelessWidget {
-  const MutltiToggle({super.key});
+  final bool isTimeLine;
+  const MutltiToggle({
+    super.key,
+    this.isTimeLine = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +26,7 @@ class MutltiToggle extends StatelessWidget {
               widgetNotifier.changeToggleSelection(text);
             },
             child: CustomTextButton(
-              text: text.title,
+              text: isTimeLine ? text.alternateTimeLineTypeString : text.title,
               containerWidth: screenWidth * 0.2,
               isHighlighted: false,
             ),
@@ -52,7 +56,10 @@ class MutltiToggle extends StatelessWidget {
                 child: FractionallySizedBox(
                   widthFactor: 0.25,
                   child: CustomTextButton(
-                    text: widgetNotifier.scheduleToggleType.title,
+                    text: isTimeLine
+                        ? widgetNotifier
+                            .scheduleToggleType.alternateTimeLineTypeString
+                        : widgetNotifier.scheduleToggleType.title,
                     containerWidth: screenWidth * 0.2,
                     isHighlighted: true,
                   ),

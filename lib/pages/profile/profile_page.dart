@@ -4,7 +4,10 @@ import 'package:heartless/backend/controllers/auth_controller.dart';
 import 'package:heartless/backend/controllers/connect_users_controller.dart';
 import 'package:heartless/pages/log/health_documents_page.dart';
 import 'package:heartless/pages/profile/edit_profile_page.dart';
+import 'package:heartless/pages/profile/extended_timeline_page.dart';
 import 'package:heartless/pages/profile/qr_code_page.dart';
+import 'package:heartless/pages/profile/users_list_page.dart';
+import 'package:heartless/services/enums/user_type.dart';
 import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
 import 'package:heartless/widgets/miscellaneous/right_trailing_button.dart';
@@ -66,6 +69,7 @@ class _ProfilePageState extends State<ProfilePage> {
           children: [
             _HeaderSection(authNotifier: authNotifier),
             _ProfileActions(
+              patients: users,
               logout: logout,
             ),
           ],
@@ -204,9 +208,11 @@ class _HeaderSection extends StatelessWidget {
 
 class _ProfileActions extends StatelessWidget {
   final void Function() logout;
+  final List<AppUser> patients;
   const _ProfileActions({
     super.key,
     required this.logout,
+    required this.patients,
   });
 
   @override
@@ -214,34 +220,34 @@ class _ProfileActions extends StatelessWidget {
     AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
     const actions = [
-      'Logout',
       'Settings',
       'TimeLine',
       'Documents',
       'Doctors & Nurses',
+      'Logout',
     ];
     const alternateActions = [
-      'Logout',
       'Settings',
       'Patients',
+      'Logout',
     ];
     const actionIcons = [
-      Icons.logout,
       Icons.settings,
       Icons.timeline,
       Icons.file_copy,
-      Icons.medical_services,
+      Icons.people,
+      Icons.logout,
     ];
 
     const alternateActionIcons = [
-      Icons.logout,
       Icons.settings,
       Icons.people,
+      Icons.logout,
     ];
     return Container(
         width: double.infinity,
         child: Column(
-          children: authNotifier.appUser!.userType == 'patient'
+          children: authNotifier.appUser!.userType == UserType.patient
               ? [
                   for (int i = 0; i < actions.length; i++)
                     _ProfileActionTile(
@@ -250,16 +256,21 @@ class _ProfileActions extends StatelessWidget {
                       onTap: () {
                         switch (i) {
                           case 0:
-                            //logout
-                            logout();
-                            break;
-                          case 1:
                             //navigate to settings
                             break;
-                          case 2:
+                          case 1:
                             //navigate to timeline
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ExtendedTimelinePage(
+                                  patient: authNotifier.appUser!,
+                                ),
+                              ),
+                            );
                             break;
-                          case 3:
+                          case 2:
+                            //documents
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -267,10 +278,16 @@ class _ProfileActions extends StatelessWidget {
                                     builder: (context) => HealthDocumentsPage(
                                           patientId: authNotifier.appUser!.uid,
                                         )));
-                            //documents
+
+                            break;
+                          case 3:
+                            //navigate to doctors and nurses
+
                             break;
                           case 4:
-                            //doctors and nurses
+
+                            //logout
+                            logout();
                             break;
                           default:
                         }
@@ -285,14 +302,25 @@ class _ProfileActions extends StatelessWidget {
                       onTap: () {
                         switch (i) {
                           case 0:
-                            //logout
-                            logout();
+                            //navigate to settings
+
                             break;
                           case 1:
-                            //navigate to settings
+                            //navigate to patients
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => UsersListPage(
+                                  appUser: authNotifier.appUser!,
+                                  users: patients,
+                                ),
+                              ),
+                            );
                             break;
                           case 2:
-                            //navigate to patients
+
+                            //logout
+                            logout();
                             break;
                           default:
                         }

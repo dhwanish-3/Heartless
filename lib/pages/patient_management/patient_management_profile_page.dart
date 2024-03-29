@@ -5,6 +5,7 @@ import 'package:heartless/pages/analytics/analytics_page.dart';
 import 'package:heartless/pages/chat/chat_page.dart';
 import 'package:heartless/pages/log/daywise_log.dart';
 import 'package:heartless/pages/log/health_documents_page.dart';
+import 'package:heartless/pages/profile/users_list_page.dart';
 import 'package:heartless/pages/schedule/schedule_page.dart';
 import 'package:heartless/shared/constants.dart';
 import 'package:heartless/shared/models/app_user.dart';
@@ -56,16 +57,6 @@ class _DoctorNurseSidePatientProfileState
                   PersonalInfoWidget(
                     user: widget.patient,
                   ),
-                  ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => HealthDocumentsPage(
-                                      patientId: widget.patient.uid,
-                                    )));
-                      },
-                      child: const Text('Documents')),
                   const SizedBox(
                     height: 20,
                   ),
@@ -82,6 +73,7 @@ class _DoctorNurseSidePatientProfileState
                   supervisors.isNotEmpty
                       ? SupervisorListContainer(
                           supervisorList: supervisors,
+                          patient: widget.patient,
                         )
                       : Container(),
                 ]),
@@ -92,7 +84,12 @@ class _DoctorNurseSidePatientProfileState
 
 class SupervisorListContainer extends StatelessWidget {
   final List<AppUser> supervisorList;
-  const SupervisorListContainer({super.key, required this.supervisorList});
+  final AppUser patient;
+  const SupervisorListContainer({
+    super.key,
+    required this.supervisorList,
+    required this.patient,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -114,14 +111,36 @@ class SupervisorListContainer extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Attended to By',
-            textAlign: TextAlign.start,
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Theme.of(context).shadowColor,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Attended to By',
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).shadowColor,
+                ),
+              ),
+              IconButton(
+                onPressed: () {
+                  //navigate to UserListPage
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => UsersListPage(
+                        users: supervisorList,
+                        appUser: patient,
+                      ),
+                    ),
+                  );
+                },
+                icon: Icon(Icons.keyboard_arrow_right),
+                color: Theme.of(context).shadowColor,
+                padding: EdgeInsets.zero,
+              )
+            ],
           ),
           const SizedBox(
             height: 10,
@@ -252,7 +271,7 @@ class ControlPanel extends StatelessWidget {
                   crossAxisCount: 2,
                   crossAxisSpacing: 20,
                   mainAxisSpacing: 20,
-                  childAspectRatio: 1.4,
+                  childAspectRatio: 1.6,
                 ),
                 children: [
                   PanelCard(
@@ -297,6 +316,17 @@ class ControlPanel extends StatelessWidget {
                                   )));
                     },
                   ),
+                  PanelCard(
+                      imageUrl: 'assets/Icons/chat.png',
+                      text: 'Documents',
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => HealthDocumentsPage(
+                                      patientId: patient.uid,
+                                    )));
+                      }),
                 ],
               ),
             ],
@@ -351,7 +381,7 @@ class PanelCard extends StatelessWidget {
                     Text(text,
                         style: const TextStyle(
                           color: Colors.black,
-                          fontSize: 12,
+                          fontSize: 14,
                         )
                         // style: Theme.of(context).textTheme.bodySmall,
                         )

@@ -34,6 +34,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
           // mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             AppBar(
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               centerTitle: true,
               title: const Text(
                 'Analytics',
