@@ -3,6 +3,7 @@ import "package:flutter/material.dart";
 import "package:flutter_svg/svg.dart";
 import "package:heartless/backend/services/notifications/notification_services.dart";
 import "package:heartless/services/splash/splash_services.dart";
+import "package:heartless/services/utils/search_service.dart";
 import "package:heartless/shared/provider/auth_notifier.dart";
 import "package:provider/provider.dart";
 
@@ -45,10 +46,11 @@ class _SplashScreenState extends State<SplashScreen> {
   void moveForward() {
     AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
-    Future.delayed(const Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 0), () {
       SplashServices().getUserFromFirebase(authNotifier).then((value) {
         if (value) {
           NotificationService.getFirebaseMessagingToken(authNotifier);
+          SearchService.initGlobalSearchOptions(authNotifier.appUser!);
           Navigator.pushNamed(context, '/home');
           inSplashScreen = false;
         } else {

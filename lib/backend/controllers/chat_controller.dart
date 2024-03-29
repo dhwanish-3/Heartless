@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:heartless/backend/controllers/base_controller.dart';
+import 'package:heartless/backend/controllers/connect_users_controller.dart';
 import 'package:heartless/backend/services/chat/chat_service.dart';
 import 'package:heartless/backend/services/chat/message_service.dart';
 import 'package:heartless/backend/services/firebase_storage/firebase_storage_service.dart';
@@ -150,5 +151,16 @@ class ChatController with BaseController {
   // to mark all messages as read
   static Future<bool> markMessagesAsRead(ChatRoom chatRoom) {
     return MessageService.markMessagesAsRead(chatRoom);
+  }
+
+  // to get all chat users
+  static Future<List<AppUser>> getChatUsers(UserType userType, String userId) {
+    if (userType == UserType.patient) {
+      return ConnectUsersController.getAllUsersConnectedToPatient(userId);
+    } else if (userType == UserType.doctor) {
+      return ConnectUsersController.getAllUsersConnectedToDoctor(userId);
+    } else {
+      return ConnectUsersController.getAllUsersConnectedToNurse(userId);
+    }
   }
 }
