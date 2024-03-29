@@ -6,7 +6,6 @@ import 'package:heartless/backend/controllers/health_document_controller.dart';
 import 'package:heartless/services/enums/custom_file_type.dart';
 import 'package:heartless/services/enums/event_tag.dart';
 import 'package:heartless/widgets/miscellaneous/health_tag_selection.dart';
-import 'package:heartless/widgets/miscellaneous/right_trailing_button.dart';
 
 class FileUploadPreviewPage extends StatelessWidget {
   final PlatformFile file;
@@ -33,6 +32,18 @@ class FileUploadPreviewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<EventTag> selectedList = [];
+
+    void _addHealthDocument() async {
+      await HealthDocumentController().addHealthDocument(
+        patientId,
+        file.name,
+        fileType,
+        selectedList,
+        File(file.path!),
+      );
+    }
+
+    ;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -42,45 +53,11 @@ class FileUploadPreviewPage extends StatelessWidget {
             Navigator.pop(context);
           },
         ),
-        title: Center(
-          child: Text(
-            'Preview',
-            textAlign: TextAlign.center,
-          ),
+        title: Text(
+          'Preview',
+          style: Theme.of(context).textTheme.headlineMedium,
+          textAlign: TextAlign.center,
         ),
-        actions: [
-          // IconButton(
-          //   iconSize: 30,
-          //   icon: Icon(Icons.check),
-          // onPressed: () async {
-          //   // todo: change the tags to the selected tags
-          //   await HealthDocumentController().addHealthDocument(
-          //       patientId,
-          //       file.name,
-          //       fileType,
-          //       [EventTag.admittance, EventTag.labReport],
-          //       File(file.path!));
-          // },
-          // ),
-          Padding(
-            padding: const EdgeInsets.only(
-              right: 20,
-            ),
-            child: RightButton(
-              text: 'Upload',
-              showTrailingIcon: false,
-              onTap: () async {
-                // todo: change the tags to the selected tags
-                await HealthDocumentController().addHealthDocument(
-                    patientId,
-                    file.name,
-                    fileType,
-                    [EventTag.admittance, EventTag.labReport],
-                    File(file.path!));
-              },
-            ),
-          )
-        ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -197,10 +174,63 @@ class FileUploadPreviewPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
+              CustomFormSubmitButton(
+                onTap: _addHealthDocument,
+                padding: 40,
+                text: 'Upload',
+              ),
+              const SizedBox(height: 20),
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class CustomFormSubmitButton extends StatelessWidget {
+  final void Function()? onTap;
+  final String text;
+  final double padding;
+  const CustomFormSubmitButton({
+    super.key,
+    required this.onTap,
+    this.text = 'Submit',
+    this.padding = 20,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+          height: 50,
+          margin: EdgeInsets.symmetric(
+            horizontal: padding,
+          ),
+          decoration: BoxDecoration(
+            color: Theme.of(context).primaryColor,
+            boxShadow: [
+              BoxShadow(
+                color: Theme.of(context).highlightColor,
+                blurRadius: 0.5,
+                spreadRadius: 0.5,
+                offset: Offset(0, 2),
+              ),
+            ],
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+          ),
+          child: Center(
+            child: Text(
+              text,
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.white,
+                // color: Theme.of(context).primaryColor,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          )),
     );
   }
 }
