@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:heartless/pages/log/file_upload_preview_page.dart';
 import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/shared/provider/widget_provider.dart';
 import 'package:heartless/widgets/auth/text_input.dart';
-import 'package:heartless/widgets/miscellaneous/right_trailing_button.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:provider/provider.dart';
 
@@ -47,21 +47,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
             'Edit Profile',
             style: Theme.of(context).textTheme.headlineMedium,
           ),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(
-                right: 20,
-                top: 0,
-              ),
-              child: RightButton(
-                onTap: () {
-                  // validate and subit form
-                },
-                text: 'Submit',
-                showTrailingIcon: false,
-              ),
-            ),
-          ],
         ),
         body: SafeArea(
           child: SingleChildScrollView(
@@ -138,6 +123,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             },
                           ),
                         ),
+                        const SizedBox(height: 20),
+                        CustomFormSubmitButton(
+                          onTap: () {
+                            //todo edit changes,
+                          },
+                          padding: 10,
+                        ),
+                        const SizedBox(height: 40),
                       ],
                     ),
                   ),

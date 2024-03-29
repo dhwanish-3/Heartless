@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/pages/home/search_page.dart';
+import 'package:heartless/services/enums/user_type.dart';
 import 'package:heartless/shared/constants.dart';
 import 'package:heartless/shared/models/app_user.dart';
 
@@ -13,92 +14,127 @@ class HomePageHeadingWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // height: 360,
+      height: 330,
       child: Stack(
+        fit: StackFit.loose,
         children: [
-          Container(
-            // height: 360,
-            child: Column(
-              children: [
-                Container(
-                  height: 240,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Constants.primaryColor,
-                    borderRadius: BorderRadius.only(
-                      bottomRight: Radius.circular(90),
-                    ),
-                  ),
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          const SizedBox(width: 15),
-                          const Icon(
-                            Icons.message_rounded,
-                            color: Colors.white,
-                            size: 30,
-                          ),
-                        ],
-                      ),
-                      Expanded(
-                        child: const SizedBox(),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Welcome,',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                  ),
-                                ),
-                                Text(
-                                  user.name,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          CircleAvatar(
-                            radius: 60,
-                            backgroundColor: Colors.white,
-                            backgroundImage: NetworkImage(user.imageUrl),
-                          ),
-                          const SizedBox(width: 8),
-                        ],
-                      ),
-                      const SizedBox(
-                          height: 10), // 20 if searchBar not overlapping
-                    ],
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                height: 240,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Constants.primaryColor,
+                  borderRadius: BorderRadius.only(
+                    bottomRight: Radius.circular(90),
                   ),
                 ),
-                Container(
-                  color: Constants.primaryColor,
-                  child: Container(
-                    height: 90,
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).scaffoldBackgroundColor,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(90),
+                padding: const EdgeInsets.only(
+                  right: 20,
+                  bottom: 20,
+                ),
+                child: Stack(
+                  children: [
+                    Positioned(
+                        child: Container(
+                      height: 200,
+                      width: 300,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.2),
+                        borderRadius: BorderRadius.only(
+                          bottomRight: Radius.circular(200),
+                          bottomLeft: Radius.circular(0),
+                        ),
+                      ),
+                    )),
+
+                    Positioned(
+                        left: 0,
+                        top: 0,
+                        child: Container(
+                          height: 120,
+                          width: 100,
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.2),
+                            borderRadius: BorderRadius.only(
+                              bottomRight: Radius.circular(100),
+                              bottomLeft: Radius.circular(0),
+                            ),
+                          ),
+                        )),
+                    Positioned(
+                      top: 20,
+                      right: 0,
+                      child: const Icon(
+                        Icons.message_rounded,
+                        color: Colors.white,
+                        size: 30,
                       ),
                     ),
+                    Positioned(
+                      left: 20,
+                      bottom: 50,
+                      child: Container(
+                        width: MediaQuery.of(context).size.width - 190,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Welcome,',
+                              style: TextStyle(
+                                color: Colors.black54,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            FittedBox(
+                              fit: BoxFit.fitWidth,
+                              child: Text(
+                                user.userType == UserType.doctor
+                                    ? 'Dr. ' + user.name
+                                    : user.userType == UserType.nurse
+                                        ? 'Rn. ' + user.name
+                                        : user.name,
+                                maxLines: 1,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      right: 10,
+                      bottom: 10,
+                      child: CircleAvatar(
+                        radius: 60,
+                        backgroundColor: Colors.white,
+                        backgroundImage: NetworkImage(user.imageUrl),
+                      ),
+                    ),
+
+                    // 20 if searchBar not overlapping
+                  ],
+                ),
+              ),
+              Container(
+                color: Constants.primaryColor,
+                child: Container(
+                  height: 90,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(90),
+                    ),
                   ),
-                )
-              ],
-            ),
+                ),
+              )
+            ],
           ),
           Positioned(
             bottom: 50, // 20 if searchBar overlapping
