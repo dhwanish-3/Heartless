@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:heartless/pages/auth/scan_qr_page.dart';
+import 'package:heartless/backend/controllers/connect_users_controller.dart';
+import 'package:heartless/backend/services/misc/connect_users.dart';
+import 'package:heartless/services/utils/qr_scanner.dart';
 import 'package:heartless/shared/models/app_user.dart';
+import 'package:heartless/shared/provider/auth_notifier.dart';
+import 'package:heartless/shared/provider/widget_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
-class QRPopupWidget extends StatelessWidget {
+class QRPopupWidget extends StatefulWidget {
   final AppUser user;
   const QRPopupWidget({
     super.key,
@@ -11,7 +16,39 @@ class QRPopupWidget extends StatelessWidget {
   });
 
   @override
+  State<QRPopupWidget> createState() => _QRPopupWidgetState();
+}
+
+class _QRPopupWidgetState extends State<QRPopupWidget> {
+  String qrCodeResult = "Not Yet Scanned";
+  Future<void> scanQRCode() async {
+    QRScanner.scanQRCode().then((value) async {
+      AppUser? user = await ConnectUsers.getUserDetails(value);
+      setState(() {
+        qrCodeResult = value;
+        user = user;
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    AuthNotifier authNotifier =
+        Provider.of<AuthNotifier>(context, listen: false);
+    WidgetNotifier widgetNotifier =
+        Provider.of<WidgetNotifier>(context, listen: false);
+
+    // * addUser function
+    Future<void> addUser() async {
+      if (authNotifier.appUser!.uid != widget.user.uid &&
+          authNotifier.appUser!.userType != widget.user.userType) {
+        widgetNotifier.setLoading(true);
+        await ConnectUsersController.connectUsers(
+            authNotifier.appUser!, widget.user);
+        widgetNotifier.setLoading(false);
+      }
+    }
+
     return Center(
       child: Container(
         width: double.infinity,
@@ -44,12 +81,12 @@ class QRPopupWidget extends StatelessWidget {
                 CircleAvatar(
                   radius: 20,
                   backgroundImage: NetworkImage(
-                    user.imageUrl,
+                    widget.user.imageUrl,
                   ),
                 ),
                 SizedBox(width: 20),
                 Text(
-                  user.name,
+                  widget.user.name,
                   style: TextStyle(
                     fontSize: 20,
                   ),
@@ -58,7 +95,7 @@ class QRPopupWidget extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             QrImageView(
-                data: user.uid,
+                data: widget.user.uid,
                 size: 240,
                 backgroundColor: Colors.white,
                 errorStateBuilder: (cxt, err) {
@@ -76,7 +113,7 @@ class QRPopupWidget extends StatelessWidget {
                 ),
                 const SizedBox(width: 2),
                 Text(
-                  user.email,
+                  widget.user.email,
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
               ],
@@ -93,27 +130,30 @@ class QRPopupWidget extends StatelessWidget {
                       width: 1,
                       style: BorderStyle.solid,
                     )),
-                child: InkWell(
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (_) => const ScanQR()));
-                  },
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.qr_code_scanner_rounded,
-                        color: Theme.of(context).primaryColor,
-                      ),
-                      const SizedBox(width: 5),
-                      Text('Open Scanner',
-                          style: TextStyle(
-                            color: Theme.of(context).shadowColor,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          )),
-                    ],
+                child: Material(
+                  child: InkWell(
+                    onTap: () {
+                      scanQRCode();
+
+                      //! mechanism to add the scanner user
+                    },
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.qr_code_scanner_rounded,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                        const SizedBox(width: 5),
+                        Text('Open Scanner',
+                            style: TextStyle(
+                              color: Theme.of(context).shadowColor,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            )),
+                      ],
+                    ),
                   ),
                 ))
           ],

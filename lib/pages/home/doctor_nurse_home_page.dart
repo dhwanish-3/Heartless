@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/backend/controllers/connect_users_controller.dart';
-import 'package:heartless/pages/patient_management/patient_management_profile_page.dart';
+import 'package:heartless/pages/profile/users_list_page.dart';
 import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
 import 'package:heartless/widgets/home/heading_widget.dart';
@@ -56,6 +56,8 @@ class PatientList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AuthNotifier authNotifier =
+        Provider.of<AuthNotifier>(context, listen: false);
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.symmetric(
@@ -83,14 +85,36 @@ class PatientList extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            'Your Patients',
-            textAlign: TextAlign.start,
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Theme.of(context).shadowColor,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Your Patients',
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).shadowColor,
+                ),
+              ),
+              IconButton(
+                onPressed: () {
+                  //navigate to UserListPage
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => UsersListPage(
+                        appUser: authNotifier.appUser!,
+                        usersFuture: usersFuture,
+                      ),
+                    ),
+                  );
+                },
+                icon: Icon(Icons.keyboard_arrow_right),
+                color: Theme.of(context).shadowColor,
+                padding: EdgeInsets.zero,
+              )
+            ],
           ),
           const SizedBox(
             height: 10,
@@ -147,44 +171,31 @@ class PatientList extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            child: InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        DoctorNurseSidePatientProfile(
-                                      patient: user,
-                                    ),
+                            child: Row(
+                              children: [
+                                CircleAvatar(
+                                  radius: 20,
+                                  backgroundImage: NetworkImage(
+                                    user.imageUrl,
                                   ),
-                                );
-                              },
-                              child: Row(
-                                children: [
-                                  CircleAvatar(
-                                    radius: 20,
-                                    backgroundImage: NetworkImage(
-                                      user.imageUrl,
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Flexible(
+                                  child: Text(
+                                    user.name,
+                                    style:
+                                        // Theme.of(context).textTheme.bodySmall,
+                                        TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      color: Theme.of(context).shadowColor,
                                     ),
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  Flexible(
-                                    child: Text(
-                                      user.name,
-                                      style:
-                                          // Theme.of(context).textTheme.bodySmall,
-                                          TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500,
-                                        color: Theme.of(context).shadowColor,
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  )
-                                ],
-                              ),
+                                )
+                              ],
                             ),
                           );
                         },

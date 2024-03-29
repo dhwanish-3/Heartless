@@ -37,13 +37,19 @@ class CustomTextButton extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Text(
-            text,
-            style: TextStyle(
-              color:
-                  isHighlighted ? Colors.white : Theme.of(context).shadowColor,
-              fontWeight: FontWeight.w600,
-              fontSize: 15,
+          FittedBox(
+            // fit: BoxFit.contain,
+            child: Text(
+              text,
+              maxLines: 1,
+              overflow: TextOverflow.clip,
+              style: TextStyle(
+                color: isHighlighted
+                    ? Colors.white
+                    : Theme.of(context).shadowColor,
+                fontWeight: FontWeight.w600,
+                fontSize: 15,
+              ),
             ),
           ),
         ],
