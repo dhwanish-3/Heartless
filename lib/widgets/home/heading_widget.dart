@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heartless/pages/chat/contacts_page.dart';
 import 'package:heartless/pages/home/search_page.dart';
 import 'package:heartless/services/enums/user_type.dart';
 import 'package:heartless/shared/constants.dart';
@@ -66,10 +67,20 @@ class HomePageHeadingWidget extends StatelessWidget {
                     Positioned(
                       top: 20,
                       right: 0,
-                      child: const Icon(
-                        Icons.message_rounded,
-                        color: Colors.white,
-                        size: 30,
+                      child: IconButton(
+                        padding: EdgeInsets.zero,
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ContactsPage(),
+                              ));
+                        },
+                        icon: const Icon(
+                          Icons.message_rounded,
+                          color: Colors.white,
+                          size: 30,
+                        ),
                       ),
                     ),
                     Positioned(
