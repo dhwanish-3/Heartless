@@ -17,6 +17,7 @@ class _YearMonthWeekSelectorState extends State<YearMonthWeekSelector> {
   final int startYear = 2022;
   final int currentYear = DateTime.now().year;
   final int startMonth = 3; // March
+
   final int currentMonth = DateTime.now().month;
   late WidgetNotifier widgetNotifier;
   late PageController _pageController;
@@ -28,6 +29,7 @@ class _YearMonthWeekSelectorState extends State<YearMonthWeekSelector> {
   void initState() {
     super.initState();
     widgetNotifier = Provider.of<WidgetNotifier>(context, listen: false);
+    DateService.getMonthConsideringMonday((currentMonth, currentYear) {});
     months = DateService.getMonths(
       widgetNotifier.analyticsSelectedYear,
       currentYear,

@@ -5,6 +5,7 @@ class WeekSelectorWidget extends StatefulWidget {
   final int month;
   final int year;
   final PageController pageController;
+
   final Function(
     String startDay,
     String endDay,
@@ -21,7 +22,7 @@ class WeekSelectorWidget extends StatefulWidget {
   State<WeekSelectorWidget> createState() => _WeekSelectorWidgetState();
 
   // returns a list of ranges of dates of each week
-  List<List<String>> getWeeks() {
+  List<List<String>> getWeeks(void callBack(int weekIndex)) {
     List<List<String>> weeks = [];
     String monthStr = month < 10
         ? '0$month'
@@ -30,6 +31,7 @@ class WeekSelectorWidget extends StatefulWidget {
     DateTime lastDay = DateTime.parse(
         '${year}-${monthStr}-${DateTime(year, month + 1, 0).day}');
 
+    int weekIndex = 0;
     // Find the most recent Monday
     while (firstDay.weekday != DateTime.monday) {
       firstDay = firstDay.add(Duration(days: 1));
@@ -49,6 +51,12 @@ class WeekSelectorWidget extends StatefulWidget {
         DateService.weekSelectorFormat(weekStart),
         DateService.weekSelectorFormat(weekEnd),
       ]);
+
+      if (now.isAfter(weekStart) &&
+          now.isBefore(weekEnd.add(Duration(days: 1)))) {
+        callBack(weekIndex);
+      }
+      weekIndex = weekIndex + 1;
       currentDay = weekEnd.add(Duration(days: 1));
     }
     return weeks;
@@ -56,10 +64,28 @@ class WeekSelectorWidget extends StatefulWidget {
 }
 
 class _WeekSelectorWidgetState extends State<WeekSelectorWidget> {
+  int currentWeekIndex = -1;
+  List<List<String>> weeks = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    weeks = widget.getWeeks((weekIndex) {
+      currentWeekIndex = weekIndex;
+    });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.pageController.hasClients && currentWeekIndex != -1) {
+        widget.pageController.jumpToPage(currentWeekIndex);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return WeekSliderWidget(
-      weeks: widget.getWeeks(),
+      weeks: weeks,
       pageController: widget.pageController,
       onWeekChanged: widget.updateDates,
     );

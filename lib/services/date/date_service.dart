@@ -178,4 +178,22 @@ class DateService {
       return monthsFormatMMM;
     }
   }
+
+  static //if the Monday of the week started on the last month then currentMonth should be the last month. Also considering edgeCase
+      void getMonthConsideringMonday(void callBack(int month, int year)) {
+    DateTime now = DateTime.now();
+    int currentYear = now.year;
+    DateTime mondayOfThisWeek = now.subtract(Duration(days: now.weekday - 1));
+
+    if (mondayOfThisWeek.month != now.month) {
+      if (now.month == 1)
+        callBack(12, currentYear - 1);
+      else
+        callBack(now.month - 1, currentYear);
+      return;
+    } else {
+      callBack(now.month, currentYear);
+      return;
+    }
+  }
 }

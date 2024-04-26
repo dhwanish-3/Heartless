@@ -4,7 +4,27 @@ import 'package:heartless/pages/profile/users_list_page.dart';
 import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
 import 'package:heartless/widgets/home/heading_widget.dart';
+import 'package:heartless/widgets/info/demo_card.dart';
 import 'package:provider/provider.dart';
+
+const items = [
+  {
+    "image": "assets/illustrations/plank.jpeg",
+    "title": "Planking",
+  },
+  {
+    "image": "assets/illustrations/breathing.jpeg",
+    "title": "Breathing",
+  },
+  {
+    "image": "assets/illustrations/plank.jpeg",
+    "title": "Planking",
+  },
+  {
+    "image": "assets/illustrations/breathing.jpeg",
+    "title": "Breathing",
+  }
+];
 
 class DoctorNurseHomePage extends StatefulWidget {
   DoctorNurseHomePage({
@@ -17,6 +37,7 @@ class DoctorNurseHomePage extends StatefulWidget {
 
 class _DoctorNurseHomePageState extends State<DoctorNurseHomePage> {
   Future<List<AppUser>>? usersFuture;
+  PageController _pageController = PageController();
 
   @override
   void initState() {
@@ -41,6 +62,9 @@ class _DoctorNurseHomePageState extends State<DoctorNurseHomePage> {
                 user: authNotifier.appUser!,
               ),
               PatientList(usersFuture: usersFuture),
+              const SizedBox(height: 20),
+              DemoPreviewWidget(pageController: _pageController),
+              const SizedBox(height: 100),
             ],
           ),
         ),
@@ -204,6 +228,69 @@ class PatientList extends StatelessWidget {
                   }
                 }
               }),
+        ],
+      ),
+    );
+  }
+}
+
+class DemoPreviewWidget extends StatelessWidget {
+  final PageController pageController;
+  const DemoPreviewWidget({
+    super.key,
+    required this.pageController,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.symmetric(
+        horizontal: 20,
+      ),
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        // color:Theme.of(context).secondaryHeaderColor,
+        borderRadius: BorderRadius.circular(20),
+        //todo should test as to whether or not the boxshadow should be kept
+        boxShadow: [
+          BoxShadow(
+            color: Theme.of(context).highlightColor,
+            offset: const Offset(0, 0.5),
+            blurRadius: 1,
+            spreadRadius: 0,
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.only(
+        top: 20,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const SizedBox(width: 16),
+              Text(
+                'Demonstrations',
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).shadowColor,
+                ),
+              ),
+              Expanded(
+                child: const SizedBox(height: 10),
+              ),
+              Icon(
+                Icons.keyboard_arrow_right_outlined,
+              ),
+              const SizedBox(width: 30),
+            ],
+          ),
+          const SizedBox(height: 5),
+          ScrollableDemoList(items: items, pageController: pageController),
         ],
       ),
     );

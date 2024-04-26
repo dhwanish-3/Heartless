@@ -104,17 +104,6 @@ class _HomePageState extends State<HomePage> {
         );
       },
     );
-    // return Scaffold(
-    //   body: authNotifier.appUser!.userType == UserType.patient
-    //       ? _patientScreens[widgetNotifier.selectedIndex]
-    //       : _doctorNurseScreens[widgetNotifier.selectedIndex],
-    //   bottomNavigationBar: _buildGnav(
-    //     context,
-    //     authNotifier.appUser!.userType == UserType.patient
-    //         ? patientTabs
-    //         : doctorNurseTabs,
-    //   ),
-    // );
   }
 
   Widget _buildGnav(BuildContext context, List<GButton> tabs) {
