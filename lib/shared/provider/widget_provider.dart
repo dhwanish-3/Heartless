@@ -90,6 +90,7 @@ class WidgetNotifier with ChangeNotifier {
 
   void setAnalyticsStartDateWithoutNotifying(DateTime date) {
     _analyticsStartDate = date;
+    log("date at widgetNotifier" + date.toString());
   }
 
   DateTime get analyticsStartDate => _analyticsStartDate;

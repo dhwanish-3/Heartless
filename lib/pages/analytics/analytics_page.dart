@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heartless/services/date/date_service.dart';
 import 'package:heartless/services/enums/activity_type.dart';
 import 'package:heartless/services/enums/medical_reading_type.dart';
 import 'package:heartless/shared/provider/widget_provider.dart';
@@ -24,7 +25,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
     WidgetNotifier widgetNotifier =
         Provider.of<WidgetNotifier>(context, listen: false);
     widgetNotifier.setAnalyticsStartDateWithoutNotifying(
-      DateTime(DateTime.now().year, DateTime.now().month, 1),
+      DateService.getMonday(),
     );
 
     return Scaffold(

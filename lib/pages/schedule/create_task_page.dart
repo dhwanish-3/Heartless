@@ -133,33 +133,33 @@ class _TaskFormPageState extends State<TaskFormPage> {
       Navigator.pop(context);
     }
 
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(Icons.arrow_back),
-          ),
-          title: Center(
-            child: Text(
-              'Create Task',
-              style: Theme.of(context).textTheme.displayLarge,
-            ),
-          ),
-          actions: [
-            IconButton(
-              padding: EdgeInsets.zero,
-              onPressed: _submitForm,
-              icon: const Icon(
-                size: 30,
-                Icons.save,
-              ),
-            ),
-          ],
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(Icons.arrow_back),
         ),
-        body: SingleChildScrollView(
+        title: Center(
+          child: Text(
+            'Create Task',
+            style: Theme.of(context).textTheme.displayLarge,
+          ),
+        ),
+        actions: [
+          IconButton(
+            padding: EdgeInsets.zero,
+            onPressed: _submitForm,
+            icon: const Icon(
+              size: 30,
+              Icons.save,
+            ),
+          ),
+        ],
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
           child: Form(
             key: _formKey,
             child: Column(

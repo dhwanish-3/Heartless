@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/backend/controllers/activity_controller.dart';
+import 'package:heartless/pages/home/doctor_nurse_home_page.dart';
 import 'package:heartless/services/date/date_service.dart';
 import 'package:heartless/shared/models/activity.dart';
 import 'package:heartless/shared/models/app_user.dart';
@@ -11,6 +12,7 @@ import 'package:provider/provider.dart';
 
 class PatientHomePage extends StatelessWidget {
   final AppUser user;
+
   const PatientHomePage({
     super.key,
     required this.user,
@@ -18,6 +20,7 @@ class PatientHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    PageController _pageController = PageController();
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -30,6 +33,8 @@ class PatientHomePage extends StatelessWidget {
               QuickActionsWidget(),
               const SizedBox(height: 20),
               ActivitiesSchedule(context),
+              const SizedBox(height: 20),
+              DemoPreviewWidget(pageController: _pageController)
             ],
           ),
         ),

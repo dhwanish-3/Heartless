@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/backend/controllers/connect_users_controller.dart';
+import 'package:heartless/pages/demo/categorised_demo_page.dart';
 import 'package:heartless/pages/profile/users_list_page.dart';
 import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
@@ -283,8 +284,26 @@ class DemoPreviewWidget extends StatelessWidget {
               Expanded(
                 child: const SizedBox(height: 10),
               ),
-              Icon(
-                Icons.keyboard_arrow_right_outlined,
+              // Icon(
+              //   Icons.keyboard_arrow_right_outlined,
+              // ),
+              SizedBox(
+                height: 20,
+                child: IconButton(
+                  padding: EdgeInsets.zero,
+                  onPressed: () {
+                    //navigate to UserListPage
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => CategorisedDemoListPage()),
+                    );
+                  },
+                  icon: Icon(
+                    Icons.keyboard_arrow_right_outlined,
+                  ),
+                  color: Theme.of(context).shadowColor,
+                ),
               ),
               const SizedBox(width: 30),
             ],

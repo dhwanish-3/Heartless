@@ -15,10 +15,10 @@ class YearMonthWeekSelector extends StatefulWidget {
 
 class _YearMonthWeekSelectorState extends State<YearMonthWeekSelector> {
   final int startYear = 2022;
-  final int currentYear = DateTime.now().year;
+  int currentYear = DateTime.now().year;
   final int startMonth = 3; // March
 
-  final int currentMonth = DateTime.now().month;
+  int currentMonth = DateTime.now().month;
   late WidgetNotifier widgetNotifier;
   late PageController _pageController;
   late List<String> months;
@@ -29,7 +29,13 @@ class _YearMonthWeekSelectorState extends State<YearMonthWeekSelector> {
   void initState() {
     super.initState();
     widgetNotifier = Provider.of<WidgetNotifier>(context, listen: false);
-    DateService.getMonthConsideringMonday((currentMonth, currentYear) {});
+    DateService.getMonthConsideringMonday((month, year) {
+      currentMonth = month;
+      currentYear = year;
+      widgetNotifier.setAnalyticsSelectedYearWithoutNotifying(year);
+      widgetNotifier.setAnalyticsSelectedMonthWithoutNotifying(
+          DateService.getMonthFormatMMM(month));
+    });
     months = DateService.getMonths(
       widgetNotifier.analyticsSelectedYear,
       currentYear,
@@ -54,6 +60,9 @@ class _YearMonthWeekSelectorState extends State<YearMonthWeekSelector> {
         widgetNotifier.analyticsSelectedYear,
         widgetNotifier.analyticsSelectedMonth,
         startDay);
+
+    //* endDate is currently not used. Should it be used later on edgecases for start and endDate being in different years have to be handled
+    /*
     DateTime tempEndDate = DateService.convertWeekSelectorFormatToDate(
         widgetNotifier.analyticsSelectedYear,
         widgetNotifier.analyticsSelectedMonth,
@@ -64,6 +73,7 @@ class _YearMonthWeekSelectorState extends State<YearMonthWeekSelector> {
       tempEndDate =
           DateTime(tempEndDate.year, tempEndDate.month + 1, tempEndDate.day);
     }
+    */
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       widgetNotifier.setAnalyticsStartDate(tempStartDate);
@@ -83,13 +93,13 @@ class _YearMonthWeekSelectorState extends State<YearMonthWeekSelector> {
               child: dropDownWidget(context, years,
                   widgetNotifier.analyticsSelectedYear.toString(), (value) {
                 widgetNotifier.setAnalyticsSelectedYearWithoutNotifying(value);
-                months = DateService.getMonths(
-                  widgetNotifier.analyticsSelectedYear,
-                  currentYear,
-                  startYear,
-                  startMonth,
-                  currentMonth,
-                );
+                // months = DateService.getMonths(
+                //   widgetNotifier.analyticsSelectedYear,
+                //   currentYear,
+                //   startYear,
+                //   startMonth,
+                //   currentMonth,
+                // );
                 if (!months.contains(widgetNotifier.analyticsSelectedMonth)) {
                   widgetNotifier
                       .setAnalyticsSelectedMonthWithoutNotifying(months[0]);
@@ -109,8 +119,7 @@ class _YearMonthWeekSelectorState extends State<YearMonthWeekSelector> {
                 child: dropDownWidget(
                     context, months, widgetNotifier.analyticsSelectedMonth,
                     (value) {
-                  widgetNotifier
-                      .setAnalyticsSelectedMonthWithoutNotifying(value);
+                  widgetNotifier.setAnalyticsSelectedMonth(value);
                   int monthIndex = DateService.getMonthNumber(value);
                   if (_pageController.hasClients) {
                     _pageController.jumpToPage(0);
