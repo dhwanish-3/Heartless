@@ -196,17 +196,4 @@ class DateService {
       return;
     }
   }
-
-  static DateTime getMonday() {
-    DateTime now = DateTime.now();
-    int currentDayOfWeek = now.weekday;
-
-    if (currentDayOfWeek == DateTime.monday) {
-      return DateTime(now.year, now.month, now.day);
-    } else {
-      int daysSinceLastMonday = currentDayOfWeek - DateTime.monday;
-      DateTime lastMonday = now.subtract(Duration(days: daysSinceLastMonday));
-      return DateTime(lastMonday.year, lastMonday.month, lastMonday.day);
-    }
-  }
 }

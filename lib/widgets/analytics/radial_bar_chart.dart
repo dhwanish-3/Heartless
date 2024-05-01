@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:heartless/backend/controllers/activity_controller.dart';
 import 'package:heartless/services/enums/activity_status.dart';
@@ -47,6 +49,7 @@ class RadialBarChart extends StatelessWidget {
             map.key.name, (completed / total) * 100, map.key.color));
       }
     }
+    log(newChartData.toString());
     return newChartData;
   }
 

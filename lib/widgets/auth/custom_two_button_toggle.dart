@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/shared/constants.dart';
+import 'package:heartless/shared/provider/analytics_provider.dart';
 import 'package:heartless/shared/provider/widget_provider.dart';
 import 'package:heartless/widgets/auth/custom_text_button.dart';
 import 'package:provider/provider.dart';
@@ -21,6 +22,8 @@ class TwoButtonToggle extends StatelessWidget {
     double screenWidth = MediaQuery.of(context).size.width;
     WidgetNotifier widgetNotifier =
         Provider.of<WidgetNotifier>(context, listen: false);
+    AnalyticsNotifier analyticsNotifier =
+        Provider.of<AnalyticsNotifier>(context, listen: false);
 
     return Consumer<WidgetNotifier>(builder: (context, value, child) {
       return Container(
@@ -49,6 +52,7 @@ class TwoButtonToggle extends StatelessWidget {
                       child: GestureDetector(
                         onTap: () {
                           widgetNotifier.toggleEmailPhone();
+                          analyticsNotifier.toggleActivityReading();
                         },
                         child: CustomTextButton(
                           height: 40,
@@ -62,6 +66,7 @@ class TwoButtonToggle extends StatelessWidget {
                       child: GestureDetector(
                         onTap: () {
                           widgetNotifier.toggleEmailPhone();
+                          analyticsNotifier.toggleActivityReading();
                         },
                         child: CustomTextButton(
                           height: 40,

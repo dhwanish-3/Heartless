@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:heartless/services/enums/schedule_toggle_type.dart';
-import 'package:intl/intl.dart';
 
 class WidgetNotifier with ChangeNotifier {
   // for circular progress indicator
@@ -79,49 +78,6 @@ class WidgetNotifier with ChangeNotifier {
     _chosenDates.remove(date);
     notifyListeners();
   }
-
-  //* for the analytics page
-  //startDate
-  DateTime _analyticsStartDate = DateTime.now();
-  void setAnalyticsStartDate(DateTime date) {
-    _analyticsStartDate = date;
-    notifyListeners();
-  }
-
-  void setAnalyticsStartDateWithoutNotifying(DateTime date) {
-    _analyticsStartDate = date;
-    log("date at widgetNotifier" + date.toString());
-  }
-
-  DateTime get analyticsStartDate => _analyticsStartDate;
-
-  //selected month
-  String _analyticsSelectedMonth =
-      DateFormat('MMM').format(DateTime.now()).toUpperCase();
-
-  void setAnalyticsSelectedMonth(String month) {
-    _analyticsSelectedMonth = month;
-    notifyListeners();
-  }
-
-  void setAnalyticsSelectedMonthWithoutNotifying(String month) {
-    _analyticsSelectedMonth = month;
-  }
-
-  String get analyticsSelectedMonth => _analyticsSelectedMonth;
-
-//selected year
-  int _analyticsSelectedYear = DateTime.now().year;
-  void setAnalyticsSelectedYear(int year) {
-    _analyticsSelectedYear = year;
-    notifyListeners();
-  }
-
-  void setAnalyticsSelectedYearWithoutNotifying(int year) {
-    _analyticsSelectedYear = year;
-  }
-
-  int get analyticsSelectedYear => _analyticsSelectedYear;
 
   bool _isGraphEmpty = true;
   bool get isGraphEmpty => _isGraphEmpty;

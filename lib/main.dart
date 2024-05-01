@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:heartless/backend/services/notifications/notification_services.dart';
 import 'package:heartless/services/routes/routes.dart';
+import 'package:heartless/shared/provider/analytics_provider.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
 import 'package:heartless/shared/provider/theme_provider.dart';
 import 'package:heartless/shared/provider/widget_provider.dart';
@@ -31,6 +32,7 @@ void main() async {
       ChangeNotifierProvider(create: (_) => AuthNotifier()),
       ChangeNotifierProvider(create: (_) => WidgetNotifier()),
       ChangeNotifierProvider(create: (_) => ThemeNotifier()),
+      ChangeNotifierProvider(create: (_) => AnalyticsNotifier()),
     ],
     child: const MyApp(),
   ));

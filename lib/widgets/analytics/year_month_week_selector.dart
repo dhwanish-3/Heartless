@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/services/date/date_service.dart';
-import 'package:heartless/shared/provider/widget_provider.dart';
+import 'package:heartless/shared/provider/analytics_provider.dart';
 import 'package:heartless/widgets/analytics/week_selector_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -15,33 +15,31 @@ class YearMonthWeekSelector extends StatefulWidget {
 
 class _YearMonthWeekSelectorState extends State<YearMonthWeekSelector> {
   final int startYear = 2022;
-  int currentYear = DateTime.now().year;
   final int startMonth = 3; // March
 
-  int currentMonth = DateTime.now().month;
-  late WidgetNotifier widgetNotifier;
+  final DateTime startOfWeek = DateService.getStartOfWeek(DateTime.now());
+
   late PageController _pageController;
   late List<String> months;
-  late List<int> years =
-      List<int>.generate(currentYear - startYear + 1, (i) => startYear + i);
+  late List<int> years = List<int>.generate(
+      startOfWeek.year - startYear + 1, (i) => startYear + i);
 
   @override
   void initState() {
     super.initState();
-    widgetNotifier = Provider.of<WidgetNotifier>(context, listen: false);
-    DateService.getMonthConsideringMonday((month, year) {
-      currentMonth = month;
-      currentYear = year;
-      widgetNotifier.setAnalyticsSelectedYearWithoutNotifying(year);
-      widgetNotifier.setAnalyticsSelectedMonthWithoutNotifying(
-          DateService.getMonthFormatMMM(month));
-    });
+    AnalyticsNotifier analyticsNotifier =
+        Provider.of<AnalyticsNotifier>(context, listen: false);
+
+    analyticsNotifier.setSelectedDateWithoutNotifying(startOfWeek);
+    analyticsNotifier.setSelectedYearWithoutNotifying(startOfWeek.year);
+    analyticsNotifier.setSelectedMonthWithoutNotifying(startOfWeek.month);
+
     months = DateService.getMonths(
-      widgetNotifier.analyticsSelectedYear,
-      currentYear,
+      analyticsNotifier.selectedYear,
+      startOfWeek.year,
       startYear,
       startMonth,
-      currentMonth,
+      startOfWeek.month,
     );
     _pageController = PageController();
   }
@@ -52,37 +50,28 @@ class _YearMonthWeekSelectorState extends State<YearMonthWeekSelector> {
     _pageController.dispose();
   }
 
-  void updateDates(
-    String startDay,
-    String endDay,
-  ) {
-    DateTime tempStartDate = DateService.convertWeekSelectorFormatToDate(
-        widgetNotifier.analyticsSelectedYear,
-        widgetNotifier.analyticsSelectedMonth,
-        startDay);
-
-    //* endDate is currently not used. Should it be used later on edgecases for start and endDate being in different years have to be handled
-    /*
-    DateTime tempEndDate = DateService.convertWeekSelectorFormatToDate(
-        widgetNotifier.analyticsSelectedYear,
-        widgetNotifier.analyticsSelectedMonth,
-        endDay);
-    //check if tempEndDate is smaller than tempStartDate
-
-    if (tempEndDate.isBefore(tempStartDate)) {
-      tempEndDate =
-          DateTime(tempEndDate.year, tempEndDate.month + 1, tempEndDate.day);
-    }
-    */
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      widgetNotifier.setAnalyticsStartDate(tempStartDate);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Consumer<WidgetNotifier>(builder: (context, value, child) {
+    AnalyticsNotifier analyticsNotifier =
+        Provider.of<AnalyticsNotifier>(context, listen: false);
+
+    void updateDates(
+      String startDay,
+      String endDay,
+    ) {
+      DateTime startDate = DateService.convertWeekSelectorFormatToDate(
+          analyticsNotifier.selectedYear,
+          DateService.getMonthFormatMMM(analyticsNotifier.selectedMonth),
+          startDay);
+//* should the interval be specified, logic for endDate to be included here
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        // analyticsNotifier.setSelectedDateWithoutNotifying(startDate);
+        analyticsNotifier.setDate(startDate);
+      });
+    }
+
+    return Consumer<AnalyticsNotifier>(builder: (context, value, child) {
       return Container(
         height: 30,
         child: Row(
@@ -90,51 +79,55 @@ class _YearMonthWeekSelectorState extends State<YearMonthWeekSelector> {
           children: [
             Expanded(
               flex: 1,
-              child: dropDownWidget(context, years,
-                  widgetNotifier.analyticsSelectedYear.toString(), (value) {
-                widgetNotifier.setAnalyticsSelectedYearWithoutNotifying(value);
-                // months = DateService.getMonths(
-                //   widgetNotifier.analyticsSelectedYear,
-                //   currentYear,
-                //   startYear,
-                //   startMonth,
-                //   currentMonth,
-                // );
-                if (!months.contains(widgetNotifier.analyticsSelectedMonth)) {
-                  widgetNotifier
-                      .setAnalyticsSelectedMonthWithoutNotifying(months[0]);
-                }
+              child: dropDownWidget(
+                  context, years, analyticsNotifier.selectedYear.toString(),
+                  (value) {
+                analyticsNotifier.setYear(value);
+                months = DateService.getMonths(
+                  analyticsNotifier.selectedYear,
+                  startOfWeek.year,
+                  startYear,
+                  startMonth,
+                  startOfWeek.month,
+                );
                 int monthIndex = DateService.getMonthNumber(months[0]);
+                if (!months.contains(DateService.getMonthFormatMMM(
+                    analyticsNotifier.selectedMonth))) {
+                  analyticsNotifier.setMonth(monthIndex);
+                } else {
+                  monthIndex = DateService.getMonthNumber(
+                      DateService.getMonthFormatMMM(
+                          analyticsNotifier.selectedMonth));
+                }
 
                 if (_pageController.hasClients) {
                   _pageController.jumpToPage(0);
                 }
-                widgetNotifier
-                    .setAnalyticsStartDate(DateTime(value, monthIndex, 1));
+                analyticsNotifier.setDate(DateTime(value, monthIndex, 1));
               }),
             ),
             const SizedBox(width: 5),
             Expanded(
                 flex: 1,
                 child: dropDownWidget(
-                    context, months, widgetNotifier.analyticsSelectedMonth,
-                    (value) {
-                  widgetNotifier.setAnalyticsSelectedMonth(value);
+                    context,
+                    months,
+                    DateService.getMonthFormatMMM(
+                        analyticsNotifier.selectedMonth), (value) {
+                  analyticsNotifier.setMonth(DateService.getMonthNumber(value));
+
                   int monthIndex = DateService.getMonthNumber(value);
                   if (_pageController.hasClients) {
                     _pageController.jumpToPage(0);
                   }
-                  widgetNotifier.setAnalyticsStartDate(DateTime(
-                      widgetNotifier.analyticsSelectedYear, monthIndex, 1));
+                  analyticsNotifier.setDate(
+                      DateTime(analyticsNotifier.selectedYear, monthIndex, 1));
                 })),
             const SizedBox(width: 5),
             Expanded(
               flex: 2,
               child: WeekSelectorWidget(
                 pageController: _pageController,
-                month: DateService.getMonthNumber(
-                    widgetNotifier.analyticsSelectedMonth),
-                year: widgetNotifier.analyticsSelectedYear,
                 updateDates: updateDates,
               ),
             ),
