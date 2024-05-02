@@ -1,7 +1,7 @@
 enum UserType { patient, nurse, doctor }
 
 extension UserTypeExtension on UserType {
-  String get name {
+  String get capitalisedName {
     switch (this) {
       case UserType.patient:
         return 'Patient';

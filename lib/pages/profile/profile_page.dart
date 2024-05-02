@@ -32,13 +32,24 @@ class _ProfilePageState extends State<ProfilePage> {
     AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
     // to be used for nurse_doctor_profile page
-    ConnectUsersController.getAllPatientsHandledByUser(
-            authNotifier.appUser!.uid, authNotifier.appUser!.userType)
-        .then((value) {
-      setState(() {
-        users = value;
+
+    if (authNotifier.appUser!.userType == UserType.patient) {
+      ConnectUsersController.getAllUsersConnectedToPatient(
+              authNotifier.appUser!.uid)
+          .then((value) {
+        setState(() {
+          users = value;
+        });
       });
-    });
+    } else {
+      ConnectUsersController.getAllPatientsHandledByUser(
+              authNotifier.appUser!.uid, authNotifier.appUser!.userType)
+          .then((value) {
+        setState(() {
+          users = value;
+        });
+      });
+    }
     super.initState();
   }
 
@@ -69,7 +80,7 @@ class _ProfilePageState extends State<ProfilePage> {
           children: [
             _HeaderSection(authNotifier: authNotifier),
             _ProfileActions(
-              patients: users,
+              users: users,
               logout: logout,
             ),
           ],
@@ -208,11 +219,11 @@ class _HeaderSection extends StatelessWidget {
 
 class _ProfileActions extends StatelessWidget {
   final void Function() logout;
-  final List<AppUser> patients;
+  final List<AppUser> users;
   const _ProfileActions({
     super.key,
     required this.logout,
-    required this.patients,
+    required this.users,
   });
 
   @override
@@ -282,7 +293,15 @@ class _ProfileActions extends StatelessWidget {
                             break;
                           case 3:
                             //navigate to doctors and nurses
-
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => UsersListPage(
+                                  appUser: authNotifier.appUser!,
+                                  users: users,
+                                ),
+                              ),
+                            );
                             break;
                           case 4:
 
@@ -312,7 +331,7 @@ class _ProfileActions extends StatelessWidget {
                               MaterialPageRoute(
                                 builder: (context) => UsersListPage(
                                   appUser: authNotifier.appUser!,
-                                  users: patients,
+                                  users: users,
                                 ),
                               ),
                             );

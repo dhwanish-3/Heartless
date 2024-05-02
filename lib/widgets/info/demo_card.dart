@@ -50,7 +50,7 @@ class DemoCard extends StatelessWidget {
                 imageUrl,
               ),
               fit: BoxFit.cover,
-              opacity: 0.8,
+              opacity: 1,
             )),
         child: Stack(children: [
           Positioned(

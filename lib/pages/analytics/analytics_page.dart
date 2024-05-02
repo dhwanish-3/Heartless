@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:heartless/services/date/date_service.dart';
 import 'package:heartless/services/enums/activity_type.dart';
 import 'package:heartless/services/enums/medical_reading_type.dart';
+import 'package:heartless/shared/provider/analytics_provider.dart';
 import 'package:heartless/shared/provider/widget_provider.dart';
 import 'package:heartless/widgets/analytics/blood_pressure_chart.dart';
 import 'package:heartless/widgets/analytics/general_reading_chart.dart';
@@ -20,12 +22,22 @@ class AnalyticsPage extends StatefulWidget {
 
 class _AnalyticsPageState extends State<AnalyticsPage> {
   @override
+  void initState() {
+    super.initState();
+    AnalyticsNotifier analyticsNotifier =
+        Provider.of<AnalyticsNotifier>(context, listen: false);
+
+    analyticsNotifier.setSelectedDateWithoutNotifying(
+      DateService.getStartOfWeek(DateTime.now()),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     WidgetNotifier widgetNotifier =
         Provider.of<WidgetNotifier>(context, listen: false);
-    widgetNotifier.setAnalyticsStartDateWithoutNotifying(
-      DateTime(DateTime.now().year, DateTime.now().month, 1),
-    );
+    AnalyticsNotifier analyticsNotifier =
+        Provider.of<AnalyticsNotifier>(context, listen: false);
 
     return Scaffold(
       appBar: PreferredSize(
@@ -61,41 +73,41 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 12),
-          child: Consumer<WidgetNotifier>(builder: (context, value, child) {
-            widgetNotifier.setIsGraphEmptyWithoutNotifying(true);
+          child: Consumer<AnalyticsNotifier>(builder: (context, value, child) {
+            // widgetNotifier.setIsGraphEmptyWithoutNotifying(true);
             var activityGraphs = [
               RadialBarChart(
                 patientId: widget.patientId,
-                date: widgetNotifier.analyticsStartDate,
+                date: analyticsNotifier.chosenDate,
               ),
               LineDefaultChart(
                 activityType: ActivityType.exercise,
                 patientId: widget.patientId,
-                date: widgetNotifier.analyticsStartDate,
+                date: analyticsNotifier.chosenDate,
               ),
               LineDefaultChart(
                 activityType: ActivityType.medicine,
                 patientId: widget.patientId,
-                date: widgetNotifier.analyticsStartDate,
+                date: analyticsNotifier.chosenDate,
               ),
               LineDefaultChart(
                 activityType: ActivityType.diet,
                 patientId: widget.patientId,
-                date: widgetNotifier.analyticsStartDate,
+                date: analyticsNotifier.chosenDate,
               ),
             ];
 
             List<Widget> readingGraphs = [
               BloodPressureChart(
                 patientId: widget.patientId,
-                date: widgetNotifier.analyticsStartDate,
+                date: analyticsNotifier.chosenDate,
               ),
               for (var readingType in MedicalReadingType.values)
                 if (readingType != MedicalReadingType.bloodPressure)
                   GeneralReadingChart(
                     patientId: widget.patientId,
                     readingType: readingType,
-                    date: widgetNotifier.analyticsStartDate,
+                    date: analyticsNotifier.chosenDate,
                   ),
               SizedBox(
                 height: 100,

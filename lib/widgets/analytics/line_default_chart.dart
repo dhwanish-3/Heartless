@@ -4,6 +4,7 @@ import 'package:heartless/services/date/date_service.dart';
 import 'package:heartless/services/enums/activity_status.dart';
 import 'package:heartless/services/enums/activity_type.dart';
 import 'package:heartless/shared/models/activity.dart';
+import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class LineDefaultChart extends StatelessWidget {
@@ -75,9 +76,11 @@ class LineDefaultChart extends StatelessWidget {
                   isVisible: true,
                   position: LegendPosition.bottom,
                   overflowMode: LegendItemOverflowMode.wrap),
-              primaryXAxis: NumericAxis(
+              primaryXAxis: DateTimeAxis(
                   edgeLabelPlacement: EdgeLabelPlacement.shift,
+                  intervalType: DateTimeIntervalType.days,
                   interval: 1,
+                  dateFormat: DateFormat.d(),
                   name: "Date",
                   majorGridLines: MajorGridLines(width: 0)),
               primaryYAxis: NumericAxis(
@@ -86,11 +89,10 @@ class LineDefaultChart extends StatelessWidget {
                   majorTickLines: MajorTickLines(color: Colors.transparent)),
               tooltipBehavior: TooltipBehavior(enable: true),
               series: <CartesianSeries>[
-                LineSeries<LineDefaultChartData, int>(
+                LineSeries<LineDefaultChartData, DateTime>(
                     dataSource: chartData,
                     color: activityType.color,
-                    xValueMapper: (LineDefaultChartData data, _) =>
-                        data.date.day,
+                    xValueMapper: (LineDefaultChartData data, _) => data.date,
                     yValueMapper: (LineDefaultChartData data, _) => data.total,
                     legendItemText: 'Total',
                     name: 'Total',
@@ -98,11 +100,10 @@ class LineDefaultChart extends StatelessWidget {
                     dataLabelSettings: const DataLabelSettings(
                         // Renders the data label
                         isVisible: false)),
-                LineSeries<LineDefaultChartData, int>(
+                LineSeries<LineDefaultChartData, DateTime>(
                     dataSource: chartData,
                     color: Colors.amberAccent,
-                    xValueMapper: (LineDefaultChartData data, _) =>
-                        data.date.day,
+                    xValueMapper: (LineDefaultChartData data, _) => data.date,
                     yValueMapper: (LineDefaultChartData data, _) =>
                         data.completed,
                     legendItemText: 'Done',

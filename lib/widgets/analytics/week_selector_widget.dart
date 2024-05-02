@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/services/date/date_service.dart';
+import 'package:heartless/shared/provider/analytics_provider.dart';
+import 'package:provider/provider.dart';
 
 class WeekSelectorWidget extends StatefulWidget {
-  final int month;
-  final int year;
   final PageController pageController;
 
   final Function(
@@ -12,8 +12,6 @@ class WeekSelectorWidget extends StatefulWidget {
   ) updateDates;
   const WeekSelectorWidget({
     super.key,
-    required this.month,
-    required this.year,
     required this.updateDates,
     required this.pageController,
   });
@@ -22,7 +20,8 @@ class WeekSelectorWidget extends StatefulWidget {
   State<WeekSelectorWidget> createState() => _WeekSelectorWidgetState();
 
   // returns a list of ranges of dates of each week
-  List<List<String>> getWeeks(void callBack(int weekIndex)) {
+  List<List<String>> getWeeks(
+      int year, int month, void callBack(int weekIndex)) {
     List<List<String>> weeks = [];
     String monthStr = month < 10
         ? '0$month'
@@ -51,7 +50,6 @@ class WeekSelectorWidget extends StatefulWidget {
         DateService.weekSelectorFormat(weekStart),
         DateService.weekSelectorFormat(weekEnd),
       ]);
-
       if (now.isAfter(weekStart) &&
           now.isBefore(weekEnd.add(Duration(days: 1)))) {
         callBack(weekIndex);
@@ -71,7 +69,12 @@ class _WeekSelectorWidgetState extends State<WeekSelectorWidget> {
   void initState() {
     super.initState();
 
-    weeks = widget.getWeeks((weekIndex) {
+    AnalyticsNotifier analyticsNotifier =
+        Provider.of<AnalyticsNotifier>(context, listen: false);
+    int year = analyticsNotifier.selectedYear;
+    int month = analyticsNotifier.selectedMonth;
+
+    weeks = widget.getWeeks(year, month, (weekIndex) {
       currentWeekIndex = weekIndex;
     });
 
@@ -84,6 +87,20 @@ class _WeekSelectorWidgetState extends State<WeekSelectorWidget> {
 
   @override
   Widget build(BuildContext context) {
+    AnalyticsNotifier analyticsNotifier =
+        Provider.of<AnalyticsNotifier>(context, listen: false);
+    int year = analyticsNotifier.selectedYear;
+    int month = analyticsNotifier.selectedMonth;
+
+    weeks = widget.getWeeks(year, month, (weekIndex) {
+      currentWeekIndex = weekIndex;
+    });
+
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   if (widget.pageController.hasClients && currentWeekIndex != -1) {
+    //     widget.pageController.jumpToPage(currentWeekIndex);
+    //   }
+    // });
     return WeekSliderWidget(
       weeks: weeks,
       pageController: widget.pageController,
@@ -113,6 +130,7 @@ class WeekSliderWidget extends StatelessWidget {
       // pageController.jumpToPage(0);
       // onWeekChanged(weeks[0][0], weeks[0][1]);
     }
+
     return Container(
       height: 30,
       width: 200,
