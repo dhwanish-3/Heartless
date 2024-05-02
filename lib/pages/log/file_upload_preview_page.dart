@@ -41,6 +41,7 @@ class FileUploadPreviewPage extends StatelessWidget {
         selectedList,
         File(file.path!),
       );
+      Navigator.pop(context);
     }
 
     ;

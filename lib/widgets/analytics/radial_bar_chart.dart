@@ -1,7 +1,6 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:heartless/backend/controllers/activity_controller.dart';
+import 'package:heartless/services/date/date_service.dart';
 import 'package:heartless/services/enums/activity_status.dart';
 import 'package:heartless/services/enums/activity_type.dart';
 import 'package:heartless/shared/models/activity.dart';
@@ -31,10 +30,19 @@ class RadialBarChart extends StatelessWidget {
       activitiesMap[ActivityType.medicine] = [];
       activitiesMap[ActivityType.exercise] = [];
       activitiesMap[ActivityType.diet] = [];
-      activities.forEach((activity) {
-        if (activity.time.isBefore(date))
+
+      //* for the current week only percentage completion only displays upto the current day
+      if (DateService.getStartOfWeek(DateTime.now()) == date) {
+        activities.forEach((activity) {
+          if (activity.time.isBefore(DateTime.now())) {
+            activitiesMap[activity.type]!.add(activity);
+          }
+        });
+      } else {
+        activities.forEach((activity) {
           activitiesMap[activity.type]!.add(activity);
-      });
+        });
+      }
 
       for (var map in activitiesMap.entries) {
         int total = 0;
@@ -45,11 +53,10 @@ class RadialBarChart extends StatelessWidget {
             completed++;
           }
         });
-        newChartData.add(RadialChartData(
-            map.key.name, (completed / total) * 100, map.key.color));
+        newChartData.add(RadialChartData(map.key.name,
+            total == 0 ? 0 : (completed / total) * 100, map.key.color));
       }
     }
-    log(newChartData.toString());
     return newChartData;
   }
 

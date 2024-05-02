@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heartless/services/date/date_service.dart';
 import 'package:heartless/services/enums/activity_type.dart';
 import 'package:heartless/services/enums/medical_reading_type.dart';
 import 'package:heartless/shared/provider/analytics_provider.dart';
@@ -20,6 +21,17 @@ class AnalyticsPage extends StatefulWidget {
 }
 
 class _AnalyticsPageState extends State<AnalyticsPage> {
+  @override
+  void initState() {
+    super.initState();
+    AnalyticsNotifier analyticsNotifier =
+        Provider.of<AnalyticsNotifier>(context, listen: false);
+
+    analyticsNotifier.setSelectedDateWithoutNotifying(
+      DateService.getStartOfWeek(DateTime.now()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     WidgetNotifier widgetNotifier =
@@ -62,7 +74,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 12),
           child: Consumer<AnalyticsNotifier>(builder: (context, value, child) {
-            widgetNotifier.setIsGraphEmptyWithoutNotifying(true);
+            // widgetNotifier.setIsGraphEmptyWithoutNotifying(true);
             var activityGraphs = [
               RadialBarChart(
                 patientId: widget.patientId,
