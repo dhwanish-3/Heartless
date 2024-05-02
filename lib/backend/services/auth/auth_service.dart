@@ -116,6 +116,20 @@ class AuthService {
     }
   }
 
+  // update user details to firebase // !requires that appUser to be assigned the instance of the user according to userType
+  Future<bool> updateUserDetails(AppUser user) async {
+    try {
+      await _userRef.doc(user.uid).update(user.toMap()).timeout(_timeLimit);
+      return true;
+    } on FirebaseAuthException {
+      throw UnAutherizedException("Firebase Exception");
+    } on SocketException {
+      throw FetchDataException('No Internet Connection');
+    } on TimeoutException {
+      throw ApiNotRespondingException('Server is not responding');
+    }
+  }
+
   //? note: this is not user anywhere
   // initialize user // !required to have authNotifier.userType set!
   Future<bool> initializeUser(AuthNotifier authNotifier) async {

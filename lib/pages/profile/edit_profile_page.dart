@@ -1,9 +1,16 @@
+import 'dart:developer';
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:heartless/backend/controllers/auth_controller.dart';
+import 'package:heartless/backend/services/firebase_storage/firebase_storage_service.dart';
 import 'package:heartless/pages/log/file_upload_preview_page.dart';
+import 'package:heartless/services/utils/toast_message.dart';
 import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/shared/provider/widget_provider.dart';
 import 'package:heartless/widgets/auth/text_input.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:provider/provider.dart';
 
@@ -20,11 +27,55 @@ class EditProfilePage extends StatefulWidget {
 
 class _EditProfilePageState extends State<EditProfilePage> {
   final _formKey = GlobalKey<FormState>();
+  final ImagePicker picker = ImagePicker();
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
+
+  File? _image;
   String _phoneNumber = '';
+
+  void _pickImage() async {
+    final pickedFile =
+        await picker.pickImage(source: ImageSource.gallery, imageQuality: 80);
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+      } else {
+        ToastMessage().showError("No image picked");
+      }
+    });
+  }
+
+  void _submitForm() async {
+    if (_formKey.currentState!.validate()) {
+      log('Form is valid', name: 'EditProfilePage');
+      log('Name: ${_nameController.text}', name: 'EditProfilePage');
+      log('Email: ${_emailController.text}', name: 'EditProfilePage');
+      log('phone: $_phoneNumber', name: 'EditProfilePage');
+      // check if the user has changed the profile image
+      if (_image != null) {
+        log("Image not null ");
+        // delete the old image
+        await FirebaseStorageService.deleteImage(widget.user.imageUrl);
+        await FirebaseStorageService.uploadFile(widget.user.uid, _image!)
+            .then((value) {
+          widget.user.imageUrl = value;
+        }).catchError((error) {
+          ToastMessage().showError(error.toString());
+          return;
+        });
+      }
+      log("uid is ${widget.user.uid}");
+      // update the user profile
+      widget.user.name = _nameController.text;
+      widget.user.email = _emailController.text;
+      widget.user.password = _passwordController.text;
+      widget.user.phone = _phoneNumber;
+      await AuthController().updateProfile(widget.user);
+    }
+  }
 
   @override
   void initState() {
@@ -52,7 +103,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
             child: Column(
               children: [
                 const SizedBox(height: 20),
-                _ProfileImage(user: widget.user),
+                _ProfileImage(
+                    user: widget.user, image: _image, onTap: _pickImage),
                 const SizedBox(height: 40),
                 Padding(
                   padding: const EdgeInsets.symmetric(
@@ -124,9 +176,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         ),
                         const SizedBox(height: 20),
                         CustomFormSubmitButton(
-                          onTap: () {
-                            //todo edit changes,
-                          },
+                          onTap: _submitForm,
                           padding: 10,
                         ),
                         const SizedBox(height: 40),
@@ -145,9 +195,13 @@ class _ProfileImage extends StatelessWidget {
   const _ProfileImage({
     super.key,
     required this.user,
+    required this.image,
+    required this.onTap,
   });
 
   final AppUser user;
+  final File? image;
+  final void Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -163,30 +217,7 @@ class _ProfileImage extends StatelessWidget {
             width: 1,
           ),
         ),
-        child: ClipOval(
-          child: CachedNetworkImage(
-            imageUrl: Uri.parse(user.imageUrl).isAbsolute
-                ? user.imageUrl
-                : 'https://via.placeholder.com/150',
-            height: 160,
-            width: 160,
-            fit: BoxFit.cover,
-            placeholder: (context, url) => const CircularProgressIndicator(),
-            // todo: modify the error widget
-            errorWidget: (context, url, error) => Container(
-                height: 160,
-                width: 160,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Theme.of(context).shadowColor,
-                ),
-                child: const Icon(
-                  Icons.person_2_outlined,
-                  color: Colors.black,
-                  size: 30,
-                )),
-          ),
-        ),
+        child: ClipOval(child: _showProfile(user.imageUrl, image)),
       ),
       Positioned(
         bottom: 0,
@@ -197,9 +228,7 @@ class _ProfileImage extends StatelessWidget {
             color: Colors.white,
           ),
           child: IconButton(
-            onPressed: () {
-//add image picker
-            },
+            onPressed: onTap,
             iconSize: 24,
             icon: Icon(
               Icons.edit,
@@ -209,5 +238,53 @@ class _ProfileImage extends StatelessWidget {
         ),
       ),
     ]);
+  }
+
+  _showProfile(String profileUrl, File? image) {
+    if (profileUrl == '' && image == null) {
+      return const Center(
+          child: Icon(
+        Icons.account_box,
+        color: Colors.blue,
+        size: 130,
+      ));
+    } else if (image != null) {
+      return Container(
+        height: 150.0,
+        width: 150.0,
+        decoration: const BoxDecoration(
+          shape: BoxShape.circle,
+        ),
+        child: ClipRRect(
+            borderRadius: BorderRadius.circular(100.0),
+            child: Image.file(
+              image,
+              fit: BoxFit.cover,
+            )),
+      );
+    } else {
+      return CachedNetworkImage(
+        imageUrl: Uri.parse(user.imageUrl).isAbsolute
+            ? user.imageUrl
+            : 'https://via.placeholder.com/150',
+        height: 160,
+        width: 160,
+        fit: BoxFit.cover,
+        placeholder: (context, url) => const CircularProgressIndicator(),
+        // todo: modify the error widget
+        errorWidget: (context, url, error) => Container(
+            height: 160,
+            width: 160,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Theme.of(context).shadowColor,
+            ),
+            child: const Icon(
+              Icons.person_2_outlined,
+              color: Colors.black,
+              size: 30,
+            )),
+      );
+    }
   }
 }

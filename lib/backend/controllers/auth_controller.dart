@@ -1,9 +1,25 @@
-import 'package:heartless/backend/services/auth/auth_service.dart';
+import 'dart:developer';
+
 import 'package:heartless/backend/controllers/base_controller.dart';
+import 'package:heartless/backend/services/auth/auth_service.dart';
+import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
 
 class AuthController with BaseController {
   final AuthService _authService = AuthService();
+
+  Future<bool> updateProfile(AppUser user) async {
+    log('user id ' + user.uid);
+    if (await _authService
+        .updateUserDetails(user)
+        .then((value) => handleSuccess(value, "Profile updated"))
+        .catchError(handleError)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   Future<bool> login(AuthNotifier authNotifier) async {
     if (await _authService
         .login(authNotifier)
