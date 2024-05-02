@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:heartless/backend/controllers/health_document_controller.dart';
 import 'package:heartless/services/enums/custom_file_type.dart';
 import 'package:heartless/services/enums/event_tag.dart';
+import 'package:heartless/shared/provider/widget_provider.dart';
 import 'package:heartless/widgets/miscellaneous/health_tag_selection.dart';
+import 'package:provider/provider.dart';
 
 class FileUploadPreviewPage extends StatelessWidget {
   final PlatformFile file;
@@ -202,36 +204,47 @@ class CustomFormSubmitButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-          height: 50,
-          margin: EdgeInsets.symmetric(
-            horizontal: padding,
+    return Container(
+      height: 50,
+      margin: EdgeInsets.symmetric(
+        horizontal: padding,
+      ),
+      decoration: BoxDecoration(
+        color: Theme.of(context).primaryColor,
+        boxShadow: [
+          BoxShadow(
+            color: Theme.of(context).highlightColor,
+            blurRadius: 0.5,
+            spreadRadius: 0.5,
+            offset: Offset(0, 2),
           ),
-          decoration: BoxDecoration(
-            color: Theme.of(context).primaryColor,
-            boxShadow: [
-              BoxShadow(
-                color: Theme.of(context).highlightColor,
-                blurRadius: 0.5,
-                spreadRadius: 0.5,
-                offset: Offset(0, 2),
-              ),
-            ],
-            borderRadius: BorderRadius.all(Radius.circular(10)),
-          ),
-          child: Center(
-            child: Text(
-              text,
-              style: TextStyle(
-                fontSize: 20,
-                color: Colors.white,
-                // color: Theme.of(context).primaryColor,
-                fontWeight: FontWeight.bold,
+        ],
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+      ),
+      child: Consumer<WidgetNotifier>(builder: (context, widgetNotifier, _) {
+        if (widgetNotifier.loading) {
+          return Center(
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+            ),
+          );
+        } else {
+          return InkWell(
+            onTap: onTap,
+            child: Center(
+              child: Text(
+                text,
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.white,
+                  // color: Theme.of(context).primaryColor,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          )),
+          );
+        }
+      }),
     );
   }
 }

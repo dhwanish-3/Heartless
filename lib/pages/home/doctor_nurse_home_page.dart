@@ -172,7 +172,7 @@ class PatientList extends StatelessWidget {
                   } else {
                     return Column(
                       children: List.generate(
-                        users.length,
+                        users.length > 3 ? 3 : users.length,
                         (index) {
                           AppUser user = users[index];
                           return Container(

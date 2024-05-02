@@ -33,7 +33,7 @@ class _DoctorNurseSidePatientProfileState
     ConnectUsersController.getAllUsersConnectedToPatient(widget.patient.uid)
         .then((value) {
       setState(() {
-        supervisors = value;
+        supervisors = value.take(3).toList();
       });
     });
     super.initState();

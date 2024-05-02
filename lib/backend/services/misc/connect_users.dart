@@ -7,14 +7,20 @@ class ConnectUsers {
 
   // get user details from uid
   static Future<AppUser?> getUserDetails(String uid) {
-    return _userRef.doc(uid).get().then((value) {
-      if (value.exists && value.data() != null) {
-        return AppUser.getInstanceFromMap(
-            UserType.values[value.data()!['userType']], value.data()!);
-      } else {
+    try {
+      return _userRef.doc(uid).get().then((value) {
+        if (value.exists && value.data() != null) {
+          return AppUser.getInstanceFromMap(
+              UserType.values[value.data()!['userType']], value.data()!);
+        } else {
+          return null;
+        }
+      });
+    } catch (e) {
+      return Future.delayed(Duration(seconds: 0), () {
         return null;
-      }
-    });
+      });
+    }
   }
 
   // get all the nurses related to a doctor
