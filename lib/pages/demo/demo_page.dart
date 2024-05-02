@@ -62,7 +62,7 @@ class _DemoPageState extends State<DemoPage> {
               const SizedBox(height: 10),
               Container(
                 margin: const EdgeInsets.symmetric(
-                  horizontal: 20,
+                  horizontal: 30,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

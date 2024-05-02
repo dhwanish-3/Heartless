@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:heartless/backend/controllers/connect_users_controller.dart';
 import 'package:heartless/backend/services/misc/connect_users.dart';
+import 'package:heartless/pages/profile/qr_result_page.dart';
+import 'package:heartless/services/enums/user_type.dart';
 import 'package:heartless/services/utils/qr_scanner.dart';
+import 'package:heartless/services/utils/toast_message.dart';
 import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
 import 'package:heartless/shared/provider/widget_provider.dart';
@@ -21,13 +23,28 @@ class QRPopupWidget extends StatefulWidget {
 
 class _QRPopupWidgetState extends State<QRPopupWidget> {
   String qrCodeResult = "Not Yet Scanned";
-  Future<void> scanQRCode() async {
+
+  Future<void> scanQRCode(AuthNotifier authNotifier) async {
     QRScanner.scanQRCode().then((value) async {
       AppUser? user = await ConnectUsers.getUserDetails(value);
-      setState(() {
-        qrCodeResult = value;
-        user = user;
-      });
+      qrCodeResult = value;
+      ToastMessage Toast = ToastMessage();
+      if (user == null) {
+        Toast.showError("Qr Code does not belong to a valid user");
+      } else if (authNotifier.appUser!.uid == user.uid) {
+        Toast.showError("Can't add yourself");
+      } else if (authNotifier.appUser!.userType == user.userType) {
+        Toast.showError(
+            "Can't add user who is a ${user.userType.capitalisedName}");
+
+        // await ConnectUsersController.connectUsers(authNotifier.appUser!, user!);
+      } else {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => QRResultPage(appUser: user),
+          ),
+        );
+      }
     });
   }
 
@@ -37,17 +54,6 @@ class _QRPopupWidgetState extends State<QRPopupWidget> {
         Provider.of<AuthNotifier>(context, listen: false);
     WidgetNotifier widgetNotifier =
         Provider.of<WidgetNotifier>(context, listen: false);
-
-    // * addUser function
-    Future<void> addUser() async {
-      if (authNotifier.appUser!.uid != widget.user.uid &&
-          authNotifier.appUser!.userType != widget.user.userType) {
-        widgetNotifier.setLoading(true);
-        await ConnectUsersController.connectUsers(
-            authNotifier.appUser!, widget.user);
-        widgetNotifier.setLoading(false);
-      }
-    }
 
     return Center(
       child: Container(
@@ -133,7 +139,7 @@ class _QRPopupWidgetState extends State<QRPopupWidget> {
                 child: Material(
                   child: InkWell(
                     onTap: () {
-                      scanQRCode();
+                      scanQRCode(authNotifier);
 
                       //! mechanism to add the scanner user
                     },

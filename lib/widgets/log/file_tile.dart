@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/services/enums/custom_file_type.dart';
+import 'package:heartless/services/enums/event_tag.dart';
 import 'package:heartless/widgets/miscellaneous/tag_tile.dart';
 
 class FileTile extends StatelessWidget {
   final String title;
   final String dateString;
   final CustomFileType fileType;
+  final List<EventTag> tags;
   const FileTile({
     super.key,
     required this.title,
     required this.dateString,
     required this.fileType,
+    this.tags = const [],
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
         color: Theme.of(context).secondaryHeaderColor,
+        margin: const EdgeInsets.symmetric(),
         padding: const EdgeInsets.symmetric(
           horizontal: 10,
           vertical: 6,
@@ -61,14 +65,11 @@ class FileTile extends StatelessWidget {
                   Wrap(
                     clipBehavior: Clip.antiAliasWithSaveLayer,
                     children: [
-                      TagWidget(
-                        tag: 'blood pressure',
-                        tagColor: Colors.red,
-                      ),
-                      TagWidget(
-                        tag: 'test report',
-                        tagColor: Colors.blue,
-                      ),
+                      for (EventTag tag in tags)
+                        TagWidget(
+                          tag: tag.value,
+                          tagColor: tag.tagColor,
+                        )
                     ],
                   )
                 ],
@@ -78,3 +79,5 @@ class FileTile extends StatelessWidget {
         ));
   }
 }
+
+class TagTile {}

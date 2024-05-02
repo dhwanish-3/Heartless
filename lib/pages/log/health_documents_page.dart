@@ -1,11 +1,10 @@
-import 'dart:developer';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:heartless/backend/controllers/health_document_controller.dart';
 import 'package:heartless/pages/log/file_upload_preview_page.dart';
 import 'package:heartless/services/date/date_service.dart';
 import 'package:heartless/services/enums/custom_file_type.dart';
+import 'package:heartless/services/enums/event_tag.dart';
 import 'package:heartless/services/storage/file_storage.dart';
 import 'package:heartless/shared/constants.dart';
 import 'package:heartless/shared/models/health_document.dart';
@@ -119,8 +118,8 @@ class _HealthDocumentsPageState extends State<HealthDocumentsPage> {
                 },
                 controller: _searchController,
                 hintText: 'Search with tag or title...',
-                textStyle: MaterialStateTextStyle.resolveWith(
-                  (Set<MaterialState> states) {
+                textStyle: WidgetStateTextStyle.resolveWith(
+                  (Set<WidgetState> states) {
                     return TextStyle(
                       color: Theme.of(context).shadowColor,
                       fontSize: 15,
@@ -128,9 +127,9 @@ class _HealthDocumentsPageState extends State<HealthDocumentsPage> {
                     );
                   },
                 ),
-                shadowColor: MaterialStateColor.resolveWith(
+                shadowColor: WidgetStateColor.resolveWith(
                     (states) => Theme.of(context).highlightColor),
-                surfaceTintColor: MaterialStateColor.resolveWith(
+                surfaceTintColor: WidgetStateColor.resolveWith(
                   (states) =>
                       // Theme.of(context).scaffoldBackgroundColor,
                       Colors.white,
@@ -151,6 +150,7 @@ class _HealthDocumentsPageState extends State<HealthDocumentsPage> {
         child: SingleChildScrollView(
           child: Column(
             children: [
+              const SizedBox(height: 10),
               SizedBox(
                 //todo alternatives to specifying height
                 height: MediaQuery.of(context).size.height,
@@ -167,7 +167,6 @@ class _HealthDocumentsPageState extends State<HealthDocumentsPage> {
                               HealthDocument healthDocument =
                                   HealthDocument.fromMap(
                                       snapshot.data.docs[index].data());
-                              log(healthDocument.toMap().toString());
 
                               // check if the document is the first document of the month
                               if (!documentDates.contains(
@@ -179,17 +178,45 @@ class _HealthDocumentsPageState extends State<HealthDocumentsPage> {
                               }
 
                               // if the document is the first document of the month show the month divider
-                              if (documentDatesIndex.contains(index)) {
-                                return Column(children: [
-                                  MonthDivider(
-                                      month: DateService.getMonthFormatMMM(
-                                          healthDocument.createdAt.month),
-                                      year: healthDocument.createdAt.year
-                                          .toString()),
-                                  _buildDocumentTile(healthDocument)
-                                ]);
+
+                              bool tagMatches(
+                                  List<EventTag> tags, String searchValue) {
+                                return tags.any((tag) =>
+                                    tag.value
+                                        .toLowerCase()
+                                        .contains(searchValue.toLowerCase()) ||
+                                    searchValue
+                                        .toLowerCase()
+                                        .contains(tag.value.toLowerCase()));
+                              }
+
+                              if (_searchController.text.isEmpty ||
+                                  healthDocument.name.toLowerCase().contains(
+                                      _searchController.text.toLowerCase()) ||
+                                  _searchController.text.toLowerCase().contains(
+                                      healthDocument.name.toLowerCase()) ||
+                                  tagMatches(healthDocument.tags,
+                                      _searchController.text) ||
+                                  _searchController.text ==
+                                      healthDocument.customFileType.value) {
+                                if (documentDatesIndex.contains(index)) {
+                                  return Column(children: [
+                                    MonthDivider(
+                                        month: DateService.getMonthFormatMMM(
+                                            healthDocument.createdAt.month),
+                                        year: healthDocument.createdAt.year
+                                            .toString()),
+                                    _buildDocumentTile(
+                                      healthDocument,
+                                    )
+                                  ]);
+                                } else {
+                                  return _buildDocumentTile(
+                                    healthDocument,
+                                  );
+                                }
                               } else {
-                                return _buildDocumentTile(healthDocument);
+                                return Container();
                               }
                             });
                       } else {
@@ -206,7 +233,9 @@ class _HealthDocumentsPageState extends State<HealthDocumentsPage> {
     );
   }
 
-  Widget _buildDocumentTile(HealthDocument healthDocument) {
+  Widget _buildDocumentTile(
+    HealthDocument healthDocument,
+  ) {
     return GestureDetector(
       onTap: () {
         healthDocumentonTap(healthDocument);
@@ -214,6 +243,7 @@ class _HealthDocumentsPageState extends State<HealthDocumentsPage> {
       child: FileTile(
         title: healthDocument.name,
         fileType: healthDocument.customFileType,
+        tags: healthDocument.tags,
         dateString: DateService.dayDateTimeFormat(healthDocument.createdAt),
       ),
     );

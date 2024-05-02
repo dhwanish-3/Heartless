@@ -4,6 +4,7 @@ import "package:flutter/material.dart";
 import "package:flutter_svg/svg.dart";
 import "package:heartless/backend/controllers/auth_controller.dart";
 import "package:heartless/backend/services/notifications/notification_services.dart";
+import "package:heartless/services/enums/user_type.dart";
 import "package:heartless/services/phone_auth/phone_auth.dart";
 import "package:heartless/shared/constants.dart";
 import 'package:heartless/shared/models/app_user.dart';
@@ -65,8 +66,6 @@ class _LoginPageState extends State<LoginPage> {
       appUser.email = _emailController.text;
       appUser.password = _passwordController.text;
       authNotifier.setAppUser(appUser);
-      log("During login: ");
-      log(authNotifier.appUser!.toMap().toString());
       bool success = await _authController.login(authNotifier);
       if (success && context.mounted) {
         NotificationService.getFirebaseMessagingToken(authNotifier);
@@ -140,7 +139,7 @@ class _LoginPageState extends State<LoginPage> {
                       height: 20,
                     ),
                     Text(
-                      '${authNotifier.userType.name} Login',
+                      '${(authNotifier.userType.capitalisedName)} Login',
                       style: Theme.of(context).textTheme.headlineMedium,
                     ),
                     const SizedBox(

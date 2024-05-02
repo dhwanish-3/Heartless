@@ -37,7 +37,11 @@ class UsersListPage extends StatelessWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           child: usersFuture == null
-              ? _buildUsersList(users, context)
+              ? _buildUsersList(
+                  users,
+                  context,
+                  authNotifier.appUser!.userType == UserType.patient,
+                )
               : FutureBuilder<List<AppUser>>(
                   future: usersFuture,
                   builder: (context, snapshot) {
@@ -54,7 +58,11 @@ class UsersListPage extends StatelessWidget {
                         child: Text('No users found'),
                       );
                     } else {
-                      return _buildUsersList(snapshot.data!, context);
+                      return _buildUsersList(
+                        snapshot.data!,
+                        context,
+                        authNotifier.appUser!.userType == UserType.patient,
+                      );
                     }
                   },
                 ),
@@ -63,7 +71,8 @@ class UsersListPage extends StatelessWidget {
     );
   }
 
-  Column _buildUsersList(List<AppUser> snapshot, BuildContext context) {
+  Column _buildUsersList(
+      List<AppUser> snapshot, BuildContext context, bool isPatient) {
     return Column(
       children: snapshot.map((user) {
         return Container(
@@ -116,6 +125,9 @@ class UsersListPage extends StatelessWidget {
                   });
             },
             onTap: () {
+              if (isPatient) {
+                return;
+              }
               Navigator.push(
                 context,
                 MaterialPageRoute(
