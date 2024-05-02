@@ -43,7 +43,7 @@ class FirebaseStorageService {
       // deleting the image
       await ref.delete();
     } catch (e) {
-      rethrow;
+      return;
     }
   }
 }

@@ -118,22 +118,22 @@ class _HealthDocumentsPageState extends State<HealthDocumentsPage> {
                 },
                 controller: _searchController,
                 hintText: 'Search with tag or title...',
-                textStyle: WidgetStateTextStyle.resolveWith(
-                  (Set<WidgetState> states) {
-                    return TextStyle(
-                      color: Theme.of(context).shadowColor,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w400,
-                    );
-                  },
-                ),
-                shadowColor: WidgetStateColor.resolveWith(
-                    (states) => Theme.of(context).highlightColor),
-                surfaceTintColor: WidgetStateColor.resolveWith(
-                  (states) =>
-                      // Theme.of(context).scaffoldBackgroundColor,
-                      Colors.white,
-                ),
+                // textStyle: WidgetStateTextStyle.resolveWith(
+                //   (Set<WidgetState> states) {
+                //     return TextStyle(
+                //       color: Theme.of(context).shadowColor,
+                //       fontSize: 15,
+                //       fontWeight: FontWeight.w400,
+                //     );
+                //   },
+                // ),
+                // shadowColor: WidgetStateColor.resolveWith(
+                //     (states) => Theme.of(context).highlightColor),
+                // surfaceTintColor: WidgetStateColor.resolveWith(
+                //   (states) =>
+                //       // Theme.of(context).scaffoldBackgroundColor,
+                //       Colors.white,
+                // ),
                 leading: InkWell(
                   onTap: () {
                     Navigator.pop(context);
