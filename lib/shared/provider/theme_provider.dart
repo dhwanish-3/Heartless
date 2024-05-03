@@ -3,13 +3,19 @@ import 'package:heartless/services/enums/color_theme.dart';
 import 'package:heartless/shared/constants.dart';
 
 class ThemeNotifier extends ChangeNotifier {
-  static ThemeMode _themeMode = ThemeMode.system;
+  static ThemeMode _themeMode = ThemeMode.light;
 
   static ThemeMode get themeMode => _themeMode;
 
   void toggleThemeMode() {
     _themeMode =
         _themeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
+    notifyListeners();
+  }
+
+  void setThemeMode(Brightness brightness) {
+    _themeMode =
+        brightness == Brightness.light ? ThemeMode.light : ThemeMode.dark;
     notifyListeners();
   }
 

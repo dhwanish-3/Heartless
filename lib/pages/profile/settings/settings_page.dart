@@ -126,12 +126,9 @@ class DarkModeToggleWidget extends StatelessWidget {
           ),
         ],
       ),
-      padding: const EdgeInsets.only(
-        left: 20,
-        top: 20,
-        bottom: 20,
-      ),
+      padding: const EdgeInsets.all(20),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Flexible(
             child: Text(
@@ -143,9 +140,6 @@ class DarkModeToggleWidget extends StatelessWidget {
                 color: Theme.of(context).shadowColor,
               ),
             ),
-          ),
-          Expanded(
-            child: const SizedBox(),
           ),
           ThemeToggleButton(),
         ],
@@ -311,9 +305,16 @@ class ThemeToggleButton extends StatelessWidget {
   Widget build(BuildContext context) {
     ThemeNotifier themeProvider =
         Provider.of<ThemeNotifier>(context, listen: false);
+    AuthNotifier authNotifier =
+        Provider.of<AuthNotifier>(context, listen: false);
     return InkWell(
       onTap: () {
         themeProvider.toggleThemeMode();
+        authNotifier.appUser!.brightness =
+            ThemeNotifier.themeMode == ThemeMode.light
+                ? Brightness.light
+                : Brightness.dark;
+        AuthController().updateProfile(authNotifier.appUser!);
       },
       child: Container(
         height: 26,

@@ -78,6 +78,7 @@ class _ContactsPageState extends State<ContactsPage> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Chats'),
+          backgroundColor: Theme.of(context).primaryColor,
         ),
         body: StreamBuilder(
           stream: ChatController.getChatRooms(),

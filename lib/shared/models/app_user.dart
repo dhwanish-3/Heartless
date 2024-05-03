@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:heartless/services/enums/color_theme.dart';
 import 'package:heartless/services/enums/user_type.dart';
 import 'package:heartless/shared/models/doctor.dart';
@@ -16,6 +17,7 @@ class AppUser {
   DateTime lastSeen = DateTime.now();
   UserType userType = UserType.patient;
   ColorTheme theme = ColorTheme.Default;
+  Brightness brightness = Brightness.light;
 
   AppUser();
 
@@ -31,6 +33,7 @@ class AppUser {
     pushToken = map['pushToken'] ?? '';
     lastSeen = DateTime.parse(map['lastSeen'] ?? DateTime.now());
     theme = ColorTheme.values[map['theme'] ?? ColorTheme.Default.index];
+    brightness = Brightness.values[map['brightness'] ?? Brightness.light.index];
   }
 
   Map<String, dynamic> toMap() {
@@ -46,6 +49,7 @@ class AppUser {
       'pushToken': pushToken,
       'lastSeen': lastSeen.toString(),
       'theme': theme.index,
+      'brightness': brightness.index,
     };
   }
 

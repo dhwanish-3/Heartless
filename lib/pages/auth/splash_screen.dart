@@ -56,8 +56,10 @@ class _SplashScreenState extends State<SplashScreen> {
         if (value) {
           NotificationService.getFirebaseMessagingToken(authNotifier);
           SearchService.initGlobalSearchOptions(authNotifier.appUser!);
-          log("theme: ${authNotifier.appUser!.theme}");
+          // setting color theme & brightness
           themeNotifier.setColorTheme(authNotifier.appUser!.theme);
+          log("dark mode: " + authNotifier.appUser!.brightness.toString());
+          themeNotifier.setThemeMode(authNotifier.appUser!.brightness);
           Navigator.pushNamed(context, '/home');
           inSplashScreen = false;
         } else {
