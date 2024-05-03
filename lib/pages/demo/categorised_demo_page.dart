@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/pages/demo/demo_page.dart';
+import 'package:heartless/pages/profile/settings/static_data.dart';
 import 'package:heartless/shared/models/demonstration.dart';
 import 'package:heartless/widgets/info/demo_card.dart';
 
 class CategorisedDemoListPage extends StatelessWidget {
-  final List<Demonstration> items;
-
   const CategorisedDemoListPage({
     super.key,
-    required this.items,
   });
 
   @override
@@ -20,10 +18,15 @@ class CategorisedDemoListPage extends StatelessWidget {
           child: Column(
             children: [
               DemoCategory(
-                items: items,
+                items: StaticData.breathingDemos,
               ),
               DemoCategory(
-                items: items,
+                items: StaticData.cardioWorkoutDemos,
+                category: 'Flexi-Cardio Workout',
+              ),
+              DemoCategory(
+                items: StaticData.protocols,
+                category: 'Emergency Protocol',
               ),
             ],
           ),
@@ -60,7 +63,7 @@ class DemoCategory extends StatelessWidget {
               children: [
                 const SizedBox(width: 10),
                 Text(
-                  'Breathing Exercise',
+                  category,
                   textAlign: TextAlign.start,
                   style: TextStyle(
                     fontSize: 20,
