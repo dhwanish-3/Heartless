@@ -15,6 +15,10 @@ class ThemeNotifier extends ChangeNotifier {
 
   ThemeData lightTheme = ThemeData(
     brightness: Brightness.light,
+    colorScheme: ColorScheme.light(
+      primary: Constants.primaryColor,
+      secondary: Constants.primaryColor.withOpacity(0.5),
+    ),
     primaryColor: Constants.primaryColor,
     primaryColorLight: Constants.lightPrimaryColor,
     textTheme: Constants().textThemeLight,
@@ -27,6 +31,10 @@ class ThemeNotifier extends ChangeNotifier {
 
   ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
+    colorScheme: ColorScheme.dark(
+      primary: Constants.primaryColor,
+      secondary: Constants.primaryColor.withOpacity(0.5),
+    ),
     primaryColor: Constants.primaryColor,
     primaryColorLight: Constants.lightPrimaryColor,
     textTheme: Constants().textThemeDark,
@@ -45,11 +53,17 @@ class ThemeNotifier extends ChangeNotifier {
 
     lightTheme = lightTheme.copyWith(
       primaryColor: colorTheme.primaryColor,
+      colorScheme: ColorScheme.light(
+        primary: colorTheme.primaryColor,
+      ),
       primaryColorLight: colorTheme.lightPrimaryColor,
     );
 
     darkTheme = darkTheme.copyWith(
       primaryColor: colorTheme.primaryColor,
+      colorScheme: ColorScheme.dark(
+        primary: colorTheme.primaryColor,
+      ),
       primaryColorLight: colorTheme.lightPrimaryColor,
     );
     notifyListeners();

@@ -1,10 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/backend/controllers/chat_controller.dart';
 import 'package:heartless/main.dart';
+import 'package:heartless/pages/analytics/analytics_page.dart';
+import 'package:heartless/pages/auth/forgot_password.dart';
+import 'package:heartless/pages/auth/scan_qr_page.dart';
 import 'package:heartless/pages/chat/chat_page.dart';
+import 'package:heartless/pages/log/daywise_diary_page.dart';
+import 'package:heartless/pages/log/daywise_log.dart';
+import 'package:heartless/pages/log/health_documents_page.dart';
+import 'package:heartless/pages/profile/edit_profile_page.dart';
+import 'package:heartless/pages/profile/extended_timeline_page.dart';
+import 'package:heartless/pages/schedule/schedule_page.dart';
+import 'package:heartless/services/enums/schedule_toggle_type.dart';
 import 'package:heartless/services/enums/user_type.dart';
 import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/shared/models/chat.dart';
+import 'package:heartless/shared/provider/widget_provider.dart';
+import 'package:provider/provider.dart';
 
 class SearchService {
   static String _getOtherUserTypes(UserType userType) {
@@ -39,7 +51,7 @@ class SearchService {
         name: 'Chat with ' + chatUser.name,
         keywords: ['chat', chatUser.name],
         onTap: () {
-          navigatorKey.currentState!.push(MaterialPageRoute(
+          navigatorKey.currentState!.pushReplacement(MaterialPageRoute(
             builder: (context) => ChatPage(
               chatRoom: chatRooms[chatUsers.indexOf(chatUser)],
               chatUser: chatUser,
@@ -66,82 +78,194 @@ class SearchService {
       SearchOption(
         name: 'Scan to add a ' + _getOtherUserTypes(user.userType),
         keywords: ['scan', 'add', _getOtherUserTypes(user.userType)],
-        onTap: () {},
+        onTap: () {
+          navigatorKey.currentState!.pushReplacement(MaterialPageRoute(
+            builder: (context) => ScanQR(),
+          ));
+        },
       ),
       SearchOption(
         name: 'Upload Health Documents',
         keywords: ['upload', 'health', 'documents', 'files'],
-        onTap: () {},
+        onTap: () {
+          navigatorKey.currentState!.pushReplacement(MaterialPageRoute(
+            builder: (context) => HealthDocumentsPage(
+              patientId: user.uid,
+            ),
+          ));
+        },
       ),
       SearchOption(
         name: 'View Docuemnts',
         keywords: ['files', 'documents', 'pdfs'],
-        onTap: () {},
+        onTap: () {
+          navigatorKey.currentState!.pushReplacement(MaterialPageRoute(
+            builder: (context) => HealthDocumentsPage(
+              patientId: user.uid,
+            ),
+          ));
+        },
       ),
       SearchOption(
         name: 'View Today\'s Schedule',
         keywords: ['activity', 'activities', 'schedule'],
-        onTap: () {},
+        onTap: () {
+          navigatorKey.currentState!.pushReplacement(MaterialPageRoute(
+            builder: (context) => SchedulePage(
+              patient: user,
+            ),
+          ));
+        },
       ),
       SearchOption(
         name: 'View Today\'s Medication',
         keywords: ['today', 'medication'],
-        onTap: () {},
+        onTap: () {
+          // setting toggle selection to medicine
+          WidgetNotifier widgetNotifier =
+              navigatorKey.currentContext!.read<WidgetNotifier>();
+          widgetNotifier.changeToggleSelection(ScheduleToggleType.medicine);
+          navigatorKey.currentState!.pushReplacement(MaterialPageRoute(
+            builder: (context) => SchedulePage(
+              patient: user,
+            ),
+          ));
+        },
       ),
       SearchOption(
         name: 'View Today\'s Exercise',
         keywords: ['today', 'exercise'],
-        onTap: () {},
+        onTap: () {
+          // setting toggle selection to exercise
+          WidgetNotifier widgetNotifier =
+              navigatorKey.currentContext!.read<WidgetNotifier>();
+          widgetNotifier.changeToggleSelection(ScheduleToggleType.drill);
+          navigatorKey.currentState!.pushReplacement(MaterialPageRoute(
+            builder: (context) => SchedulePage(
+              patient: user,
+            ),
+          ));
+        },
       ),
       SearchOption(
         name: 'View Today\'s Diet',
         keywords: ['today', 'diet'],
-        onTap: () {},
+        onTap: () {
+          // setting toggle selection to diet
+          WidgetNotifier widgetNotifier =
+              navigatorKey.currentContext!.read<WidgetNotifier>();
+          widgetNotifier.changeToggleSelection(ScheduleToggleType.diet);
+          navigatorKey.currentState!.pushReplacement(MaterialPageRoute(
+            builder: (context) => SchedulePage(
+              patient: user,
+            ),
+          ));
+        },
       ),
       SearchOption(
         name: 'View Today\'s Readings',
         keywords: ['today', 'readings'],
-        onTap: () {},
+        onTap: () {
+          navigatorKey.currentState!.pushReplacement(MaterialPageRoute(
+            builder: (context) => DayWiseLogPage(
+              patient: user,
+            ),
+          ));
+        },
       ),
       SearchOption(
         name: 'Add a new Reading',
         keywords: ['add', 'new', 'reading'],
-        onTap: () {},
+        onTap: () {
+          navigatorKey.currentState!.pushReplacement(MaterialPageRoute(
+            builder: (context) => DayWiseLogPage(
+              patient: user,
+            ),
+          ));
+        },
       ),
       SearchOption(
         name: 'Add a Diary Entry',
         keywords: ['add', 'diary', 'entry'],
-        onTap: () {},
+        onTap: () {
+          navigatorKey.currentState!.pushReplacement(MaterialPageRoute(
+            builder: (context) => DayWiseDiary(
+              patient: user,
+            ),
+          ));
+        },
       ),
       SearchOption(
         name: 'View Diary',
         keywords: ['diary', 'entries'],
-        onTap: () {},
+        onTap: () {
+          navigatorKey.currentState!.pushReplacement(MaterialPageRoute(
+            builder: (context) => DayWiseDiary(
+              patient: user,
+            ),
+          ));
+        },
       ),
       SearchOption(
         name: 'View Timeline',
         keywords: ['timeline', 'entries'],
-        onTap: () {},
+        onTap: () {
+          navigatorKey.currentState!.pushReplacement(MaterialPageRoute(
+            builder: (context) => ExtendedTimelinePage(
+              patient: user,
+            ),
+          ));
+        },
       ),
       SearchOption(
         name: 'View Analytics of Medical Readings',
         keywords: ['analytics', 'medical', 'readings'],
-        onTap: () {},
+        onTap: () {
+          // setting toggle selection to readings
+          WidgetNotifier widgetNotifier =
+              navigatorKey.currentContext!.read<WidgetNotifier>();
+          widgetNotifier.setEmailPhoneToggle(false);
+          navigatorKey.currentState!.pushReplacement(MaterialPageRoute(
+            builder: (context) => AnalyticsPage(
+              patientId: user.uid,
+            ),
+          ));
+        },
       ),
       SearchOption(
         name: 'View Analytics of Activities',
         keywords: ['analytics', 'activities'],
-        onTap: () {},
+        onTap: () {
+          // setting toggle selection to activities
+          WidgetNotifier widgetNotifier =
+              navigatorKey.currentContext!.read<WidgetNotifier>();
+          widgetNotifier.setEmailPhoneToggle(true);
+          navigatorKey.currentState!.pushReplacement(MaterialPageRoute(
+            builder: (context) => AnalyticsPage(
+              patientId: user.uid,
+            ),
+          ));
+        },
       ),
       SearchOption(
         name: 'Change Profile Picture',
         keywords: ['change', 'profile', 'picture'],
-        onTap: () {},
+        onTap: () {
+          navigatorKey.currentState!.pushReplacement(MaterialPageRoute(
+            builder: (context) => EditProfilePage(
+              user: user,
+            ),
+          ));
+        },
       ),
       SearchOption(
         name: 'Change Password',
         keywords: ['change', 'password'],
-        onTap: () {},
+        onTap: () {
+          navigatorKey.currentState!.pushReplacement(MaterialPageRoute(
+            builder: (context) => ForgotPasswordPage(),
+          ));
+        },
       ),
     ]);
 
