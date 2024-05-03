@@ -80,6 +80,7 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
     Set<int> chatDatesIndex = {};
     return Scaffold(
       appBar: AppBar(
+          backgroundColor: Theme.of(context).primaryColor,
           leadingWidth: 25,
           title: Row(
             mainAxisAlignment: MainAxisAlignment.start,

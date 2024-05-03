@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:heartless/backend/controllers/auth_controller.dart';
 import 'package:heartless/pages/profile/settings/static_home_page.dart';
 import 'package:heartless/pages/profile/settings/static_patient_management.dart';
 import 'package:heartless/services/enums/color_theme.dart';
@@ -125,12 +126,9 @@ class DarkModeToggleWidget extends StatelessWidget {
           ),
         ],
       ),
-      padding: const EdgeInsets.only(
-        left: 20,
-        top: 20,
-        bottom: 20,
-      ),
+      padding: const EdgeInsets.all(20),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Flexible(
             child: Text(
@@ -142,9 +140,6 @@ class DarkModeToggleWidget extends StatelessWidget {
                 color: Theme.of(context).shadowColor,
               ),
             ),
-          ),
-          Expanded(
-            child: const SizedBox(),
           ),
           ThemeToggleButton(),
         ],
@@ -160,6 +155,8 @@ class ColorsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     ThemeNotifier themeProvider =
         Provider.of<ThemeNotifier>(context, listen: false);
+    AuthNotifier authNotifier =
+        Provider.of<AuthNotifier>(context, listen: false);
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 30),
       decoration: BoxDecoration(
@@ -205,6 +202,8 @@ class ColorsWidget extends StatelessWidget {
                   onTap: () {
                     log('Color: $color');
                     themeProvider.setColorTheme(color);
+                    authNotifier.appUser!.theme = color;
+                    AuthController().updateProfile(authNotifier.appUser!);
                   },
                   child: SingleColorWidget(
                     primaryColor: color.primaryColor,
@@ -306,9 +305,16 @@ class ThemeToggleButton extends StatelessWidget {
   Widget build(BuildContext context) {
     ThemeNotifier themeProvider =
         Provider.of<ThemeNotifier>(context, listen: false);
+    AuthNotifier authNotifier =
+        Provider.of<AuthNotifier>(context, listen: false);
     return InkWell(
       onTap: () {
         themeProvider.toggleThemeMode();
+        authNotifier.appUser!.brightness =
+            ThemeNotifier.themeMode == ThemeMode.light
+                ? Brightness.light
+                : Brightness.dark;
+        AuthController().updateProfile(authNotifier.appUser!);
       },
       child: Container(
         height: 26,

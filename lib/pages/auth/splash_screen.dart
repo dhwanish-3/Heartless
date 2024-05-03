@@ -1,3 +1,5 @@
+import "dart:developer";
+
 import "package:connectivity_plus/connectivity_plus.dart";
 import "package:flutter/material.dart";
 import "package:flutter_svg/svg.dart";
@@ -5,6 +7,7 @@ import "package:heartless/backend/services/notifications/notification_services.d
 import "package:heartless/services/splash/splash_services.dart";
 import "package:heartless/services/utils/search_service.dart";
 import "package:heartless/shared/provider/auth_notifier.dart";
+import "package:heartless/shared/provider/theme_provider.dart";
 import "package:provider/provider.dart";
 
 class SplashScreen extends StatefulWidget {
@@ -46,11 +49,17 @@ class _SplashScreenState extends State<SplashScreen> {
   void moveForward() {
     AuthNotifier authNotifier =
         Provider.of<AuthNotifier>(context, listen: false);
+    ThemeNotifier themeNotifier =
+        Provider.of<ThemeNotifier>(context, listen: false);
     Future.delayed(const Duration(seconds: 0), () {
       SplashServices().getUserFromFirebase(authNotifier).then((value) {
         if (value) {
           NotificationService.getFirebaseMessagingToken(authNotifier);
           SearchService.initGlobalSearchOptions(authNotifier.appUser!);
+          // setting color theme & brightness
+          themeNotifier.setColorTheme(authNotifier.appUser!.theme);
+          log("dark mode: " + authNotifier.appUser!.brightness.toString());
+          themeNotifier.setThemeMode(authNotifier.appUser!.brightness);
           Navigator.pushNamed(context, '/home');
           inSplashScreen = false;
         } else {

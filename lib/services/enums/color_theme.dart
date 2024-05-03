@@ -14,13 +14,13 @@ extension ColorThemeExtension on ColorTheme {
       case ColorTheme.Default:
         return Color.fromARGB(255, 52, 190, 171);
       case ColorTheme.Yellow:
-        return Colors.yellow;
+        return Color.fromARGB(255, 255, 230, 0);
       case ColorTheme.Orange:
-        return Colors.orange;
+        return const Color.fromARGB(255, 255, 158, 14);
       case ColorTheme.Green:
-        return Colors.green;
+        return const Color.fromARGB(255, 99, 223, 103);
       case ColorTheme.Purple:
-        return Colors.purple;
+        return Color.fromARGB(255, 203, 93, 223);
       default:
         return Color.fromARGB(255, 52, 190, 171);
     }
@@ -37,7 +37,7 @@ extension ColorThemeExtension on ColorTheme {
       case ColorTheme.Green:
         return Color.fromARGB(255, 117, 232, 120);
       case ColorTheme.Purple:
-        return Color.fromARGB(255, 230, 132, 248);
+        return Color.fromARGB(255, 239, 148, 255);
 
       default:
         return Color.fromARGB(255, 202, 230, 226);
