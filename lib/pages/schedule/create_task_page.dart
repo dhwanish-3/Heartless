@@ -1,19 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/backend/controllers/activity_controller.dart';
+import 'package:heartless/pages/log/file_upload_preview_page.dart';
 import 'package:heartless/services/enums/activity_status.dart';
 import 'package:heartless/services/enums/activity_type.dart';
 import 'package:heartless/services/utils/toast_message.dart';
 import 'package:heartless/shared/constants.dart';
 import 'package:heartless/shared/models/activity.dart';
 import 'package:heartless/shared/models/app_user.dart';
+import 'package:heartless/shared/provider/widget_provider.dart';
 import 'package:heartless/widgets/auth/text_input.dart';
 import 'package:heartless/widgets/schedule/date_picker_button.dart';
 import 'package:heartless/widgets/schedule/discret_date_picker.dart';
 import 'package:heartless/widgets/schedule/time_picker_button.dart';
+import 'package:provider/provider.dart';
 
 class TaskFormPage extends StatefulWidget {
   final AppUser patient;
-  const TaskFormPage({super.key, required this.patient});
+  final bool isEdit;
+  final Activity? activity;
+  TaskFormPage({
+    super.key,
+    required this.patient,
+    this.isEdit = false,
+    this.activity,
+  });
 
   @override
   State<TaskFormPage> createState() => _TaskFormPageState();
@@ -41,6 +51,12 @@ class _TaskFormPageState extends State<TaskFormPage> {
     super.initState();
     _titleController = TextEditingController();
     _descriptionController = TextEditingController();
+    if (widget.isEdit && widget.activity != null) {
+      _titleController.text = widget.activity!.name;
+      _descriptionController.text = widget.activity!.description;
+      typeDropDownValue = widget.activity!.type;
+      _selectedTime = TimeOfDay.fromDateTime(widget.activity!.time);
+    }
   }
 
   @override
@@ -52,6 +68,8 @@ class _TaskFormPageState extends State<TaskFormPage> {
 
   @override
   Widget build(BuildContext context) {
+    WidgetNotifier widgetNotifier =
+        Provider.of<WidgetNotifier>(context, listen: false);
     final List<String> listOfDropdownItems = [];
     for (ActivityType type in ActivityType.values) {
       listOfDropdownItems.add(type.value);
@@ -84,6 +102,42 @@ class _TaskFormPageState extends State<TaskFormPage> {
         );
         await _activityController.addActivity(activity);
       }
+    }
+
+    void _editForm(activity) async {
+      if (!_formKey.currentState!.validate()) {
+        return;
+      }
+      // handling multiple clicks
+      if (clicked) {
+        ToastMessage()
+            .showError('Please wait for the previous task to complete');
+        return;
+      }
+      clicked = true;
+      activity.name = _titleController.text;
+      activity.description = _descriptionController.text;
+      activity.type = typeDropDownValue;
+
+      activity.time = DateTime(
+        activity.time.year,
+        activity.time.month,
+        activity.time.day,
+        _selectedTime.hour,
+        _selectedTime.minute,
+      );
+
+      await _activityController.editActivity(activity);
+
+      clicked = false;
+
+      // clear form
+      _titleController.clear();
+      _descriptionController.clear();
+
+      ToastMessage().showSuccess('Task edited successfully');
+      // go back to previous page
+      Navigator.pop(context);
     }
 
     void _submitForm() async {
@@ -135,28 +189,17 @@ class _TaskFormPageState extends State<TaskFormPage> {
 
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
           },
           icon: const Icon(Icons.arrow_back),
         ),
-        title: Center(
-          child: Text(
-            'Create Task',
-            style: Theme.of(context).textTheme.displayLarge,
-          ),
+        title: Text(
+          'Create Task',
+          style: Theme.of(context).textTheme.headlineMedium,
         ),
-        actions: [
-          IconButton(
-            padding: EdgeInsets.zero,
-            onPressed: _submitForm,
-            icon: const Icon(
-              size: 30,
-              Icons.save,
-            ),
-          ),
-        ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -225,51 +268,74 @@ class _TaskFormPageState extends State<TaskFormPage> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                SelectorWidgetRow(
-                    text: 'Date',
-                    childWidget: Container(
-                        padding: const EdgeInsets.fromLTRB(20, 10, 10, 10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Theme.of(context).cardColor,
-                          border: Border.all(
-                            color: Theme.of(context).shadowColor,
-                            width: 0.6,
-                          ),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Constants.customGray,
-                              // color: Theme.of(context).shadowColor.withOpacity(0.5),
-                              blurRadius: 0.5,
-                              spreadRadius: 0.5,
-                              offset: Offset(1, 1),
-                            ),
-                          ],
-                        ),
-                        child: DropDownWidget(
-                          dropdownItems: const [
-                            'Specify a Period',
-                            'Selective Days'
-                          ],
-                          dropdownValue: dateDropDownValue,
-                          onChanged: (newValue) {
-                            setState(() {
-                              dateDropDownValue = newValue;
-                            });
-                          },
-                        ))),
-                const SizedBox(height: 20),
-                dateDropDownValue == 'Specify a Period'
-                    ? DateRangeSelector(
-                        startDate: startDate,
-                        endDate: endDate,
-                        onStartDateChanged: (newDate) {
-                          startDate = newDate;
-                        },
-                        onEndDateChanged: (newDate) {
-                          endDate = newDate;
-                        })
-                    : DiscreteDateSelector(selectedDates: _selectedDates),
+                widget.isEdit
+                    ? Container()
+                    : Column(
+                        children: [
+                          SelectorWidgetRow(
+                              text: 'Date',
+                              childWidget: Container(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(20, 10, 10, 10),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Theme.of(context).cardColor,
+                                    border: Border.all(
+                                      color: Theme.of(context).shadowColor,
+                                      width: 0.6,
+                                    ),
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        color: Constants.customGray,
+                                        // color: Theme.of(context).shadowColor.withOpacity(0.5),
+                                        blurRadius: 0.5,
+                                        spreadRadius: 0.5,
+                                        offset: Offset(1, 1),
+                                      ),
+                                    ],
+                                  ),
+                                  child: DropDownWidget(
+                                    dropdownItems: const [
+                                      'Specify a Period',
+                                      'Selective Days'
+                                    ],
+                                    dropdownValue: dateDropDownValue,
+                                    onChanged: (newValue) {
+                                      setState(() {
+                                        dateDropDownValue = newValue;
+                                      });
+                                    },
+                                  ))),
+                          const SizedBox(height: 20),
+                          dateDropDownValue == 'Specify a Period'
+                              ? DateRangeSelector(
+                                  startDate: startDate,
+                                  endDate: endDate,
+                                  onStartDateChanged: (newDate) {
+                                    startDate = newDate;
+                                  },
+                                  onEndDateChanged: (newDate) {
+                                    endDate = newDate;
+                                  })
+                              : DiscreteDateSelector(
+                                  selectedDates: _selectedDates),
+                        ],
+                      ),
+                const SizedBox(height: 60),
+                CustomFormSubmitButton(
+                  onTap: () {
+                    widgetNotifier.setLoading(true);
+                    if (widget.isEdit) {
+                      _editForm(widget.activity!);
+                    } else {
+                      _submitForm();
+                    }
+                    widgetNotifier.setLoading(false);
+                  },
+                  text: widget.isEdit ? 'Edit Task' : 'Add Task',
+                  padding: 30,
+                ),
+                const SizedBox(height: 40),
               ],
             ),
           ),

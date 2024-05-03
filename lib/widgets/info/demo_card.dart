@@ -60,8 +60,8 @@ class _ScrollableDemoListState extends State<ScrollableDemoList> {
         itemCount: widget.items.length,
         itemBuilder: (context, index) {
           return DemoCard(
-            imageUrl: widget.items[index]["image"] as String,
-            title: widget.items[index]["title"] as String,
+            imageUrl: widget.items[index].imageUrl,
+            title: widget.items[index].title,
           );
         },
       ),

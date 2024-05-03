@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:heartless/pages/analytics/analytics_page.dart';
 import 'package:heartless/pages/chat/contacts_page.dart';
-import 'package:heartless/pages/demo/demo_page.dart';
 import 'package:heartless/pages/home/doctor_nurse_home_page.dart';
 import 'package:heartless/pages/home/patient_home_page.dart';
 import 'package:heartless/pages/log/daywise_log.dart';
@@ -52,11 +51,6 @@ class _HomePageState extends State<HomePage> {
       ContactsPage(),
       ProfilePage(),
       SettingsPage(),
-      DemoPage(
-        title: 'Demo',
-        videoUrl:
-            "https://firebasestorage.googleapis.com/v0/b/heartless-17b56.appspot.com/o/demos%2FArc%20on%20Windows.%20Download%20now..mp4?alt=media",
-      )
     ];
     const patientTabs = const [
       GButton(

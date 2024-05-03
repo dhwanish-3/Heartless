@@ -37,8 +37,8 @@ class _SearchPageState extends State<SearchPage> {
                   },
                   controller: _searchController,
                   hintText: 'Search for shortcuts...',
-                  textStyle: MaterialStateTextStyle.resolveWith(
-                    (Set<MaterialState> states) {
+                  textStyle: WidgetStateTextStyle.resolveWith(
+                    (Set<WidgetState> states) {
                       return TextStyle(
                         color: Theme.of(context).shadowColor,
                         fontSize: 15,
@@ -46,9 +46,9 @@ class _SearchPageState extends State<SearchPage> {
                       );
                     },
                   ),
-                  shadowColor: MaterialStateColor.resolveWith(
+                  shadowColor: WidgetStateColor.resolveWith(
                       (states) => Theme.of(context).highlightColor),
-                  surfaceTintColor: MaterialStateColor.resolveWith(
+                  surfaceTintColor: WidgetStateColor.resolveWith(
                     (states) =>
                         // Theme.of(context).scaffoldBackgroundColor,
                         Colors.white,

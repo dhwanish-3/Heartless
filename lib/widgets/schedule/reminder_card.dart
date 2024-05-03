@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:heartless/backend/controllers/activity_controller.dart';
+import 'package:heartless/pages/schedule/create_task_page.dart';
 import 'package:heartless/services/date/date_service.dart';
 import 'package:heartless/services/enums/activity_status.dart';
 import 'package:heartless/services/enums/activity_type.dart';
@@ -220,6 +221,14 @@ class ReminderCard extends StatelessWidget {
                           InkWell(
                             onTap: () {
                               //todo edit activity
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) => TaskFormPage(
+                                            patient: patient,
+                                            isEdit: true,
+                                            activity: activity,
+                                          )));
                             },
                             child: Container(
                                 height: 33,

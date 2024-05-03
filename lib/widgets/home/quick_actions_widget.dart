@@ -5,6 +5,12 @@ class QuickActionsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const imageUrls = [
+      'assets/Icons/quickAction/file.png',
+      'assets/Icons/quickAction/scan.png',
+      'assets/Icons/quickAction/timeline.png',
+      'assets/Icons/quickAction/activity.png',
+    ];
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 30),
       decoration: BoxDecoration(
@@ -57,18 +63,22 @@ class QuickActionsWidget extends StatelessWidget {
                   QuickActionCard(
                     icon: Icons.file_copy,
                     title: 'Files',
+                    imageUrl: imageUrls[0],
                   ),
                   QuickActionCard(
                     icon: Icons.qr_code_scanner,
                     title: 'Scan',
+                    imageUrl: imageUrls[1],
                   ),
                   QuickActionCard(
                     icon: Icons.timeline,
                     title: 'Timeline',
+                    imageUrl: imageUrls[2],
                   ),
                   QuickActionCard(
                     icon: Icons.add,
                     title: 'Activity',
+                    imageUrl: imageUrls[3],
                   )
                 ],
               ),
@@ -83,10 +93,12 @@ class QuickActionsWidget extends StatelessWidget {
 class QuickActionCard extends StatelessWidget {
   final IconData icon;
   final String title;
+  final String imageUrl;
   const QuickActionCard({
     super.key,
     required this.icon,
     required this.title,
+    required this.imageUrl,
   });
 
   @override
@@ -94,7 +106,7 @@ class QuickActionCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        // color: Theme.of(context).cardColor,
+        // color: Theme.of(context).primaryColorLight,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Column(
@@ -105,6 +117,10 @@ class QuickActionCard extends StatelessWidget {
             size: 20,
             color: Theme.of(context).shadowColor,
           ),
+          // Image.asset(
+          //   imageUrl,
+          //   height: 24,
+          // ),
           const SizedBox(height: 10),
           FittedBox(
             fit: BoxFit.scaleDown,

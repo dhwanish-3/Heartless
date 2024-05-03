@@ -63,7 +63,11 @@ class _ExtendedTimelinePageState extends State<ExtendedTimelinePage> {
               future: TimeLineService.getTimeLine(widget.patient.uid, null),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
+                  return Center(
+                    child: CircularProgressIndicator(
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  );
                 } else if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 } else if (snapshot.connectionState == ConnectionState.done) {

@@ -110,6 +110,7 @@ flutter:
     - assets/Icons/chat/
     - assets/Icons/fileFormat/
     - assets/Icons/readingGenre/
+    - assets/Icons/quickAction/
 
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg

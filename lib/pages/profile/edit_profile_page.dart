@@ -8,11 +8,9 @@ import 'package:heartless/backend/services/firebase_storage/firebase_storage_ser
 import 'package:heartless/pages/log/file_upload_preview_page.dart';
 import 'package:heartless/services/utils/toast_message.dart';
 import 'package:heartless/shared/models/app_user.dart';
-import 'package:heartless/shared/provider/widget_provider.dart';
 import 'package:heartless/widgets/auth/text_input.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
-import 'package:provider/provider.dart';
 
 class EditProfilePage extends StatefulWidget {
   final AppUser user;
@@ -30,7 +28,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
   final ImagePicker picker = ImagePicker();
 
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
 
   File? _image;
@@ -71,9 +68,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
       // update the user profile
       widget.user.name = _nameController.text;
       widget.user.email = _emailController.text;
-      widget.user.password = _passwordController.text;
       widget.user.phone = _phoneNumber;
       await AuthController().updateProfile(widget.user);
+      Navigator.pop(context);
     }
   }
 
@@ -82,17 +79,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
     super.initState();
     _emailController.text = widget.user.email;
     _nameController.text = widget.user.name;
-    _passwordController.text = widget.user.password;
   }
 
   @override
   Widget build(BuildContext context) {
-    WidgetNotifier widgetNotifier = Provider.of<WidgetNotifier>(
-      context,
-      listen: false,
-    );
     return Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           title: Text(
             'Edit Profile',
             style: Theme.of(context).textTheme.headlineMedium,
@@ -130,20 +123,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           startIcon: 'assets/Icons/Email.svg',
                           textInputType: TextInputType.emailAddress,
                         ),
-                        const SizedBox(height: 20),
-                        Consumer<WidgetNotifier>(
-                            builder: (context, value, child) {
-                          return TextFieldInput(
-                            textEditingController: _passwordController,
-                            hintText: 'Enter your password',
-                            labelText: 'password',
-                            startIcon: 'assets/Icons/lock.svg',
-                            endIcon: 'assets/Icons/eyeClosed.svg',
-                            endIconAlt: 'assets/Icons/eyeOpened.svg',
-                            passwordShown: widgetNotifier.passwordShown,
-                            textInputType: TextInputType.visiblePassword,
-                          );
-                        }),
+                        const SizedBox(height: 10),
                         Container(
                           width: double.infinity,
                           margin: const EdgeInsets.symmetric(
@@ -174,8 +154,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             },
                           ),
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 40),
                         CustomFormSubmitButton(
+                          text: 'Update Profile',
                           onTap: _submitForm,
                           padding: 10,
                         ),
