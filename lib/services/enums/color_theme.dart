@@ -8,6 +8,10 @@ enum ColorTheme {
   Purple,
 }
 
+enum customBrightness { light, dark }
+
+extension customBrightnessExtension on customBrightness {}
+
 extension ColorThemeExtension on ColorTheme {
   Color get primaryColor {
     switch (this) {

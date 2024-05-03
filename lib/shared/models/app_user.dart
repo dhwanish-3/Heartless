@@ -1,3 +1,4 @@
+import 'package:heartless/services/enums/color_theme.dart';
 import 'package:heartless/services/enums/user_type.dart';
 import 'package:heartless/shared/models/doctor.dart';
 import 'package:heartless/shared/models/nurse.dart';
@@ -14,6 +15,7 @@ class AppUser {
   String pushToken = '';
   DateTime lastSeen = DateTime.now();
   UserType userType = UserType.patient;
+  ColorTheme theme = ColorTheme.Default;
 
   AppUser();
 
@@ -28,6 +30,7 @@ class AppUser {
     isOnline = map['isOnline'] ?? false;
     pushToken = map['pushToken'] ?? '';
     lastSeen = DateTime.parse(map['lastSeen'] ?? DateTime.now());
+    theme = ColorTheme.values[map['theme'] ?? ColorTheme.Default.index];
   }
 
   Map<String, dynamic> toMap() {
@@ -42,6 +45,7 @@ class AppUser {
       'isOnline': isOnline,
       'pushToken': pushToken,
       'lastSeen': lastSeen.toString(),
+      'theme': theme.index,
     };
   }
 

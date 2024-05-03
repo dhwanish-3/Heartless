@@ -1,3 +1,4 @@
+import 'package:heartless/services/enums/color_theme.dart';
 import 'package:heartless/services/enums/user_type.dart';
 import 'package:heartless/shared/models/app_user.dart';
 
@@ -24,6 +25,7 @@ class Doctor extends AppUser {
     lastSeen = DateTime.parse(map['lastSeen'] ?? DateTime.now());
     patients = map['patients'] is Iterable ? List.from(map['patients']) : [];
     nurses = map['nurses'] is Iterable ? List.from(map['nurses']) : [];
+    theme = ColorTheme.values[map['theme'] ?? ColorTheme.Default.index];
   }
 
   @override
@@ -41,6 +43,7 @@ class Doctor extends AppUser {
       'lastSeen': lastSeen.toString(),
       'patients': patients,
       'nurses': nurses,
+      'theme': theme.index,
     };
   }
 }
