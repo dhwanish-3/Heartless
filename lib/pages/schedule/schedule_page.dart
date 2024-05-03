@@ -112,17 +112,15 @@ class SchedulePage extends StatelessWidget {
           ],
         ),
       )),
-      floatingActionButton: authNotifier.userType == UserType.patient
-          ? FloatingActionButton(
-              child: const Icon(Icons.add, size: 30),
-              backgroundColor: Theme.of(context).primaryColor,
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => TaskFormPage(patient: patient)));
-              })
-          : null,
+      floatingActionButton: FloatingActionButton(
+          child: const Icon(Icons.add, size: 30),
+          backgroundColor: Theme.of(context).primaryColor,
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => TaskFormPage(patient: patient)));
+          }),
     );
   }
 }

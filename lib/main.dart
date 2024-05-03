@@ -20,13 +20,14 @@ void main() async {
 
   // initializing firebase
   await Firebase.initializeApp(
-      options: FirebaseOptions(
-    apiKey: 'AIzaSyCpzMaQ8VnK9aBfI2i8P8wwcxqeRWYm9fY',
-    appId: '1:1064544734386:android:daf184d0cc0ad786c74dab',
-    messagingSenderId: 'sendid',
-    projectId: 'heartless-17b56',
-    storageBucket: 'heartless-17b56.appspot.com',
-  ));
+      // options: FirebaseOptions(
+      // apiKey: 'AIzaSyCpzMaQ8VnK9aBfI2i8P8wwcxqeRWYm9fY',
+      // appId: '1:1064544734386:android:daf184d0cc0ad786c74dab',
+      // messagingSenderId: 'sendid',
+      // projectId: 'heartless-17b56',
+      // storageBucket: 'heartless-17b56.appspot.com',
+      // ),
+      );
 
   // initializing push notifications
   await NotificationService.initPushNotifications();

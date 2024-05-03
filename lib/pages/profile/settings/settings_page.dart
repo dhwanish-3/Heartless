@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:heartless/pages/profile/settings/static_home_page.dart';
 import 'package:heartless/pages/profile/settings/static_patient_management.dart';
 import 'package:heartless/services/enums/color_theme.dart';
+import 'package:heartless/shared/provider/auth_notifier.dart';
 import 'package:heartless/shared/provider/theme_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -12,6 +13,8 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AuthNotifier authNotifier =
+        Provider.of<AuthNotifier>(context, listen: false);
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -20,6 +23,7 @@ class SettingsPage extends StatelessWidget {
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.only(
                 left: 30,
@@ -36,6 +40,8 @@ class SettingsPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
+            DarkModeToggleWidget(),
+            const SizedBox(height: 20),
             ColorsWidget(),
             const SizedBox(height: 30),
             Container(
@@ -51,7 +57,9 @@ class SettingsPage extends StatelessWidget {
                       child: SizedBox(
                         width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height,
-                        child: StaticHomePage(),
+                        child: StaticHomePage(
+                          user: authNotifier.appUser!,
+                        ),
                       ),
                       fit: BoxFit.contain,
                     ),
@@ -64,7 +72,9 @@ class SettingsPage extends StatelessWidget {
                       child: SizedBox(
                         width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height,
-                        child: StaticPatientManagement(),
+                        child: StaticPatientManagement(
+                          user: authNotifier.appUser!,
+                        ),
                       ),
                       fit: BoxFit.contain,
                     ),
@@ -77,7 +87,9 @@ class SettingsPage extends StatelessWidget {
                       child: SizedBox(
                         width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height,
-                        child: StaticHomePage(),
+                        child: StaticHomePage(
+                          user: authNotifier.appUser!,
+                        ),
                       ),
                       fit: BoxFit.contain,
                     ),
@@ -86,32 +98,58 @@ class SettingsPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 30),
-            Container(
-              padding: const EdgeInsets.only(
-                left: 40,
-              ),
-              child: Row(
-                children: [
-                  Flexible(
-                    child: Text(
-                      'Dark Mode',
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).shadowColor,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: const SizedBox(),
-                  ),
-                  ThemeToggleButton(),
-                ],
-              ),
-            ),
           ],
         ));
+  }
+}
+
+class DarkModeToggleWidget extends StatelessWidget {
+  const DarkModeToggleWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 30),
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        // color:Theme.of(context).secondaryHeaderColor,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Theme.of(context).highlightColor,
+            offset: const Offset(0, 0.5),
+            blurRadius: 1,
+            spreadRadius: 0,
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.only(
+        left: 20,
+        top: 20,
+        bottom: 20,
+      ),
+      child: Row(
+        children: [
+          Flexible(
+            child: Text(
+              'Dark Mode',
+              textAlign: TextAlign.start,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).shadowColor,
+              ),
+            ),
+          ),
+          Expanded(
+            child: const SizedBox(),
+          ),
+          ThemeToggleButton(),
+        ],
+      ),
+    );
   }
 }
 
@@ -273,10 +311,10 @@ class ThemeToggleButton extends StatelessWidget {
         themeProvider.toggleThemeMode();
       },
       child: Container(
-        height: 30,
-        width: 60,
+        height: 26,
+        width: 50,
         decoration: BoxDecoration(
-          color: ThemeNotifier.themeMode == ThemeMode.light
+          color: ThemeNotifier.themeMode != ThemeMode.dark
               ? Colors.grey
               : Theme.of(context).primaryColor,
           borderRadius: BorderRadius.circular(20),
@@ -284,14 +322,14 @@ class ThemeToggleButton extends StatelessWidget {
         child: Stack(
           children: [
             AnimatedAlign(
-              alignment: ThemeNotifier.themeMode == ThemeMode.light
+              alignment: ThemeNotifier.themeMode != ThemeMode.dark
                   ? Alignment.centerLeft
                   : Alignment.centerRight,
               duration: const Duration(milliseconds: 200),
               curve: Curves.easeInOut,
               child: Container(
-                height: 30,
-                width: 30,
+                height: 26,
+                width: 26,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: Theme.of(context).shadowColor,

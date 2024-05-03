@@ -1,14 +1,13 @@
 import 'package:appinio_video_player/appinio_video_player.dart';
 import 'package:flutter/material.dart';
+import 'package:heartless/shared/models/demonstration.dart';
 
 class DemoPage extends StatefulWidget {
-  final String videoUrl;
-  final String title;
+  final Demonstration demonstration;
 
   const DemoPage({
     Key? key,
-    required this.title,
-    required this.videoUrl,
+    required this.demonstration,
   });
   @override
   State<DemoPage> createState() => _DemoPageState();
@@ -27,7 +26,7 @@ class _DemoPageState extends State<DemoPage> {
     super.initState();
 
     _videoPlayerController = CachedVideoPlayerController.network(
-      widget.videoUrl,
+      widget.demonstration.videoUrl,
     )..initialize().then((value) => setState(() {}));
 
     _customVideoPlayerController = CustomVideoPlayerController(
@@ -48,55 +47,58 @@ class _DemoPageState extends State<DemoPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.title,
+          widget.demonstration.title,
         ),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CustomVideoPlayer(
                 customVideoPlayerController: _customVideoPlayerController,
               ),
               const SizedBox(height: 10),
               Container(
-                margin: const EdgeInsets.symmetric(
-                  horizontal: 30,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Steps',
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
-                    Text('''
-- place arms at shoulder width
-- straighten out your back
-- feel the weight on your toes, shoulders and forearms
-- focus on some point right infront of you 
-- in one fluid motion move your arms downward
-- stand still
-- do not move until your muscles endure fatigue
-                  '''),
-                    Divider(),
-                    Text(
-                      'Advantages',
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
-                    Text('''
-- place arms at shoulder width
-- straighten out your back
-- feel the weight on your toes, shoulders and forearms
-- focus on some point right infront of you 
-- in one fluid motion move your arms downward
-- stand still
-- do not move until your muscles endure fatigue
-                  '''),
-                  ],
-                ),
-              ),
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 30,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: widget.demonstration.sections.map((section) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            section.title,
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          ...section.points.map((point) {
+                            return Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('•  '),
+                                Expanded(
+                                  child: Text(
+                                    point,
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          }).toList(),
+                          Divider(),
+                        ],
+                      );
+                    }).toList(),
+                  )),
+              const SizedBox(height: 40),
             ],
           ),
         ),

@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:heartless/pages/demo/demo_page.dart';
+import 'package:heartless/shared/models/demonstration.dart';
 import 'package:heartless/widgets/info/demo_card.dart';
 
 class CategorisedDemoListPage extends StatelessWidget {
-  const CategorisedDemoListPage({super.key});
+  final List<Demonstration> items;
+
+  const CategorisedDemoListPage({
+    super.key,
+    required this.items,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -12,8 +19,12 @@ class CategorisedDemoListPage extends StatelessWidget {
             child: SingleChildScrollView(
           child: Column(
             children: [
-              DemoCategory(),
-              DemoCategory(),
+              DemoCategory(
+                items: items,
+              ),
+              DemoCategory(
+                items: items,
+              ),
             ],
           ),
         )));
@@ -21,7 +32,13 @@ class CategorisedDemoListPage extends StatelessWidget {
 }
 
 class DemoCategory extends StatelessWidget {
-  const DemoCategory({super.key});
+  final String category;
+  final List<Demonstration> items;
+  const DemoCategory({
+    super.key,
+    this.category = 'Breathing Exercise',
+    required this.items,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -56,14 +73,21 @@ class DemoCategory extends StatelessWidget {
             const SizedBox(height: 10),
             Column(
               children: [
-                DemoCard(
-                  imageUrl: "assets/illustrations/plank.jpeg",
-                  title: "Planking",
-                ),
-                DemoCard(
-                  imageUrl: "assets/illustrations/breathing.jpeg",
-                  title: "Breathing",
-                ),
+                for (var item in items)
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DemoPage(demonstration: item),
+                        ),
+                      );
+                    },
+                    child: DemoCard(
+                      title: item.title,
+                      imageUrl: item.imageUrl,
+                    ),
+                  ),
               ],
             ),
           ],
