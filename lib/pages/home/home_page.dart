@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:heartless/pages/analytics/analytics_page.dart';
 import 'package:heartless/pages/chat/contacts_page.dart';
@@ -97,15 +98,56 @@ class _HomePageState extends State<HomePage> {
     return Consumer<WidgetNotifier>(
       builder: (context, WidgetNotifier widgetNotifier, child) {
         log(widgetNotifier.selectedIndex.toString());
-        return Scaffold(
-          body: authNotifier.appUser!.userType == UserType.patient
-              ? _patientScreens[widgetNotifier.selectedIndex]
-              : _doctorNurseScreens[widgetNotifier.selectedIndex],
-          bottomNavigationBar: _buildGnav(
-            context,
-            authNotifier.appUser!.userType == UserType.patient
-                ? patientTabs
-                : doctorNurseTabs,
+        return PopScope(
+          canPop: false,
+          onPopInvoked: (didPop) async {
+            if (widgetNotifier.selectedIndex != 0) {
+              widgetNotifier.setSelectedIndex(0);
+              return Future.value(false);
+            } else {
+              final val = await showDialog<bool>(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      contentPadding: const EdgeInsets.all(25),
+                      actionsPadding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 16),
+                      shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(12))),
+                      title: const Text('Alert'),
+                      content: const Text('Do you want to Exit the App'),
+                      actions: [
+                        ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(context).pop(false);
+                            },
+                            child: const Text('No')),
+                        ElevatedButton(
+                            onPressed: () {
+                              SystemNavigator.pop();
+                              // Navigator.of(context).pop(true);
+                            },
+                            child: const Text('Yes'))
+                      ],
+                    );
+                  });
+              if (val != null) {
+                return Future.value(val);
+              } else {
+                return Future.value(false);
+              }
+            }
+          },
+          child: Scaffold(
+            body: authNotifier.appUser!.userType == UserType.patient
+                ? _patientScreens[widgetNotifier.selectedIndex]
+                : _doctorNurseScreens[widgetNotifier.selectedIndex],
+            bottomNavigationBar: _buildGnav(
+              context,
+              authNotifier.appUser!.userType == UserType.patient
+                  ? patientTabs
+                  : doctorNurseTabs,
+            ),
           ),
         );
       },
