@@ -37,18 +37,13 @@ class _QRPopupWidgetState extends State<QRPopupWidget> {
         Toast.showError(
             "Can't add user who is a ${user.userType.capitalisedName}");
       } else {
-        await Navigator.of(context)
-            .push(
+        await Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => QRResultPage(appUser: user),
           ),
-        )
-            .then((value) {
-          Toast.showSuccess(
-              "${user.userType.capitalisedName} added successfully");
-        });
+        );
       }
-      Navigator.of(context).pop();
+      // Navigator.of(context).pop();
     });
   }
 

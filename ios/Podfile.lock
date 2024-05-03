@@ -1043,7 +1043,7 @@ SPEC CHECKSUMS:
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   flutter_barcode_scanner: 7a1144744c28dc0c57a8de7218ffe5ec59a9e4bf
   flutter_local_notifications: 4cde75091f6327eb8517fa068a0a5950212d2086
-  fluttertoast: 31b00dabfa7fb7bacd9e7dbee580d7a2ff4bf265
+  fluttertoast: 9f2f8e81bb5ce18facb9748d7855bf5a756fe3db
   google_sign_in_ios: 8115e3fbe097e6509beb819ed602d47369d9011f
   GoogleDataTransport: 6c09b596d841063d76d4288cc2d2f42cc36e1e2a
   GoogleSignIn: b232380cf495a429b8095d3178a8d5855b42e842

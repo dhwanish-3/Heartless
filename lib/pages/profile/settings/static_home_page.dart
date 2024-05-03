@@ -27,7 +27,10 @@ class StaticHomePage extends StatelessWidget {
                 user: user,
                 disableSearch: true,
               ),
-              QuickActionsWidget(),
+              QuickActionsWidget(
+                user: user,
+                disableTouch: true,
+              ),
               const SizedBox(height: 20),
               ActivitiesSchedule(context),
               // const SizedBox(height: 20),

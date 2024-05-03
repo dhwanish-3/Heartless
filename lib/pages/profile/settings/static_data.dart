@@ -79,7 +79,7 @@ class StaticData {
         title: "CPR",
         imageUrl: "assets/illustrations/demonstration/cpr.jpeg",
         videoUrl:
-            "https://firebasestorage.googleapis.com/v0/b/heartless-17b56.appspot.com/o/demos%2FArc%20on%20Windows.%20Download%20now..mp4?alt=media",
+            "https://firebasestorage.googleapis.com/v0/b/heartless-17b56.appspot.com/o/demos%2FCPR.mp4?alt=media&token=596dc6cb-968a-42d8-b799-110a38a18e1d",
         sections: [
           Section(
             title: 'Instructions',
@@ -130,7 +130,7 @@ class StaticData {
         title: "Deep Breathing",
         imageUrl: "assets/illustrations/demonstration/deepBreathing.jpeg",
         videoUrl:
-            "https://firebasestorage.googleapis.com/v0/b/heartless-17b56.appspot.com/o/demos%2FArc%20on%20Windows.%20Download%20now..mp4?alt=media",
+            "https://firebasestorage.googleapis.com/v0/b/heartless-17b56.appspot.com/o/demos%2FdeepBreathing.mp4?alt=media&token=3b615a53-4bf5-4282-bb56-4c7b959ae066",
         sections: [
           Section(title: "Benefits", points: [
             " In particular, engaging in aerobic exercise that increases your heart rate (such as walking, jogging, or swimming) is a leading way to promote a healthy heart. ",
@@ -158,7 +158,7 @@ class StaticData {
         imageUrl:
             "assets/illustrations/demonstration/alternateNostrilBreathing.png",
         videoUrl:
-            "https://firebasestorage.googleapis.com/v0/b/heartless-17b56.appspot.com/o/demos%2FArc%20on%20Windows.%20Download%20now..mp4?alt=media",
+            "https://firebasestorage.googleapis.com/v0/b/heartless-17b56.appspot.com/o/demos%2FalternateNostrilBreathing.mp4?alt=media&token=a0aabbc2-9fdd-4367-a640-b62d6e441cd4",
         sections: [
           Section(title: "Instructions", points: [
             "Often part of yoga or meditation routines, alternate nostril breathing is a calming technique that can help center your breaths and promote cardiovascular strength.",
@@ -177,7 +177,7 @@ class StaticData {
         title: "Diaphragm Breathing",
         imageUrl: "assets/illustrations/demonstration/diaphragmBreathing.jpeg",
         videoUrl:
-            "https://firebasestorage.googleapis.com/v0/b/heartless-17b56.appspot.com/o/demos%2FArc%20on%20Windows.%20Download%20now..mp4?alt=media",
+            "https://firebasestorage.googleapis.com/v0/b/heartless-17b56.appspot.com/o/demos%2FdiaphragmBreahing.mp4?alt=media&token=544efa8a-3e1d-4026-abe2-c10b162c1537",
         sections: [
           Section(title: "Benefits", points: [
             "Chronic stress can have harmful effects on the mind and body by activating the body’s fight-or-flight response. Techniques like diaphragmatic breathing can counteract this effect.",
@@ -201,7 +201,7 @@ class StaticData {
         title: "Pursed Lip Breathing",
         imageUrl: "assets/illustrations/demonstration/pursedLipBreathing.jpeg",
         videoUrl:
-            "https://firebasestorage.googleapis.com/v0/b/heartless-17b56.appspot.com/o/demos%2FArc%20on%20Windows.%20Download%20now..mp4?alt=media",
+            "https://firebasestorage.googleapis.com/v0/b/heartless-17b56.appspot.com/o/demos%2FpursedLipBreathing.mp4?alt=media&token=4190a89f-b228-4fd1-9b5e-9ded10ab50d2",
         sections: [
           Section(title: "Benefits", points: [
             "Improves ventilation.",
@@ -236,7 +236,7 @@ class StaticData {
         title: "Stretching",
         imageUrl: "assets/illustrations/demonstration/stretching.jpeg",
         videoUrl:
-            "https://firebasestorage.googleapis.com/v0/b/heartless-17b56.appspot.com/o/demos%2FArc%20on%20Windows.%20Download%20now..mp4?alt=media",
+            "https://firebasestorage.googleapis.com/v0/b/heartless-17b56.appspot.com/o/demos%2Fstretching.mp4?alt=media&token=f640aa95-16a3-444b-8e5d-8844c4b1abac",
         sections: [
           Section(title: 'Benefits', points: [
             "stretching promotes blood flow to the regions being stretched",
@@ -289,7 +289,7 @@ class StaticData {
         title: "Cycling",
         imageUrl: "assets/illustrations/demonstration/cycling.jpeg",
         videoUrl:
-            "https://firebasestorage.googleapis.com/v0/b/heartless-17b56.appspot.com/o/demos%2FArc%20on%20Windows.%20Download%20now..mp4?alt=media",
+            "https://firebasestorage.googleapis.com/v0/b/heartless-17b56.appspot.com/o/demos%2Fcycling.mp4?alt=media&token=2cbb027c-21f1-4ebd-b07c-6b560f6e7fdd",
         sections: [
           Section(title: "Benefits", points: [
             "Cardio is an essential aspect of cardiac rehabilitation, and cycling is an excellent low-impact exercise that people can do at nearly all fitness levels.",
@@ -328,7 +328,7 @@ class StaticData {
       title: "Arm Raises",
       imageUrl: "assets/illustrations/demonstration/armRaises.jpeg",
       videoUrl:
-          "https://firebasestorage.googleapis.com/v0/b/heartless-17b56.appspot.com/o/demos%2FArc%20on%20Windows.%20Download%20now..mp4?alt=media",
+          "https://firebasestorage.googleapis.com/v0/b/heartless-17b56.appspot.com/o/demos%2FarmRaises.mp4?alt=media&token=17353762-f74e-4771-a1c0-d25f1cac2262",
       sections: [
         Section(
           title: "Beginner Instructions",
@@ -350,7 +350,7 @@ class StaticData {
         title: "Squats",
         imageUrl: "assets/illustrations/demonstration/squat.jpg",
         videoUrl:
-            "https://firebasestorage.googleapis.com/v0/b/heartless-17b56.appspot.com/o/demos%2FArc%20on%20Windows.%20Download%20now..mp4?alt=media",
+            "https://firebasestorage.googleapis.com/v0/b/heartless-17b56.appspot.com/o/demos%2Fsquat.mp4?alt=media&token=3a55db8d-44d2-403a-a1d9-0f146da91cf4",
         sections: [
           Section(title: "Instructions", points: [
             "Start with feet slightly wider than hip-width apart, toes turned slightly out.",

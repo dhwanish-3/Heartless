@@ -140,7 +140,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
       Navigator.pop(context);
     }
 
-    void _submitForm() async {
+    void _submitForm(WidgetNotifier widgetNotifer) async {
       if (!_formKey.currentState!.validate()) {
         return;
       }
@@ -184,6 +184,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
 
       ToastMessage().showSuccess('Task added successfully');
       // go back to previous page
+      widgetNotifier.setLoading(false);
       Navigator.pop(context);
     }
 
@@ -328,7 +329,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
                     if (widget.isEdit) {
                       _editForm(widget.activity!);
                     } else {
-                      _submitForm();
+                      _submitForm(widgetNotifier);
                     }
                     widgetNotifier.setLoading(false);
                   },

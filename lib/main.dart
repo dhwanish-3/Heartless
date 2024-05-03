@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -19,15 +21,19 @@ void main() async {
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
   // initializing firebase
-  await Firebase.initializeApp(
-    options: FirebaseOptions(
-      apiKey: 'AIzaSyCpzMaQ8VnK9aBfI2i8P8wwcxqeRWYm9fY',
-      appId: '1:1064544734386:android:daf184d0cc0ad786c74dab',
-      messagingSenderId: 'sendid',
-      projectId: 'heartless-17b56',
-      storageBucket: 'heartless-17b56.appspot.com',
-    ),
-  );
+  if (Platform.isAndroid) {
+    await Firebase.initializeApp(
+      options: FirebaseOptions(
+        apiKey: 'AIzaSyCpzMaQ8VnK9aBfI2i8P8wwcxqeRWYm9fY',
+        appId: '1:1064544734386:android:daf184d0cc0ad786c74dab',
+        messagingSenderId: 'sendid',
+        projectId: 'heartless-17b56',
+        storageBucket: 'heartless-17b56.appspot.com',
+      ),
+    );
+  } else {
+    await Firebase.initializeApp();
+  }
 
   // initializing push notifications
   await NotificationService.initPushNotifications();
