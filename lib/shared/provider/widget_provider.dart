@@ -37,6 +37,11 @@ class WidgetNotifier with ChangeNotifier {
     notifyListeners();
   }
 
+  void setEmailPhoneToggle(bool value) {
+    _emailPhoneToggle = value;
+    notifyListeners();
+  }
+
   // login or signup toggle
   bool _showLogin = true;
   bool get showLogin => _showLogin;
