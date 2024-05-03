@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:heartless/pages/chat/contacts_page.dart';
 import 'package:heartless/pages/home/search_page.dart';
 import 'package:heartless/services/enums/user_type.dart';
-import 'package:heartless/shared/constants.dart';
 import 'package:heartless/shared/models/app_user.dart';
 
 class HomePageHeadingWidget extends StatelessWidget {
   final AppUser user;
+  final bool disableSearch;
   const HomePageHeadingWidget({
     super.key,
     required this.user,
+    this.disableSearch = false,
   });
 
   @override
@@ -26,7 +27,7 @@ class HomePageHeadingWidget extends StatelessWidget {
                 height: 240,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: Constants.primaryColor,
+                  color: Theme.of(context).primaryColor,
                   borderRadius: BorderRadius.only(
                     bottomRight: Radius.circular(90),
                   ),
@@ -70,6 +71,7 @@ class HomePageHeadingWidget extends StatelessWidget {
                       child: IconButton(
                         padding: EdgeInsets.zero,
                         onPressed: () {
+                          if (disableSearch) return;
                           Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -134,7 +136,7 @@ class HomePageHeadingWidget extends StatelessWidget {
                 ),
               ),
               Container(
-                color: Constants.primaryColor,
+                color: Theme.of(context).primaryColor,
                 child: Container(
                   height: 90,
                   decoration: BoxDecoration(
@@ -151,6 +153,7 @@ class HomePageHeadingWidget extends StatelessWidget {
             bottom: 50, // 20 if searchBar overlapping
             child: InkWell(
               onTap: () {
+                if (disableSearch) return;
                 Navigator.push(
                   context,
                   PageRouteBuilder(

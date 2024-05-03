@@ -6,7 +6,6 @@ import 'package:heartless/services/date/date_service.dart';
 import 'package:heartless/services/enums/custom_file_type.dart';
 import 'package:heartless/services/enums/event_tag.dart';
 import 'package:heartless/services/storage/file_storage.dart';
-import 'package:heartless/shared/constants.dart';
 import 'package:heartless/shared/models/health_document.dart';
 import 'package:heartless/widgets/log/file_tile.dart';
 import 'package:heartless/widgets/miscellaneous/month_divider.dart';
@@ -99,7 +98,7 @@ class _HealthDocumentsPageState extends State<HealthDocumentsPage> {
             },
           );
         },
-        backgroundColor: Constants.primaryColor,
+        backgroundColor: Theme.of(context).primaryColor,
         child: const Icon(Icons.add),
       ),
       appBar: PreferredSize(

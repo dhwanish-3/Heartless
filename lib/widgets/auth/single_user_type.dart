@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:heartless/shared/constants.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
 import 'package:provider/provider.dart';
 
@@ -40,7 +39,7 @@ class SingleUserType extends StatelessWidget {
               color: Theme.of(context).canvasColor,
               borderRadius: BorderRadius.circular(20),
               border: isSelected
-                  ? Border.all(color: Constants.primaryColor, width: 2)
+                  ? Border.all(color: Theme.of(context).primaryColor, width: 2)
                   : Border.all(color: Colors.black, width: 1),
               boxShadow: isSelected
                   ? const [

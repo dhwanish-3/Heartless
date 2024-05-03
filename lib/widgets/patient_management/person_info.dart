@@ -4,9 +4,11 @@ import 'package:heartless/shared/models/app_user.dart';
 
 class PersonalInfoWidget extends StatelessWidget {
   final AppUser user;
+  final bool disableTouch;
   const PersonalInfoWidget({
     super.key,
     required this.user,
+    this.disableTouch = false,
   });
 
   @override
@@ -62,6 +64,7 @@ class PersonalInfoWidget extends StatelessWidget {
                     ),
                     child: IconButton(
                       onPressed: () {
+                        if (disableTouch) return;
                         //go to qr_code page
                         showDialog(
                           context: context,

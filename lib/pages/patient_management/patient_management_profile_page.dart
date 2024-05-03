@@ -7,7 +7,6 @@ import 'package:heartless/pages/log/daywise_log.dart';
 import 'package:heartless/pages/log/health_documents_page.dart';
 import 'package:heartless/pages/profile/users_list_page.dart';
 import 'package:heartless/pages/schedule/schedule_page.dart';
-import 'package:heartless/shared/constants.dart';
 import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/shared/models/chat.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
@@ -209,9 +208,11 @@ class SupervisorTile extends StatelessWidget {
 
 class ControlPanel extends StatelessWidget {
   final AppUser patient;
+  final bool disableTouch;
   const ControlPanel({
     super.key,
     required this.patient,
+    this.disableTouch = false,
   });
 
   @override
@@ -278,6 +279,7 @@ class ControlPanel extends StatelessWidget {
                     imageUrl: 'assets/Icons/schedule.png',
                     text: 'Schedule',
                     onTap: () {
+                      if (disableTouch) return;
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -290,6 +292,7 @@ class ControlPanel extends StatelessWidget {
                     imageUrl: 'assets/Icons/charts.png',
                     text: 'Analytics',
                     onTap: () {
+                      if (disableTouch) return;
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -302,12 +305,14 @@ class ControlPanel extends StatelessWidget {
                       imageUrl: 'assets/Icons/chat.png',
                       text: 'Chat',
                       onTap: () {
+                        if (disableTouch) return;
                         createNewChat(patient);
                       }),
                   PanelCard(
                     imageUrl: 'assets/Icons/diary.png',
                     text: 'Health Log',
                     onTap: () {
+                      if (disableTouch) return;
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -320,6 +325,7 @@ class ControlPanel extends StatelessWidget {
                       imageUrl: 'assets/Icons/chat.png',
                       text: 'Documents',
                       onTap: () {
+                        if (disableTouch) return;
                         Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -356,7 +362,8 @@ class PanelCard extends StatelessWidget {
           height: 140,
           width: 150,
           decoration: BoxDecoration(
-            color: Constants.lightPrimaryColor,
+            // color: Constants.lightPrimaryColor,
+            color: Theme.of(context).primaryColorLight,
             borderRadius: BorderRadius.circular(10),
             boxShadow: [
               BoxShadow(

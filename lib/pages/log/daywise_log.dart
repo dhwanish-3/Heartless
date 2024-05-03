@@ -226,7 +226,7 @@ class _DayWiseLogState extends State<DayWiseLogPage> {
         floatingActionButton: SpeedDial(
           animatedIcon: AnimatedIcons.menu_close,
           animatedIconTheme: const IconThemeData(size: 22.0),
-          backgroundColor: Constants.primaryColor,
+          backgroundColor: Theme.of(context).primaryColor,
           children: [
             MedicalReadingType.diary,
             MedicalReadingType.heartRate,
@@ -273,7 +273,7 @@ class _DayWiseLogState extends State<DayWiseLogPage> {
           // controller: calendarSliderController,
           selectedDayPosition: SelectedDayPosition.center,
           fullCalendarWeekDay: WeekDay.short,
-          selectedTileBackgroundColor: Constants.primaryColor,
+          selectedTileBackgroundColor: Theme.of(context).primaryColor,
           monthYearButtonBackgroundColor: Constants.cardColor,
           monthYearTextColor: Colors.black,
           tileBackgroundColor: Theme.of(context).cardColor,

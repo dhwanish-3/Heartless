@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:heartless/services/enums/color_theme.dart';
 import 'package:heartless/shared/constants.dart';
 
 class ThemeNotifier extends ChangeNotifier {
@@ -15,6 +16,7 @@ class ThemeNotifier extends ChangeNotifier {
   ThemeData lightTheme = ThemeData(
     brightness: Brightness.light,
     primaryColor: Constants.primaryColor,
+    primaryColorLight: Constants.lightPrimaryColor,
     textTheme: Constants().textThemeLight,
     canvasColor: Colors.white,
     shadowColor: Colors.black,
@@ -26,10 +28,30 @@ class ThemeNotifier extends ChangeNotifier {
   ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
     primaryColor: Constants.primaryColor,
+    primaryColorLight: Constants.lightPrimaryColor,
     textTheme: Constants().textThemeDark,
     canvasColor: Colors.black,
     shadowColor: Colors.white,
     highlightColor: Colors.black,
     secondaryHeaderColor: Constants.darkCardColor,
   );
+
+  ColorTheme _colorTheme = ColorTheme.Default;
+
+  ColorTheme get colorTheme => _colorTheme;
+
+  void setColorTheme(ColorTheme colorTheme) {
+    _colorTheme = colorTheme;
+
+    lightTheme = lightTheme.copyWith(
+      primaryColor: colorTheme.primaryColor,
+      primaryColorLight: colorTheme.lightPrimaryColor,
+    );
+
+    darkTheme = darkTheme.copyWith(
+      primaryColor: colorTheme.primaryColor,
+      primaryColorLight: colorTheme.lightPrimaryColor,
+    );
+    notifyListeners();
+  }
 }

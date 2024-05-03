@@ -61,7 +61,7 @@ class SchedulePage extends StatelessWidget {
               //     // controller: calendarSliderController, //* controller is not needed here
               selectedDayPosition: SelectedDayPosition.center,
               fullCalendarWeekDay: WeekDay.short,
-              selectedTileBackgroundColor: Constants.primaryColor,
+              selectedTileBackgroundColor: Theme.of(context).primaryColor,
               monthYearButtonBackgroundColor: Constants.cardColor,
               monthYearTextColor: Colors.black,
               tileBackgroundColor: Theme.of(context).cardColor,
@@ -115,7 +115,7 @@ class SchedulePage extends StatelessWidget {
       floatingActionButton: authNotifier.userType == UserType.patient
           ? FloatingActionButton(
               child: const Icon(Icons.add, size: 30),
-              backgroundColor: Constants.primaryColor,
+              backgroundColor: Theme.of(context).primaryColor,
               onPressed: () {
                 Navigator.push(
                     context,
