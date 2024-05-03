@@ -11,30 +11,37 @@ class MonthDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        height: 40,
-        child: Row(children: [
-          Expanded(
-            flex: 1,
-            child: Divider(
-              color: Colors.black,
-              thickness: 1,
-            ),
-          ),
-          Text(
-            '$month $year',
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Divider(
-              color: Colors.black,
-              thickness: 1,
-            ),
-          ),
-        ]));
+    return Column(
+      children: [
+        SizedBox(height: 16),
+        Container(
+            height: 30,
+            child: Row(children: [
+              SizedBox(width: 30),
+              Expanded(
+                flex: 1,
+                child: Divider(
+                  thickness: 1,
+                ),
+              ),
+              SizedBox(width: 10),
+              Text(
+                '$month $year',
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              SizedBox(width: 10),
+              Expanded(
+                flex: 1,
+                child: Divider(
+                  thickness: 1,
+                ),
+              ),
+              SizedBox(width: 30),
+            ])),
+      ],
+    );
   }
 }

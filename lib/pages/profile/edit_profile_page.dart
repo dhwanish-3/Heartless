@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -8,9 +7,11 @@ import 'package:heartless/backend/services/firebase_storage/firebase_storage_ser
 import 'package:heartless/pages/log/file_upload_preview_page.dart';
 import 'package:heartless/services/utils/toast_message.dart';
 import 'package:heartless/shared/models/app_user.dart';
+import 'package:heartless/shared/provider/widget_provider.dart';
 import 'package:heartless/widgets/auth/text_input.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:provider/provider.dart';
 
 class EditProfilePage extends StatefulWidget {
   final AppUser user;
@@ -45,15 +46,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
     });
   }
 
-  void _submitForm() async {
+  void _submitForm(WidgetNotifier widgetNotifier) async {
+    widgetNotifier.setLoading(true);
+
     if (_formKey.currentState!.validate()) {
-      log('Form is valid', name: 'EditProfilePage');
-      log('Name: ${_nameController.text}', name: 'EditProfilePage');
-      log('Email: ${_emailController.text}', name: 'EditProfilePage');
-      log('phone: $_phoneNumber', name: 'EditProfilePage');
       // check if the user has changed the profile image
       if (_image != null) {
-        log("Image not null ");
         // delete the old image
         await FirebaseStorageService.deleteImage(widget.user.imageUrl);
         await FirebaseStorageService.uploadFile(widget.user.uid, _image!)
@@ -61,16 +59,20 @@ class _EditProfilePageState extends State<EditProfilePage> {
           widget.user.imageUrl = value;
         }).catchError((error) {
           ToastMessage().showError(error.toString());
+          widgetNotifier.setLoading(false);
+
           return;
         });
       }
-      log("uid is ${widget.user.uid}");
+
       // update the user profile
       widget.user.name = _nameController.text;
       widget.user.email = _emailController.text;
       widget.user.phone = _phoneNumber;
       await AuthController().updateProfile(widget.user);
-      Navigator.pop(context);
+      widgetNotifier.setLoading(false);
+      Navigator.of(context).popUntil((route) => route.isFirst);
+      Navigator.of(context).pushNamed('/home');
     }
   }
 
@@ -79,6 +81,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     super.initState();
     _emailController.text = widget.user.email;
     _nameController.text = widget.user.name;
+    _phoneNumber = widget.user.phone == null ? '' : widget.user.phone!;
   }
 
   @override
@@ -132,6 +135,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           ),
                           child: IntlPhoneField(
                             initialCountryCode: 'IN',
+                            initialValue: _phoneNumber,
                             decoration: InputDecoration(
                               labelText: 'Phone Number',
                               labelStyle: const TextStyle(
@@ -157,7 +161,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         const SizedBox(height: 40),
                         CustomFormSubmitButton(
                           text: 'Update Profile',
-                          onTap: _submitForm,
+                          onTap: () {
+                            _submitForm(Provider.of<WidgetNotifier>(context,
+                                listen: false));
+                          },
                           padding: 10,
                         ),
                         const SizedBox(height: 40),
@@ -188,8 +195,8 @@ class _ProfileImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(children: [
       Container(
-        height: 160,
-        width: 160,
+        height: 200,
+        width: 200,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: Colors.white,
@@ -201,8 +208,8 @@ class _ProfileImage extends StatelessWidget {
         child: ClipOval(child: _showProfile(user.imageUrl, image)),
       ),
       Positioned(
-        bottom: 0,
-        right: 0,
+        bottom: 6,
+        right: 6,
         child: Container(
           decoration: BoxDecoration(
             shape: BoxShape.circle,
@@ -231,8 +238,8 @@ class _ProfileImage extends StatelessWidget {
       ));
     } else if (image != null) {
       return Container(
-        height: 150.0,
-        width: 150.0,
+        height: 200.0,
+        width: 200.0,
         decoration: const BoxDecoration(
           shape: BoxShape.circle,
         ),
@@ -248,14 +255,14 @@ class _ProfileImage extends StatelessWidget {
         imageUrl: Uri.parse(user.imageUrl).isAbsolute
             ? user.imageUrl
             : 'https://via.placeholder.com/150',
-        height: 160,
-        width: 160,
+        height: 200,
+        width: 200,
         fit: BoxFit.cover,
         placeholder: (context, url) => const CircularProgressIndicator(),
         // todo: modify the error widget
         errorWidget: (context, url, error) => Container(
-            height: 160,
-            width: 160,
+            height: 200,
+            width: 200,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: Theme.of(context).shadowColor,

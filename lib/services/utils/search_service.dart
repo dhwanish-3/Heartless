@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/backend/controllers/chat_controller.dart';
+import 'package:heartless/backend/services/misc/connect_users.dart';
 import 'package:heartless/main.dart';
 import 'package:heartless/pages/analytics/analytics_page.dart';
 import 'package:heartless/pages/auth/forgot_password.dart';
-import 'package:heartless/pages/auth/scan_qr_page.dart';
 import 'package:heartless/pages/chat/chat_page.dart';
 import 'package:heartless/pages/log/daywise_diary_page.dart';
 import 'package:heartless/pages/log/daywise_log.dart';
@@ -11,9 +11,12 @@ import 'package:heartless/pages/log/health_documents_page.dart';
 import 'package:heartless/pages/patient_management/patient_management_profile_page.dart';
 import 'package:heartless/pages/profile/edit_profile_page.dart';
 import 'package:heartless/pages/profile/extended_timeline_page.dart';
+import 'package:heartless/pages/profile/qr_result_page.dart';
 import 'package:heartless/pages/schedule/schedule_page.dart';
 import 'package:heartless/services/enums/schedule_toggle_type.dart';
 import 'package:heartless/services/enums/user_type.dart';
+import 'package:heartless/services/utils/qr_scanner.dart';
+import 'package:heartless/services/utils/toast_message.dart';
 import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/shared/models/chat.dart';
 import 'package:heartless/shared/provider/widget_provider.dart';
@@ -93,9 +96,25 @@ class SearchService {
         name: 'Scan to add a ' + _getOtherUserTypes(user.userType),
         keywords: ['scan', 'add', _getOtherUserTypes(user.userType)],
         onTap: () {
-          navigatorKey.currentState!.pushReplacement(MaterialPageRoute(
-            builder: (context) => ScanQR(),
-          ));
+          QRScanner.scanQRCode().then((value) async {
+            AppUser? resultUser = await ConnectUsers.getUserDetails(value);
+            ToastMessage Toast = ToastMessage();
+            if (resultUser == null) {
+              Toast.showError("Qr Code does not belong to a valid user");
+            } else if (resultUser.uid == user.uid) {
+              Toast.showError("Can't add yourself");
+            } else if (resultUser.userType == user.userType) {
+              Toast.showError(
+                  "Can't add user who is a ${user.userType.capitalisedName}");
+            } else {
+              await navigatorKey.currentState!.push(
+                MaterialPageRoute(
+                  builder: (context) => QRResultPage(appUser: resultUser),
+                ),
+              );
+            }
+          });
+          navigatorKey.currentState!.pop();
         },
       ),
       if (user.userType == UserType.patient)

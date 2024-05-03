@@ -49,7 +49,7 @@ class ReminderCard extends StatelessWidget {
           activity.status == ActivityStatus.upcoming
               ? SlidableAction(
                   onPressed: (context) => _onDisimissed(),
-                  label: "Completed",
+                  label: "Mark as Done",
                   icon: Icons.check,
                   backgroundColor: Colors.green,
                   borderRadius: BorderRadius.circular(20),

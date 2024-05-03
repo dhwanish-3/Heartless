@@ -30,7 +30,9 @@ class PatientHomePage extends StatelessWidget {
               HomePageHeadingWidget(
                 user: user,
               ),
-              QuickActionsWidget(),
+              QuickActionsWidget(
+                user: user,
+              ),
               const SizedBox(height: 20),
               ActivitiesSchedule(context),
               const SizedBox(height: 20),

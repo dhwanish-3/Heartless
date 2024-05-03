@@ -33,8 +33,13 @@ class TimeLineEntryWidget extends StatelessWidget {
                 child: Column(
                   children: [
                     Container(
-                      width: 8.0,
-                      height: 8.0,
+                      height: 20,
+                      width: 2,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    Container(
+                      width: 14.0,
+                      height: 14.0,
                       decoration: BoxDecoration(
                         color: Theme.of(context).primaryColor,
                         shape: BoxShape.circle,
@@ -64,7 +69,7 @@ class TimeLineEntryWidget extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                           // color: Colors.black,
-                          fontSize: 10,
+                          fontSize: 12,
                           height: 1.2,
                           fontWeight: FontWeight.w400),
                     ),
@@ -75,7 +80,7 @@ class TimeLineEntryWidget extends StatelessWidget {
                             textAlign: TextAlign.start,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
-                              fontSize: 14,
+                              fontSize: 16,
                               height: 1.2,
                               fontWeight: FontWeight.w500,
                             ),
@@ -92,17 +97,9 @@ class TimeLineEntryWidget extends StatelessWidget {
                           tag: tag.tag,
                           tagColor: tag.color,
                         ),
-                        // TagWidget(
-                        //   tag: 'test report',
-                        //   tagColor: Colors.blue,
-                        // ),
-                        // TagWidget(
-                        //   tag: 'blood pressure',
-                        //   tagColor: Colors.red,
-                        // ),
                       ],
                     ),
-                    const SizedBox(height: 5),
+                    const SizedBox(height: 20),
                   ],
                 ),
               )

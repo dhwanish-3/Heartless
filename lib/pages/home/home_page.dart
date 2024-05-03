@@ -153,34 +153,36 @@ class _HomePageState extends State<HomePage> {
     double fem = MediaQuery.of(context).size.width / 500;
     final WidgetNotifier widgetNotifier =
         Provider.of<WidgetNotifier>(context, listen: false);
-    return Container(
-      height: 80,
-      margin: EdgeInsets.symmetric(
-        horizontal: tabs.length == 3 ? 60 : 0,
-        vertical: 0,
-      ),
-      decoration: BoxDecoration(
-        // color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.all(Radius.circular(40 * fem)),
-      ),
-      child: GNav(
-        selectedIndex: widgetNotifier.selectedIndex,
-        rippleColor: Theme.of(context).primaryColor.withOpacity(0.3),
-        hoverColor: Theme.of(context).primaryColor.withOpacity(0.5),
-        haptic: true,
-        tabBorderRadius: 20,
-        curve: Curves.easeOutExpo,
-        duration: const Duration(milliseconds: 300),
-        gap: 0,
-        color: Theme.of(context).shadowColor,
-        activeColor: Theme.of(context).primaryColor,
-        iconSize: 24,
-        tabBackgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
-        padding: const EdgeInsets.all(16),
-        onTabChange: (index) {
-          widgetNotifier.setSelectedIndex(index);
-        },
-        tabs: tabs,
+    return SafeArea(
+      child: Container(
+        height: 80,
+        margin: EdgeInsets.symmetric(
+          horizontal: tabs.length == 3 ? 60 : 0,
+          vertical: 0,
+        ),
+        decoration: BoxDecoration(
+          // color: Theme.of(context).cardColor,
+          borderRadius: BorderRadius.all(Radius.circular(40 * fem)),
+        ),
+        child: GNav(
+          selectedIndex: widgetNotifier.selectedIndex,
+          rippleColor: Theme.of(context).primaryColor.withOpacity(0.3),
+          hoverColor: Theme.of(context).primaryColor.withOpacity(0.5),
+          haptic: true,
+          tabBorderRadius: 20,
+          curve: Curves.easeOutExpo,
+          duration: const Duration(milliseconds: 300),
+          gap: 0,
+          color: Theme.of(context).shadowColor,
+          activeColor: Theme.of(context).primaryColor,
+          iconSize: 24,
+          tabBackgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
+          padding: const EdgeInsets.all(16),
+          onTabChange: (index) {
+            widgetNotifier.setSelectedIndex(index);
+          },
+          tabs: tabs,
+        ),
       ),
     );
   }

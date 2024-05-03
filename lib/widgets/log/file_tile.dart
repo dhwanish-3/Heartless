@@ -19,8 +19,21 @@ class FileTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: Theme.of(context).secondaryHeaderColor,
-        margin: const EdgeInsets.symmetric(),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Theme.of(context).secondaryHeaderColor,
+          boxShadow: [
+            BoxShadow(
+              color: Theme.of(context).highlightColor,
+              blurRadius: 1,
+              offset: const Offset(0, 0.5),
+            )
+          ],
+        ),
+        margin: const EdgeInsets.symmetric(
+          horizontal: 12,
+          vertical: 4,
+        ),
         padding: const EdgeInsets.symmetric(
           horizontal: 10,
           vertical: 6,

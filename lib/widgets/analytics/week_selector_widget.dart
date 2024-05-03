@@ -168,6 +168,11 @@ class WeekSliderWidget extends StatelessWidget {
             child: PageView.builder(
               controller: pageController,
               itemCount: weeks.length,
+              onPageChanged: (index) {
+                if (index < weeks.length && index >= 0) {
+                  onWeekChanged(weeks[index][0], weeks[index][1]);
+                }
+              },
               itemBuilder: (context, index) {
                 return Container(
                   padding: const EdgeInsets.all(0),
@@ -176,7 +181,6 @@ class WeekSliderWidget extends StatelessWidget {
                     child: Text('${weeks[index][0]} - ${weeks[index][1]}',
                         style: TextStyle(
                           fontSize: 16,
-                          // color: Colors.black,
                           color: Theme.of(context).primaryColor,
                           fontWeight: FontWeight.bold,
                         )),

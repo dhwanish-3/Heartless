@@ -1,8 +1,11 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:heartless/backend/controllers/connect_users_controller.dart';
 import 'package:heartless/pages/log/file_upload_preview_page.dart';
 import 'package:heartless/services/enums/user_type.dart';
+import 'package:heartless/services/utils/toast_message.dart';
 import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
 import 'package:heartless/shared/provider/widget_provider.dart';
@@ -28,11 +31,10 @@ class QRResultPage extends StatelessWidget {
           authNotifier.appUser!.uid != user!.uid &&
           authNotifier.appUser!.userType != user!.userType) {
         widgetNotifier.setLoading(true);
-
+        log("before connct");
         await ConnectUsersController.connectUsers(authNotifier.appUser!, user!)
             .then((_) {
           widgetNotifier.setLoading(false);
-          Navigator.of(context).pop();
         });
       }
     }
@@ -92,7 +94,13 @@ class QRResultPage extends StatelessWidget {
         CustomFormSubmitButton(
           text: 'Add ${appUser.userType.capitalisedName}',
           onTap: () {
-            addUser(appUser);
+            addUser(appUser).then((_) {
+              ToastMessage toastMessage = ToastMessage();
+              toastMessage.showSuccess(
+                  '${appUser.userType.capitalisedName} added successfully');
+
+              Navigator.of(context).pop();
+            });
           },
           padding: 60,
         ),

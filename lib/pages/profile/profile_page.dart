@@ -76,16 +76,18 @@ class _ProfilePageState extends State<ProfilePage> {
           style: Theme.of(context).textTheme.headlineMedium,
         ),
       ),
-      body: Container(
-        width: double.infinity,
-        child: Column(
-          children: [
-            _HeaderSection(authNotifier: authNotifier),
-            _ProfileActions(
-              users: users,
-              logout: logout,
-            ),
-          ],
+      body: SingleChildScrollView(
+        child: Container(
+          width: double.infinity,
+          child: Column(
+            children: [
+              _HeaderSection(authNotifier: authNotifier),
+              _ProfileActions(
+                users: users,
+                logout: logout,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -109,8 +111,8 @@ class _HeaderSection extends StatelessWidget {
         const SizedBox(height: 20),
         Stack(children: [
           Container(
-            height: 160,
-            width: 160,
+            height: 200,
+            width: 200,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: Colors.white,
@@ -124,15 +126,15 @@ class _HeaderSection extends StatelessWidget {
                 imageUrl: Uri.parse(authNotifier.appUser!.imageUrl).isAbsolute
                     ? authNotifier.appUser!.imageUrl
                     : 'https://via.placeholder.com/150',
-                height: 160,
-                width: 160,
+                height: 200,
+                width: 200,
                 fit: BoxFit.cover,
                 placeholder: (context, url) =>
                     const CircularProgressIndicator(),
                 // todo: modify the error widget
                 errorWidget: (context, url, error) => Container(
-                    height: 160,
-                    width: 160,
+                    height: 200,
+                    width: 200,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: Theme.of(context).shadowColor,
@@ -146,8 +148,8 @@ class _HeaderSection extends StatelessWidget {
             ),
           ),
           Positioned(
-            bottom: 0,
-            right: 0,
+            bottom: 6,
+            right: 6,
             child: Container(
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
