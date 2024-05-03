@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:heartless/services/utils/search_service.dart';
 
@@ -19,6 +21,7 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
+    log("search list: ${SearchService.globalSearchOptions.length}");
     return Scaffold(
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(80),

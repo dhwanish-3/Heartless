@@ -6,6 +6,7 @@ import "package:heartless/backend/controllers/auth_controller.dart";
 import "package:heartless/backend/services/notifications/notification_services.dart";
 import "package:heartless/services/enums/user_type.dart";
 import "package:heartless/services/phone_auth/phone_auth.dart";
+import "package:heartless/services/utils/search_service.dart";
 import "package:heartless/shared/constants.dart";
 import 'package:heartless/shared/models/app_user.dart';
 import "package:heartless/shared/provider/auth_notifier.dart";
@@ -68,6 +69,7 @@ class _LoginPageState extends State<LoginPage> {
       authNotifier.setAppUser(appUser);
       bool success = await _authController.login(authNotifier);
       if (success && context.mounted) {
+        SearchService.initGlobalSearchOptions(authNotifier.appUser!);
         NotificationService.getFirebaseMessagingToken(authNotifier);
         goHome();
       }
@@ -97,6 +99,7 @@ class _LoginPageState extends State<LoginPage> {
     void googleSignIn() async {
       bool success = await _authController.googleSignIn(authNotifier);
       if (success && context.mounted) {
+        SearchService.initGlobalSearchOptions(authNotifier.appUser!);
         NotificationService.getFirebaseMessagingToken(authNotifier);
         goHome();
       }
