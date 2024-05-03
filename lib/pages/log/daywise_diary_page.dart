@@ -30,7 +30,7 @@ class DayWiseDiary extends StatelessWidget {
           // controller: calendarSliderController,
           selectedDayPosition: SelectedDayPosition.center,
           fullCalendarWeekDay: WeekDay.short,
-          selectedTileBackgroundColor: Constants.primaryColor,
+          selectedTileBackgroundColor: Theme.of(context).primaryColor,
           monthYearButtonBackgroundColor: Constants.cardColor,
           monthYearTextColor: Colors.black,
           tileBackgroundColor: Theme.of(context).cardColor,

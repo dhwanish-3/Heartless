@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/services/enums/activity_status.dart';
 import 'package:heartless/services/enums/activity_type.dart';
-import 'package:heartless/shared/constants.dart';
 import 'package:heartless/shared/provider/widget_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -45,9 +44,9 @@ class ActivityScheduleEntry extends StatelessWidget {
                   time,
                   textAlign: TextAlign.start,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
-                    color: Constants.primaryColor,
+                    color: Theme.of(context).primaryColor,
                     height: 1.2,
                     fontWeight: FontWeight.w600,
                   ),

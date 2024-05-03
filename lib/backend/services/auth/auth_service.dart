@@ -186,7 +186,7 @@ class AuthService {
           appUser.name = result.user!.displayName!;
           appUser.imageUrl = result.user!.photoURL!;
           authNotifier.setAppUser(appUser);
-          bool success = await setUserDetails(authNotifier).timeout(_timeLimit);
+          bool success = await setUserDetails(authNotifier);
           if (success) {
             authNotifier.setLoggedIn(true);
             return true;
@@ -246,11 +246,10 @@ class AuthService {
           .createUserWithEmailAndPassword(
               email: authNotifier.appUser!.email,
               password: authNotifier.appUser!.password)
-          .then((value) => authNotifier.appUser!.uid = value.user!.uid)
-          .timeout(_timeLimit);
+          .then((value) => authNotifier.appUser!.uid = value.user!.uid);
       User? user = _auth.currentUser;
       if (user != null) {
-        bool success = await setUserDetails(authNotifier).timeout(_timeLimit);
+        bool success = await setUserDetails(authNotifier);
         if (success) {
           authNotifier.setLoggedIn(true);
           return true;

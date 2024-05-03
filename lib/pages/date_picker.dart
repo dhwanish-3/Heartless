@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/services/date/date_service.dart';
-import 'package:heartless/shared/constants.dart';
 import 'package:heartless/shared/provider/widget_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -58,7 +57,7 @@ class _DatePickerState extends State<DatePicker> {
   Widget _buildDateCard(DateTime date, WidgetNotifier widgetNotifier) {
     return Container(
       decoration: BoxDecoration(
-        color: Constants.primaryColor,
+        color: Theme.of(context).primaryColor,
         borderRadius: BorderRadius.circular(10.0),
       ),
       padding: const EdgeInsets.all(8.0),

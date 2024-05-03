@@ -50,17 +50,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ThemeNotifier themeNotifier =
-        Provider.of<ThemeNotifier>(context, listen: false);
-    return MaterialApp(
-      title: 'Heart Recovery',
-      debugShowCheckedModeBanner: false,
-      theme: themeNotifier.lightTheme,
-      darkTheme: themeNotifier.darkTheme,
-      themeMode: ThemeNotifier.themeMode,
-      initialRoute: '/',
-      onGenerateRoute: Routes.generateRoutes,
-      navigatorKey: navigatorKey,
+    return Consumer<ThemeNotifier>(
+      builder: (context, themeNotifier, child) {
+        return MaterialApp(
+          title: 'Heart Recovery',
+          debugShowCheckedModeBanner: false,
+          theme: themeNotifier.lightTheme,
+          darkTheme: themeNotifier.darkTheme,
+          themeMode: ThemeNotifier.themeMode,
+          initialRoute: '/',
+          onGenerateRoute: Routes.generateRoutes,
+          navigatorKey: navigatorKey,
+        );
+      },
     );
   }
 }
