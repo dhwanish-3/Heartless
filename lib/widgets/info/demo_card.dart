@@ -61,7 +61,7 @@ class _ScrollableDemoListState extends State<ScrollableDemoList> {
         itemCount: items.length,
         itemBuilder: (context, index) {
           return DemoCard(
-            imageUrl: items[index].imageUrl,
+            imageUrl: items[index].imageUrl!,
             title: items[index].title,
           );
         },

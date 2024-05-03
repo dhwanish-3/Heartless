@@ -26,7 +26,7 @@ class _DemoPageState extends State<DemoPage> {
     super.initState();
 
     _videoPlayerController = CachedVideoPlayerController.network(
-      widget.demonstration.videoUrl,
+      widget.demonstration.videoUrl!,
     )..initialize().then((value) => setState(() {
           _videoPlayerController.play();
         }));
