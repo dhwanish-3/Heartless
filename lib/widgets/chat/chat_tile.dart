@@ -28,7 +28,7 @@ class _ChatTileState extends State<ChatTile> {
     return Container(
         height: 75,
         width: screenWidth,
-        color: Theme.of(context).primaryColor.withOpacity(0.05),
+        color: Theme.of(context).primaryColor.withOpacity(0.1),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
           child: Row(

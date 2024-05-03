@@ -43,7 +43,7 @@ dependencies:
   shared_preferences: ^2.2.2
   pin_code_text_field: ^1.8.0
   google_sign_in: ^6.1.6
-  fluttertoast: ^8.2.4
+  fluttertoast: ^8.2.5
   syncfusion_flutter_charts: ^21.2.4
   sliding_up_panel: ^2.0.0+1
   scrollable_positioned_list: ^0.3.8

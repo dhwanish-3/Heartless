@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:heartless/services/enums/color_theme.dart';
 import 'package:heartless/services/enums/user_type.dart';
 import 'package:heartless/shared/models/app_user.dart';
@@ -26,6 +28,7 @@ class Patient extends AppUser {
     nurses = map['nurses'] is Iterable ? List.from(map['nurses']) : [];
     doctors = map['doctors'] is Iterable ? List.from(map['doctors']) : [];
     theme = ColorTheme.values[map['theme'] ?? ColorTheme.Default.index];
+    brightness = Brightness.values[map['brightness'] ?? Brightness.light.index];
   }
 
   @override
@@ -44,6 +47,7 @@ class Patient extends AppUser {
       'nurses': nurses,
       'doctors': doctors,
       'theme': theme.index,
+      'brightness': brightness.index,
     };
   }
 }

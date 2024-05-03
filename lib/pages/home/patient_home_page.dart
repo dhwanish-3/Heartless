@@ -34,7 +34,8 @@ class PatientHomePage extends StatelessWidget {
               const SizedBox(height: 20),
               ActivitiesSchedule(context),
               const SizedBox(height: 20),
-              DemoPreviewWidget(pageController: _pageController)
+              DemoPreviewWidget(pageController: _pageController),
+              const SizedBox(height: 40),
             ],
           ),
         ),
