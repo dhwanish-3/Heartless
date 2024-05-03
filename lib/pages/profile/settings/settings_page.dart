@@ -1,9 +1,11 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:heartless/backend/controllers/auth_controller.dart';
 import 'package:heartless/pages/profile/settings/static_home_page.dart';
 import 'package:heartless/pages/profile/settings/static_patient_management.dart';
 import 'package:heartless/services/enums/color_theme.dart';
+import 'package:heartless/shared/provider/auth_notifier.dart';
 import 'package:heartless/shared/provider/theme_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -122,6 +124,8 @@ class ColorsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     ThemeNotifier themeProvider =
         Provider.of<ThemeNotifier>(context, listen: false);
+    AuthNotifier authNotifier =
+        Provider.of<AuthNotifier>(context, listen: false);
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 30),
       decoration: BoxDecoration(
@@ -167,6 +171,8 @@ class ColorsWidget extends StatelessWidget {
                   onTap: () {
                     log('Color: $color');
                     themeProvider.setColorTheme(color);
+                    authNotifier.appUser!.theme = color;
+                    AuthController().updateProfile(authNotifier.appUser!);
                   },
                   child: SingleColorWidget(
                     primaryColor: color.primaryColor,

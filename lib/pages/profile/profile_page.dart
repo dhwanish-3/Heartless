@@ -265,7 +265,7 @@ class _ProfileActions extends StatelessWidget {
                     _ProfileActionTile(
                       actionString: actions[i],
                       actionIcon: actionIcons[i],
-                      onTap: () {
+                      onTap: () async {
                         switch (i) {
                           case 0:
                             //navigate to settings
@@ -311,11 +311,34 @@ class _ProfileActions extends StatelessWidget {
                             );
                             break;
                           case 4:
-
-                            //logout
-                            logout();
+                            await showDialog<bool>(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    contentPadding: const EdgeInsets.all(25),
+                                    actionsPadding: const EdgeInsets.symmetric(
+                                        horizontal: 20, vertical: 16),
+                                    shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(12))),
+                                    title: const Text('Alert'),
+                                    content: const Text(
+                                        'Do you want to Exit the App'),
+                                    actions: [
+                                      ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop(false);
+                                          },
+                                          child: const Text('No')),
+                                      ElevatedButton(
+                                          onPressed: () {
+                                            logout();
+                                          },
+                                          child: const Text('Yes'))
+                                    ],
+                                  );
+                                });
                             break;
-                          default:
                         }
                       },
                     )
