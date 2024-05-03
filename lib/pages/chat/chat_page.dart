@@ -120,7 +120,8 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(widget.chatUser.name,
-                      style: const TextStyle(fontSize: 18)),
+                      style: const TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.w600)),
                   Text(
                     widget.chatUser.isOnline
                         ? "Online"
@@ -240,11 +241,9 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
               ),
             ),
           ),
-          SafeArea(
-            child: MessageField(
-              messageController: _messageController,
-              sendMessage: sendMessage,
-            ),
+          MessageField(
+            messageController: _messageController,
+            sendMessage: sendMessage,
           ),
         ],
       ),
