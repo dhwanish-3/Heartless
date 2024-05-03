@@ -3,39 +3,10 @@ import 'package:heartless/backend/controllers/connect_users_controller.dart';
 import 'package:heartless/pages/demo/categorised_demo_page.dart';
 import 'package:heartless/pages/profile/users_list_page.dart';
 import 'package:heartless/shared/models/app_user.dart';
-import 'package:heartless/shared/models/demonstration.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
 import 'package:heartless/widgets/home/heading_widget.dart';
 import 'package:heartless/widgets/info/demo_card.dart';
 import 'package:provider/provider.dart';
-
-List<Demonstration> items = [
-  Demonstration(
-    title: "Planking",
-    imageUrl: "assets/illustrations/plank.jpeg",
-    videoUrl:
-        "https://firebasestorage.googleapis.com/v0/b/heartless-17b56.appspot.com/o/demos%2FArc%20on%20Windows.%20Download%20now..mp4?alt=media",
-    sections: List<Section>.generate(
-      4,
-      (index) => Section(title: "Section $index", points: [
-        "point 1 take ample water inside to match your requirements",
-        "point 2",
-        "point 3"
-      ]),
-    ),
-  ),
-  Demonstration(
-    title: "Breathing",
-    imageUrl: "assets/illustrations/breathing.jpeg",
-    videoUrl:
-        "https://firebasestorage.googleapis.com/v0/b/heartless-17b56.appspot.com/o/demos%2FArc%20on%20Windows.%20Download%20now..mp4?alt=media",
-    sections: List<Section>.generate(
-      3,
-      (index) => Section(
-          title: "Section $index", points: ["point 1", "point 2", "point 3"]),
-    ),
-  ),
-];
 
 class DoctorNurseHomePage extends StatefulWidget {
   DoctorNurseHomePage({
@@ -306,9 +277,7 @@ class DemoPreviewWidget extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => CategorisedDemoListPage(
-                                items: items,
-                              )),
+                          builder: (context) => CategorisedDemoListPage()),
                     );
                   },
                   icon: Icon(
@@ -321,7 +290,7 @@ class DemoPreviewWidget extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 5),
-          ScrollableDemoList(items: items, pageController: pageController),
+          ScrollableDemoList(pageController: pageController),
         ],
       ),
     );
