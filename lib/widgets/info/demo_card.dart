@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:heartless/pages/profile/settings/static_data.dart';
+import 'package:heartless/shared/models/demonstration.dart';
 
 class ScrollableDemoList extends StatefulWidget {
-  final items;
   const ScrollableDemoList({
     Key? key,
-    required this.items,
     required PageController pageController,
   })  : _pageController = pageController,
         super(key: key);
@@ -20,6 +20,7 @@ class ScrollableDemoList extends StatefulWidget {
 class _ScrollableDemoListState extends State<ScrollableDemoList> {
   late Timer _timer;
   int _currentPage = 0;
+  List<Demonstration> items = StaticData.previewList;
 
   @override
   void initState() {
@@ -27,7 +28,7 @@ class _ScrollableDemoListState extends State<ScrollableDemoList> {
     bool forwardScroll = true;
     //todo logic to implement forward and backward scrolling
     _timer = Timer.periodic(Duration(seconds: 5), (timer) {
-      if (_currentPage < widget.items.length) {
+      if (_currentPage < items.length) {
         widget._pageController.animateToPage(
           _currentPage,
           duration: Duration(milliseconds: 350),
@@ -57,11 +58,11 @@ class _ScrollableDemoListState extends State<ScrollableDemoList> {
       height: 180,
       child: PageView.builder(
         controller: widget._pageController,
-        itemCount: widget.items.length,
+        itemCount: items.length,
         itemBuilder: (context, index) {
           return DemoCard(
-            imageUrl: widget.items[index].imageUrl,
-            title: widget.items[index].title,
+            imageUrl: items[index].imageUrl,
+            title: items[index].title,
           );
         },
       ),
