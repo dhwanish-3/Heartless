@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:heartless/backend/controllers/demonstration_controller.dart';
 import 'package:heartless/pages/demo/demo_page.dart';
-import 'package:heartless/pages/profile/settings/static_data.dart';
 import 'package:heartless/shared/models/demonstration.dart';
 import 'package:heartless/widgets/info/demo_card.dart';
 
@@ -14,23 +14,37 @@ class CategorisedDemoListPage extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(title: Text('Video Demonstrations')),
         body: SafeArea(
-            child: SingleChildScrollView(
-          child: Column(
-            children: [
-              DemoCategory(
-                items: StaticData.breathingDemos,
-              ),
-              DemoCategory(
-                items: StaticData.cardioWorkoutDemos,
-                category: 'Flexi-Cardio Workout',
-              ),
-              DemoCategory(
-                items: StaticData.protocols,
-                category: 'Emergency Protocol',
-              ),
-            ],
-          ),
-        )));
+            child: StreamBuilder(
+                stream: DemonstrationController().getDemos(),
+                builder: (context, AsyncSnapshot snapshot) {
+                  if (snapshot.hasData &&
+                      snapshot.data != null &&
+                      snapshot.data.docs.isNotEmpty) {
+                    return ListView.builder(
+                        itemCount: snapshot.data.docs.length,
+                        itemBuilder: (context, index) {
+                          Demonstration demo = Demonstration.fromMap(
+                              snapshot.data.docs[index].data());
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      DemoPage(demonstration: demo),
+                                ),
+                              );
+                            },
+                            child: DemoCard(
+                                imageUrl: demo.imageUrl!, title: demo.title),
+                          );
+                        });
+                  } else {
+                    return const Center(
+                      child: Text("No Demos Yet"),
+                    );
+                  }
+                })));
   }
 }
 
@@ -88,7 +102,7 @@ class DemoCategory extends StatelessWidget {
                     },
                     child: DemoCard(
                       title: item.title,
-                      imageUrl: item.imageUrl,
+                      imageUrl: item.imageUrl!,
                     ),
                   ),
               ],
