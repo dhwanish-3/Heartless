@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/services/date/date_service.dart';
 import 'package:heartless/services/enums/medical_reading_type.dart';
-import 'package:heartless/shared/constants.dart';
 
 class GenericReadingTile extends StatelessWidget {
   final String reading;
@@ -79,11 +78,11 @@ class GenericReadingTile extends StatelessWidget {
                         reading,
                         optionalValue,
                       ),
-                      style: const TextStyle(
+                      style: TextStyle(
                         // overflow: TextOverflow.ellipsis,
                         fontSize: 20,
                         fontWeight: FontWeight.w800,
-                        color: Constants.primaryColor,
+                        color: Theme.of(context).primaryColor,
                       ),
                     ),
                     comment.isNotEmpty

@@ -36,15 +36,19 @@ class _QRPopupWidgetState extends State<QRPopupWidget> {
       } else if (authNotifier.appUser!.userType == user.userType) {
         Toast.showError(
             "Can't add user who is a ${user.userType.capitalisedName}");
-
-        // await ConnectUsersController.connectUsers(authNotifier.appUser!, user!);
       } else {
-        Navigator.of(context).push(
+        await Navigator.of(context)
+            .push(
           MaterialPageRoute(
             builder: (context) => QRResultPage(appUser: user),
           ),
-        );
+        )
+            .then((value) {
+          Toast.showSuccess(
+              "${user.userType.capitalisedName} added successfully");
+        });
       }
+      Navigator.of(context).pop();
     });
   }
 

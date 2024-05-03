@@ -9,9 +9,9 @@ import 'package:heartless/pages/home/doctor_nurse_home_page.dart';
 import 'package:heartless/pages/home/patient_home_page.dart';
 import 'package:heartless/pages/log/daywise_log.dart';
 import 'package:heartless/pages/profile/profile_page.dart';
+import 'package:heartless/pages/profile/settings/settings_page.dart';
 import 'package:heartless/pages/schedule/schedule_page.dart';
 import 'package:heartless/services/enums/user_type.dart';
-import 'package:heartless/shared/constants.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
 import 'package:heartless/shared/provider/widget_provider.dart';
 import 'package:provider/provider.dart';
@@ -50,6 +50,7 @@ class _HomePageState extends State<HomePage> {
       DoctorNurseHomePage(),
       ContactsPage(),
       ProfilePage(),
+      SettingsPage(),
       DemoPage(
         title: 'Demo',
         videoUrl:
@@ -128,17 +129,17 @@ class _HomePageState extends State<HomePage> {
       ),
       child: GNav(
         selectedIndex: widgetNotifier.selectedIndex,
-        rippleColor: Constants.primaryColor.withOpacity(0.3),
-        hoverColor: Constants.primaryColor.withOpacity(0.5),
+        rippleColor: Theme.of(context).primaryColor.withOpacity(0.3),
+        hoverColor: Theme.of(context).primaryColor.withOpacity(0.5),
         haptic: true,
         tabBorderRadius: 20,
         curve: Curves.easeOutExpo,
         duration: const Duration(milliseconds: 300),
         gap: 0,
         color: Theme.of(context).shadowColor,
-        activeColor: Constants.primaryColor,
+        activeColor: Theme.of(context).primaryColor,
         iconSize: 24,
-        tabBackgroundColor: Constants.primaryColor.withOpacity(0.1),
+        tabBackgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
         padding: const EdgeInsets.all(16),
         onTabChange: (index) {
           widgetNotifier.setSelectedIndex(index);

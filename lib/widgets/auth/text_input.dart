@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:heartless/shared/constants.dart';
 import 'package:heartless/shared/provider/widget_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -50,10 +49,10 @@ class TextFieldInput extends StatelessWidget {
         decoration: InputDecoration(
           filled: true,
           fillColor: Theme.of(context).cardColor,
-          floatingLabelStyle: const TextStyle(
+          floatingLabelStyle: TextStyle(
             fontWeight: FontWeight.w600,
             fontSize: 18,
-            color: Constants.primaryColor,
+            color: Theme.of(context).primaryColor,
           ),
           labelText: labelText,
           labelStyle: const TextStyle(

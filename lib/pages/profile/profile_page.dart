@@ -6,6 +6,7 @@ import 'package:heartless/pages/log/health_documents_page.dart';
 import 'package:heartless/pages/profile/edit_profile_page.dart';
 import 'package:heartless/pages/profile/extended_timeline_page.dart';
 import 'package:heartless/pages/profile/qr_code_page.dart';
+import 'package:heartless/pages/profile/settings/settings_page.dart';
 import 'package:heartless/pages/profile/users_list_page.dart';
 import 'package:heartless/services/enums/user_type.dart';
 import 'package:heartless/shared/models/app_user.dart';
@@ -268,6 +269,12 @@ class _ProfileActions extends StatelessWidget {
                         switch (i) {
                           case 0:
                             //navigate to settings
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SettingsPage(),
+                              ),
+                            );
                             break;
                           case 1:
                             //navigate to timeline
@@ -322,6 +329,12 @@ class _ProfileActions extends StatelessWidget {
                         switch (i) {
                           case 0:
                             //navigate to settings
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SettingsPage(),
+                              ),
+                            );
 
                             break;
                           case 1:
