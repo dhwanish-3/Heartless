@@ -20,12 +20,6 @@ class QuickActionsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const imageUrls = [
-      'assets/Icons/quickAction/file.png',
-      'assets/Icons/quickAction/scan.png',
-      'assets/Icons/quickAction/timeline.png',
-      'assets/Icons/quickAction/activity.png',
-    ];
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 30),
       decoration: BoxDecoration(

@@ -26,14 +26,6 @@ class UsersListPage extends StatelessWidget {
             ? const Text('Your Patients ')
             : const Text('Doctors and Nurses'),
       ),
-      floatingActionButton: authNotifier.appUser == appUser
-          ? FloatingActionButton(
-              onPressed: () {
-                //todo qr code scanner
-              },
-              child: const Icon(Icons.add),
-            )
-          : null,
       body: SafeArea(
         child: SingleChildScrollView(
           child: usersFuture == null

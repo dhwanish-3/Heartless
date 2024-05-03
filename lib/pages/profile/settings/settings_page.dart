@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:heartless/backend/controllers/auth_controller.dart';
+import 'package:heartless/pages/profile/profile_page.dart';
 import 'package:heartless/pages/profile/settings/static_home_page.dart';
 import 'package:heartless/pages/profile/settings/static_patient_management.dart';
 import 'package:heartless/services/enums/color_theme.dart';
@@ -88,9 +89,7 @@ class SettingsPage extends StatelessWidget {
                       child: SizedBox(
                         width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height,
-                        child: StaticHomePage(
-                          user: authNotifier.appUser!,
-                        ),
+                        child: ProfilePage(),
                       ),
                       fit: BoxFit.contain,
                     ),

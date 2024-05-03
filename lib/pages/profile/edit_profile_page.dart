@@ -71,7 +71,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
       widget.user.phone = _phoneNumber;
       await AuthController().updateProfile(widget.user);
       widgetNotifier.setLoading(false);
-      Navigator.pop(context);
+      Navigator.of(context).popUntil((route) => route.isFirst);
+      Navigator.of(context).pushNamed('/home');
     }
   }
 
@@ -80,7 +81,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     super.initState();
     _emailController.text = widget.user.email;
     _nameController.text = widget.user.name;
-    _phoneNumber = widget.user.phone.toString();
+    _phoneNumber = widget.user.phone == null ? '' : widget.user.phone!;
   }
 
   @override

@@ -26,7 +26,11 @@ class PersonalInfoWidget extends StatelessWidget {
             alignment: Alignment.center,
             child: Container(
                 height: 40,
-                color: const Color.fromARGB(255, 225, 225, 225),
+                padding: const EdgeInsets.only(
+                  right: 10,
+                ),
+                // color: const Color.fromARGB(255, 225, 225, 225),
+                color: Theme.of(context).shadowColor.withOpacity(0.2),
                 child: Row(
                   children: [
                     Container(

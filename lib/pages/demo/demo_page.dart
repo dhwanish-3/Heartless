@@ -27,7 +27,9 @@ class _DemoPageState extends State<DemoPage> {
 
     _videoPlayerController = CachedVideoPlayerController.network(
       widget.demonstration.videoUrl,
-    )..initialize().then((value) => setState(() {}));
+    )..initialize().then((value) => setState(() {
+          _videoPlayerController.play();
+        }));
 
     _customVideoPlayerController = CustomVideoPlayerController(
       context: context,
@@ -75,6 +77,7 @@ class _DemoPageState extends State<DemoPage> {
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
+                              color: Theme.of(context).primaryColor,
                             ),
                           ),
                           ...section.points.map((point) {

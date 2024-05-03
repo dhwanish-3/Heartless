@@ -132,10 +132,10 @@ class MessageTile extends StatelessWidget {
                               message,
                               textAlign: TextAlign.start,
                               style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  height: 1.2,
-                                  fontWeight: FontWeight.w500),
+                                color: Colors.white,
+                                fontSize: 16,
+                                height: 1.2,
+                              ),
                             ),
                           ),
                         ],
@@ -178,7 +178,7 @@ class MessageTile extends StatelessWidget {
               bottom: 0,
               child: Text(
                 time,
-                style: const TextStyle(color: Colors.white, fontSize: 10),
+                style: const TextStyle(color: Colors.white, fontSize: 9),
               ),
             ),
           ],

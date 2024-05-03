@@ -55,7 +55,7 @@ class TimeLineService {
     // sort the list by date
     timeLineList.sort((b, a) => a.date.compareTo(b.date));
 
-    if (limit == null) return [...timeLineList, ...timeLineList];
+    if (limit == null) return timeLineList;
     // resize the list to the limit
     if (timeLineList.length > limit) {
       timeLineList = timeLineList.sublist(0, limit);
