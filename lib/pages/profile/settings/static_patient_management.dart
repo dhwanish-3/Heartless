@@ -5,7 +5,11 @@ import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/widgets/patient_management/person_info.dart';
 
 class StaticPatientManagement extends StatelessWidget {
-  const StaticPatientManagement({super.key});
+  final AppUser user;
+  const StaticPatientManagement({
+    super.key,
+    required this.user,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +31,7 @@ class StaticPatientManagement extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   PersonalInfoWidget(
-                    user: StaticData.user,
+                    user: user,
                     disableTouch: true,
                   ),
                   const SizedBox(

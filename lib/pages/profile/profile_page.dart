@@ -70,6 +70,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text(
           'Profile',
           style: Theme.of(context).textTheme.headlineMedium,

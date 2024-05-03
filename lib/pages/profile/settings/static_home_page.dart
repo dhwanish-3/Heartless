@@ -2,12 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:heartless/pages/profile/settings/static_data.dart';
 import 'package:heartless/services/date/date_service.dart';
 import 'package:heartless/shared/models/activity.dart';
+import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/widgets/home/activity_schedule.dart';
 import 'package:heartless/widgets/home/heading_widget.dart';
 import 'package:heartless/widgets/home/quick_actions_widget.dart';
 
 class StaticHomePage extends StatelessWidget {
-  const StaticHomePage({super.key});
+  final AppUser user;
+  const StaticHomePage({
+    super.key,
+    required this.user,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +24,7 @@ class StaticHomePage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               HomePageHeadingWidget(
-                user: StaticData.user,
+                user: user,
                 disableSearch: true,
               ),
               QuickActionsWidget(),
