@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/backend/controllers/connect_users_controller.dart';
 import 'package:heartless/pages/demo/categorised_demo_page.dart';
+import 'package:heartless/pages/patient_management/patient_management_profile_page.dart';
 import 'package:heartless/pages/profile/users_list_page.dart';
 import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
@@ -82,9 +83,11 @@ class PatientList extends StatelessWidget {
           ),
         ],
       ),
-      padding: const EdgeInsets.symmetric(
-        horizontal: 20,
-        vertical: 20,
+      padding: const EdgeInsets.only(
+        left: 20,
+        right: 20,
+        bottom: 20,
+        top: 10,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -123,7 +126,7 @@ class PatientList extends StatelessWidget {
             ],
           ),
           const SizedBox(
-            height: 10,
+            height: 0,
           ),
           FutureBuilder<List<AppUser>>(
               future: usersFuture,
@@ -151,61 +154,79 @@ class PatientList extends StatelessWidget {
                           )),
                     );
                   } else {
-                    return Column(
-                      children: List.generate(
-                        users.length > 3 ? 3 : users.length,
-                        (index) {
-                          AppUser user = users[index];
-                          return Container(
-                            height: 56,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                            ),
-                            margin: const EdgeInsets.only(
-                              bottom: 10,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).secondaryHeaderColor,
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(10)),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Theme.of(context).highlightColor,
-                                  offset: const Offset(0, 0.5),
-                                  blurRadius: 1,
-                                  spreadRadius: 0,
-                                ),
-                              ],
-                            ),
-                            child: Row(
-                              children: [
-                                CircleAvatar(
-                                  radius: 20,
-                                  backgroundImage: NetworkImage(
-                                    user.imageUrl,
+                    return SizedBox(
+                      height: 120,
+                      // width: 300,
+                      child: ListView.builder(
+                          itemCount: users.length,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (BuildContext context, int index) {
+                            AppUser user = users[index];
+                            return InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          DoctorNurseSidePatientProfile(
+                                            patient: user,
+                                          )),
+                                );
+                              },
+                              child: Container(
+                                  height: 120,
+                                  width: 92,
+                                  margin: const EdgeInsets.only(
+                                    right: 10,
+                                    left: 2,
+                                    bottom: 2,
                                   ),
-                                ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                Flexible(
-                                  child: Text(
-                                    user.name,
-                                    style:
-                                        // Theme.of(context).textTheme.bodySmall,
-                                        TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                      color: Theme.of(context).shadowColor,
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(10),
                                     ),
-                                    overflow: TextOverflow.ellipsis,
+                                    color:
+                                        Theme.of(context).secondaryHeaderColor,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Theme.of(context).highlightColor,
+                                        offset: const Offset(0, 0.5),
+                                        blurRadius: 1,
+                                        spreadRadius: 0,
+                                      ),
+                                    ],
                                   ),
-                                )
-                              ],
-                            ),
-                          );
-                        },
-                      ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      CircleAvatar(
+                                        radius: 30,
+                                        backgroundImage: NetworkImage(
+                                          user.imageUrl,
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Flexible(
+                                        child: Text(
+                                          user.name,
+                                          style:
+                                              // Theme.of(context).textTheme.bodySmall,
+                                              TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w500,
+                                            color:
+                                                Theme.of(context).shadowColor,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      )
+                                    ],
+                                  )),
+                            );
+                          }),
                     );
                   }
                 }

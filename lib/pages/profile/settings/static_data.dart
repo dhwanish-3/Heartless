@@ -5,6 +5,18 @@ import 'package:heartless/shared/models/activity.dart';
 import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/shared/models/demonstration.dart';
 
+class DummyMessage {
+  final String message;
+  final String time;
+  final bool isSender;
+
+  DummyMessage({
+    required this.message,
+    required this.time,
+    required this.isSender,
+  });
+}
+
 class StaticData {
   static final AppUser user = AppUser.getInstance(UserType.patient)
     ..name = 'John Doe'
@@ -39,6 +51,51 @@ class StaticData {
       ..name = 'Dr. Thomas Reus'
       ..imageUrl =
           'https://www.stockvault.net/data/2015/09/01/177580/preview16.jpg',
+  ];
+
+  static final List<DummyMessage> messages = [
+    DummyMessage(
+      message:
+          "Hi John. Do you think it would be possible to schedule an appointment tomorrow?",
+      time: "10:00 AM",
+      isSender: true,
+    ),
+    DummyMessage(
+      message: "Give me a second. Let me check my schedule",
+      time: "10:05 AM",
+      isSender: false,
+    ),
+    DummyMessage(
+      message: "Is it something that requires immediate attention?",
+      time: "10:05 AM",
+      isSender: false,
+    ),
+    DummyMessage(message: "I am afraid so.", time: "10:06 AM", isSender: true),
+    DummyMessage(
+        message: "I had symptoms of Cardiac arrest Yesterday. ",
+        time: "10:06 AM",
+        isSender: true),
+    DummyMessage(message: "Oh My God!!", time: "10:07 AM", isSender: false),
+    DummyMessage(
+      message: "Are you alright now",
+      time: "10:07 AM",
+      isSender: false,
+    ),
+    DummyMessage(
+      message: "Yes, I am fine now. I am taking my medicines regularly",
+      time: "10:08 AM",
+      isSender: true,
+    ),
+    DummyMessage(
+      message: "That's good to hear. Please take care of yourself",
+      time: "10:09 AM",
+      isSender: false,
+    ),
+    DummyMessage(
+      message: "I will. Thank you for your concern",
+      time: "10:10 AM",
+      isSender: true,
+    ),
   ];
 
   static List<Demonstration> previewList = [
