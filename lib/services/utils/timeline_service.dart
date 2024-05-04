@@ -17,9 +17,8 @@ class TimeLineService {
       value.forEach((reading) {
         timeLineList.add(TimeLineData(
             title: 'Reading Added ' +
-                reading.type.formatReading(reading.value.toString(),
-                    reading.optionalValue.toString()) +
-                reading.unit,
+                reading.type.formatReading(
+                    reading.value.toString(), reading.optionalValue.toString()),
             tag: TimeLineEventType.reading,
             date: reading.time));
       });
