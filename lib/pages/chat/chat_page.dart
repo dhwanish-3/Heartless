@@ -78,6 +78,7 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
 
     Set<DateTime> chatDates = {};
     Set<int> chatDatesIndex = {};
+    ;
     return Scaffold(
       appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
@@ -253,20 +254,17 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
   Widget _buildMessageTile(ChatRoom chatRoom, Message message, String userId) {
     return Padding(
         padding: const EdgeInsets.symmetric(vertical: 2),
-        child: GestureDetector(
-            onDoubleTap: () {
-              // todo: this should not be allowed
-              deleteMessage(message, userId);
-            },
-            child: MessageTile(
-              chatId: widget.chatRoom.id,
-              imageUrl: message.imageUrl,
-              documentUrl: message.type == MessageType.document
-                  ? message.imageUrl
-                  : null,
-              message: message.message,
-              isSender: message.senderId == userId,
-              time: DateService.getFormattedTime(message.time),
-            )));
+        child: MessageTile(
+          chatId: widget.chatRoom.id,
+          imageUrl: message.imageUrl,
+          documentUrl:
+              message.type == MessageType.document ? message.imageUrl : null,
+          message: message.message,
+          callback: () {
+            deleteMessage(message, userId);
+          },
+          isSender: message.senderId == userId,
+          time: DateService.getFormattedTime(message.time),
+        ));
   }
 }
