@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:heartless/backend/controllers/demonstration_controller.dart';
+import 'package:heartless/pages/demo/demo_page.dart';
 import 'package:heartless/pages/profile/settings/static_data.dart';
 import 'package:heartless/shared/models/demonstration.dart';
 
@@ -54,18 +56,40 @@ class _ScrollableDemoListState extends State<ScrollableDemoList> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 180,
-      child: PageView.builder(
-        controller: widget._pageController,
-        itemCount: items.length,
-        itemBuilder: (context, index) {
-          return DemoCard(
-            imageUrl: items[index].imageUrl!,
-            title: items[index].title,
+    return StreamBuilder(
+      stream: DemonstrationController().getDemos(),
+      builder: (context, AsyncSnapshot snapshot) {
+        if (snapshot.hasData &&
+            snapshot.data != null &&
+            snapshot.data.docs.isNotEmpty) {
+          return SizedBox(
+            height: 180,
+            child: PageView.builder(
+              controller: widget._pageController,
+              itemCount: items.length,
+              itemBuilder: (context, index) {
+                Demonstration demo =
+                    Demonstration.fromMap(snapshot.data.docs[index].data());
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DemoPage(demonstration: demo),
+                      ),
+                    );
+                  },
+                  child: DemoCard(imageUrl: demo.imageUrl!, title: demo.title),
+                );
+              },
+            ),
           );
-        },
-      ),
+        } else {
+          return const Center(
+            child: Text("No Demos Yet"),
+          );
+        }
+      },
     );
   }
 }
