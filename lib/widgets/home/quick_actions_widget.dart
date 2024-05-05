@@ -64,8 +64,8 @@ class QuickActionsWidget extends StatelessWidget {
                 physics: NeverScrollableScrollPhysics(),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 4,
-                  crossAxisSpacing: 0,
-                  mainAxisSpacing: 10,
+                  // crossAxisSpacing: 0,
+                  // mainAxisSpacing: 10,
                   childAspectRatio: 1,
                 ),
                 children: [
@@ -198,14 +198,16 @@ class QuickActionCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 6),
-            FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
-                title,
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).primaryColor,
+            Flexible(
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).primaryColor,
+                  ),
                 ),
               ),
             ),

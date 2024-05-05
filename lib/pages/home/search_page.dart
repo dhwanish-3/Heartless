@@ -93,19 +93,25 @@ class _SearchPageState extends State<SearchPage> {
                           horizontal: 20,
                           vertical: 10,
                         ),
-                        child: Row(
-                          children: [
-                            Icon(Icons.search,
-                                color: Theme.of(context).shadowColor),
-                            const SizedBox(width: 20),
-                            Text(
-                              SearchService.globalSearchOptions[index].name,
-                              style: TextStyle(
-                                color: Theme.of(context).shadowColor,
-                                fontSize: 16,
+                        child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          child: Row(
+                            children: [
+                              Icon(Icons.search,
+                                  color: Theme.of(context).shadowColor),
+                              const SizedBox(width: 20),
+                              Flexible(
+                                child: Text(
+                                  overflow: TextOverflow.ellipsis,
+                                  SearchService.globalSearchOptions[index].name,
+                                  style: TextStyle(
+                                    color: Theme.of(context).shadowColor,
+                                    fontSize: 16,
+                                  ),
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                       onTap: SearchService.globalSearchOptions[index].onTap,
