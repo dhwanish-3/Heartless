@@ -14,7 +14,7 @@ class DemoPage extends StatefulWidget {
 }
 
 class _DemoPageState extends State<DemoPage> {
-  late CachedVideoPlayerController _videoPlayerController;
+  late VideoPlayerController _videoPlayerController;
   late CustomVideoPlayerController _customVideoPlayerController;
   // late CustomVideoPlayerWebController _customVideoPlayerWebController;
 
@@ -25,7 +25,7 @@ class _DemoPageState extends State<DemoPage> {
   void initState() {
     super.initState();
 
-    _videoPlayerController = CachedVideoPlayerController.network(
+    _videoPlayerController = VideoPlayerController.network(
       widget.demonstration.videoUrl!,
     )..initialize().then((value) => setState(() {
           _videoPlayerController.play();
