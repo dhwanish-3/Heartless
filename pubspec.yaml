@@ -116,6 +116,7 @@ flutter:
     - assets/Icons/fileFormat/
     - assets/Icons/readingGenre/
     - assets/Icons/quickAction/
+    - assets/Icons/controlPanel/
 
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg

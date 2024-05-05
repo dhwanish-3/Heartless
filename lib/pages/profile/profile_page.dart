@@ -309,6 +309,7 @@ class _ProfileActions extends StatelessWidget {
                                 builder: (context) => UsersListPage(
                                   appUser: authNotifier.appUser!,
                                   users: users,
+                                  isPatientList: false,
                                 ),
                               ),
                             );

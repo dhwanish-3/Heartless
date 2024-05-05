@@ -131,6 +131,7 @@ class SupervisorListContainer extends StatelessWidget {
                       builder: (context) => UsersListPage(
                         users: supervisorList,
                         appUser: patient,
+                        isPatientList: false,
                       ),
                     ),
                   );
@@ -276,7 +277,7 @@ class ControlPanel extends StatelessWidget {
                 ),
                 children: [
                   PanelCard(
-                    imageUrl: 'assets/Icons/schedule.png',
+                    imageUrl: 'assets/Icons/controlPanel/schedule.png',
                     text: 'Schedule',
                     onTap: () {
                       if (disableTouch) return;
@@ -289,7 +290,7 @@ class ControlPanel extends StatelessWidget {
                     },
                   ),
                   PanelCard(
-                    imageUrl: 'assets/Icons/charts.png',
+                    imageUrl: 'assets/Icons/controlPanel/charts.png',
                     text: 'Analytics',
                     onTap: () {
                       if (disableTouch) return;
@@ -302,14 +303,14 @@ class ControlPanel extends StatelessWidget {
                     },
                   ),
                   PanelCard(
-                      imageUrl: 'assets/Icons/chat.png',
+                      imageUrl: 'assets/Icons/controlPanel/chat.png',
                       text: 'Chat',
                       onTap: () {
                         if (disableTouch) return;
                         createNewChat(patient);
                       }),
                   PanelCard(
-                    imageUrl: 'assets/Icons/diary.png',
+                    imageUrl: 'assets/Icons/controlPanel/diary.png',
                     text: 'Health Log',
                     onTap: () {
                       if (disableTouch) return;
@@ -322,7 +323,7 @@ class ControlPanel extends StatelessWidget {
                     },
                   ),
                   PanelCard(
-                      imageUrl: 'assets/Icons/chat.png',
+                      imageUrl: 'assets/Icons/quickAction/file.png',
                       text: 'Documents',
                       onTap: () {
                         if (disableTouch) return;
