@@ -198,7 +198,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
           icon: const Icon(Icons.arrow_back),
         ),
         title: Text(
-          'Create Task',
+          widget.isEdit ? 'Edit Task' : 'Create Task',
           style: Theme.of(context).textTheme.headlineMedium,
         ),
       ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:heartless/pages/patient_management/patient_management_profile_page.dart';
-import 'package:heartless/services/enums/user_type.dart';
 import 'package:heartless/shared/models/app_user.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
 import 'package:provider/provider.dart';
@@ -9,11 +8,13 @@ class UsersListPage extends StatelessWidget {
   final AppUser appUser;
   final Future<List<AppUser>>? usersFuture;
   final List<AppUser> users;
+  final bool isPatientList;
   const UsersListPage({
     super.key,
     this.users = const [],
     this.usersFuture,
     required this.appUser,
+    this.isPatientList = true,
   });
 
   @override
@@ -22,7 +23,7 @@ class UsersListPage extends StatelessWidget {
         Provider.of<AuthNotifier>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
-        title: authNotifier.appUser!.userType != UserType.patient
+        title: isPatientList
             ? const Text('Your Patients ')
             : const Text('Doctors and Nurses'),
       ),
@@ -32,7 +33,7 @@ class UsersListPage extends StatelessWidget {
               ? _buildUsersList(
                   users,
                   context,
-                  authNotifier.appUser!.userType == UserType.patient,
+                  isPatientList,
                 )
               : FutureBuilder<List<AppUser>>(
                   future: usersFuture,
@@ -53,7 +54,7 @@ class UsersListPage extends StatelessWidget {
                       return _buildUsersList(
                         snapshot.data!,
                         context,
-                        authNotifier.appUser!.userType == UserType.patient,
+                        isPatientList,
                       );
                     }
                   },
@@ -64,7 +65,7 @@ class UsersListPage extends StatelessWidget {
   }
 
   Column _buildUsersList(
-      List<AppUser> snapshot, BuildContext context, bool isPatient) {
+      List<AppUser> snapshot, BuildContext context, bool isPatientList) {
     return Column(
       children: snapshot.map((user) {
         return Container(
@@ -91,6 +92,9 @@ class UsersListPage extends StatelessWidget {
           ),
           child: InkWell(
             onLongPress: () {
+              if (!isPatientList) {
+                return;
+              }
               showDialog(
                   context: context,
                   builder: (context) {
@@ -117,7 +121,7 @@ class UsersListPage extends StatelessWidget {
                   });
             },
             onTap: () {
-              if (isPatient) {
+              if (!isPatientList) {
                 return;
               }
               Navigator.push(

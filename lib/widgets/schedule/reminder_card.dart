@@ -41,6 +41,32 @@ class ReminderCard extends StatelessWidget {
     Color bgColor = activity.type.color;
     // bgColor = Constants.primaryColor.withOpacity(0.1);
 
+    Future<dynamic> showDeleteConfirmationDialog(BuildContext context) {
+      return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Delete Message'),
+            content: Text('Are you sure you want to delete this message?'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+              ),
+              TextButton(
+                child: Text('Delete'),
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+
     return Slidable(
       startActionPane: ActionPane(
         motion: const StretchMotion(),
@@ -203,7 +229,12 @@ class ReminderCard extends StatelessWidget {
                         children: [
                           InkWell(
                             onTap: () {
-                              ActivityController().deleteActivity(activity);
+                              showDeleteConfirmationDialog(context)
+                                  .then((value) {
+                                if (value != null && value) {
+                                  ActivityController().deleteActivity(activity);
+                                }
+                              });
                             },
                             child: Container(
                                 height: 33,
