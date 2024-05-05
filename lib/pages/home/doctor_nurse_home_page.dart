@@ -186,8 +186,7 @@ class PatientList extends StatelessWidget {
                                     borderRadius: BorderRadius.all(
                                       Radius.circular(10),
                                     ),
-                                    color:
-                                        Theme.of(context).secondaryHeaderColor,
+                                    color: Theme.of(context).primaryColorLight,
                                     boxShadow: [
                                       BoxShadow(
                                         color: Theme.of(context).highlightColor,
