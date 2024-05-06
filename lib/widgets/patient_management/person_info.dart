@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:heartless/pages/profile/qr_code_page.dart';
 import 'package:heartless/shared/models/app_user.dart';
@@ -53,10 +54,32 @@ class PersonalInfoWidget extends StatelessWidget {
             //* default image icon
             child: Stack(
               children: [
-                CircleAvatar(
-                  radius: 70,
-                  backgroundColor: Colors.white,
-                  foregroundImage: NetworkImage(user.imageUrl),
+                CachedNetworkImage(
+                  imageUrl: user.imageUrl,
+                  imageBuilder: (context, imageProvider) => Container(
+                    width: 140,
+                    height: 140,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                        image: imageProvider,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  placeholder: (context, url) => Center(
+                    child: SizedBox(
+                      height: 40,
+                      width: 40,
+                      child: CircularProgressIndicator(
+                        color: Theme.of(context).canvasColor,
+                      ),
+                    ),
+                  ),
+                  errorWidget: (context, url, error) => Icon(
+                    Icons.error,
+                    color: Colors.red,
+                  ),
                 ),
                 Positioned(
                   bottom: 0,

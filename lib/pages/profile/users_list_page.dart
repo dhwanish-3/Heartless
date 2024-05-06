@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:heartless/pages/patient_management/patient_management_profile_page.dart';
 import 'package:heartless/shared/models/app_user.dart';
@@ -135,10 +136,18 @@ class UsersListPage extends StatelessWidget {
             },
             child: Row(
               children: [
-                CircleAvatar(
-                  radius: 20,
-                  backgroundImage: NetworkImage(
-                    user.imageUrl,
+                CachedNetworkImage(
+                  imageUrl: user.imageUrl,
+                  imageBuilder: (context, imageProvider) => Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                        image: imageProvider,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ),
                 ),
                 const SizedBox(

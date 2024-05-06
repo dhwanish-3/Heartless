@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:heartless/backend/controllers/chat_controller.dart';
 import 'package:heartless/backend/controllers/connect_users_controller.dart';
@@ -186,12 +187,19 @@ class SupervisorTile extends StatelessWidget {
         ),
         child: Row(
           children: [
-            CircleAvatar(
-              radius: 20,
-              backgroundImage: NetworkImage(
-                imageUrl,
-              ),
-            ),
+            CachedNetworkImage(
+                imageUrl: imageUrl,
+                imageBuilder: (context, imageProvider) => Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                          image: imageProvider,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    )),
             const SizedBox(
               width: 10,
             ),
