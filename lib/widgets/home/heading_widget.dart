@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:heartless/pages/chat/contacts_page.dart';
 import 'package:heartless/pages/home/search_page.dart';
@@ -124,13 +125,41 @@ class HomePageHeadingWidget extends StatelessWidget {
                     Positioned(
                       right: 10,
                       bottom: 10,
-                      child: CircleAvatar(
-                        radius: 60,
-                        backgroundColor: Colors.white,
-                        backgroundImage: NetworkImage(user.imageUrl),
+                      child: CachedNetworkImage(
+                        imageUrl: user.imageUrl,
+                        imageBuilder: (context, imageProvider) => Container(
+                          width: 120,
+                          height: 120,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        placeholder: (context, url) => Center(
+                          child: SizedBox(
+                            height: 40,
+                            width: 40,
+                            child: CircularProgressIndicator(
+                                color: Theme.of(context).canvasColor),
+                          ),
+                        ),
+                        errorWidget: (context, url, error) => Container(
+                            height: 40,
+                            width: 40,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                              color: Theme.of(context).shadowColor,
+                            ),
+                            child: const Icon(
+                              Icons.person_2_outlined,
+                              color: Colors.black,
+                              size: 30,
+                            )),
                       ),
                     ),
-
                     // 20 if searchBar not overlapping
                   ],
                 ),

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:heartless/backend/services/misc/connect_users.dart';
 import 'package:heartless/pages/profile/qr_result_page.dart';
@@ -83,12 +84,19 @@ class _QRPopupWidgetState extends State<QRPopupWidget> {
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                CircleAvatar(
-                  radius: 20,
-                  backgroundImage: NetworkImage(
-                    widget.user.imageUrl,
-                  ),
-                ),
+                CachedNetworkImage(
+                    imageUrl: widget.user.imageUrl,
+                    imageBuilder: (context, imageProvider) => Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        )),
                 SizedBox(width: 20),
                 Text(
                   widget.user.name,

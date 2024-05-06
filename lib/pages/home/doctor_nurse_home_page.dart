@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:heartless/backend/controllers/connect_users_controller.dart';
 import 'package:heartless/pages/demo/categorised_demo_page.dart';
@@ -199,12 +200,22 @@ class PatientList extends StatelessWidget {
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      CircleAvatar(
-                                        radius: 30,
-                                        backgroundImage: NetworkImage(
-                                          user.imageUrl,
-                                        ),
-                                      ),
+                                      CachedNetworkImage(
+                                          imageUrl: user.imageUrl,
+                                          imageBuilder:
+                                              (context, imageProvider) {
+                                            return Container(
+                                              width: 50,
+                                              height: 50,
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                image: DecorationImage(
+                                                  image: imageProvider,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                            );
+                                          }),
                                       const SizedBox(
                                         height: 10,
                                       ),

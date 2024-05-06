@@ -153,7 +153,7 @@ class WeekSliderWidget extends StatelessWidget {
                 if (pageController.hasClients && pageController.page! > 0) {
                   int index = pageController.page!.toInt() - 1;
                   if (index < weeks.length && index >= 0) {
-                    onWeekChanged(weeks[index][0], weeks[index][1]);
+                    // onWeekChanged(weeks[index][0], weeks[index][1]);
                   }
                   pageController.animateToPage(
                     (pageController.page! - 1).toInt(),
@@ -200,7 +200,7 @@ class WeekSliderWidget extends StatelessWidget {
                     pageController.page! < weeks.length - 1) {
                   int index = pageController.page!.toInt() + 1;
                   if (index < weeks.length && index >= 0) {
-                    onWeekChanged(weeks[index][0], weeks[index][1]);
+                    // onWeekChanged(weeks[index][0], weeks[index][1]);
                   }
                   pageController.animateToPage(
                     (pageController.page! + 1).toInt(),

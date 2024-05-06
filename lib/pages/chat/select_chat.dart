@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:heartless/backend/controllers/chat_controller.dart';
 import 'package:heartless/backend/controllers/connect_users_controller.dart';
@@ -81,8 +82,19 @@ class _MyWidgetState extends State<SelectChatPage> {
           AppUser user = users[index];
           return ListTile(
             title: Text(user.name),
-            leading: CircleAvatar(
-              backgroundImage: NetworkImage(user.imageUrl),
+            leading: CachedNetworkImage(
+              imageUrl: user.imageUrl,
+              imageBuilder: (context, imageProvider) => Container(
+                // width: 50,
+                // height: 50,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
             ),
             onTap: () {
               createNewChat(user);
