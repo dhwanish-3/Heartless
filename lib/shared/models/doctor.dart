@@ -12,7 +12,7 @@ class Doctor extends AppUser {
     userType = UserType.doctor;
     // todo: add a default image for doctor
     imageUrl =
-        'https://firebasestorage.googleapis.com/v0/b/heartless-17b56.appspot.com/o/static%2Fdoctor.png?alt=media&token=da52fba4-c80c-47bb-869b-bcca36fecff9';
+        'https://firebasestorage.googleapis.com/v0/b/heartless-17b56.appspot.com/o/static%2Fdoctor.png?alt=media';
   }
 
   Doctor.fromMap(Map<String, dynamic> map) {

@@ -11,7 +11,7 @@ class Nurse extends AppUser {
   Nurse() {
     // todo: add a default image for nurse
     imageUrl =
-        'https://firebasestorage.googleapis.com/v0/b/heartless-17b56.appspot.com/o/static%2Fnurse.png?alt=media&token=df2260dc-f9c3-49c6-920e-7e0c2b2e7791';
+        'https://firebasestorage.googleapis.com/v0/b/heartless-17b56.appspot.com/o/static%2Fnurse.png?alt=media';
     userType = UserType.nurse;
   }
 
