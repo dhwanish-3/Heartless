@@ -103,7 +103,9 @@ class _YearMonthWeekSelectorState extends State<YearMonthWeekSelector> {
                 if (_pageController.hasClients) {
                   _pageController.jumpToPage(0);
                 }
-                analyticsNotifier.setDate(DateTime(value, monthIndex, 1));
+
+                analyticsNotifier
+                    .setDate(DateService.findNextMonday(value, monthIndex));
               }),
             ),
             const SizedBox(width: 5),
@@ -120,8 +122,8 @@ class _YearMonthWeekSelectorState extends State<YearMonthWeekSelector> {
                   if (_pageController.hasClients) {
                     _pageController.jumpToPage(0);
                   }
-                  analyticsNotifier.setDate(
-                      DateTime(analyticsNotifier.selectedYear, monthIndex, 1));
+                  analyticsNotifier.setDate(DateService.findNextMonday(
+                      analyticsNotifier.selectedYear, monthIndex));
                 })),
             const SizedBox(width: 5),
             Expanded(
