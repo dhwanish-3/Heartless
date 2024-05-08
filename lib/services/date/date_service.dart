@@ -196,4 +196,18 @@ class DateService {
       return;
     }
   }
+
+  static DateTime findNextMonday(int year, int month) {
+    // Start from the first day of the given month and year
+    DateTime date = DateTime(year, month, 1);
+
+    // While the weekday is not Monday (1 represents Monday in DateTime)
+    while (date.weekday != DateTime.monday) {
+      // Go to the next day
+      date = date.add(Duration(days: 1));
+    }
+
+    // Return the date of the next Monday
+    return date;
+  }
 }
