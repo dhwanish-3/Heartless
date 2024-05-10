@@ -8,6 +8,7 @@ import 'package:heartless/widgets/log/diary_list.dart';
 import 'package:heartless/widgets/log/medical_metrics.dart';
 import 'package:provider/provider.dart';
 
+//! This page is not being used
 class MedicalLogPage extends StatelessWidget {
   final AppUser patient;
   const MedicalLogPage({super.key, required this.patient});

@@ -5,7 +5,6 @@ import 'package:heartless/main.dart';
 import 'package:heartless/pages/analytics/analytics_page.dart';
 import 'package:heartless/pages/auth/forgot_password.dart';
 import 'package:heartless/pages/chat/chat_page.dart';
-import 'package:heartless/pages/log/daywise_diary_page.dart';
 import 'package:heartless/pages/log/daywise_log.dart';
 import 'package:heartless/pages/log/health_documents_page.dart';
 import 'package:heartless/pages/patient_management/patient_management_profile_page.dart';
@@ -231,7 +230,7 @@ class SearchService {
           keywords: ['add', 'diary', 'entry'],
           onTap: () {
             navigatorKey.currentState!.pushReplacement(MaterialPageRoute(
-              builder: (context) => DayWiseDiary(
+              builder: (context) => DayWiseLogPage(
                 patient: user,
               ),
             ));
@@ -243,7 +242,7 @@ class SearchService {
           keywords: ['diary', 'entries'],
           onTap: () {
             navigatorKey.currentState!.pushReplacement(MaterialPageRoute(
-              builder: (context) => DayWiseDiary(
+              builder: (context) => DayWiseLogPage(
                 patient: user,
               ),
             ));

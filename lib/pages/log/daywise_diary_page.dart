@@ -1,5 +1,3 @@
-// ! if it is possible discard this page and use the dayWiseLog page by passing the diaryList Widget as a paramter
-
 import 'package:calendar_slider/calendar_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:heartless/shared/constants.dart';
@@ -13,6 +11,7 @@ import 'package:provider/provider.dart';
 
 const String _heroAddTodo = 'add-todo-hero';
 
+//! This page is not being used anymore
 class DayWiseDiary extends StatelessWidget {
   final AppUser patient;
   const DayWiseDiary({super.key, required this.patient});
