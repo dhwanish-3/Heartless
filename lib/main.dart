@@ -1,9 +1,7 @@
-import 'dart:io';
-
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:heartless/backend/services/notifications/notification_services.dart';
+import 'package:heartless/firebase_options.dart';
 import 'package:heartless/services/routes/routes.dart';
 import 'package:heartless/shared/provider/analytics_provider.dart';
 import 'package:heartless/shared/provider/auth_notifier.dart';
@@ -21,19 +19,7 @@ void main() async {
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
   // initializing firebase
-  if (Platform.isAndroid) {
-    await Firebase.initializeApp(
-      options: FirebaseOptions(
-        apiKey: 'AIzaSyCpzMaQ8VnK9aBfI2i8P8wwcxqeRWYm9fY',
-        appId: '1:1064544734386:android:daf184d0cc0ad786c74dab',
-        messagingSenderId: 'sendid',
-        projectId: 'heartless-17b56',
-        storageBucket: 'heartless-17b56.appspot.com',
-      ),
-    );
-  } else {
-    await Firebase.initializeApp();
-  }
+  await FirebaseInit.initializeApp();
 
   // initializing push notifications
   await NotificationService.initPushNotifications();

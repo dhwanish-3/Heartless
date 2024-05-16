@@ -49,3 +49,5 @@ Icon
 .vscode
 
 pubspec.lock
+
+firebase_options.dart

@@ -1,4 +1,4 @@
-# heartless
+# heartless (Heart++)
 
 Amazing app for patients recovering from heart attack
 
